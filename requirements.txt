@@ -1,0 +1,8 @@
+numpy
+pandas
+networkx
+matplotlib
+gymnasium
+geojson-pydantic==0.3.1
+
+ipykernel

@@ -1,0 +1,693 @@
+{
+  "version": "3.0.1",
+  "operational_points": [
+    {
+      "id": "Station_A",
+      "parts": [
+        {
+          "track": "T0",
+          "position": 100.0
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "ci": 0,
+          "ch": "aa",
+          "ch_short_label": "aa",
+          "ch_long_label": "0",
+          "trigram": "STA"
+        },
+        "identifier": {
+          "name": "Station_A",
+          "uic": 0
+        }
+      }
+    },
+    {
+      "id": "Station_B",
+      "parts": [
+        {
+          "track": "T1",
+          "position": 100.0
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "ci": 0,
+          "ch": "aa",
+          "ch_short_label": "aa",
+          "ch_long_label": "0",
+          "trigram": "STA"
+        },
+        "identifier": {
+          "name": "Station_B",
+          "uic": 0
+        }
+      }
+    },
+    {
+      "id": "Station_C",
+      "parts": [
+        {
+          "track": "T2",
+          "position": 5000.0
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "ci": 0,
+          "ch": "aa",
+          "ch_short_label": "aa",
+          "ch_long_label": "0",
+          "trigram": "STA"
+        },
+        "identifier": {
+          "name": "Station_C",
+          "uic": 0
+        }
+      }
+    },
+    {
+      "id": "Station_D",
+      "parts": [
+        {
+          "track": "T2",
+          "position": 10000.0
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "ci": 0,
+          "ch": "aa",
+          "ch_short_label": "aa",
+          "ch_long_label": "0",
+          "trigram": "STA"
+        },
+        "identifier": {
+          "name": "Station_D",
+          "uic": 0
+        }
+      }
+    },
+    {
+      "id": "Station_E",
+      "parts": [
+        {
+          "track": "T2",
+          "position": 19900.0
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "ci": 0,
+          "ch": "aa",
+          "ch_short_label": "aa",
+          "ch_long_label": "0",
+          "trigram": "STA"
+        },
+        "identifier": {
+          "name": "Station_E",
+          "uic": 0
+        }
+      }
+    }
+  ],
+  "routes": [
+    {
+      "id": "rt.D0->buffer_stop.2",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D0"
+      },
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.2"
+      },
+      "release_detectors": [
+        "D2"
+      ],
+      "path": [
+        {
+          "track": "T0",
+          "begin": 4320.0,
+          "end": 4500.0,
+          "direction": "START_TO_STOP"
+        },
+        {
+          "track": "T2",
+          "begin": 0.0,
+          "end": 20000.0,
+          "direction": "START_TO_STOP"
+        }
+      ]
+    },
+    {
+      "id": "rt.buffer_stop.0->D0",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.0"
+      },
+      "exit_point": {
+        "type": "Detector",
+        "id": "D0"
+      },
+      "release_detectors": [],
+      "path": [
+        {
+          "track": "T0",
+          "begin": 0.0,
+          "end": 4320.0,
+          "direction": "START_TO_STOP"
+        }
+      ]
+    },
+    {
+      "id": "rt.D1->buffer_stop.2",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D1"
+      },
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.2"
+      },
+      "release_detectors": [
+        "D2"
+      ],
+      "path": [
+        {
+          "track": "T1",
+          "begin": 4320.0,
+          "end": 4500.0,
+          "direction": "START_TO_STOP"
+        },
+        {
+          "track": "T2",
+          "begin": 0.0,
+          "end": 20000.0,
+          "direction": "START_TO_STOP"
+        }
+      ]
+    },
+    {
+      "id": "rt.buffer_stop.1->D1",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.1"
+      },
+      "exit_point": {
+        "type": "Detector",
+        "id": "D1"
+      },
+      "release_detectors": [],
+      "path": [
+        {
+          "track": "T1",
+          "begin": 0.0,
+          "end": 4320.0,
+          "direction": "START_TO_STOP"
+        }
+      ]
+    },
+    {
+      "id": "rt.D2->buffer_stop.1",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D2"
+      },
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.1"
+      },
+      "release_detectors": [
+        "D1"
+      ],
+      "path": [
+        {
+          "track": "T2",
+          "begin": 0.0,
+          "end": 180.0,
+          "direction": "STOP_TO_START"
+        },
+        {
+          "track": "T1",
+          "begin": 0.0,
+          "end": 4500.0,
+          "direction": "STOP_TO_START"
+        }
+      ]
+    },
+    {
+      "id": "rt.D2->buffer_stop.0",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D2"
+      },
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.0"
+      },
+      "release_detectors": [
+        "D0"
+      ],
+      "path": [
+        {
+          "track": "T2",
+          "begin": 0.0,
+          "end": 180.0,
+          "direction": "STOP_TO_START"
+        },
+        {
+          "track": "T0",
+          "begin": 0.0,
+          "end": 4500.0,
+          "direction": "STOP_TO_START"
+        }
+      ]
+    },
+    {
+      "id": "rt.buffer_stop.2->D2",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.2"
+      },
+      "exit_point": {
+        "type": "Detector",
+        "id": "D2"
+      },
+      "release_detectors": [],
+      "path": [
+        {
+          "track": "T2",
+          "begin": 180.0,
+          "end": 20000.0,
+          "direction": "STOP_TO_START"
+        }
+      ]
+    }
+  ],
+  "switch_types": [
+    {
+      "id": "point",
+      "ports": [
+        "base",
+        "left",
+        "right"
+      ],
+      "groups": {
+        "LEFT": [
+          {
+            "src": "base",
+            "dst": "left"
+          }
+        ],
+        "RIGHT": [
+          {
+            "src": "base",
+            "dst": "right"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cross",
+      "ports": [
+        "north",
+        "south",
+        "east",
+        "west"
+      ],
+      "groups": {
+        "static": [
+          {
+            "src": "east",
+            "dst": "west"
+          },
+          {
+            "src": "north",
+            "dst": "south"
+          }
+        ]
+      }
+    },
+    {
+      "id": "double_cross",
+      "ports": [
+        "north_1",
+        "north_2",
+        "south_1",
+        "south_2"
+      ],
+      "groups": {
+        "N1_S1": [
+          {
+            "src": "north_1",
+            "dst": "south_1"
+          }
+        ],
+        "N1_S2": [
+          {
+            "src": "north_1",
+            "dst": "south_2"
+          }
+        ],
+        "N2_S1": [
+          {
+            "src": "north_2",
+            "dst": "south_1"
+          }
+        ],
+        "N2_S2": [
+          {
+            "src": "north_2",
+            "dst": "south_2"
+          }
+        ]
+      }
+    }
+  ],
+  "switches": [
+    {
+      "id": "P0",
+      "switch_type": "point",
+      "group_change_delay": 0.0,
+      "ports": {
+        "base": {
+          "endpoint": "BEGIN",
+          "track": "T2"
+        },
+        "left": {
+          "endpoint": "END",
+          "track": "T0"
+        },
+        "right": {
+          "endpoint": "END",
+          "track": "T1"
+        }
+      },
+      "extensions": {
+        "sncf": {
+          "label": "P0"
+        }
+      }
+    }
+  ],
+  "track_section_links": [
+    {
+      "id": "link.0",
+      "src": {
+        "endpoint": "BEGIN",
+        "track": "T2"
+      },
+      "dst": {
+        "endpoint": "END",
+        "track": "T0"
+      }
+    },
+    {
+      "id": "link.1",
+      "src": {
+        "endpoint": "BEGIN",
+        "track": "T2"
+      },
+      "dst": {
+        "endpoint": "END",
+        "track": "T1"
+      }
+    }
+  ],
+  "track_sections": [
+    {
+      "geo": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "sch": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "id": "T0",
+      "length": 4500.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 1,
+          "track_name": "V1"
+        }
+      }
+    },
+    {
+      "geo": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "sch": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "id": "T1",
+      "length": 4500.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 1,
+          "track_name": "V2"
+        }
+      }
+    },
+    {
+      "geo": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "sch": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "id": "T2",
+      "length": 20000.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 1,
+          "track_name": "V3"
+        }
+      }
+    }
+  ],
+  "speed_sections": [],
+  "catenaries": [],
+  "signals": [
+    {
+      "track": "T0",
+      "position": 4300.0,
+      "id": "S0",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D0",
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "S0",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T1",
+      "position": 4300.0,
+      "id": "S1",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D1",
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "S1",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T2",
+      "position": 200.0,
+      "id": "S2",
+      "direction": "STOP_TO_START",
+      "sight_distance": 400.0,
+      "linked_detector": "D2",
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "angle_geo": -90.0,
+          "angle_sch": -90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "S2",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    }
+  ],
+  "buffer_stops": [
+    {
+      "track": "T0",
+      "position": 0.0,
+      "id": "buffer_stop.0",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T1",
+      "position": 0.0,
+      "id": "buffer_stop.1",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T2",
+      "position": 20000.0,
+      "id": "buffer_stop.2",
+      "applicable_directions": "BOTH"
+    }
+  ],
+  "detectors": [
+    {
+      "track": "T0",
+      "position": 4320.0,
+      "id": "D0",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T1",
+      "position": 4320.0,
+      "id": "D1",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T2",
+      "position": 180.0,
+      "id": "D2",
+      "applicable_directions": "BOTH"
+    }
+  ]
+}

@@ -109,16 +109,27 @@ class Schedule(object):
             self.previous_track_section(train2, track_section)
             )
 
+    def shift_train_departure(self, train: int, time: float) -> 'Schedule':
+        """Shift the departure and thus the whole train trajectory by a given time"""
+
+        new_schedule = copy.deepcopy(self)
+
+        new_schedule._df[train] += time
+
+        return new_schedule
+
     def add_delay(self, train: int, track_section: int, delay: float) -> 'Schedule':
 
-        end = self._df.loc[track_section, (train, 'e')]
+        # end = self._df.loc[track_section, (train, 'e')]
+        start = self._df.loc[track_section, (train, 's')]
         new_schedule = copy.deepcopy(self)
 
         # extend length at given track section
         new_schedule._df.loc[track_section, (train, 'e')] += delay
         
         # Add delay to all subsequent track sections 
-        new_schedule._df.loc[self._df[pd.IndexSlice[train,'s']]>=end, pd.IndexSlice[train,:]] += delay
+        # new_schedule._df.loc[self._df[pd.IndexSlice[train,'s']]>=end, pd.IndexSlice[train,:]] += delay
+        new_schedule._df.loc[self._df[pd.IndexSlice[train,'s']]>start, pd.IndexSlice[train,:]] += delay
 
         return new_schedule
 
@@ -138,8 +149,9 @@ class Schedule(object):
             pd.concat([starts0, self.starts]).rename_axis('index').groupby('index').max()
             < pd.concat([ends0, self.ends]).rename_axis('index').groupby('index').min()
             )
+        # mask = np.logical_and(mask1, mask2)
 
-        conflict_times = self.starts[np.logical_and(mask1, mask2)].drop(columns=train)
+        conflict_times = self.starts[mask1 & mask2].drop(columns=train)
 
         return (conflict_times[conflict_times.notna()])
 
@@ -185,7 +197,10 @@ class Schedule(object):
 
     def total_delay_at_stations(self, initial_schedule, stations: List[int]) -> float:
 
-        return self.delays(initial_schedule).iloc[stations].sum().sum()
+        try:
+            return self.delays(initial_schedule).iloc[stations].sum().sum()
+        except:
+            return self.delays(initial_schedule).loc[stations].sum().sum()
 
     def first_in(self, train1: int, train2: int, track_section: int) -> int:
         """Among two trains, which one train first arrives at a given track_section"""
@@ -222,7 +237,41 @@ class Schedule(object):
         return G
  
     def draw_graph(self):
+        """
+        
+        https://networkx.org/documentation/stable/auto_examples/graph/plot_dag_layout.html
+        """
+
 
         G = self.graph
-        pos = nx.planar_layout(G)
-        nx.draw_networkx(G, pos)
+
+        for layer, nodes in enumerate(nx.topological_generations(G)):
+            # `multipartite_layout` expects the layer as a node attribute, so add the
+            # numeric layer value as a node attribute
+            for node in nodes:
+                G.nodes[node]["layer"] = layer
+
+        # Compute the multipartite_layout using the "layer" node attribute
+        pos = nx.multipartite_layout(G, subset_key="layer")
+
+        nx.draw_networkx(G, pos, node_shape='s')
+
+
+    def propagate_delay(self, delayed_train: int) -> Tuple[pd.DataFrame, int]:
+
+        new_schedule = copy.deepcopy(self)
+        decision = False
+        while new_schedule.has_conflicts(delayed_train):
+            decision = False
+            if new_schedule.has_conflicts(delayed_train):
+
+                track_section, other_train = new_schedule.first_conflict(delayed_train)
+                decision = new_schedule.is_after_switch(delayed_train, other_train, track_section)
+
+                if not decision:
+                    first_in = new_schedule.first_in(delayed_train, other_train, track_section)
+                    delayed_train = other_train if first_in==delayed_train else delayed_train
+                    new_schedule = new_schedule.shift_train_after(delayed_train, first_in, track_section)
+                else:
+                    break
+        return new_schedule, delayed_train
