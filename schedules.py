@@ -102,7 +102,7 @@ class Schedule(object):
             return t[idx+1]
         return None
 
-    def is_after_switch(self, train1: int, train2: int, track_section: int) -> bool:
+    def is_a_point_switch(self, train1: int, train2: int, track_section: int) -> bool:
         return (
             self.previous_track_section(train1, track_section) 
             !=
@@ -181,7 +181,7 @@ class Schedule(object):
 
         new_schedule = self.add_delay(train1, train1_waits_at, train1_wait_time)
 
-        if not new_schedule.is_after_switch(train1, train2, track_section):
+        if not new_schedule.is_a_point_switch(train1, train2, track_section):
             new_schedule._df.loc[track_section, (train1, 's')] = self.ends.loc[track_section, train2]
         
         return new_schedule
@@ -218,7 +218,7 @@ class Schedule(object):
         action_needed = False
         if self.has_conflicts(train):
             track_section, other_train = self.first_conflict(train)
-            action_needed = self.is_after_switch(train, other_train, track_section)
+            action_needed = self.is_a_point_switch(train, other_train, track_section)
         return action_needed
 
     @property
@@ -266,7 +266,7 @@ class Schedule(object):
             if new_schedule.has_conflicts(delayed_train):
 
                 track_section, other_train = new_schedule.first_conflict(delayed_train)
-                decision = new_schedule.is_after_switch(delayed_train, other_train, track_section)
+                decision = new_schedule.is_a_point_switch(delayed_train, other_train, track_section)
 
                 if not decision:
                     first_in = new_schedule.first_in(delayed_train, other_train, track_section)
