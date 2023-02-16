@@ -1,4 +1,9 @@
 #!/bin/bash
+## Usage : 
+## ./osrd_standalone.sh -i infra.json -r res.json -s sim.json
+##
+## Une fois osrd core buildé
+
 
 while getopts i:s:r: flag
 do

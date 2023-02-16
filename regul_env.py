@@ -8,7 +8,7 @@ from schedules import Schedule
 
 class RegulEnv(gym.Env):
     
-    def __init__(self, schedule: Schedule, stations: List[int] = [], max_delay: float = 2.):
+    def __init__(self, schedule: Schedule, stations: List[int] = [], max_delay: float = 120.):
 
         self._initial_schedule = schedule
         self._schedule = schedule

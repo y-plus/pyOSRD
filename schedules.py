@@ -174,9 +174,17 @@ class Schedule(object):
         if train1_waits_at is None:
             train1_waits_at = track_section
 
+
+        # If the conflict occurs at a switch point, train 1 waits until the track section
+        # after the switch is free
+        if self.is_a_point_switch(train1, train2, track_section):
+            track_section_shift = self.next_track_section(train1, track_section)
+        else:
+            track_section_shift = track_section
+
         train1_wait_time = (
-            self.ends.loc[track_section, train2]
-            - self.starts.loc[track_section, train1]
+            self.ends.loc[track_section_shift, train2]
+            - self.starts.loc[track_section_shift, train1]
         )
 
         new_schedule = self.add_delay(train1, train1_waits_at, train1_wait_time)
