@@ -85,7 +85,6 @@ class Schedule(object):
 
     def previous_track_section(self, train: int, track_section: int) -> Union[int, None]:
 
-
         t = self.trajectory(train)
         idx = list(t).index(track_section)
 
@@ -103,11 +102,39 @@ class Schedule(object):
         return None
 
     def is_a_point_switch(self, train1: int, train2: int, track_section: int) -> bool:
+        
+        if (
+            track_section not in self.trajectory(train1)
+            or
+            track_section  not in self.trajectory(train2) 
+        ):
+            return False
+    
         return (
             self.previous_track_section(train1, track_section) 
             !=
             self.previous_track_section(train2, track_section)
             )
+
+
+    def is_just_after_a_point_switch(self, train1: int, train2: int, track_section) -> bool:
+        
+        if (
+            track_section not in self.trajectory(train1)
+            or
+            track_section  not in self.trajectory(train2) 
+        ):
+            return False
+        
+        return (
+            ~self.is_a_point_switch(train1, train2, track_section)
+            and
+                self.is_a_point_switch(
+                    train1,
+                    train2,
+                    self.previous_track_section(train1, track_section)
+                )
+        )
 
     def shift_train_departure(self, train: int, time: float) -> 'Schedule':
         """Shift the departure and thus the whole train trajectory by a given time"""
@@ -120,7 +147,6 @@ class Schedule(object):
 
     def add_delay(self, train: int, track_section: int, delay: float) -> 'Schedule':
 
-        # end = self._df.loc[track_section, (train, 'e')]
         start = self._df.loc[track_section, (train, 's')]
         new_schedule = copy.deepcopy(self)
 
@@ -128,7 +154,6 @@ class Schedule(object):
         new_schedule._df.loc[track_section, (train, 'e')] += delay
         
         # Add delay to all subsequent track sections 
-        # new_schedule._df.loc[self._df[pd.IndexSlice[train,'s']]>=end, pd.IndexSlice[train,:]] += delay
         new_schedule._df.loc[self._df[pd.IndexSlice[train,'s']]>start, pd.IndexSlice[train,:]] += delay
 
         return new_schedule
@@ -171,16 +196,22 @@ class Schedule(object):
 
         train1_waits_at = self.previous_track_section(train1, track_section)
 
+        # If the track section is the departure, it has no previous track section
         if train1_waits_at is None:
             train1_waits_at = track_section
 
 
         # If the conflict occurs at a switch point, train 1 waits until the track section
-        # after the switch is free
+        # after the switch point is free
         if self.is_a_point_switch(train1, train2, track_section):
             track_section_shift = self.next_track_section(train1, track_section)
         else:
             track_section_shift = track_section
+
+        # if the conflict occurs just after a switch point, train shoud wait before the switch
+        if self.is_just_after_a_point_switch(train1, train2, track_section):
+            train1_waits_at = self.previous_track_section(train1, train1_waits_at)
+
 
         train1_wait_time = (
             self.ends.loc[track_section_shift, train2]
@@ -226,8 +257,13 @@ class Schedule(object):
         action_needed = False
         if self.has_conflicts(train):
             track_section, other_train = self.first_conflict(train)
-            action_needed = self.is_a_point_switch(train, other_train, track_section)
+            action_needed = (
+                self.is_a_point_switch(train, other_train, track_section)
+                or
+                self.is_just_after_a_point_switch(train, other_train, track_section)
+            )
         return action_needed
+
 
     @property
     def graph(self) -> nx.DiGraph:
@@ -239,7 +275,11 @@ class Schedule(object):
 
         G = nx.DiGraph(edges)
 
-        dict = {i: row for i, row in enumerate(self.df.fillna(0).values)}
+        dict = {
+            u:v 
+            for u,v in zip(self.df.index, self.df.fillna(0).values)
+        }
+
         nx.set_node_attributes(G, dict, 'times')
 
         return G
@@ -249,7 +289,6 @@ class Schedule(object):
         
         https://networkx.org/documentation/stable/auto_examples/graph/plot_dag_layout.html
         """
-
 
         G = self.graph
 
@@ -264,7 +303,6 @@ class Schedule(object):
 
         nx.draw_networkx(G, pos, node_shape='s')
 
-
     def propagate_delay(self, delayed_train: int) -> Tuple[pd.DataFrame, int]:
 
         new_schedule = copy.deepcopy(self)
@@ -274,7 +312,7 @@ class Schedule(object):
             if new_schedule.has_conflicts(delayed_train):
 
                 track_section, other_train = new_schedule.first_conflict(delayed_train)
-                decision = new_schedule.is_a_point_switch(delayed_train, other_train, track_section)
+                decision = new_schedule.is_action_needed(delayed_train)
 
                 if not decision:
                     first_in = new_schedule.first_in(delayed_train, other_train, track_section)
@@ -283,3 +321,10 @@ class Schedule(object):
                 else:
                     break
         return new_schedule, delayed_train
+    
+    def sort(self) -> 'Schedule':
+
+        new_schedule = copy.deepcopy(self)
+        sorted_idx = self.starts.min(axis=1).sort_values().index
+        new_schedule ._df = new_schedule ._df.loc[sorted_idx]
+        return new_schedule

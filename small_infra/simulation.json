@@ -1,0 +1,254 @@
+{
+  "train_schedules": [
+    {
+      "id": "train.0",
+      "rolling_stock": "fast_rolling_stock",
+      "departure_time": 0.0,
+      "initial_head_location": {
+        "track_section": "TA1",
+        "offset": 500
+      },
+      "initial_speed": 0.0,
+      "final_head_location": {
+        "track_section": "TF1",
+        "offset": 4300
+      },
+      "stops": [
+        {
+          "duration": 1,
+          "position": -1
+        }
+      ],
+      "routes": [
+        "rt.buffer_stop.1->DA0",
+        "rt.DA0->DA6_1",
+        "rt.DA6_1->DA6_2",
+        "rt.DA6_2->DA6_3",
+        "rt.DA6_3->DA6_4",
+        "rt.DA6_4->DA6_5",
+        "rt.DA6_5->DA5",
+        "rt.DA5->DC4",
+        "rt.DC4->DD0_1",
+        "rt.DD0_1->DD0_2",
+        "rt.DD0_2->DD0_3",
+        "rt.DD0_3->DD0_4",
+        "rt.DD0_4->DD0_5",
+        "rt.DD0_5->DD0_6",
+        "rt.DD0_6->DD0_7",
+        "rt.DD0_7->DD0_8",
+        "rt.DD0_8->DD0_9",
+        "rt.DD0_9->DD0_10",
+        "rt.DD0_10->DD0_11",
+        "rt.DD0_11->DD0_12",
+        "rt.DD0_12->DD0_13",
+        "rt.DD0_13->DD0_14",
+        "rt.DD0_14->DD0_15",
+        "rt.DD0_15->DD2",
+        "rt.DD2->DD6",
+        "rt.DD6->DE6",
+        "rt.DE6->DE2",
+        "rt.DE2->DE0",
+        "rt.DE0->DF1_1",
+        "rt.DF1_1->buffer_stop.4"
+      ]
+    },
+    {
+      "id": "train.1",
+      "rolling_stock": "fast_rolling_stock",
+      "departure_time": 0.0,
+      "initial_head_location": {
+        "track_section": "TA2",
+        "offset": 500
+      },
+      "initial_speed": 0.0,
+      "final_head_location": {
+        "track_section": "TG5",
+        "offset": 1500
+      },
+      "stops": [
+        {
+          "duration": 1,
+          "position": -1
+        }
+      ],
+      "routes": [
+        "rt.buffer_stop.2->DA1",
+        "rt.DA1->DA7_2",
+        "rt.DA7_2->DA7_5",
+        "rt.DA7_5->DA6",
+        "rt.DA6->DC6",
+        "rt.DC6->DD1_2",
+        "rt.DD1_2->DD1_5",
+        "rt.DD1_5->DD1_8",
+        "rt.DD1_8->DD1_11",
+        "rt.DD1_11->DD1_14",
+        "rt.DD1_14->DD3",
+        "rt.DD3->DH0",
+        "rt.DH0->DG1_1",
+        "rt.DG1_1->DG3",
+        "rt.DG3->buffer_stop.6"
+      ]
+    },
+    {
+      "id": "train.2",
+      "rolling_stock": "fast_rolling_stock",
+      "departure_time": 0.0,
+      "initial_head_location": {
+        "track_section": "TA0",
+        "offset": 500
+      },
+      "initial_speed": 0.0,
+      "final_head_location": {
+        "track_section": "TH1",
+        "offset": 4400
+      },
+      "stops": [
+        {
+          "duration": 1,
+          "position": -1
+        }
+      ],
+      "routes": [
+        "rt.buffer_stop.0->DA2",
+        "rt.DA2->DA6_1",
+        "rt.DA6_1->DA6_2",
+        "rt.DA6_2->DA6_3",
+        "rt.DA6_3->DA6_4",
+        "rt.DA6_4->DA6_5",
+        "rt.DA6_5->DA5",
+        "rt.DA5->DC5",
+        "rt.DC5->DD0_1",
+        "rt.DD0_1->DD0_2",
+        "rt.DD0_2->DD0_3",
+        "rt.DD0_3->DD0_4",
+        "rt.DD0_4->DD0_5",
+        "rt.DD0_5->DD0_6",
+        "rt.DD0_6->DD0_7",
+        "rt.DD0_7->DD0_8",
+        "rt.DD0_8->DD0_9",
+        "rt.DD0_9->DD0_10",
+        "rt.DD0_10->DD0_11",
+        "rt.DD0_11->DD0_12",
+        "rt.DD0_12->DD0_13",
+        "rt.DD0_13->DD0_14",
+        "rt.DD0_14->DD0_15",
+        "rt.DD0_15->DD2",
+        "rt.DD2->DD6",
+        "rt.DD6->DG0",
+        "rt.DG0->DH2",
+        "rt.DH2->DH1_1",
+        "rt.DH1_1->DH1_2",
+        "rt.DH1_2->buffer_stop.7"
+      ]
+    }
+  ],
+  "train_succession_tables": [
+    {
+      "switch": "PA2",
+      "train_order": [
+        "train.0",
+        "train.2"
+      ]
+    },
+    {
+      "switch": "PC0",
+      "train_order": [
+        "train.0",
+        "train.2"
+      ]
+    },
+    {
+      "switch": "PC2",
+      "train_order": [
+        "train.0",
+        "train.2"
+      ]
+    },
+    {
+      "switch": "PH0",
+      "train_order": [
+        "train.1",
+        "train.2"
+      ]
+    }
+  ],
+  "rolling_stocks": [
+    {
+      "version": "3.0",
+      "id": "fast_rolling_stock",
+      "length": 400,
+      "max_speed": 80,
+      "startup_time": 10,
+      "startup_acceleration": 0.05,
+      "comfort_acceleration": 0.25,
+      "gamma": {
+        "vale": 0.5,
+        "type": "CONST"
+      },
+      "inertia_coefficient": 1.05,
+      "features": [
+        "TVM300",
+        "TVM430",
+        "ETCS1",
+        "ETCS2",
+        "KVB"
+      ],
+      "mass": 900000,
+      "rolling_resistance": {
+        "type": "davis",
+        "A": 5400,
+        "B": 200,
+        "C": 12
+      },
+      "effort_curves": {
+        "default_mode": "thermal",
+        "modes": {
+          "thermal": {
+            "curves": [],
+            "default_curve": {
+              "max_efforts": [
+                441666.6666666667,
+                439473.6842105263,
+                435714.28571428574,
+                427777.77777777775,
+                400000,
+                350971.5388299929,
+                347206.93642395496,
+                346938.7385068534,
+                344395.0325320009,
+                334314.2138640166,
+                313589.8108101956,
+                283584.5657113532,
+                250604.14937613969,
+                222698.71360301683,
+                204685.35097358702,
+                195984.55717992093,
+                192916.7642524637
+              ],
+              "speeds": [
+                0,
+                5,
+                10,
+                15,
+                20,
+                22,
+                27,
+                32,
+                37,
+                42,
+                47,
+                52,
+                57,
+                62,
+                67,
+                72,
+                77
+              ]
+            },
+            "is_electric": false
+          }
+        }
+      }
+    }
+  ]
+}
