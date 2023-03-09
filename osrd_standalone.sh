@@ -14,11 +14,5 @@ do
     esac
 done
 
-# Quick fix
-lead='^  \"rolling_stocks\": \[$'
-tail='^  ]$'
-sed -e "/$lead/,/$tail/{ /$lead/{p; r ./fast_rolling_stock.json
-        }; /$tail/p; d }"  $simulation > $simulation"_fix"
-
 # Run stand alone simulation
-java -jar /home/renan/osrd/core/build/libs/osrd-all.jar standalone-simulation --infra_path $infra --sim_path $simulation"_fix" --res_path $results
+java -jar /home/renan/osrd/core/build/libs/osrd-all.jar standalone-simulation --infra_path $infra --sim_path $simulation --res_path $results

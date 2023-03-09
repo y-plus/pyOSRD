@@ -1,0 +1,1423 @@
+[
+  {
+    "base_simulations": [
+      {
+        "head_positions": [
+          {
+            "offset": 400.0,
+            "path_offset": 0.0,
+            "time": 0.0,
+            "track_section": "STA_Q1"
+          },
+          {
+            "offset": 408.29372207539166,
+            "path_offset": 8.293722075391658,
+            "time": 6.0,
+            "track_section": "STA_Q1"
+          },
+          {
+            "offset": 445.0655840853055,
+            "path_offset": 45.065584085305474,
+            "time": 14.0,
+            "track_section": "STA_Q1"
+          },
+          {
+            "offset": 61.014205997204684,
+            "path_offset": 111.01420599720468,
+            "time": 22.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 155.8111505355178,
+            "path_offset": 205.8111505355178,
+            "time": 30.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 245.53552366585438,
+            "path_offset": 295.5355236658544,
+            "time": 36.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 389.1804084229013,
+            "path_offset": 439.1804084229013,
+            "time": 44.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 558.4010599865563,
+            "path_offset": 608.4010599865563,
+            "time": 52.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 750.5561023962644,
+            "path_offset": 800.5561023962644,
+            "time": 60.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 909.3464399779697,
+            "path_offset": 959.3464399779697,
+            "time": 66.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 1140.4351510240772,
+            "path_offset": 1190.4351510240772,
+            "time": 74.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 1393.488407958817,
+            "path_offset": 1443.488407958817,
+            "time": 82.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 1668.2792793467538,
+            "path_offset": 1718.2792793467538,
+            "time": 90.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 1888.4677897851884,
+            "path_offset": 1938.4677897851884,
+            "time": 96.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 2200.5132668861165,
+            "path_offset": 2250.5132668861165,
+            "time": 104.0,
+            "track_section": "T"
+          },
+          {
+            "offset": 2736.0,
+            "path_offset": 2786.0,
+            "time": 116.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 2979.0,
+            "path_offset": 3029.0,
+            "time": 122.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 3204.0,
+            "path_offset": 3254.0,
+            "time": 128.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 3476.0,
+            "path_offset": 3526.0,
+            "time": 136.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 3716.0,
+            "path_offset": 3766.0,
+            "time": 144.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 3824.0,
+            "path_offset": 3874.0,
+            "time": 148.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 3971.0,
+            "path_offset": 4021.0,
+            "time": 154.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 4139.0,
+            "path_offset": 4189.0,
+            "time": 162.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 4211.0,
+            "path_offset": 4261.0,
+            "time": 166.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 4304.0,
+            "path_offset": 4354.0,
+            "time": 172.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 4379.0,
+            "path_offset": 4429.0,
+            "time": 178.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 4436.0,
+            "path_offset": 4486.0,
+            "time": 184.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 4475.0,
+            "path_offset": 4525.0,
+            "time": 190.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 4496.0,
+            "path_offset": 4546.0,
+            "time": 196.73086457070139,
+            "track_section": "T"
+          },
+          {
+            "offset": 4500.0,
+            "path_offset": 4550.0,
+            "time": 300.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 4514.737564131869,
+            "path_offset": 4564.737564131869,
+            "time": 308.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 4558.828024738028,
+            "path_offset": 4608.828024738028,
+            "time": 316.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 4591.8069436487185,
+            "path_offset": 4641.8069436487185,
+            "time": 320.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 4654.834363742604,
+            "path_offset": 4704.834363742604,
+            "time": 326.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 4763.876715061479,
+            "path_offset": 4813.876715061479,
+            "time": 334.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 4828.917725684901,
+            "path_offset": 4878.917725684901,
+            "time": 338.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 4939.180408422901,
+            "path_offset": 4989.180408422901,
+            "time": 344.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 5063.887210602946,
+            "path_offset": 5113.887210602946,
+            "time": 350.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 5201.6683698059915,
+            "path_offset": 5251.6683698059915,
+            "time": 356.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 5352.0961623123285,
+            "path_offset": 5402.0961623123285,
+            "time": 362.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 5515.049360774037,
+            "path_offset": 5565.049360774037,
+            "time": 368.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 5690.435151024076,
+            "path_offset": 5740.435151024076,
+            "time": 374.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 5878.176865947894,
+            "path_offset": 5928.176865947894,
+            "time": 380.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 6078.183637413782,
+            "path_offset": 6128.183637413782,
+            "time": 386.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 6290.341198246589,
+            "path_offset": 6340.341198246589,
+            "time": 392.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 6670.54946979309,
+            "path_offset": 6720.54946979309,
+            "time": 402.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 6914.293479099583,
+            "path_offset": 6964.293479099583,
+            "time": 408.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 7169.4445950702975,
+            "path_offset": 7219.4445950702975,
+            "time": 414.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 7619.0972831968475,
+            "path_offset": 7669.0972831968475,
+            "time": 424.7308645707014,
+            "track_section": "T"
+          },
+          {
+            "offset": 8324.0,
+            "path_offset": 8374.0,
+            "time": 439.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 8504.0,
+            "path_offset": 8554.0,
+            "time": 443.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 8759.0,
+            "path_offset": 8809.0,
+            "time": 449.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 8996.0,
+            "path_offset": 9046.0,
+            "time": 455.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 9215.0,
+            "path_offset": 9265.0,
+            "time": 461.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 9416.0,
+            "path_offset": 9466.0,
+            "time": 467.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 9599.0,
+            "path_offset": 9649.0,
+            "time": 473.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 9764.0,
+            "path_offset": 9814.0,
+            "time": 479.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 9956.0,
+            "path_offset": 10006.0,
+            "time": 487.5347353437818,
+            "track_section": "T"
+          },
+          {
+            "offset": 116.0,
+            "path_offset": 10166.0,
+            "time": 495.5347353437818,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 244.0,
+            "path_offset": 10294.0,
+            "time": 503.5347353437818,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 319.0,
+            "path_offset": 10369.0,
+            "time": 509.5347353437818,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 391.0,
+            "path_offset": 10441.0,
+            "time": 517.5347353437818,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 431.0,
+            "path_offset": 10481.0,
+            "time": 525.5347353437818,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 440.0,
+            "path_offset": 10490.0,
+            "time": 532.5347353437818,
+            "track_section": "STB_Q1"
+          }
+        ],
+        "mechanical_energy_consumed": 2.182990633696049e9,
+        "route_occupancies": {
+          "rt.D3->DB_in": {
+            "time_head_free": 488.174,
+            "time_head_occupy": 432.734,
+            "time_tail_free": 514.799,
+            "time_tail_occupy": 441.2
+          },
+          "rt.buffer_stop.0->DA1": {
+            "time_head_free": 11.418,
+            "time_head_occupy": 0.0,
+            "time_tail_free": 43.529,
+            "time_tail_occupy": 0.0
+          },
+          "rt.DA_out->D0": {
+            "time_head_free": 98.921,
+            "time_head_occupy": 20.876,
+            "time_tail_free": 108.855,
+            "time_tail_occupy": 47.008
+          },
+          "rt.DA2->DA_out": {
+            "time_head_free": 20.876,
+            "time_head_occupy": 11.418,
+            "time_tail_free": 47.008,
+            "time_tail_occupy": 43.529
+          },
+          "rt.D0->D1": {
+            "time_head_free": 156.008,
+            "time_head_occupy": 98.921,
+            "time_tail_free": 180.73,
+            "time_tail_occupy": 108.855
+          },
+          "rt.D2->D3": {
+            "time_head_free": 432.734,
+            "time_head_occupy": 384.427,
+            "time_tail_free": 441.2,
+            "time_tail_occupy": 395.704
+          },
+          "rt.DB_in->DB1": {
+            "time_head_free": 491.036,
+            "time_head_occupy": 488.174,
+            "time_tail_free": 525.2080000000001,
+            "time_tail_occupy": 514.799
+          },
+          "rt.D1->D2": {
+            "time_head_free": 384.427,
+            "time_head_occupy": 156.008,
+            "time_tail_free": 395.704,
+            "time_tail_occupy": 180.73
+          },
+          "rt.DB_in->DB2": {
+            "time_head_free": 491.036,
+            "time_head_occupy": 488.174,
+            "time_tail_free": 525.2080000000001,
+            "time_tail_occupy": 514.799
+          },
+          "rt.DB1->buffer_stop.2": {
+            "time_head_free": 532.533,
+            "time_head_occupy": 491.036,
+            "time_tail_free": 532.533,
+            "time_tail_occupy": 525.2080000000001
+          },
+          "rt.DA1->DA_out": {
+            "time_head_free": 20.876,
+            "time_head_occupy": 11.418,
+            "time_tail_free": 47.008,
+            "time_tail_occupy": 43.529
+          }
+        },
+        "speeds": [
+          { "position": 0.0, "speed": 0.0, "time": 0.0 },
+          {
+            "position": 0.922252864428832,
+            "speed": 0.922252864428832,
+            "time": 2.0
+          },
+          {
+            "position": 3.6877089403523287,
+            "speed": 1.8432032114946646,
+            "time": 4.0
+          },
+          {
+            "position": 8.293722075391658,
+            "speed": 2.7628099235446646,
+            "time": 6.0
+          },
+          {
+            "position": 14.737564131867863,
+            "speed": 3.6810321329315396,
+            "time": 8.0
+          },
+          {
+            "position": 33.12696112343589,
+            "speed": 5.5128202736486145,
+            "time": 12.0
+          },
+          {
+            "position": 58.8280247380274,
+            "speed": 7.336637964500956,
+            "time": 16.0
+          },
+          {
+            "position": 91.80694364871871,
+            "speed": 9.151702521168463,
+            "time": 20.0
+          },
+          {
+            "position": 154.83436374260492,
+            "speed": 11.85256567893157,
+            "time": 26.0
+          },
+          {
+            "position": 233.96297684784363,
+            "speed": 14.51797516481141,
+            "time": 32.0
+          },
+          {
+            "position": 328.91772568490126,
+            "speed": 17.119156463497404,
+            "time": 38.0
+          },
+          {
+            "position": 439.1804084229013,
+            "speed": 19.6185313566869,
+            "time": 44.0
+          },
+          {
+            "position": 563.8872106029471,
+            "speed": 21.902415850299366,
+            "time": 50.0
+          },
+          {
+            "position": 959.3464399779697,
+            "speed": 27.50578139824669,
+            "time": 66.0
+          },
+          {
+            "position": 1443.488407958817,
+            "speed": 32.99601920421478,
+            "time": 82.0
+          },
+          {
+            "position": 2014.5180331911379,
+            "speed": 38.35451543355326,
+            "time": 98.0
+          },
+          {
+            "position": 2664.466476605495,
+            "speed": 43.422730492157044,
+            "time": 113.88540358638731
+          },
+          { "position": 3106.0, "speed": 38.0, "time": 124.7308645707014 },
+          { "position": 3461.0, "speed": 33.0, "time": 134.73086457070139 },
+          { "position": 3766.0, "speed": 28.0, "time": 144.73086457070139 },
+          { "position": 4066.0, "speed": 22.0, "time": 156.73086457070139 },
+          { "position": 4261.0, "speed": 17.0, "time": 166.73086457070139 },
+          { "position": 4354.0, "speed": 14.0, "time": 172.73086457070139 },
+          { "position": 4429.0, "speed": 11.0, "time": 178.73086457070139 },
+          { "position": 4469.0, "speed": 9.0, "time": 182.73086457070139 },
+          { "position": 4514.0, "speed": 6.0, "time": 188.73086457070139 },
+          { "position": 4525.0, "speed": 5.0, "time": 190.73086457070139 },
+          { "position": 4541.0, "speed": 3.0, "time": 194.73086457070139 },
+          { "position": 4546.0, "speed": 2.0, "time": 196.73086457070139 },
+          { "position": 4549.0, "speed": 1.0, "time": 198.73086457070139 },
+          { "position": 4550.0, "speed": 0.0, "time": 200.73086457070139 },
+          {
+            "position": 4550.922252864429,
+            "speed": 0.922252864428832,
+            "time": 302.7308645707014
+          },
+          {
+            "position": 4553.687708940352,
+            "speed": 1.8432032114946646,
+            "time": 304.7308645707014
+          },
+          {
+            "position": 4558.293722075392,
+            "speed": 2.7628099235446646,
+            "time": 306.7308645707014
+          },
+          {
+            "position": 4573.016368557294,
+            "speed": 4.5977722924939375,
+            "time": 310.7308645707014
+          },
+          {
+            "position": 4595.065584085306,
+            "speed": 6.425802688220971,
+            "time": 314.7308645707014
+          },
+          {
+            "position": 4624.4099519150395,
+            "speed": 8.245289212510947,
+            "time": 318.7308645707014
+          },
+          {
+            "position": 4661.014205997204,
+            "speed": 10.055559827317502,
+            "time": 322.7308645707014
+          },
+          {
+            "position": 4755.811150535517,
+            "speed": 13.633851147514424,
+            "time": 330.7308645707014
+          },
+          {
+            "position": 4878.917725684901,
+            "speed": 17.119156463497404,
+            "time": 338.7308645707014
+          },
+          {
+            "position": 5029.215594888602,
+            "speed": 20.416655109014798,
+            "time": 346.7308645707014
+          },
+          {
+            "position": 5350.556102396263,
+            "speed": 25.421627328247766,
+            "time": 360.7308645707014
+          },
+          {
+            "position": 5622.133630424382,
+            "speed": 28.887130252522393,
+            "time": 370.7308645707014
+          },
+          {
+            "position": 5928.176865947894,
+            "speed": 32.31552280670609,
+            "time": 380.7308645707014
+          },
+          {
+            "position": 6564.518033191134,
+            "speed": 38.35451543355326,
+            "time": 398.7308645707014
+          },
+          {
+            "position": 7306.972002537259,
+            "speed": 44.06926083791856,
+            "time": 416.7308645707014
+          },
+          {
+            "position": 8094.125985413449,
+            "speed": 48.947666079053775,
+            "time": 433.6394031856742
+          },
+          { "position": 8726.0, "speed": 42.0, "time": 447.5347353437818 },
+          { "position": 9194.0, "speed": 36.0, "time": 459.5347353437818 },
+          { "position": 9590.0, "speed": 30.0, "time": 471.5347353437818 },
+          { "position": 9914.0, "speed": 24.0, "time": 483.5347353437818 },
+          { "position": 10049.0, "speed": 21.0, "time": 489.5347353437818 },
+          { "position": 10166.0, "speed": 18.0, "time": 495.5347353437818 },
+          { "position": 10265.0, "speed": 15.0, "time": 501.5347353437818 },
+          { "position": 10346.0, "speed": 12.0, "time": 507.5347353437818 },
+          { "position": 10409.0, "speed": 9.0, "time": 513.5347353437818 },
+          { "position": 10454.0, "speed": 6.0, "time": 519.5347353437818 },
+          { "position": 10465.0, "speed": 5.0, "time": 521.5347353437818 },
+          { "position": 10481.0, "speed": 3.0, "time": 525.5347353437818 },
+          { "position": 10486.0, "speed": 2.0, "time": 527.5347353437818 },
+          { "position": 10489.0, "speed": 1.0, "time": 529.5347353437818 },
+          { "position": 10490.0, "speed": 0.0, "time": 532.5347353437818 }
+        ],
+        "stops": [
+          { "duration": 100.0, "position": 4550.0, "time": 300.7308645707014 },
+          { "duration": 1.0, "position": 10490.0, "time": 532.5347353437818 }
+        ]
+      }
+    ],
+    "eco_simulations": [
+      {
+        "head_positions": [
+          {
+            "offset": 400.0,
+            "path_offset": 0.0,
+            "time": 0.0,
+            "track_section": "STA_Q1"
+          },
+          {
+            "offset": 408.29372207539166,
+            "path_offset": 8.293722075391658,
+            "time": 6.319152020801855,
+            "track_section": "STA_Q1"
+          },
+          {
+            "offset": 445.0655840853055,
+            "path_offset": 45.065584085305474,
+            "time": 14.744688048537657,
+            "track_section": "STA_Q1"
+          },
+          {
+            "offset": 61.014205997204684,
+            "path_offset": 111.01420599720468,
+            "time": 23.17022407627346,
+            "track_section": "T"
+          },
+          {
+            "offset": 155.8111505355178,
+            "path_offset": 205.8111505355178,
+            "time": 31.59576010400927,
+            "track_section": "T"
+          },
+          {
+            "offset": 245.53552366585438,
+            "path_offset": 295.5355236658544,
+            "time": 37.914912124811124,
+            "track_section": "T"
+          },
+          {
+            "offset": 389.1804084229013,
+            "path_offset": 439.1804084229013,
+            "time": 46.340448152546934,
+            "track_section": "T"
+          },
+          {
+            "offset": 558.4010599865563,
+            "path_offset": 608.4010599865563,
+            "time": 54.76598418028274,
+            "track_section": "T"
+          },
+          {
+            "offset": 750.5561023962644,
+            "path_offset": 800.5561023962644,
+            "time": 63.19152020801854,
+            "track_section": "T"
+          },
+          {
+            "offset": 909.3464399779697,
+            "path_offset": 959.3464399779697,
+            "time": 69.5106722288204,
+            "track_section": "T"
+          },
+          {
+            "offset": 1140.4351510240772,
+            "path_offset": 1190.4351510240772,
+            "time": 77.9362082565562,
+            "track_section": "T"
+          },
+          {
+            "offset": 1393.488407958817,
+            "path_offset": 1443.488407958817,
+            "time": 86.361744284292,
+            "track_section": "T"
+          },
+          {
+            "offset": 1668.2792793467538,
+            "path_offset": 1718.2792793467538,
+            "time": 94.78728031202782,
+            "track_section": "T"
+          },
+          {
+            "offset": 1888.4677897851884,
+            "path_offset": 1938.4677897851884,
+            "time": 101.10643233282968,
+            "track_section": "T"
+          },
+          {
+            "offset": 2200.5132668861165,
+            "path_offset": 2250.5132668861165,
+            "time": 109.5319683605655,
+            "track_section": "T"
+          },
+          {
+            "offset": 2736.0,
+            "path_offset": 2786.0,
+            "time": 122.94001312364925,
+            "track_section": "T"
+          },
+          {
+            "offset": 2979.0,
+            "path_offset": 3029.0,
+            "time": 129.2591651444511,
+            "track_section": "T"
+          },
+          {
+            "offset": 3204.0,
+            "path_offset": 3254.0,
+            "time": 135.57831716525294,
+            "track_section": "T"
+          },
+          {
+            "offset": 3476.0,
+            "path_offset": 3526.0,
+            "time": 144.00385319298874,
+            "track_section": "T"
+          },
+          {
+            "offset": 3716.0,
+            "path_offset": 3766.0,
+            "time": 152.42938922072454,
+            "track_section": "T"
+          },
+          {
+            "offset": 3924.0,
+            "path_offset": 3974.0,
+            "time": 160.85492524846035,
+            "track_section": "T"
+          },
+          {
+            "offset": 4100.0,
+            "path_offset": 4150.0,
+            "time": 169.28046127619615,
+            "track_section": "T"
+          },
+          {
+            "offset": 4176.0,
+            "path_offset": 4226.0,
+            "time": 173.49322929006405,
+            "track_section": "T"
+          },
+          {
+            "offset": 4275.0,
+            "path_offset": 4325.0,
+            "time": 179.8123813108659,
+            "track_section": "T"
+          },
+          {
+            "offset": 4356.0,
+            "path_offset": 4406.0,
+            "time": 186.13153333166775,
+            "track_section": "T"
+          },
+          {
+            "offset": 4419.0,
+            "path_offset": 4469.0,
+            "time": 192.4506853524696,
+            "track_section": "T"
+          },
+          {
+            "offset": 4464.0,
+            "path_offset": 4514.0,
+            "time": 198.76983737327146,
+            "track_section": "T"
+          },
+          {
+            "offset": 4496.0,
+            "path_offset": 4546.0,
+            "time": 207.19537340100726,
+            "track_section": "T"
+          },
+          {
+            "offset": 4500.0,
+            "path_offset": 4550.0,
+            "time": 311.40814141487516,
+            "track_section": "T"
+          },
+          {
+            "offset": 4514.737564131869,
+            "path_offset": 4564.737564131869,
+            "time": 319.84570844080065,
+            "track_section": "T"
+          },
+          {
+            "offset": 4558.828024738028,
+            "path_offset": 4608.828024738028,
+            "time": 328.2832754667261,
+            "track_section": "T"
+          },
+          {
+            "offset": 4591.8069436487185,
+            "path_offset": 4641.8069436487185,
+            "time": 332.50205897968874,
+            "track_section": "T"
+          },
+          {
+            "offset": 4654.834363742604,
+            "path_offset": 4704.834363742604,
+            "time": 338.8302342491328,
+            "track_section": "T"
+          },
+          {
+            "offset": 4763.876715061479,
+            "path_offset": 4813.876715061479,
+            "time": 347.2678012750582,
+            "track_section": "T"
+          },
+          {
+            "offset": 4828.917725684901,
+            "path_offset": 4878.917725684901,
+            "time": 351.48658478802093,
+            "track_section": "T"
+          },
+          {
+            "offset": 4939.180408422901,
+            "path_offset": 4989.180408422901,
+            "time": 357.81476005746504,
+            "track_section": "T"
+          },
+          {
+            "offset": 5063.887210602946,
+            "path_offset": 5113.887210602946,
+            "time": 364.1429353269091,
+            "track_section": "T"
+          },
+          {
+            "offset": 5201.6683698059915,
+            "path_offset": 5251.6683698059915,
+            "time": 370.47111059635324,
+            "track_section": "T"
+          },
+          {
+            "offset": 5352.0961623123285,
+            "path_offset": 5402.0961623123285,
+            "time": 376.7992858657973,
+            "track_section": "T"
+          },
+          {
+            "offset": 5515.049360774037,
+            "path_offset": 5565.049360774037,
+            "time": 383.1274611352414,
+            "track_section": "T"
+          },
+          {
+            "offset": 5690.435151024076,
+            "path_offset": 5740.435151024076,
+            "time": 389.4556364046855,
+            "track_section": "T"
+          },
+          {
+            "offset": 5878.176865947894,
+            "path_offset": 5928.176865947894,
+            "time": 395.78381167412954,
+            "track_section": "T"
+          },
+          {
+            "offset": 6078.183637413782,
+            "path_offset": 6128.183637413782,
+            "time": 402.1119869435735,
+            "track_section": "T"
+          },
+          {
+            "offset": 6290.341198246589,
+            "path_offset": 6340.341198246589,
+            "time": 408.44016221301763,
+            "track_section": "T"
+          },
+          {
+            "offset": 6670.54946979309,
+            "path_offset": 6720.54946979309,
+            "time": 418.98712099542433,
+            "track_section": "T"
+          },
+          {
+            "offset": 6914.293479099583,
+            "path_offset": 6964.293479099583,
+            "time": 425.3152962648685,
+            "track_section": "T"
+          },
+          {
+            "offset": 7169.4445950702975,
+            "path_offset": 7219.4445950702975,
+            "time": 431.64347153431254,
+            "track_section": "T"
+          },
+          {
+            "offset": 7619.0972831968475,
+            "path_offset": 7669.0972831968475,
+            "time": 442.1904303167193,
+            "track_section": "T"
+          },
+          {
+            "offset": 8324.0,
+            "path_offset": 8374.0,
+            "time": 457.80401180309485,
+            "track_section": "T"
+          },
+          {
+            "offset": 8504.0,
+            "path_offset": 8554.0,
+            "time": 462.0227953160576,
+            "track_section": "T"
+          },
+          {
+            "offset": 8759.0,
+            "path_offset": 8809.0,
+            "time": 468.3509705855018,
+            "track_section": "T"
+          },
+          {
+            "offset": 8996.0,
+            "path_offset": 9046.0,
+            "time": 474.6791458549459,
+            "track_section": "T"
+          },
+          {
+            "offset": 9215.0,
+            "path_offset": 9265.0,
+            "time": 481.00732112439005,
+            "track_section": "T"
+          },
+          {
+            "offset": 9416.0,
+            "path_offset": 9466.0,
+            "time": 487.3354963938342,
+            "track_section": "T"
+          },
+          {
+            "offset": 9599.0,
+            "path_offset": 9649.0,
+            "time": 493.66367166327836,
+            "track_section": "T"
+          },
+          {
+            "offset": 9764.0,
+            "path_offset": 9814.0,
+            "time": 499.9918469327225,
+            "track_section": "T"
+          },
+          {
+            "offset": 9956.0,
+            "path_offset": 10006.0,
+            "time": 508.42941395864807,
+            "track_section": "T"
+          },
+          {
+            "offset": 116.0,
+            "path_offset": 10166.0,
+            "time": 516.8669809845736,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 244.0,
+            "path_offset": 10294.0,
+            "time": 525.3045480104992,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 319.0,
+            "path_offset": 10369.0,
+            "time": 531.6327232799433,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 391.0,
+            "path_offset": 10441.0,
+            "time": 540.0702903058689,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 431.0,
+            "path_offset": 10481.0,
+            "time": 548.5078573317944,
+            "track_section": "STB_Q1"
+          },
+          {
+            "offset": 440.0,
+            "path_offset": 10490.0,
+            "time": 555.8360326012386,
+            "track_section": "STB_Q1"
+          }
+        ],
+        "mechanical_energy_consumed": 1.9701969333147864e9,
+        "route_occupancies": {
+          "rt.D3->DB_in": {
+            "time_head_free": 509.029,
+            "time_head_occupy": 450.568,
+            "time_tail_free": 537.106,
+            "time_tail_occupy": 459.495
+          },
+          "rt.buffer_stop.0->DA1": {
+            "time_head_free": 12.024,
+            "time_head_occupy": 0.0,
+            "time_tail_free": 45.837,
+            "time_tail_occupy": 0.0
+          },
+          "rt.DA_out->D0": {
+            "time_head_free": 104.164,
+            "time_head_occupy": 21.982,
+            "time_tail_free": 114.625,
+            "time_tail_occupy": 49.5
+          },
+          "rt.DA2->DA_out": {
+            "time_head_free": 21.982,
+            "time_head_occupy": 12.024,
+            "time_tail_free": 49.5,
+            "time_tail_occupy": 45.837
+          },
+          "rt.D0->D1": {
+            "time_head_free": 164.277,
+            "time_head_occupy": 104.164,
+            "time_tail_free": 190.309,
+            "time_tail_occupy": 114.625
+          },
+          "rt.D2->D3": {
+            "time_head_free": 450.568,
+            "time_head_occupy": 399.628,
+            "time_tail_free": 459.495,
+            "time_tail_occupy": 411.52
+          },
+          "rt.DB_in->DB1": {
+            "time_head_free": 512.047,
+            "time_head_occupy": 509.029,
+            "time_tail_free": 548.082,
+            "time_tail_occupy": 537.106
+          },
+          "rt.D1->D2": {
+            "time_head_free": 399.628,
+            "time_head_occupy": 164.277,
+            "time_tail_free": 411.52,
+            "time_tail_occupy": 190.309
+          },
+          "rt.DB_in->DB2": {
+            "time_head_free": 512.047,
+            "time_head_occupy": 509.029,
+            "time_tail_free": 548.082,
+            "time_tail_occupy": 537.106
+          },
+          "rt.DB1->buffer_stop.2": {
+            "time_head_free": 555.751,
+            "time_head_occupy": 512.047,
+            "time_tail_free": 555.751,
+            "time_tail_occupy": 548.082
+          },
+          "rt.DA1->DA_out": {
+            "time_head_free": 21.982,
+            "time_head_occupy": 12.024,
+            "time_tail_free": 49.5,
+            "time_tail_occupy": 45.837
+          }
+        },
+        "speeds": [
+          { "position": 0.0, "speed": 0.0, "time": 0.0 },
+          {
+            "position": 0.922252864428832,
+            "speed": 0.8756740094805995,
+            "time": 2.1063840069339514
+          },
+          {
+            "position": 3.6877089403523287,
+            "speed": 1.7501112859071009,
+            "time": 4.212768013867903
+          },
+          {
+            "position": 8.293722075391658,
+            "speed": 2.6232727882948614,
+            "time": 6.319152020801855
+          },
+          {
+            "position": 33.12696112343589,
+            "speed": 5.2343924521845056,
+            "time": 12.638304041603707
+          },
+          {
+            "position": 58.8280247380274,
+            "speed": 6.966097293133319,
+            "time": 16.851072055471608
+          },
+          {
+            "position": 91.80694364871871,
+            "speed": 8.68949108143834,
+            "time": 21.06384006933951
+          },
+          {
+            "position": 154.83436374260492,
+            "speed": 11.253945757197563,
+            "time": 27.382992090141364
+          },
+          {
+            "position": 233.96297684784363,
+            "speed": 13.784737366994872,
+            "time": 33.702144110943216
+          },
+          {
+            "position": 328.91772568490126,
+            "speed": 16.25454466720531,
+            "time": 40.021296131745075
+          },
+          {
+            "position": 439.1804084229013,
+            "speed": 18.627687346756492,
+            "time": 46.340448152546934
+          },
+          {
+            "position": 563.8872106029471,
+            "speed": 20.796223080121543,
+            "time": 52.659600173348785
+          },
+          {
+            "position": 959.3464399779697,
+            "speed": 26.116587770986786,
+            "time": 69.5106722288204
+          },
+          {
+            "position": 1443.488407958817,
+            "speed": 31.329538294628176,
+            "time": 86.361744284292
+          },
+          {
+            "position": 2014.5180331911379,
+            "speed": 36.4174009176817,
+            "time": 103.21281633976363
+          },
+          {
+            "position": 2664.466476605495,
+            "speed": 41.229643169730565,
+            "time": 119.94319636879239
+          },
+          {
+            "position": 3106.0,
+            "speed": 36.08079046831801,
+            "time": 131.36554915138504
+          },
+          {
+            "position": 3461.0,
+            "speed": 31.333318038276165,
+            "time": 141.8974691860548
+          },
+          {
+            "position": 3766.0,
+            "speed": 26.585845608234322,
+            "time": 152.42938922072454
+          },
+          {
+            "position": 4066.0,
+            "speed": 20.88887869218411,
+            "time": 165.06769326232825
+          },
+          {
+            "position": 4189.0,
+            "speed": 18.040395234159003,
+            "time": 171.3868452831301
+          },
+          {
+            "position": 4294.0,
+            "speed": 15.191911776133898,
+            "time": 177.70599730393195
+          },
+          {
+            "position": 4354.0,
+            "speed": 13.292922804117161,
+            "time": 181.91876531779985
+          },
+          {
+            "position": 4429.0,
+            "speed": 10.444439346092055,
+            "time": 188.2379173386017
+          },
+          {
+            "position": 4486.0,
+            "speed": 7.595955888066949,
+            "time": 194.55706935940356
+          },
+          {
+            "position": 4525.0,
+            "speed": 4.747472430041843,
+            "time": 200.8762213802054
+          },
+          {
+            "position": 4534.0,
+            "speed": 3.7979779440334744,
+            "time": 202.98260538713936
+          },
+          {
+            "position": 4546.0,
+            "speed": 1.8989889720167372,
+            "time": 207.19537340100726
+          },
+          {
+            "position": 4549.0,
+            "speed": 0.9494944860083686,
+            "time": 209.3017574079412
+          },
+          { "position": 4550.0, "speed": 0.0, "time": 211.40814141487516 },
+          {
+            "position": 4550.922252864429,
+            "speed": 0.8744253992603302,
+            "time": 313.51753317135604
+          },
+          {
+            "position": 4553.687708940352,
+            "speed": 1.7476158289053698,
+            "time": 315.62692492783765
+          },
+          {
+            "position": 4558.293722075392,
+            "speed": 2.619532303618421,
+            "time": 317.73631668431915
+          },
+          {
+            "position": 4573.016368557294,
+            "speed": 4.359334654994004,
+            "time": 321.9551001972821
+          },
+          {
+            "position": 4595.065584085306,
+            "speed": 6.092564521006507,
+            "time": 326.1738837102447
+          },
+          {
+            "position": 4661.014205997204,
+            "speed": 9.534084691874401,
+            "time": 334.61145073617007
+          },
+          {
+            "position": 4755.811150535517,
+            "speed": 12.926808029492639,
+            "time": 343.0490177620955
+          },
+          {
+            "position": 4878.917725684901,
+            "speed": 16.231367559768564,
+            "time": 351.48658478802093
+          },
+          {
+            "position": 5029.215594888602,
+            "speed": 19.357859957764745,
+            "time": 359.92415181394637
+          },
+          {
+            "position": 5350.556102396263,
+            "speed": 24.103277402252793,
+            "time": 374.6898941093159
+          },
+          {
+            "position": 5622.133630424382,
+            "speed": 27.389061480650227,
+            "time": 385.2368528917227
+          },
+          {
+            "position": 5928.176865947894,
+            "speed": 30.63965970987867,
+            "time": 395.78381167412954
+          },
+          {
+            "position": 6564.518033191134,
+            "speed": 36.36547390090472,
+            "time": 414.7683374824616
+          },
+          {
+            "position": 7306.972002537259,
+            "speed": 41.783856130574534,
+            "time": 433.7528632907939
+          },
+          {
+            "position": 8094.125985413449,
+            "speed": 46.40927028244624,
+            "time": 451.58622927507906
+          },
+          {
+            "position": 8726.0,
+            "speed": 39.821905884433185,
+            "time": 466.2415788290204
+          },
+          {
+            "position": 9194.0,
+            "speed": 34.13306218665702,
+            "time": 478.89792936790866
+          },
+          {
+            "position": 9590.0,
+            "speed": 28.44421848888085,
+            "time": 491.554279906797
+          },
+          {
+            "position": 9914.0,
+            "speed": 22.75537479110468,
+            "time": 504.2106304456853
+          },
+          {
+            "position": 10049.0,
+            "speed": 19.910952942216593,
+            "time": 510.53880571512946
+          },
+          {
+            "position": 10166.0,
+            "speed": 17.06653109332851,
+            "time": 516.8669809845736
+          },
+          {
+            "position": 10265.0,
+            "speed": 14.222109244440425,
+            "time": 523.1951562540178
+          },
+          {
+            "position": 10346.0,
+            "speed": 11.37768739555234,
+            "time": 529.5233315234619
+          },
+          {
+            "position": 10409.0,
+            "speed": 8.533265546664255,
+            "time": 535.8515067929061
+          },
+          {
+            "position": 10454.0,
+            "speed": 5.68884369777617,
+            "time": 542.1796820623503
+          },
+          {
+            "position": 10465.0,
+            "speed": 4.740703081480142,
+            "time": 544.2890738188316
+          },
+          {
+            "position": 10481.0,
+            "speed": 2.844421848888085,
+            "time": 548.5078573317944
+          },
+          {
+            "position": 10486.0,
+            "speed": 1.8962812325920566,
+            "time": 550.6172490882758
+          },
+          {
+            "position": 10489.0,
+            "speed": 0.9481406162960283,
+            "time": 552.7266408447572
+          },
+          { "position": 10490.0, "speed": 0.0, "time": 555.8360326012386 }
+        ],
+        "stops": [
+          { "duration": 100.0, "position": 4550.0, "time": 311.40814141487516 },
+          { "duration": 1.0, "position": 10490.0, "time": 555.8360326012386 }
+        ]
+      }
+    ],
+    "modes_and_profiles": [
+      [
+        {
+          "seen_mode": "",
+          "start": 0.0,
+          "stop": 10490.0,
+          "used_mode": "thermal"
+        }
+      ]
+    ],
+    "speed_limits": [
+      [
+        { "position": 0.0, "speed": 80.0 },
+        { "position": 10490.0, "speed": 80.0 }
+      ]
+    ],
+    "warnings": []
+  }
+]

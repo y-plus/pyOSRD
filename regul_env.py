@@ -33,6 +33,10 @@ class RegulEnv(gym.Env):
         }
 
     @property
+    def delayed_train(self) -> int:
+        return self._delayed_train
+
+    @property
     def schedule(self) -> Schedule:
         return self._schedule
 
@@ -49,13 +53,13 @@ class RegulEnv(gym.Env):
         self._schedule = self._initial_schedule
         self._delayed_train = 0
 
-        while not self._schedule.has_conflicts(self._delayed_train): # to ensure a schedule with conflicts
-            self._delayed_train = self.np_random.integers(0, self.schedule.num_trains-1) if train is None else train
-            delay = self.np_random.random() * self._max_delay if delay is None else delay
-            track = self.np_random.choice(self.schedule.trajectory(self._delayed_train)) if track_section is None else track_section
+        # while not self._schedule.has_conflicts(self._delayed_train): # to ensure a schedule with conflicts
+        self._delayed_train = self.np_random.integers(0, self.schedule.num_trains-1) if train is None else train
+        delay = self.np_random.random() * self._max_delay if delay is None else delay
+        track = self.np_random.choice(self.schedule.trajectory(self._delayed_train)) if track_section is None else track_section
 
-            self._schedule = self._schedule.add_delay(self._delayed_train, track, delay)
-            self._schedule, self._delayed_train = self._schedule.propagate_delay(self._delayed_train)
+        self._schedule = self._schedule.add_delay(self._delayed_train, track, delay)
+        self._schedule, self._delayed_train = self._schedule.propagate_delay(self._delayed_train)
 
         return self._get_obs(), {}
 
