@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from schedules import Schedule
+from rlway.schedules import Schedule
 
 def three_trains() -> Schedule:
     schedule = Schedule(6,3)
