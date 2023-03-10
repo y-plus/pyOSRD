@@ -4,7 +4,7 @@ import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
 
-from schedules import Schedule
+from .schedules import Schedule
 
 class RegulEnv(gym.Env):
     

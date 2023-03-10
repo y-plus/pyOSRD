@@ -1,6 +1,10 @@
 # virtual env
 venv
 
+#build
+build/
+dist/
+
 #compiled sources
 *.py[ocd]
 __pycache__
