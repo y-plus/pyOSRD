@@ -330,7 +330,7 @@ class Schedule(object):
         return new_schedule
 
     def earliest_conflict(self) -> Tuple[Union[int, str], int]:
-        """ Track section where earliest conflict occurs and first train in."""
+        """ Returns track section where earliest conflict occurs, first train in and last in."""
         conflicts_times = [
             np.min(self.conflicts(train).stack())
             if not self.conflicts(train).stack().empty
@@ -340,8 +340,12 @@ class Schedule(object):
         
         if np.isfinite(np.min(conflicts_times)):
             other_train = np.argmin(conflicts_times)
-            return self.first_conflict(other_train)
-        return None, None
+            return (
+                self.first_conflict(other_train)[0],
+                self.first_conflict(other_train)[1],
+                other_train
+                )
+        return None, None, None
 
 
 def schedule_from_simulation(

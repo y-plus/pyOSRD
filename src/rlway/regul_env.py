@@ -15,7 +15,6 @@ class RegulEnv(gym.Env):
         self._stations = stations
         self._max_delay = max_delay
         self.observation_space = spaces.Dict({
-            "delayed_train" : spaces.Box(0, self._schedule.num_trains-1, dtype=int),
             "timetable": spaces.Box(
                 low=0,
                 high=np.inf,
@@ -28,13 +27,8 @@ class RegulEnv(gym.Env):
 
     def _get_obs(self):
         return {
-            "delayed_train": self._delayed_train,
             "timetable": self._schedule.df.values
         }
-
-    @property
-    def delayed_train(self) -> int:
-        return self._delayed_train
 
     @property
     def schedule(self) -> Schedule:
@@ -47,49 +41,45 @@ class RegulEnv(gym.Env):
     @property
     def stations(self):
         return self._stations
+    
+    @property
+    def done(self):
+        return self.__done
 
     def reset(self, seed=None, train=None, track_section=None, delay=None):
 
         self._schedule = self._initial_schedule
-        self._delayed_train = 0
 
-        # while not self._schedule.has_conflicts(self._delayed_train): # to ensure a schedule with conflicts
-        self._delayed_train = self.np_random.integers(0, self.schedule.num_trains-1) if train is None else train
+        train_with_delay = self.np_random.integers(0, self.schedule.num_trains-1) if train is None else train
         delay = self.np_random.random() * self._max_delay if delay is None else delay
-        track = self.np_random.choice(self.schedule.trajectory(self._delayed_train)) if track_section is None else track_section
+        track = self.np_random.choice(self.schedule.trajectory(train_with_delay)) if track_section is None else track_section
 
-        self._schedule = self._schedule.add_delay(self._delayed_train, track, delay)
-        self._schedule, self._delayed_train = self._schedule.propagate_delay(self._delayed_train)
+        self._schedule = self._schedule.add_delay(train_with_delay, track, delay)
+        self._schedule, train_with_delay = self._schedule.propagate_delay(train_with_delay)
 
+        self._done = self.schedule.earliest_conflict()[0] is None
         return self._get_obs(), {}
 
     def step(self, action):
-        """
-        0: the delayed train waits before the switch for the track section to be free
-        1: the delayed train has the priority, the other waits
-        """
+        """ 0 = FIFO, 1 = LIFO """
 
-        track_section, other_train = self._schedule.first_conflict(self._delayed_train)
-        if action == 0: # delayed train waits
-            first_out, last_out = other_train, self._delayed_train
-        else: # delayed train has priority
-            first_out, last_out = self._delayed_train, other_train
-        self._schedule = self._schedule.shift_train_after(last_out, first_out, track_section)
-        self._delayed_train = last_out
-        self._schedule, self._delayed_train = self._schedule.propagate_delay(last_out)
+        track_section, first_in, last_in =  self._schedule.earliest_conflict()
 
-
-        if self._schedule.has_conflicts(self._delayed_train):
-            done = False
+        if action == 0:
+            self._schedule = self._schedule.shift_train_after(last_in, first_in, track_section)
+        else:
+            self._schedule = self._schedule.shift_train_after(first_in, last_in, track_section)
+        self._done = self.schedule.earliest_conflict()[0] is None
+        
+        if not self._done:
             reward = 0
         else:
-            done = True
             reward = - self._schedule.total_delay_at_stations(
                 self._initial_schedule, 
                 self._stations
                 )
 
-        return self._get_obs(), reward, done, {}
+        return self._get_obs(), reward, self._done, {}
 
 
     def render(self):
