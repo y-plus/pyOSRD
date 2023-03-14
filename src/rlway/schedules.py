@@ -185,7 +185,7 @@ class Schedule(object):
         return ~self.conflicts(train).isna().all().all()
 
     def first_conflict(self, train: int) -> Tuple[int, int]:
-
+        
         c = self.conflicts(train).stack()
         track_section, other_train = c.index[np.argmin(c)]
         return track_section, other_train
@@ -323,11 +323,25 @@ class Schedule(object):
         return new_schedule, delayed_train
     
     def sort(self) -> 'Schedule':
-
+        """Sort the schedule index by occupancies times"""
         new_schedule = copy.deepcopy(self)
         sorted_idx = self.starts.min(axis=1).sort_values().index
         new_schedule ._df = new_schedule ._df.loc[sorted_idx]
         return new_schedule
+
+    def earliest_conflict(self) -> Tuple[Union[int, str], int]:
+        """ Track section where earliest conflict occurs and first train in."""
+        conflicts_times = [
+            np.min(self.conflicts(train).stack())
+            if not self.conflicts(train).stack().empty
+            else np.inf
+            for train in range(self.num_trains)
+        ]
+        
+        if np.isfinite(np.min(conflicts_times)):
+            other_train = np.argmin(conflicts_times)
+            return self.first_conflict(other_train)
+        return None, None
 
 
 def schedule_from_simulation(
