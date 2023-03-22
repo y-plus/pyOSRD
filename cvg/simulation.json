@@ -30,7 +30,7 @@
     {
       "id": "train1",
       "rolling_stock": "fast_rolling_stock",
-      "departure_time": 60,
+      "departure_time": 350,
       "initial_head_location": {
         "track_section": "STA_Q2",
         "offset": 300

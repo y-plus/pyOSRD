@@ -59,7 +59,7 @@ train1 = builder.add_train_schedule(
     Location(STA_Q2, 300),
     Location(STB_Q2, 300),
     label='train1',
-    departure_time=60
+    departure_time=350
 )
 
 sim = builder.build()

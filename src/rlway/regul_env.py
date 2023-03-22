@@ -44,7 +44,14 @@ class RegulEnv(gym.Env):
     
     @property
     def done(self):
-        return self.__done
+        return self._done
+
+    @property
+    def total_delay(self):
+        return self._schedule.total_delay_at_stations(
+            self._initial_schedule, 
+            self._stations
+        )
 
     def reset(self, seed=None, train=None, track_section=None, delay=None):
 
@@ -74,10 +81,7 @@ class RegulEnv(gym.Env):
         if not self._done:
             reward = 0
         else:
-            reward = - self._schedule.total_delay_at_stations(
-                self._initial_schedule, 
-                self._stations
-                )
+            reward = - self.total_delay
 
         return self._get_obs(), reward, self._done, {}
 
