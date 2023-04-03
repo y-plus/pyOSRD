@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
 
+
 class Schedule(object):
 
     def __init__(self, num_track_sections: int, num_trains: int):
@@ -12,7 +13,9 @@ class Schedule(object):
         self._num_track_sections = num_track_sections
         self._num_trains = num_trains
         self._df = pd.DataFrame(
-            columns=pd.MultiIndex.from_product([range(self._num_trains), ['s','e']]),
+            columns=pd.MultiIndex.from_product(
+                [range(self._num_trains), ['s', 'e']]
+            ),
             index=range(num_track_sections)
         )
 
@@ -45,15 +48,15 @@ class Schedule(object):
     @property
     def starts(self) -> pd.DataFrame:
         return self._df.loc[
-                pd.IndexSlice[:], 
-                pd.IndexSlice[:,'s']
+                pd.IndexSlice[:],
+                pd.IndexSlice[:, 's']
             ].set_axis(self._df.columns.levels[0], axis=1)
 
     @property
     def ends(self) -> pd.DataFrame:
         return self._df.loc[
-                pd.IndexSlice[:], 
-                pd.IndexSlice[:,'e']
+                pd.IndexSlice[:],
+                pd.IndexSlice[:, 'e']
             ].set_axis(self._df.columns.levels[0], axis=1)
 
     @property
@@ -61,7 +64,7 @@ class Schedule(object):
         return self.ends - self.starts
 
     def plot(self, alpha=.5):
-  
+
         for train in self._df.columns.levels[0]:
             plt.barh(
                 width=self.lengths[train],
@@ -75,7 +78,7 @@ class Schedule(object):
         plt.xlabel('Time')
         plt.ylabel('Track sections')
         plt.legend()
-    
+
     def trajectory(self, train: int) -> List[int]:
         return list(
             self.starts[train][self.starts[train].notna()]
@@ -83,7 +86,11 @@ class Schedule(object):
             .index
         )
 
-    def previous_track_section(self, train: int, track_section: int) -> Union[int, None]:
+    def previous_track_section(
+        self,
+        train: int,
+        track_section: int
+    ) -> Union[int, None]:
 
         t = self.trajectory(train)
         idx = list(t).index(track_section)
@@ -101,43 +108,52 @@ class Schedule(object):
             return t[idx+1]
         return None
 
-    def is_a_point_switch(self, train1: int, train2: int, track_section: int) -> bool:
-        
+    def is_a_point_switch(
+        self,
+        train1: int,
+        train2: int,
+        track_section: int
+    ) -> bool:
+
         if (
             track_section not in self.trajectory(train1)
             or
-            track_section  not in self.trajectory(train2) 
+            track_section not in self.trajectory(train2)
         ):
             return False
-    
+
         return (
-            self.previous_track_section(train1, track_section) 
+            self.previous_track_section(train1, track_section)
             !=
             self.previous_track_section(train2, track_section)
             )
 
+    def is_just_after_a_point_switch(
+        self,
+        train1: int,
+        train2: int,
+        track_section
+    ) -> bool:
 
-    def is_just_after_a_point_switch(self, train1: int, train2: int, track_section) -> bool:
-        
         if (
             track_section not in self.trajectory(train1)
             or
-            track_section  not in self.trajectory(train2) 
+            track_section not in self.trajectory(train2)
         ):
             return False
-        
+
         return (
             ~self.is_a_point_switch(train1, train2, track_section)
             and
-                self.is_a_point_switch(
-                    train1,
-                    train2,
-                    self.previous_track_section(train1, track_section)
-                )
+            self.is_a_point_switch(
+                train1,
+                train2,
+                self.previous_track_section(train1, track_section)
+            )
         )
 
     def shift_train_departure(self, train: int, time: float) -> 'Schedule':
-        """Shift the departure and thus the whole train trajectory by a given time"""
+        """Shift the departure by a given time"""
 
         new_schedule = copy.deepcopy(self)
 
@@ -145,35 +161,51 @@ class Schedule(object):
 
         return new_schedule
 
-    def add_delay(self, train: int, track_section: int, delay: float) -> 'Schedule':
+    def add_delay(
+        self,
+        train: int,
+        track_section: int,
+        delay: float
+    ) -> 'Schedule':
 
         start = self._df.loc[track_section, (train, 's')]
         new_schedule = copy.deepcopy(self)
 
         # extend length at given track section
         new_schedule._df.loc[track_section, (train, 'e')] += delay
-        
-        # Add delay to all subsequent track sections 
-        new_schedule._df.loc[self._df[pd.IndexSlice[train,'s']]>start, pd.IndexSlice[train,:]] += delay
+
+        # Add delay to all subsequent track sections
+        new_schedule._df.loc[
+            self._df[pd.IndexSlice[train, 's']] > start,
+            pd.IndexSlice[train, :]
+        ] += delay
 
         return new_schedule
 
     def conflicts(self, train: int) -> pd.DataFrame:
 
-        starts0 =  (
-            pd.concat([self._df[train,'s']]*self.num_trains, axis=1)
+        starts0 = (
+            pd.concat([self._df[train, 's']]*self.num_trains, axis=1)
             .set_axis(range(self.num_trains), axis=1)
         )
-        ends0 =  (
-            pd.concat([self._df[train,'e']]*self.num_trains, axis=1)
+        ends0 = (
+            pd.concat([self._df[train, 'e']]*self.num_trains, axis=1)
             .set_axis(range(self.num_trains), axis=1)
         )
 
         mask1 = self.ends >= starts0
-        mask2 = (
-            pd.concat([starts0, self.starts]).rename_axis('index').groupby('index').max()
-            < pd.concat([ends0, self.ends]).rename_axis('index').groupby('index').min()
-            )
+        max_starts = (
+            pd.concat([starts0, self.starts])
+            .rename_axis('index')
+            .groupby('index').max()
+        )
+        min_ends = (
+            pd.concat([ends0, self.ends])
+            .rename_axis('index')
+            .groupby('index').min()
+        )
+        mask2 = max_starts < min_ends
+
         # mask = np.logical_and(mask1, mask2)
 
         conflict_times = self.starts[mask1 & mask2].drop(columns=train)
@@ -185,44 +217,56 @@ class Schedule(object):
         return ~self.conflicts(train).isna().all().all()
 
     def first_conflict(self, train: int) -> Tuple[int, int]:
-        
+
         c = self.conflicts(train).stack()
         track_section, other_train = c.index[np.argmin(c)]
         return track_section, other_train
 
-
-    def shift_train_after(self, train1: int, train2: int, track_section: int) -> 'Schedule':
+    def shift_train_after(
+        self,
+        train1: int,
+        train2: int,
+        track_section: int
+    ) -> 'Schedule':
         """Train1 waits until train has freed track_section"""
 
         train1_waits_at = self.previous_track_section(train1, track_section)
 
-        # If the track section is the departure, it has no previous track section
+        # If the track section is the departure,
+        # it has no previous track section
         if train1_waits_at is None:
             train1_waits_at = track_section
 
-
-        # If the conflict occurs at a switch point, train 1 waits until the track section
+        # If the conflict occurs at a switch point,
+        # train 1 waits until the track section
         # after the switch point is free
         if self.is_a_point_switch(train1, train2, track_section):
-            track_section_shift = self.next_track_section(train1, track_section)
+            track_section_shift = \
+                self.next_track_section(train1, track_section)
         else:
             track_section_shift = track_section
 
-        # if the conflict occurs just after a switch point, train shoud wait before the switch
+        # if the conflict occurs just after a switch point,
+        # train shoud wait before the switch
         if self.is_just_after_a_point_switch(train1, train2, track_section):
-            train1_waits_at = self.previous_track_section(train1, train1_waits_at)
-
+            train1_waits_at = \
+                self.previous_track_section(train1, train1_waits_at)
 
         train1_wait_time = (
             self.ends.loc[track_section_shift, train2]
             - self.starts.loc[track_section_shift, train1]
         )
 
-        new_schedule = self.add_delay(train1, train1_waits_at, train1_wait_time)
+        new_schedule = self.add_delay(
+            train1,
+            train1_waits_at,
+            train1_wait_time
+        )
 
         if not new_schedule.is_a_point_switch(train1, train2, track_section):
-            new_schedule._df.loc[track_section, (train1, 's')] = self.ends.loc[track_section, train2]
-        
+            new_schedule._df.loc[track_section, (train1, 's')] = \
+                self.ends.loc[track_section, train2]
+
         return new_schedule
 
     def delays(self, initial_schedule: 'Schedule') -> pd.DataFrame:
@@ -230,11 +274,15 @@ class Schedule(object):
         delta = self._df - initial_schedule._df
 
         return (
-            delta.loc[pd.IndexSlice[:], pd.IndexSlice[:,'s']]
+            delta.loc[pd.IndexSlice[:], pd.IndexSlice[:, 's']]
             .set_axis(self._df.columns.levels[0], axis=1)
         )
 
-    def total_delay_at_stations(self, initial_schedule, stations: List[int]) -> float:
+    def total_delay_at_stations(
+        self,
+        initial_schedule,
+        stations: List[int]
+    ) -> float:
 
         try:
             return self.delays(initial_schedule).iloc[stations].sum().sum()
@@ -242,11 +290,16 @@ class Schedule(object):
             return self.delays(initial_schedule).loc[stations].sum().sum()
 
     def first_in(self, train1: int, train2: int, track_section: int) -> int:
-        """Among two trains, which one train first arrives at a given track_section"""
+        """Among two trains, which train first arrives at a track_section"""
 
-        trains_enter_at = self.starts.loc[track_section, [train1, train2]].astype(float)
-        
-        trains = trains_enter_at.index[trains_enter_at==trains_enter_at.min()].to_list()
+        trains_enter_at = (
+            self.starts.loc[track_section, [train1, train2]].astype(float)
+        )
+
+        trains = (
+            trains_enter_at.index[trains_enter_at == trains_enter_at.min()]
+            .to_list()
+        )
 
         if len(trains) == 1:
             return trains[0]
@@ -260,41 +313,47 @@ class Schedule(object):
             action_needed = (
                 self.is_a_point_switch(train, other_train, track_section)
                 or
-                self.is_just_after_a_point_switch(train, other_train, track_section)
+                self.is_just_after_a_point_switch(
+                    train,
+                    other_train,
+                    track_section
+                )
             )
         return action_needed
-
 
     @property
     def graph(self) -> nx.DiGraph:
 
         edges = set()
         for train in self.trains:
-            l = self.trajectory(train)
-            edges = edges.union({(l[i], l[i+1]) for i in range(len(l)-1)})
+            traj = self.trajectory(train)
+            edges = edges.union({
+                (traj[i], traj[i+1])
+                for i in range(len(traj)-1)
+                })
 
         G = nx.DiGraph(edges)
 
         dict = {
-            u:v 
-            for u,v in zip(self.df.index, self.df.fillna(0).values)
+            u: v
+            for u, v in zip(self.df.index, self.df.fillna(0).values)
         }
 
         nx.set_node_attributes(G, dict, 'times')
 
         return G
- 
+
     def draw_graph(self):
         """
-        
+
         https://networkx.org/documentation/stable/auto_examples/graph/plot_dag_layout.html
         """
 
         G = self.graph
 
         for layer, nodes in enumerate(nx.topological_generations(G)):
-            # `multipartite_layout` expects the layer as a node attribute, so add the
-            # numeric layer value as a node attribute
+            # `multipartite_layout` expects the layer as a node attribute,
+            # so add the numeric layer value as a node attribute
             for node in nodes:
                 G.nodes[node]["layer"] = layer
 
@@ -311,17 +370,27 @@ class Schedule(object):
             decision = False
             if new_schedule.has_conflicts(delayed_train):
 
-                track_section, other_train = new_schedule.first_conflict(delayed_train)
+                track_section, other_train = \
+                    new_schedule.first_conflict(delayed_train)
                 decision = new_schedule.is_action_needed(delayed_train)
 
                 if not decision:
-                    first_in = new_schedule.first_in(delayed_train, other_train, track_section)
-                    delayed_train = other_train if first_in==delayed_train else delayed_train
-                    new_schedule = new_schedule.shift_train_after(delayed_train, first_in, track_section)
+                    first_in = new_schedule.first_in(
+                        delayed_train,
+                        other_train,
+                        track_section
+                    )
+                    delayed_train = other_train \
+                        if first_in == delayed_train else delayed_train
+                    new_schedule = new_schedule.shift_train_after(
+                        delayed_train,
+                        first_in,
+                        track_section
+                    )
                 else:
                     break
         return new_schedule, delayed_train
-    
+
     def sort(self) -> 'Schedule':
         """Sort the schedule index by occupancies times"""
         new_schedule = copy.deepcopy(self)
@@ -330,14 +399,15 @@ class Schedule(object):
         return new_schedule
 
     def earliest_conflict(self) -> Tuple[Union[int, str], int]:
-        """ Returns track section where earliest conflict occurs, first train in and last in."""
+        """ Returns track section where earliest conflict occurs,
+        first train in and last in."""
         conflicts_times = [
             np.min(self.conflicts(train).stack())
             if not self.conflicts(train).stack().empty
             else np.inf
             for train in range(self.num_trains)
         ]
-        
+
         if np.isfinite(np.min(conflicts_times)):
             other_train = np.argmin(conflicts_times)
             return (
@@ -352,16 +422,16 @@ def schedule_from_simulation(
         infra: Dict,
         res: List,
         simplify_route_names: bool = False
-    ) -> Schedule:
+) -> Schedule:
 
     routes = [route['id'] for route in infra['routes']]
 
     s = Schedule(len(routes), len(res))
 
     routes_switches = {
-        route['id']:list(route['switches_directions'].keys())[0] 
+        route['id']: list(route['switches_directions'].keys())[0]
         for route in infra['routes']
-        if len(list(route['switches_directions'].keys()))!=0
+        if len(list(route['switches_directions'].keys())) != 0
     }
     simulations = 'base_simulations'
     simulations = 'eco_simulations'
@@ -374,15 +444,18 @@ def schedule_from_simulation(
             s._df.loc[idx, (train, 'e')] = times['time_tail_free']
     s._df.index = routes
 
-    s._df.index = pd.Series(s.df.index.map(routes_switches)).fillna(pd.Series(s.df.index))
+    s._df.index = (
+        pd.Series(s.df.index.map(routes_switches))
+        .fillna(pd.Series(s.df.index))
+    )
 
-    s._df = s.df[~s.df.index.duplicated()] 
+    s._df = s.df[~s.df.index.duplicated()]
 
     if simplify_route_names:
         s._df.index = (
             s.df.index
-            .str.replace('rt.','', regex=False)
-            .str.replace('buffer_stop','STOP', regex=False)
+            .str.replace('rt.', '', regex=False)
+            .str.replace('buffer_stop', 'STOP', regex=False)
         )
 
     return s

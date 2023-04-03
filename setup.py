@@ -8,9 +8,9 @@ setup(
     author_email='renan.hilbert.ext@eurodecision.com',
     description='Railway traffic regulation using AI/RL',
     packages=find_packages(where="src"),
-    package_dir={"":"src"},
+    package_dir={"": "src"},
     python_requires=">=3.6",
-    setup_requires=["wheel"], 
+    setup_requires=["wheel"],
     install_requires=[
         'networkx >= 3.0',
         'matplotlib>= 3.6.3',
