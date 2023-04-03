@@ -1,0 +1,1386 @@
+{
+  "version": "3.1.0",
+  "operational_points": [],
+  "routes": [
+    {
+      "id": "rt.DA1->DA_out",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DA1"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "DA_out"
+      },
+      "release_detectors": [],
+      "switches_directions": {
+        "CVG": "LEFT"
+      }
+    },
+    {
+      "id": "rt.buffer_stop.0->DA1",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.0"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "DA1"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.DA2->DA_out",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DA2"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "DA_out"
+      },
+      "release_detectors": [],
+      "switches_directions": {
+        "CVG": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.buffer_stop.1->DA2",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.1"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "DA2"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.DA_out->D0",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DA_out"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D0"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.D0->D1",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D0"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D1"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.D1->D2",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D1"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D2"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.D2->D3",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D2"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D3"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.D3->D4",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D3"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D4"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.D4->D5",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D4"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D5"
+      },
+      "release_detectors": [],
+      "switches_directions": {
+        "CVG2": "LEFT"
+      }
+    },
+    {
+      "id": "rt.D5->D6",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D5"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D6"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.D6->D7",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D6"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D7"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.D7->D8",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D7"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D8"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.D8->DB_in",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D8"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "DB_in"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.DB_in->DB2",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DB_in"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "DB2"
+      },
+      "release_detectors": [],
+      "switches_directions": {
+        "DVG": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.DB_in->DB1",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DB_in"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "DB1"
+      },
+      "release_detectors": [],
+      "switches_directions": {
+        "DVG": "LEFT"
+      }
+    },
+    {
+      "id": "rt.DB1->buffer_stop.2",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DB1"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.2"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.DB2->buffer_stop.3",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DB2"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.3"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    },
+    {
+      "id": "rt.DS1->D5",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DS1"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D5"
+      },
+      "release_detectors": [],
+      "switches_directions": {
+        "CVG2": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.buffer_stop.4->DS1",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.4"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "DS1"
+      },
+      "release_detectors": [],
+      "switches_directions": {}
+    }
+  ],
+  "switch_types": [
+    {
+      "id": "point",
+      "ports": [
+        "base",
+        "left",
+        "right"
+      ],
+      "groups": {
+        "LEFT": [
+          {
+            "src": "base",
+            "dst": "left"
+          }
+        ],
+        "RIGHT": [
+          {
+            "src": "base",
+            "dst": "right"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cross",
+      "ports": [
+        "north",
+        "south",
+        "east",
+        "west"
+      ],
+      "groups": {
+        "static": [
+          {
+            "src": "east",
+            "dst": "west"
+          },
+          {
+            "src": "north",
+            "dst": "south"
+          }
+        ]
+      }
+    },
+    {
+      "id": "double_cross",
+      "ports": [
+        "north_1",
+        "north_2",
+        "south_1",
+        "south_2"
+      ],
+      "groups": {
+        "N1_S1": [
+          {
+            "src": "north_1",
+            "dst": "south_1"
+          }
+        ],
+        "N1_S2": [
+          {
+            "src": "north_1",
+            "dst": "south_2"
+          }
+        ],
+        "N2_S1": [
+          {
+            "src": "north_2",
+            "dst": "south_1"
+          }
+        ],
+        "N2_S2": [
+          {
+            "src": "north_2",
+            "dst": "south_2"
+          }
+        ]
+      }
+    }
+  ],
+  "switches": [
+    {
+      "id": "CVG",
+      "switch_type": "point",
+      "group_change_delay": 0.0,
+      "ports": {
+        "base": {
+          "endpoint": "BEGIN",
+          "track": "T1"
+        },
+        "left": {
+          "endpoint": "END",
+          "track": "WEST_Q1"
+        },
+        "right": {
+          "endpoint": "END",
+          "track": "WEST_Q2"
+        }
+      },
+      "extensions": {
+        "sncf": {
+          "label": "CVG"
+        }
+      }
+    },
+    {
+      "id": "DVG",
+      "switch_type": "point",
+      "group_change_delay": 0.0,
+      "ports": {
+        "base": {
+          "endpoint": "END",
+          "track": "T2"
+        },
+        "left": {
+          "endpoint": "BEGIN",
+          "track": "EAST_Q1"
+        },
+        "right": {
+          "endpoint": "BEGIN",
+          "track": "EAST_Q2"
+        }
+      },
+      "extensions": {
+        "sncf": {
+          "label": "DVG"
+        }
+      }
+    },
+    {
+      "id": "CVG2",
+      "switch_type": "point",
+      "group_change_delay": 0.0,
+      "ports": {
+        "base": {
+          "endpoint": "BEGIN",
+          "track": "T2"
+        },
+        "left": {
+          "endpoint": "END",
+          "track": "T1"
+        },
+        "right": {
+          "endpoint": "END",
+          "track": "SOUTH_Q1"
+        }
+      },
+      "extensions": {
+        "sncf": {
+          "label": "CVG2"
+        }
+      }
+    }
+  ],
+  "track_section_links": [
+    {
+      "id": "link.0",
+      "src": {
+        "endpoint": "END",
+        "track": "T1"
+      },
+      "dst": {
+        "endpoint": "BEGIN",
+        "track": "T2"
+      }
+    },
+    {
+      "id": "link.1",
+      "src": {
+        "endpoint": "BEGIN",
+        "track": "T1"
+      },
+      "dst": {
+        "endpoint": "END",
+        "track": "WEST_Q1"
+      }
+    },
+    {
+      "id": "link.2",
+      "src": {
+        "endpoint": "BEGIN",
+        "track": "T1"
+      },
+      "dst": {
+        "endpoint": "END",
+        "track": "WEST_Q2"
+      }
+    },
+    {
+      "id": "link.3",
+      "src": {
+        "endpoint": "END",
+        "track": "T2"
+      },
+      "dst": {
+        "endpoint": "BEGIN",
+        "track": "EAST_Q1"
+      }
+    },
+    {
+      "id": "link.4",
+      "src": {
+        "endpoint": "END",
+        "track": "T2"
+      },
+      "dst": {
+        "endpoint": "BEGIN",
+        "track": "EAST_Q2"
+      }
+    },
+    {
+      "id": "link.5",
+      "src": {
+        "endpoint": "BEGIN",
+        "track": "T2"
+      },
+      "dst": {
+        "endpoint": "END",
+        "track": "T1"
+      }
+    },
+    {
+      "id": "link.6",
+      "src": {
+        "endpoint": "BEGIN",
+        "track": "T2"
+      },
+      "dst": {
+        "endpoint": "END",
+        "track": "SOUTH_Q1"
+      }
+    }
+  ],
+  "track_sections": [
+    {
+      "geo": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "sch": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "WEST_Q1",
+      "length": 450.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 0,
+          "track_name": "placeholder_track"
+        }
+      }
+    },
+    {
+      "geo": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "sch": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "WEST_Q2",
+      "length": 450.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 0,
+          "track_name": "placeholder_track"
+        }
+      }
+    },
+    {
+      "geo": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "sch": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "T1",
+      "length": 10000.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 0,
+          "track_name": "placeholder_track"
+        }
+      }
+    },
+    {
+      "geo": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "sch": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "T2",
+      "length": 10000.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 0,
+          "track_name": "placeholder_track"
+        }
+      }
+    },
+    {
+      "geo": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "sch": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "EAST_Q1",
+      "length": 450.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 0,
+          "track_name": "placeholder_track"
+        }
+      }
+    },
+    {
+      "geo": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "sch": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "EAST_Q2",
+      "length": 450.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 0,
+          "track_name": "placeholder_track"
+        }
+      }
+    },
+    {
+      "geo": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "sch": {
+        "coordinates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ],
+        "type": "LineString"
+      },
+      "id": "SOUTH_Q1",
+      "length": 450.0,
+      "slopes": [],
+      "curves": [],
+      "loading_gauge_limits": [],
+      "extensions": {
+        "sncf": {
+          "line_code": 0,
+          "line_name": "placeholder_line",
+          "track_number": 0,
+          "track_name": "placeholder_track"
+        }
+      }
+    }
+  ],
+  "speed_sections": [],
+  "catenaries": [],
+  "signals": [
+    {
+      "track": "WEST_Q1",
+      "position": 410.0,
+      "id": "signal.0",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "DA1",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.0",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "WEST_Q2",
+      "position": 410.0,
+      "id": "signal.1",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "DA2",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.1",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T1",
+      "position": 30.0,
+      "id": "signal.2",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "DA_out",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.2",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T1",
+      "position": 1960.0,
+      "id": "signal.6",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D0",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.6",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T1",
+      "position": 3940.0,
+      "id": "signal.7",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D1",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.7",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T1",
+      "position": 5920.0,
+      "id": "signal.8",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D2",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.8",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T1",
+      "position": 7900.0,
+      "id": "signal.9",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D3",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.9",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T1",
+      "position": 9880.0,
+      "id": "signal.10",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D4",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.10",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T2",
+      "position": 1960.0,
+      "id": "signal.11",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D5",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.11",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T2",
+      "position": 3940.0,
+      "id": "signal.12",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D6",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.12",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T2",
+      "position": 5920.0,
+      "id": "signal.13",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D7",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.13",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T2",
+      "position": 7900.0,
+      "id": "signal.14",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "D8",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.14",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "T2",
+      "position": 9950.0,
+      "id": "signal.3",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "DB_in",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.3",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "EAST_Q1",
+      "position": 10.0,
+      "id": "signal.4",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "DB1",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.4",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "EAST_Q2",
+      "position": 10.0,
+      "id": "signal.5",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "DB2",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.5",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    },
+    {
+      "track": "SOUTH_Q1",
+      "position": 410.0,
+      "id": "signal.15",
+      "direction": "START_TO_STOP",
+      "sight_distance": 400.0,
+      "linked_detector": "DS1",
+      "logical_signals": [],
+      "extensions": {
+        "sncf": {
+          "angle_geo": 90.0,
+          "angle_sch": 90.0,
+          "aspects": [],
+          "comment": "",
+          "default_aspect": "",
+          "installation_type": "CARRE",
+          "is_in_service": false,
+          "is_lightable": false,
+          "is_operational": false,
+          "label": "signal.15",
+          "side": "LEFT",
+          "support_type": "",
+          "type_code": "",
+          "value": ""
+        }
+      }
+    }
+  ],
+  "buffer_stops": [
+    {
+      "track": "WEST_Q1",
+      "position": 0.0,
+      "id": "buffer_stop.0",
+      "applicable_directions": "START_TO_STOP"
+    },
+    {
+      "track": "WEST_Q2",
+      "position": 0.0,
+      "id": "buffer_stop.1",
+      "applicable_directions": "START_TO_STOP"
+    },
+    {
+      "track": "EAST_Q1",
+      "position": 450.0,
+      "id": "buffer_stop.2",
+      "applicable_directions": "START_TO_STOP"
+    },
+    {
+      "track": "EAST_Q2",
+      "position": 450.0,
+      "id": "buffer_stop.3",
+      "applicable_directions": "START_TO_STOP"
+    },
+    {
+      "track": "SOUTH_Q1",
+      "position": 0.0,
+      "id": "buffer_stop.4",
+      "applicable_directions": "START_TO_STOP"
+    }
+  ],
+  "detectors": [
+    {
+      "track": "WEST_Q1",
+      "position": 430.0,
+      "id": "DA1",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "WEST_Q2",
+      "position": 430.0,
+      "id": "DA2",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T1",
+      "position": 50.0,
+      "id": "DA_out",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T1",
+      "position": 1980.0,
+      "id": "D0",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T1",
+      "position": 3960.0,
+      "id": "D1",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T1",
+      "position": 5940.0,
+      "id": "D2",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T1",
+      "position": 7920.0,
+      "id": "D3",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T1",
+      "position": 9900.0,
+      "id": "D4",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T2",
+      "position": 1980.0,
+      "id": "D5",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T2",
+      "position": 3960.0,
+      "id": "D6",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T2",
+      "position": 5940.0,
+      "id": "D7",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T2",
+      "position": 7920.0,
+      "id": "D8",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "T2",
+      "position": 9970.0,
+      "id": "DB_in",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "EAST_Q1",
+      "position": 30.0,
+      "id": "DB1",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "EAST_Q2",
+      "position": 30.0,
+      "id": "DB2",
+      "applicable_directions": "BOTH"
+    },
+    {
+      "track": "SOUTH_Q1",
+      "position": 430.0,
+      "id": "DS1",
+      "applicable_directions": "BOTH"
+    }
+  ]
+}
