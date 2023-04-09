@@ -48,10 +48,10 @@ EAST_Q2.add_buffer_stop(position=EAST_Q2.length, applicable_direction=Applicable
 
 D, S = [], []
 for pos in range(5):
-    D.append(T1.add_detector(position = 1980.*(1+pos), label=f"D{str(pos)}"))
+    D.append(T1.add_detector(position=1980.*(1+pos), label=f"D{str(pos)}"))
     T1.add_signal(D[pos].position-20, Direction.START_TO_STOP, D[pos])
-for pos in range(4):    
-    D.append(T2.add_detector(position = 1980.*(1+pos), label=f"D{str(5+pos)}"))
+for pos in range(4):
+    D.append(T2.add_detector(position=1980.*(1+pos), label=f"D{str(5+pos)}"))
     T2.add_signal(D[5+pos].position-20, Direction.START_TO_STOP, D[5+pos])
 
 
@@ -97,6 +97,7 @@ train2 = builder.add_train_schedule(
     # rolling_stock="short_fast_rolling_stock",
 )
 # train0.add_stop(100, location=Location(T1, 4500))
+
 
 sim = builder.build()
 

@@ -421,16 +421,27 @@ class Schedule(object):
 def schedule_from_simulation(
         infra: Dict,
         res: List,
-        simplify_route_names: bool = False
+        simplify_route_names: bool = False,
+        remove_bufferstop_to_bufferstop: bool = True,
 ) -> Schedule:
 
-    routes = [route['id'] for route in infra['routes']]
+    useful_routes = [
+        route
+        for route in infra['routes']
+        if not (('rt.buffer' in route['id']) and ('->buffer' in route['id']))
+    ] if remove_bufferstop_to_bufferstop else [infra['routes']]
 
+    routes = [
+        route['id']
+        for route in useful_routes
+    ]
+
+    print(routes)
     s = Schedule(len(routes), len(res))
 
     routes_switches = {
         route['id']: list(route['switches_directions'].keys())[0]
-        for route in infra['routes']
+        for route in useful_routes
         if len(list(route['switches_directions'].keys())) != 0
     }
     simulations = 'base_simulations'
@@ -439,9 +450,10 @@ def schedule_from_simulation(
     for train in range(s.num_trains):
         route_occupancies = res[train][simulations][0]['route_occupancies']
         for route, times in route_occupancies.items():
-            idx = routes.index(route)
-            s._df.loc[idx, (train, 's')] = times['time_head_occupy']
-            s._df.loc[idx, (train, 'e')] = times['time_tail_free']
+            if route in routes:
+                idx = routes.index(route)
+                s._df.loc[idx, (train, 's')] = times['time_head_occupy']
+                s._df.loc[idx, (train, 'e')] = times['time_tail_free']
     s._df.index = routes
 
     s._df.index = (

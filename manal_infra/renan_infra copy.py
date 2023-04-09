@@ -1,6 +1,3 @@
-import os
-# import rlway.osrd
-
 from railjson_generator import (
     InfraBuilder,
     SimulationBuilder,
@@ -14,8 +11,7 @@ from railjson_generator import get_output_dir
 
 from typing import Mapping, Tuple
 
-# OUTPUT_DIR = get_output_dir()
-OUTPUT_DIR = '.'
+OUTPUT_DIR = get_output_dir()
 
 def add_signal_on_ports(switch, ports: Mapping[str, Tuple[str, str]]):
     """Add signals and detectors to given ports.
@@ -23,10 +19,8 @@ def add_signal_on_ports(switch, ports: Mapping[str, Tuple[str, str]]):
         ports: A dictionary of port names to (detector_label, signal_label) pairs.
     """
     # Reference distances, in meters
-    # SIGNAL_TO_SWITCH = 200
-    # DETECTOR_TO_SWITCH = 180
-    SIGNAL_TO_SWITCH = 40
-    DETECTOR_TO_SWITCH = 20
+    SIGNAL_TO_SWITCH = 200
+    DETECTOR_TO_SWITCH = 180
 
     for port, (det_label, sig_label) in ports.items():
         detector = switch.add_detector_on_port(port, DETECTOR_TO_SWITCH, label=det_label)
@@ -56,9 +50,8 @@ CVG = builder.add_point_switch(
     right=t1.end(),
 )
 add_signal_on_ports(CVG,{
-                        "base": ("DA_out", "S0"),
-                        "right": ("DA1", "S1"),
-                        "left": ("DA2", "S2")
+                        "base": ("D0", "S0"),
+                        "right": ("D2", "S2")   
                     })
 
 DVG = builder.add_point_switch(
@@ -68,9 +61,8 @@ DVG = builder.add_point_switch(
     right=t3.begin(),
 )
 add_signal_on_ports(DVG,{
-                        "base": ("DB_in", "S3"),
-                        "left": ("DB1", "S4"),
-                        "right": ("DB2", "S5"),
+                        "base": ("D3", "S3"),
+                        "left": ("D1", "S1"),   
                     })
 
 # =============================================
@@ -79,11 +71,11 @@ add_signal_on_ports(DVG,{
 
 station_A = builder.add_operational_point(label="Station_A")
 station_A.add_part(t0, 300)
-station_A.add_part(t1, 300)
+station_A.add_part(t1,300)
 
 station_B = builder.add_operational_point(label="Station_B")
 station_B.add_part(t2, 300)
-station_B.add_part(t3, 300)
+station_B.add_part(t3,300)
 
 
 # ================================
@@ -94,7 +86,7 @@ station_B.add_part(t3, 300)
 infra = builder.build()
 
 # Save railjson
-infra.save("infra.json")
+infra.save(OUTPUT_DIR / "infra.json")
 
 # ================================
 # Produce the simulation file
@@ -121,6 +113,4 @@ train_1 = builder.add_train_schedule(
 sim = builder.build()
 
 # Save railjson
-sim.save("simulation.json")
-
-os.system("java -jar /home/renan/osrd/core/build/libs/osrd-all.jar standalone-simulation --infra_path infra.json --sim_path simulation.json --res_path results.json")
+sim.save(OUTPUT_DIR / "simulation.json")

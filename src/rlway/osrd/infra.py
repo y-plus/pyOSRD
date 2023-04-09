@@ -1,11 +1,10 @@
 import os
 import json
 
-from typing import Tuple, Dict, List, Any
+from typing import Tuple, Dict, List
 
 import base64
 from IPython.display import Image, display
-import matplotlib.pyplot as plt
 import networkx as nx
 
 
@@ -28,19 +27,19 @@ def routes(infra: Dict) -> List:
 
 
 def route_switches(infra: Dict) -> Dict[str, str]:
-    
+
     return {
-        route['id']:list(route['switches_directions'].keys())[0] 
+        route['id']: list(route['switches_directions'].keys())[0]
         for route in infra['routes']
-        if len(list(route['switches_directions'].keys()))!=0
+        if len(list(route['switches_directions'].keys())) != 0
     }
 
 
 def route_limits(infra: Dict) -> Dict:
     points = {d['id']: (d['track'], d['position']) for d in infra['detectors']}
-    points.update(
-        {bs['id']: (bs['track'], bs['position']) for bs in infra['buffer_stops']}
-    )
+    points.update({
+        bs['id']: (bs['track'], bs['position']) for bs in infra['buffer_stops']
+    })
     return points
 
 
@@ -57,21 +56,27 @@ def route_lengths(infra: Dict) -> Dict:
     lengths = {}
     points = route_limits(infra)
     for route in routes(infra):
-        start = route.replace('rt.','').split('->')[0]
-        end = route.replace('rt.','').split('->')[1]
-        tracks = nx.shortest_path(ts, points[start][0],points[end][0])
+        start = route.replace('rt.', '').split('->')[0]
+        end = route.replace('rt.', '').split('->')[1]
+        tracks = nx.shortest_path(ts, points[start][0], points[end][0])
         if len(tracks) == 1:
             lengths[route] = points[end][1] - points[start][1]
         else:
-            lengths[route] =track_section_lengths(infra)[tracks[0]] - points[start][1]
+            lengths[route] = (
+                track_section_lengths(infra)[tracks[0]]
+                - points[start][1]
+            )
             for t in tracks[1:-1]:
-                lengths[route] +=track_section_lengths(infra)[t]
+                lengths[route] += track_section_lengths(infra)[t]
             lengths[route] += points[end][1]
     return lengths
 
 
-
-def draw_infra(infra: Dict):
+def draw_infra(
+    infra: Dict,
+    remove_bufferstop_to_bufferstop: bool = True,
+) -> None:
+    """Use mermaid.js to display the infra as a DAG with detectors as nodes"""
 
     def mm(graph):
         graphbytes = graph.encode("ascii")
@@ -79,6 +84,14 @@ def draw_infra(infra: Dict):
         base64_string = base64_bytes.decode("ascii")
         display(Image(url="https://mermaid.ink/img/" + base64_string))
 
-    g = "graph LR;"+";".join([route.replace('rt.','').replace("->","-->") for route in routes(infra)])
-    mm(g)
+    displayed_routes = [
+        route
+        for route in routes(infra)
+        if not (('rt.buffer' in route) and ('->buffer' in route))
+    ] if remove_bufferstop_to_bufferstop else routes(infra)
 
+    g = "graph LR;"+";".join([
+        route.replace('rt.', '').replace('->', '-->')
+        for route in displayed_routes
+    ])
+    mm(g)

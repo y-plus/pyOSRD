@@ -1,6 +1,4 @@
 import os
-import sys
-sys.path.append("/home/renan/osrd/core/examples/generated/lib/")
 
 from railjson_generator import (
     InfraBuilder,
@@ -18,7 +16,6 @@ STA_Q2 = builder.add_track_section(label='STA_Q2', length=450)
 T = builder.add_track_section(label='T', length=10_000.)
 
 builder.add_point_switch(T.begin(), STA_Q1.end(), STA_Q2.end(), label='CVG')
-
 
 DA1 = STA_Q1.add_detector(position=430, label='DA1')
 DA2 = STA_Q2.add_detector(position=430, label='DA2')
@@ -39,13 +36,20 @@ SB_in = T.add_signal(DB_in.position-20, Direction.START_TO_STOP, DB_in)
 SB1 = STB_Q1.add_signal(DB1.position-20, Direction.START_TO_STOP, DB1)
 SB2 = STB_Q2.add_signal(DB2.position-20, Direction.START_TO_STOP, DB2)
 
-STA_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-STA_Q2.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-STB_Q1.add_buffer_stop(position=STB_Q1.length, applicable_direction=ApplicableDirection.START_TO_STOP)
-STB_Q2.add_buffer_stop(position=STB_Q2.length, applicable_direction=ApplicableDirection.START_TO_STOP)
+# STA_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
+# STA_Q2.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
+# STB_Q1.add_buffer_stop(position=STB_Q1.length, applicable_direction=ApplicableDirection.START_TO_STOP)
+# STB_Q2.add_buffer_stop(position=STB_Q2.length, applicable_direction=ApplicableDirection.START_TO_STOP)
+
+station_A = builder.add_operational_point(label="Station_A")
+station_A.add_part(STA_Q1, 300)
+station_A.add_part(STB_Q1, 300)
+
+station_B = builder.add_operational_point(label="Station_B")
+station_B.add_part(STA_Q2, 300)
+station_B.add_part(STB_Q2, 300)
 
 infra = builder.build()
-
 
 builder = SimulationBuilder(infra)
 
@@ -63,7 +67,6 @@ train1 = builder.add_train_schedule(
 )
 
 sim = builder.build()
-
 
 infra.save("infra.json")
 sim.save('simulation.json')
