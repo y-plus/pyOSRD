@@ -4,5 +4,6 @@ ipykernel
 pytest
 coverage
 flake8
+/home/renan/osrd/python/railjson_generator/
 
 

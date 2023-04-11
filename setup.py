@@ -21,6 +21,5 @@ setup(
         'torch-sparse==0.6.16+pt113cu117',
         'torch==1.13.1',
         'torch-geometric==2.2.0',
-        '/home/renan/osrd/python/railjson_generator/'
     ],
 )
