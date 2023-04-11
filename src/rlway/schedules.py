@@ -24,29 +24,36 @@ class Schedule(object):
 
     @property
     def num_track_sections(self) -> int:
+        """Number of track sections"""
         return len(self._df)
 
     @property
+    def track_sections(self) -> List[int]:
+        """List of track sections"""
+        return self._df.index.to_list()
+
+    @property
     def num_trains(self) -> int:
+        """Number of trains"""
         return len(self._df.columns.levels[0])
 
     @property
     def trains(self) -> List[int]:
+        """List of trains"""
         return list(self._df.columns.levels[0])
 
     @property
-    def track_sections(self) -> List[int]:
-        return self._df.index.to_list()
-
-    @property
     def df(self) -> pd.DataFrame:
+        """ Schedule as a pandas DataFrale"""
         return self._df
 
     def set(self, train, track, interval):
+        """Set times for a train at a given track section"""
         self._df.at[track, train] = interval
 
     @property
     def starts(self) -> pd.DataFrame:
+        """Times when the trains enter the track section"""
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 's']
@@ -54,6 +61,7 @@ class Schedule(object):
 
     @property
     def ends(self) -> pd.DataFrame:
+        """Times when the trains leave the track section"""
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 'e']
@@ -61,23 +69,8 @@ class Schedule(object):
 
     @property
     def lengths(self) -> pd.DataFrame:
+        """How much time do the train occupy the track section"""
         return self.ends - self.starts
-
-    def plot(self, alpha=.5):
-
-        for train in self._df.columns.levels[0]:
-            plt.barh(
-                width=self.lengths[train],
-                left=self.starts[train],
-                y=self._df.index,
-                label=train,
-                height=1,
-                alpha=alpha
-                )
-        plt.gca().invert_yaxis()
-        plt.xlabel('Time')
-        plt.ylabel('Track sections')
-        plt.legend()
 
     def trajectory(self, train: int) -> List[int]:
         return list(
@@ -89,9 +82,22 @@ class Schedule(object):
     def previous_track_section(
         self,
         train: int,
-        track_section: int
-    ) -> Union[int, None]:
+        track_section: Union[int, str],
+    ) -> Union[int, str, None]:
+        """"Previous track section index in train's trajectory (None if 1st)
 
+        Parameters
+        ----------
+        train : int
+            Train index
+        track_section : Union[int, str]
+            Track section index (integer or string)
+
+        Returns
+        -------
+        Union[int, str, None]
+            Previous track section index or None
+        """
         t = self.trajectory(train)
         idx = list(t).index(track_section)
 
@@ -99,7 +105,25 @@ class Schedule(object):
             return t[idx-1]
         return None
 
-    def next_track_section(self, train: int, track_section: int) -> int:
+    def next_track_section(
+        self,
+        train: int,
+        track_section: Union[int, str],
+    ) -> Union[int, str, None]:
+        """Next track section index in train's trajectory (None if last)
+
+        Parameters
+        ----------
+        train : int
+            Train index
+        track_section : Union[int, str]
+            Track section index (integer or string)
+
+        Returns
+        -------
+        Union[int, str, None]
+            Previous track section index or None
+        """
 
         t = self.trajectory(train)
         idx = list(t).index(track_section)
@@ -112,9 +136,26 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        track_section: int
+        track_section: Union[int, str]
     ) -> bool:
+        """Given two trains trajectories, is the track section a point switch ?
 
+        Parameters
+        ----------
+        train1 : int
+            first train index
+        train2 : int
+            second train index
+        track_section : Union[int, str]
+            Track section index
+
+        Returns
+        -------
+        bool
+            True if it is point switch, False otherwise
+            False if the track section is not in the trajectory of
+            one of the trains
+        """
         if (
             track_section not in self.trajectory(train1)
             or
@@ -134,7 +175,24 @@ class Schedule(object):
         train2: int,
         track_section
     ) -> bool:
+        """Given two trains, is the track section just after a point switch ?
 
+        Parameters
+        ----------
+        train1 : int
+            first train index
+        train2 : int
+            second train index
+        track_section : Union[int, str]
+            Track section index
+
+        Returns
+        -------
+        bool
+            True if it is just after a point switch, False otherwise
+            False if the track section is not in the trajectory
+            of one of the trains
+        """
         if (
             track_section not in self.trajectory(train1)
             or
@@ -152,8 +210,25 @@ class Schedule(object):
             )
         )
 
+    # actions
+
     def shift_train_departure(self, train: int, time: float) -> 'Schedule':
-        """Shift the departure by a given time"""
+        """Shift the departure by a given time
+
+        All the trajectory is shifted
+
+        Parameters
+        ----------
+        train : int
+            Train index
+        time : float
+            Departure's delay
+
+        Returns
+        -------
+        Schedule
+            The new schedule
+        """
 
         new_schedule = copy.deepcopy(self)
 
@@ -164,7 +239,7 @@ class Schedule(object):
     def add_delay(
         self,
         train: int,
-        track_section: int,
+        track_section: Union[int, str],
         delay: float
     ) -> 'Schedule':
 
@@ -182,51 +257,11 @@ class Schedule(object):
 
         return new_schedule
 
-    def conflicts(self, train: int) -> pd.DataFrame:
-
-        starts0 = (
-            pd.concat([self._df[train, 's']]*self.num_trains, axis=1)
-            .set_axis(range(self.num_trains), axis=1)
-        )
-        ends0 = (
-            pd.concat([self._df[train, 'e']]*self.num_trains, axis=1)
-            .set_axis(range(self.num_trains), axis=1)
-        )
-
-        mask1 = self.ends >= starts0
-        max_starts = (
-            pd.concat([starts0, self.starts])
-            .rename_axis('index')
-            .groupby('index').max()
-        )
-        min_ends = (
-            pd.concat([ends0, self.ends])
-            .rename_axis('index')
-            .groupby('index').min()
-        )
-        mask2 = max_starts < min_ends
-
-        # mask = np.logical_and(mask1, mask2)
-
-        conflict_times = self.starts[mask1 & mask2].drop(columns=train)
-
-        return (conflict_times[conflict_times.notna()])
-
-    def has_conflicts(self, train: int) -> bool:
-
-        return ~self.conflicts(train).isna().all().all()
-
-    def first_conflict(self, train: int) -> Tuple[int, int]:
-
-        c = self.conflicts(train).stack()
-        track_section, other_train = c.index[np.argmin(c)]
-        return track_section, other_train
-
     def shift_train_after(
         self,
         train1: int,
         train2: int,
-        track_section: int
+        track_section: Union[int, str]
     ) -> 'Schedule':
         """Train1 waits until train has freed track_section"""
 
@@ -269,6 +304,46 @@ class Schedule(object):
 
         return new_schedule
 
+    # conflicts_detection
+
+    def conflicts(self, train: int) -> pd.DataFrame:
+
+        starts0 = (
+            pd.concat([self._df[train, 's']]*self.num_trains, axis=1)
+            .set_axis(range(self.num_trains), axis=1)
+        )
+        ends0 = (
+            pd.concat([self._df[train, 'e']]*self.num_trains, axis=1)
+            .set_axis(range(self.num_trains), axis=1)
+        )
+
+        mask1 = self.ends >= starts0
+        max_starts = (
+            pd.concat([starts0, self.starts])
+            .rename_axis('index')
+            .groupby('index').max()
+        )
+        min_ends = (
+            pd.concat([ends0, self.ends])
+            .rename_axis('index')
+            .groupby('index').min()
+        )
+        mask2 = max_starts < min_ends
+
+        conflict_times = self.starts[mask1 & mask2].drop(columns=train)
+
+        return (conflict_times[conflict_times.notna()])
+
+    def has_conflicts(self, train: int) -> bool:
+
+        return ~self.conflicts(train).isna().all().all()
+
+    def first_conflict(self, train: int) -> Tuple[int, int]:
+
+        c = self.conflicts(train).stack()
+        track_section, other_train = c.index[np.argmin(c)]
+        return track_section, other_train
+
     def delays(self, initial_schedule: 'Schedule') -> pd.DataFrame:
 
         delta = self._df - initial_schedule._df
@@ -289,7 +364,12 @@ class Schedule(object):
         except:
             return self.delays(initial_schedule).loc[stations].sum().sum()
 
-    def first_in(self, train1: int, train2: int, track_section: int) -> int:
+    def first_in(
+        self,
+        train1: int,
+        train2: int,
+        track_section: Union[int, str]
+    ) -> int:
         """Among two trains, which train first arrives at a track_section"""
 
         trains_enter_at = (
@@ -342,6 +422,22 @@ class Schedule(object):
         nx.set_node_attributes(G, dict, 'times')
 
         return G
+
+    def plot(self, alpha=.5):
+
+        for train in self._df.columns.levels[0]:
+            plt.barh(
+                width=self.lengths[train],
+                left=self.starts[train],
+                y=self._df.index,
+                label=train,
+                height=1,
+                alpha=alpha
+                )
+        plt.gca().invert_yaxis()
+        plt.xlabel('Time')
+        plt.ylabel('Track sections')
+        plt.legend()
 
     def draw_graph(self):
         """
@@ -436,7 +532,6 @@ def schedule_from_simulation(
         for route in useful_routes
     ]
 
-    print(routes)
     s = Schedule(len(routes), len(res))
 
     routes_switches = {

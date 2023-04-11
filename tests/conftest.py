@@ -1,6 +1,8 @@
+import pytest
 from rlway.schedules import Schedule
 
 
+@pytest.fixture
 def three_trains() -> Schedule:
     schedule = Schedule(6, 3)
 
@@ -22,6 +24,24 @@ def three_trains() -> Schedule:
     return schedule
 
 
+@pytest.fixture
+def two_trains() -> Schedule:
+    schedule = Schedule(6, 3)
+
+    schedule.df.at[0, 0] = [0, 1]
+    schedule.df.at[2, 0] = [1, 2]
+    schedule.df.at[3, 0] = [2, 3]
+    schedule.df.at[4, 0] = [3, 4]
+
+    schedule.df.at[1, 1] = [1, 2]
+    schedule.df.at[2, 1] = [2, 3]
+    schedule.df.at[3, 1] = [3, 4]
+    schedule.df.at[5, 1] = [4, 5]
+
+    return schedule
+
+
+@pytest.fixture
 def two_trains_first_faster() -> Schedule:
 
     schedule = Schedule(6, 2)
@@ -39,6 +59,7 @@ def two_trains_first_faster() -> Schedule:
     return schedule
 
 
+@pytest.fixture
 def two_trains_first_slower() -> Schedule:
 
     schedule = Schedule(6, 2)
