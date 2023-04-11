@@ -41,10 +41,10 @@ SB_in = T2.add_signal(DB_in.position-20, Direction.START_TO_STOP, DB_in)
 SB1 = EAST_Q1.add_signal(DB1.position-20, Direction.START_TO_STOP, DB1)
 SB2 = EAST_Q2.add_signal(DB2.position-20, Direction.START_TO_STOP, DB2)
 
-WEST_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-WEST_Q2.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-EAST_Q1.add_buffer_stop(position=EAST_Q1.length, applicable_direction=ApplicableDirection.START_TO_STOP)
-EAST_Q2.add_buffer_stop(position=EAST_Q2.length, applicable_direction=ApplicableDirection.START_TO_STOP)
+# WEST_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
+# WEST_Q2.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
+# EAST_Q1.add_buffer_stop(position=EAST_Q1.length, applicable_direction=ApplicableDirection.START_TO_STOP)
+# EAST_Q2.add_buffer_stop(position=EAST_Q2.length, applicable_direction=ApplicableDirection.START_TO_STOP)
 
 D, S = [], []
 for pos in range(5):
@@ -62,7 +62,7 @@ builder.add_point_switch(
     SOUTH_Q1.end(),
     label='CVG2'
 )
-SOUTH_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
+# SOUTH_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
 DS1 = SOUTH_Q1.add_detector(position=430, label='DS1')
 SA1 = SOUTH_Q1.add_signal(DS1.position-20, Direction.START_TO_STOP, DS1)
 

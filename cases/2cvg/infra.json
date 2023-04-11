@@ -1,5 +1,5 @@
 {
-  "version": "3.1.0",
+  "version": "3.2.0",
   "operational_points": [],
   "routes": [
     {
@@ -251,6 +251,95 @@
       "switches_directions": {}
     },
     {
+      "id": "rt.buffer_stop.2->buffer_stop.4",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.2"
+      },
+      "entry_point_direction": "STOP_TO_START",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.4"
+      },
+      "release_detectors": [
+        "DB1",
+        "DB_in",
+        "D8",
+        "D7",
+        "D6",
+        "D5",
+        "DS1"
+      ],
+      "switches_directions": {
+        "DVG": "LEFT",
+        "CVG2": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.buffer_stop.2->buffer_stop.1",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.2"
+      },
+      "entry_point_direction": "STOP_TO_START",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.1"
+      },
+      "release_detectors": [
+        "DB1",
+        "DB_in",
+        "D8",
+        "D7",
+        "D6",
+        "D5",
+        "D4",
+        "D3",
+        "D2",
+        "D1",
+        "D0",
+        "DA_out",
+        "DA2"
+      ],
+      "switches_directions": {
+        "DVG": "LEFT",
+        "CVG2": "LEFT",
+        "CVG": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.buffer_stop.2->buffer_stop.0",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.2"
+      },
+      "entry_point_direction": "STOP_TO_START",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.0"
+      },
+      "release_detectors": [
+        "DB1",
+        "DB_in",
+        "D8",
+        "D7",
+        "D6",
+        "D5",
+        "D4",
+        "D3",
+        "D2",
+        "D1",
+        "D0",
+        "DA_out",
+        "DA1"
+      ],
+      "switches_directions": {
+        "DVG": "LEFT",
+        "CVG2": "LEFT",
+        "CVG": "LEFT"
+      }
+    },
+    {
       "id": "rt.DB2->buffer_stop.3",
       "entry_point": {
         "type": "Detector",
@@ -263,6 +352,95 @@
       },
       "release_detectors": [],
       "switches_directions": {}
+    },
+    {
+      "id": "rt.buffer_stop.3->buffer_stop.4",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.3"
+      },
+      "entry_point_direction": "STOP_TO_START",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.4"
+      },
+      "release_detectors": [
+        "DB2",
+        "DB_in",
+        "D8",
+        "D7",
+        "D6",
+        "D5",
+        "DS1"
+      ],
+      "switches_directions": {
+        "DVG": "RIGHT",
+        "CVG2": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.buffer_stop.3->buffer_stop.1",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.3"
+      },
+      "entry_point_direction": "STOP_TO_START",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.1"
+      },
+      "release_detectors": [
+        "DB2",
+        "DB_in",
+        "D8",
+        "D7",
+        "D6",
+        "D5",
+        "D4",
+        "D3",
+        "D2",
+        "D1",
+        "D0",
+        "DA_out",
+        "DA2"
+      ],
+      "switches_directions": {
+        "DVG": "RIGHT",
+        "CVG2": "LEFT",
+        "CVG": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.buffer_stop.3->buffer_stop.0",
+      "entry_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.3"
+      },
+      "entry_point_direction": "STOP_TO_START",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.0"
+      },
+      "release_detectors": [
+        "DB2",
+        "DB_in",
+        "D8",
+        "D7",
+        "D6",
+        "D5",
+        "D4",
+        "D3",
+        "D2",
+        "D1",
+        "D0",
+        "DA_out",
+        "DA1"
+      ],
+      "switches_directions": {
+        "DVG": "RIGHT",
+        "CVG2": "LEFT",
+        "CVG": "LEFT"
+      }
     },
     {
       "id": "rt.DS1->D5",
@@ -531,6 +709,7 @@
   "track_sections": [
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -540,10 +719,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -553,8 +732,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "WEST_Q1",
       "length": 450.0,
@@ -572,6 +750,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -581,10 +760,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -594,8 +773,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "WEST_Q2",
       "length": 450.0,
@@ -613,6 +791,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -622,10 +801,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -635,8 +814,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "T1",
       "length": 10000.0,
@@ -654,6 +832,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -663,10 +842,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -676,8 +855,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "T2",
       "length": 10000.0,
@@ -695,6 +873,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -704,10 +883,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -717,8 +896,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "EAST_Q1",
       "length": 450.0,
@@ -736,6 +914,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -745,10 +924,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -758,8 +937,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "EAST_Q2",
       "length": 450.0,
@@ -777,6 +955,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -786,10 +965,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -799,8 +978,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "SOUTH_Q1",
       "length": 450.0,
@@ -1257,32 +1435,27 @@
     {
       "track": "WEST_Q1",
       "position": 0.0,
-      "id": "buffer_stop.0",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.0"
     },
     {
       "track": "WEST_Q2",
       "position": 0.0,
-      "id": "buffer_stop.1",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.1"
     },
     {
       "track": "EAST_Q1",
       "position": 450.0,
-      "id": "buffer_stop.2",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.2"
     },
     {
       "track": "EAST_Q2",
       "position": 450.0,
-      "id": "buffer_stop.3",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.3"
     },
     {
       "track": "SOUTH_Q1",
       "position": 0.0,
-      "id": "buffer_stop.4",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.4"
     }
   ],
   "detectors": [

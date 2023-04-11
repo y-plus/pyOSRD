@@ -9,6 +9,10 @@ dist/
 *.py[ocd]
 __pycache__
 
+# tests
+.pytest_cache
+
+
 # Egg metadata
 *.egg-info
 .eggs

@@ -1,14 +1,8 @@
-numpy
-pandas
-networkx
-matplotlib
-gymnasium
-geojson-pydantic==0.3.1
+-e .
 jupyter
 ipykernel
-torch
-pyg-lib==0.1.0+pt113cu117
-torch-scatter==2.1.0+pt113cu117
-torch-sparse==0.6.16+pt113cu117
-torch-geometric
+pytest
+coverage
+flake8
+
 
