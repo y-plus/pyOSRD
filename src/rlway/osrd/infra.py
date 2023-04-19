@@ -8,7 +8,7 @@ from IPython.display import Image, display
 import networkx as nx
 
 
-def read_json(file: str) -> dict:
+def read_json(file: str) -> Dict:
     with open(file, 'r') as f:
         dict_ = json.load(f)
     return dict_
