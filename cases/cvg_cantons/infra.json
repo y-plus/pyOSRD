@@ -1,5 +1,5 @@
 {
-  "version": "3.1.0",
+  "version": "3.2.0",
   "operational_points": [],
   "routes": [
     {
@@ -372,6 +372,7 @@
   "track_sections": [
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -381,10 +382,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -394,8 +395,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "STA_Q1",
       "length": 450.0,
@@ -413,6 +413,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -422,10 +423,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -435,8 +436,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "STA_Q2",
       "length": 450.0,
@@ -454,6 +454,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -463,10 +464,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -476,8 +477,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "T",
       "length": 10000.0,
@@ -495,6 +495,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -504,10 +505,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -517,8 +518,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "STB_Q1",
       "length": 450.0,
@@ -536,6 +536,7 @@
     },
     {
       "geo": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -545,10 +546,10 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "sch": {
+        "type": "LineString",
         "coordinates": [
           [
             0.0,
@@ -558,8 +559,7 @@
             0.0,
             0.0
           ]
-        ],
-        "type": "LineString"
+        ]
       },
       "id": "STB_Q2",
       "length": 450.0,
@@ -854,26 +854,22 @@
     {
       "track": "STA_Q1",
       "position": 0.0,
-      "id": "buffer_stop.0",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.0"
     },
     {
       "track": "STA_Q2",
       "position": 0.0,
-      "id": "buffer_stop.1",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.1"
     },
     {
       "track": "STB_Q1",
       "position": 450.0,
-      "id": "buffer_stop.2",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.2"
     },
     {
       "track": "STB_Q2",
       "position": 450.0,
-      "id": "buffer_stop.3",
-      "applicable_directions": "START_TO_STOP"
+      "id": "buffer_stop.3"
     }
   ],
   "detectors": [

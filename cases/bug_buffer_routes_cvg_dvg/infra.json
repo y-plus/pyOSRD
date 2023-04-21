@@ -176,50 +176,6 @@
       "switches_directions": {}
     },
     {
-      "id": "rt.buffer_stop.2->buffer_stop.1",
-      "entry_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.2"
-      },
-      "entry_point_direction": "STOP_TO_START",
-      "exit_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.1"
-      },
-      "release_detectors": [
-        "DB1",
-        "DB_in",
-        "DA_out",
-        "DA2"
-      ],
-      "switches_directions": {
-        "DVG": "LEFT",
-        "CVG": "RIGHT"
-      }
-    },
-    {
-      "id": "rt.buffer_stop.2->buffer_stop.0",
-      "entry_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.2"
-      },
-      "entry_point_direction": "STOP_TO_START",
-      "exit_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.0"
-      },
-      "release_detectors": [
-        "DB1",
-        "DB_in",
-        "DA_out",
-        "DA1"
-      ],
-      "switches_directions": {
-        "DVG": "LEFT",
-        "CVG": "LEFT"
-      }
-    },
-    {
       "id": "rt.DB2->buffer_stop.3",
       "entry_point": {
         "type": "Detector",
@@ -232,50 +188,6 @@
       },
       "release_detectors": [],
       "switches_directions": {}
-    },
-    {
-      "id": "rt.buffer_stop.3->buffer_stop.1",
-      "entry_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.3"
-      },
-      "entry_point_direction": "STOP_TO_START",
-      "exit_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.1"
-      },
-      "release_detectors": [
-        "DB2",
-        "DB_in",
-        "DA_out",
-        "DA2"
-      ],
-      "switches_directions": {
-        "DVG": "RIGHT",
-        "CVG": "RIGHT"
-      }
-    },
-    {
-      "id": "rt.buffer_stop.3->buffer_stop.0",
-      "entry_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.3"
-      },
-      "entry_point_direction": "STOP_TO_START",
-      "exit_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.0"
-      },
-      "release_detectors": [
-        "DB2",
-        "DB_in",
-        "DA_out",
-        "DA1"
-      ],
-      "switches_directions": {
-        "DVG": "RIGHT",
-        "CVG": "LEFT"
-      }
     }
   ],
   "switch_types": [
@@ -671,7 +583,15 @@
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DA1",
-      "logical_signals": [],
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
       "extensions": {
         "sncf": {
           "angle_geo": 90.0,
@@ -698,7 +618,15 @@
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DA2",
-      "logical_signals": [],
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
       "extensions": {
         "sncf": {
           "angle_geo": 90.0,
@@ -725,7 +653,15 @@
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DA_out",
-      "logical_signals": [],
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
       "extensions": {
         "sncf": {
           "angle_geo": 90.0,
@@ -752,7 +688,15 @@
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DB_in",
-      "logical_signals": [],
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
       "extensions": {
         "sncf": {
           "angle_geo": 90.0,
@@ -779,7 +723,15 @@
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DB1",
-      "logical_signals": [],
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
       "extensions": {
         "sncf": {
           "angle_geo": 90.0,
@@ -806,7 +758,15 @@
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DB2",
-      "logical_signals": [],
+      "logical_signals": [
+        {
+          "signaling_system": "BAL",
+          "next_signaling_systems": [],
+          "settings": {
+            "Nf": "true"
+          }
+        }
+      ],
       "extensions": {
         "sncf": {
           "angle_geo": 90.0,

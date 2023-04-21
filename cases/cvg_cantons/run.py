@@ -5,7 +5,6 @@ sys.path.append("/home/renan/osrd/core/examples/generated/lib/")
 from railjson_generator import (
     InfraBuilder,
     SimulationBuilder,
-    ApplicableDirection,
     Location,
 )
 from railjson_generator.schema.infra.direction import Direction
@@ -39,14 +38,14 @@ SB_in = T.add_signal(DB_in.position-20, Direction.START_TO_STOP, DB_in)
 SB1 = STB_Q1.add_signal(DB1.position-20, Direction.START_TO_STOP, DB1)
 SB2 = STB_Q2.add_signal(DB2.position-20, Direction.START_TO_STOP, DB2)
 
-STA_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-STA_Q2.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-STB_Q1.add_buffer_stop(position=STB_Q1.length, applicable_direction=ApplicableDirection.START_TO_STOP)
-STB_Q2.add_buffer_stop(position=STB_Q2.length, applicable_direction=ApplicableDirection.START_TO_STOP)
+# STA_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
+# STA_Q2.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
+# STB_Q1.add_buffer_stop(position=STB_Q1.length, applicable_direction=ApplicableDirection.START_TO_STOP)
+# STB_Q2.add_buffer_stop(position=STB_Q2.length, applicable_direction=ApplicableDirection.START_TO_STOP)
 
 D, S = [], []
 for pos in range(4):
-    D.append(T.add_detector(position = 2000.*(1+pos), label=f"D{str(pos)}"))
+    D.append(T.add_detector(position=2_000.*(1+pos), label=f"D{str(pos)}"))
     T.add_signal(D[pos].position-20, Direction.START_TO_STOP, D[pos])
 
 infra = builder.build()
