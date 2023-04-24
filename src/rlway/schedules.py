@@ -57,7 +57,7 @@ class Schedule(object):
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 's']
-            ].set_axis(self._df.columns.levels[0], axis=1)
+            ].set_axis(self._df.columns.levels[0], axis=1).astype(float)
 
     @property
     def ends(self) -> pd.DataFrame:
@@ -65,7 +65,7 @@ class Schedule(object):
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 'e']
-            ].set_axis(self._df.columns.levels[0], axis=1)
+            ].set_axis(self._df.columns.levels[0], axis=1).astype(float)
 
     @property
     def lengths(self) -> pd.DataFrame:

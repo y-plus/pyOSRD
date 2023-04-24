@@ -1,6 +1,8 @@
 import pytest
 from rlway.schedules import Schedule
 
+from _build_infra_test import infra_cvg_dvg
+
 
 @pytest.fixture
 def three_trains() -> Schedule:
@@ -75,3 +77,11 @@ def two_trains_first_slower() -> Schedule:
     schedule.df.at[5, 1] = [7, 8]
 
     return schedule
+
+
+infra = infra_cvg_dvg()
+
+
+@pytest.fixture()
+def infra_test():
+    return infra.to_rjs().dict()

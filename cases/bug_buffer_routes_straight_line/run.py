@@ -38,6 +38,7 @@ train0 = builder.add_train_schedule(
 sim = builder.build()
 
 infra.save("infra.json")
+
 sim.save('simulation.json')
 
-os.system("java -jar /home/renan/osrd/core/build/libs/osrd-all.jar standalone-simulation --infra_path infra.json --sim_path simulation.json --res_path results.json")
+# os.system("java -jar /home/renan/osrd/core/build/libs/osrd-all.jar standalone-simulation --infra_path infra.json --sim_path simulation.json --res_path results.json")

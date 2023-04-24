@@ -41,7 +41,6 @@ def test_schedules_starts(three_trains):
             1: [np.nan, 1, 2, 3, np.nan, 4],
             2: [2, np.nan, 3, 4, 5, np.nan],
         },
-        dtype=int
     )
     assert_frame_equal(three_trains.starts, expected)
 
@@ -53,7 +52,6 @@ def test_schedules_ends(three_trains):
             1: [np.nan, 2, 3, 4, np.nan, 5],
             2: [3, np.nan, 4, 5, 6, np.nan],
         },
-        dtype=int
     )
     assert_frame_equal(three_trains.ends, expected)
 
@@ -65,7 +63,6 @@ def test_schedules_lengths(three_trains):
             1: [np.nan, 1, 1, 1, np.nan, 1],
             2: [1, np.nan, 1, 1, 1, np.nan],
         },
-        dtype=int
     )
     assert_frame_equal(three_trains.lengths, expected)
 
