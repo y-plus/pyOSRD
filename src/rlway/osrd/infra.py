@@ -1,7 +1,7 @@
 import os
 import json
 
-from typing import Tuple, Dict, List
+from typing import Tuple, Dict, List, Any
 
 import base64
 from IPython.display import Image, display
@@ -22,7 +22,8 @@ def read_jsons_in_dir(directory: str) -> Tuple[Dict, Dict, List]:
     )
 
 
-def routes(infra: Dict) -> List:
+def routes(infra: Dict) -> List[str]:
+    """List of routes ids"""
     return [route['id'] for route in infra['routes']]
 
 
@@ -35,19 +36,33 @@ def route_switches(infra: Dict) -> Dict[str, str]:
     }
 
 
-def route_limits(infra: Dict) -> Dict:
-    points = {d['id']: (d['track'], d['position']) for d in infra['detectors']}
-    points.update({
+def route_limits(infra: Dict) -> Dict[str, Tuple[str, float]]:
+    """Dict of routes limiting points (detectors and buffer stops)
+
+    >>> {'point_label' : ('track_id', position: float), ...}
+
+    Returns
+    -------
+    Dict[str, Tuple[str, float]]
+      Keys are points labels, values are tuples (associated track, position)
+    """
+
+    points_dict = {
+        d['id']: (d['track'], d['position']) for d in infra['detectors']
+    }
+    points_dict.update({
         bs['id']: (bs['track'], bs['position']) for bs in infra['buffer_stops']
     })
-    return points
+    return points_dict
 
 
-def track_section_lengths(infra: Dict) -> Dict:
+def track_section_lengths(infra: Dict) -> Dict[str, float]:
+    """Dict of track sections and their lengths"""
     return {t['id']: t['length'] for t in infra['track_sections']}
 
 
-def route_lengths(infra: Dict) -> Dict:
+def route_lengths(infra: Dict) -> Dict[str, float]:
+    """Dict of routes and their lengths"""
 
     ts = nx.Graph()
 
@@ -70,6 +85,32 @@ def route_lengths(infra: Dict) -> Dict:
                 lengths[route] += track_section_lengths(infra)[t]
             lengths[route] += points[end][1]
     return lengths
+
+
+def num_switches(infra: Dict) -> int:
+    """Number of switches"""
+    return len(infra['switches'])
+
+
+def points_of_interest(infra: Dict) -> Dict[str, Any]:
+    """Points of interest are stations and switches"""
+    return {
+        point['id']: point
+        for point in infra['switches'] + infra['operational_points']
+    }
+
+
+def station_capacities(infra: Dict) -> Dict[str, int]:
+    """Dict of stations labels (operational points) and their capacities"""
+    return {
+        station['id']: len(station['parts'])
+        for station in infra['operational_points']
+    }
+
+
+def num_stations(infra: Dict) -> int:
+    """Number of stations (defined as operational points)"""
+    return len(station_capacities(infra))
 
 
 def draw_infra(

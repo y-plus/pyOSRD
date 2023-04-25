@@ -1,7 +1,7 @@
 import pytest
 from rlway.schedules import Schedule
 
-from _build_infra_test import infra_cvg_dvg
+from _build_infra_sim_test import infra_cvg_dvg, simulation_cvg_dvg_two_trains
 
 
 @pytest.fixture
@@ -79,9 +79,15 @@ def two_trains_first_slower() -> Schedule:
     return schedule
 
 
-infra = infra_cvg_dvg()
+built_infra = infra_cvg_dvg()
+built_simulation = simulation_cvg_dvg_two_trains(built_infra)
 
 
 @pytest.fixture()
 def infra_test():
-    return infra.to_rjs().dict()
+    return built_infra.to_rjs().dict()
+
+
+@pytest.fixture
+def simulation_test():
+    return built_simulation.format()

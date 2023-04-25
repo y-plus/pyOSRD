@@ -356,7 +356,7 @@ class Schedule(object):
     def total_delay_at_stations(
         self,
         initial_schedule,
-        stations: List[int]
+        stations: List[Union[int, str]]
     ) -> float:
 
         try:

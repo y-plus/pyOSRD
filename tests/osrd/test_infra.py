@@ -73,8 +73,26 @@ def test_infra_route_lengths(infra_test):
         }
 
 
+def test_infra_num_switches(infra_test):
+    assert infr.num_switches(infra_test) == 2
+
+
 def test_infra_draw_infra_not_fail(infra_test):
+    """Test if it does not raise an exception"""
     try:
         infr.draw_infra(infra_test)
     except:  # noqa
         assert False
+
+
+def test_infra_points_of_interest(infra_test):
+    poi = infr.points_of_interest(infra_test)
+    assert set(poi.keys()) == {'CVG', 'DVG', 'station0', 'station1'}
+
+
+def test_infra_station_capacities(infra_test):
+    assert infr.station_capacities(infra_test) == {'station0': 2, 'station1': 2}
+
+
+def test_infra_num_stations(infra_test):
+    assert infr.num_stations(infra_test) == 2
