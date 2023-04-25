@@ -59,3 +59,64 @@ def test_schedule_shift_train_after_after_a_switch(two_trains):
 
     assert_frame_equal(shifted.df[0], expected_train0)
     assert_frame_equal(shifted.df[1], two_trains.df[1])
+
+
+def test_schedule_shift_train_after_at_departure(three_trains):
+
+    shifted = three_trains.shift_train_after(0, 2, 0)
+    expected_train0 = pd.DataFrame(
+        [
+            [3, 4],
+            [np.nan, np.nan],
+            [4, 5],
+            [5, 6],
+            [6, 7],
+            [np.nan, np.nan],
+        ],
+        columns=['s', 'e'],
+        dtype=object
+    )
+
+    assert_frame_equal(shifted.df[0], expected_train0)
+    assert_frame_equal(shifted.df[2], three_trains.df[2])
+
+
+def test_schedules_propagate_delay_action_needed(
+    two_trains_two_blocks_before_dvg
+):
+    """conflict occurs at point switch => action/decision needed
+        => notihng is propagated
+    """
+    propagated, delayed_train = (
+        two_trains_two_blocks_before_dvg
+        .add_delay(train=0, track_section=2, delay=.5)
+        .propagate_delay(delayed_train=0)
+    )
+
+    assert_frame_equal(
+        two_trains_two_blocks_before_dvg.add_delay(
+            train=0,
+            track_section=2,
+            delay=.5
+        ).df,
+        propagated.df
+    )
+
+
+def test_schedules_propagate_delay(
+    two_trains_two_blocks_before_dvg
+):
+    propagated, _ = (
+        two_trains_two_blocks_before_dvg
+        .add_delay(train=0, track_section=4, delay=.5)
+        .propagate_delay(delayed_train=0)
+    )
+
+    expected = pd.DataFrame(
+        {
+            0: [1, np.nan, 2, 3, 4.5, 5.5, np.nan],
+            1: [np.nan, 2, 3, 4.5, 5.5, np.nan, 6.5],
+        }
+    )
+
+    assert_frame_equal(propagated.ends, expected)

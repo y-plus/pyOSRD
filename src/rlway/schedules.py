@@ -1,8 +1,10 @@
-from typing import List, Tuple, Union, Dict
+from typing import List, Tuple, Union
 import copy
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.axes._axes import Axes
 import networkx as nx
 
 
@@ -351,6 +353,7 @@ class Schedule(object):
         return (
             delta.loc[pd.IndexSlice[:], pd.IndexSlice[:, 's']]
             .set_axis(self._df.columns.levels[0], axis=1)
+            .astype(float)
         )
 
     def total_delay_at_stations(
@@ -423,23 +426,7 @@ class Schedule(object):
 
         return G
 
-    def plot(self, alpha=.5):
-
-        for train in self._df.columns.levels[0]:
-            plt.barh(
-                width=self.lengths[train],
-                left=self.starts[train],
-                y=self._df.index,
-                label=train,
-                height=1,
-                alpha=alpha
-                )
-        plt.gca().invert_yaxis()
-        plt.xlabel('Time')
-        plt.ylabel('Track sections')
-        plt.legend()
-
-    def draw_graph(self):
+    def draw_graph(self) -> Axes:
         """
 
         https://networkx.org/documentation/stable/auto_examples/graph/plot_dag_layout.html
@@ -456,7 +443,10 @@ class Schedule(object):
         # Compute the multipartite_layout using the "layer" node attribute
         pos = nx.multipartite_layout(G, subset_key="layer")
 
-        nx.draw_networkx(G, pos, node_shape='s')
+        _, ax = plt.subplots()
+        nx.draw_networkx(G, pos, node_shape='s', ax=ax)
+
+        return ax
 
     def propagate_delay(self, delayed_train: int) -> Tuple[pd.DataFrame, int]:
 
@@ -487,13 +477,6 @@ class Schedule(object):
                     break
         return new_schedule, delayed_train
 
-    def sort(self) -> 'Schedule':
-        """Sort the schedule index by occupancies times"""
-        new_schedule = copy.deepcopy(self)
-        sorted_idx = self.starts.min(axis=1).sort_values().index
-        new_schedule ._df = new_schedule ._df.loc[sorted_idx]
-        return new_schedule
-
     def earliest_conflict(self) -> Tuple[Union[int, str], int]:
         """ Returns track section where earliest conflict occurs,
         first train in and last in."""
@@ -513,56 +496,28 @@ class Schedule(object):
                 )
         return None, None, None
 
+    def sort(self) -> 'Schedule':
+        """Sort the schedule index by occupancies times"""
+        new_schedule = copy.deepcopy(self)
+        sorted_idx = self.starts.min(axis=1).sort_values().index
+        new_schedule ._df = new_schedule ._df.loc[sorted_idx]
+        return new_schedule
 
-def schedule_from_simulation(
-        infra: Dict,
-        res: List,
-        simplify_route_names: bool = False,
-        remove_bufferstop_to_bufferstop: bool = True,
-) -> Schedule:
+    def plot(self, alpha: float = .5) -> Axes:
 
-    useful_routes = [
-        route
-        for route in infra['routes']
-        if not (('rt.buffer' in route['id']) and ('->buffer' in route['id']))
-    ] if remove_bufferstop_to_bufferstop else [infra['routes']]
+        _, ax = plt.subplots()
+        for train in self._df.columns.levels[0]:
+            ax.barh(
+                width=self.lengths[train],
+                left=self.starts[train],
+                y=self._df.index,
+                label=train,
+                height=1,
+                alpha=alpha
+                )
+        ax.invert_yaxis()
+        ax.set_xlabel('Time')
+        ax.set_ylabel('Track sections')
+        ax.legend()
 
-    routes = [
-        route['id']
-        for route in useful_routes
-    ]
-
-    s = Schedule(len(routes), len(res))
-
-    routes_switches = {
-        route['id']: list(route['switches_directions'].keys())[0]
-        for route in useful_routes
-        if len(list(route['switches_directions'].keys())) != 0
-    }
-    simulations = 'base_simulations'
-    simulations = 'eco_simulations'
-
-    for train in range(s.num_trains):
-        route_occupancies = res[train][simulations][0]['route_occupancies']
-        for route, times in route_occupancies.items():
-            if route in routes:
-                idx = routes.index(route)
-                s._df.loc[idx, (train, 's')] = times['time_head_occupy']
-                s._df.loc[idx, (train, 'e')] = times['time_tail_free']
-    s._df.index = routes
-
-    s._df.index = (
-        pd.Series(s.df.index.map(routes_switches))
-        .fillna(pd.Series(s.df.index))
-    )
-
-    s._df = s.df[~s.df.index.duplicated()]
-
-    if simplify_route_names:
-        s._df.index = (
-            s.df.index
-            .str.replace('rt.', '', regex=False)
-            .str.replace('buffer_stop', 'STOP', regex=False)
-        )
-
-    return s
+        return ax
