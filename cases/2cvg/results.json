@@ -1,1 +1,5063 @@
-[{"base_simulations":[{"head_positions":[{"offset":400.0,"path_offset":0.0,"time":0.0,"track_section":"WEST_Q1"},{"offset":403.6877089403523,"path_offset":3.6877089403523287,"time":4.0,"track_section":"WEST_Q1"},{"offset":423.01636855729333,"path_offset":23.01636855729334,"time":10.0,"track_section":"WEST_Q1"},{"offset":8.828024738027402,"path_offset":58.8280247380274,"time":16.0,"track_section":"T1"},{"offset":61.014205997204684,"path_offset":111.01420599720468,"time":22.0,"track_section":"T1"},{"offset":104.83436374260492,"path_offset":154.83436374260492,"time":26.0,"track_section":"T1"},{"offset":183.96297684784363,"path_offset":233.96297684784363,"time":32.0,"track_section":"T1"},{"offset":278.91772568490126,"path_offset":328.91772568490126,"time":38.0,"track_section":"T1"},{"offset":389.1804084229013,"path_offset":439.1804084229013,"time":44.0,"track_section":"T1"},{"offset":513.8872106029471,"path_offset":563.8872106029471,"time":50.0,"track_section":"T1"},{"offset":651.6683698059925,"path_offset":701.6683698059925,"time":56.0,"track_section":"T1"},{"offset":802.0961623123302,"path_offset":852.0961623123302,"time":62.0,"track_section":"T1"},{"offset":965.0493607740393,"path_offset":1015.0493607740393,"time":68.0,"track_section":"T1"},{"offset":1140.4351510240772,"path_offset":1190.4351510240772,"time":74.0,"track_section":"T1"},{"offset":1328.1768659478962,"path_offset":1378.1768659478962,"time":80.0,"track_section":"T1"},{"offset":1528.183637413785,"path_offset":1578.183637413785,"time":86.0,"track_section":"T1"},{"offset":1740.3411982465916,"path_offset":1790.3411982465916,"time":92.0,"track_section":"T1"},{"offset":2120.549469793094,"path_offset":2170.549469793094,"time":102.0,"track_section":"T1"},{"offset":2364.2934790995873,"path_offset":2414.2934790995873,"time":108.0,"track_section":"T1"},{"offset":2619.444595070302,"path_offset":2669.444595070302,"time":114.0,"track_section":"T1"},{"offset":2885.658926414239,"path_offset":2935.658926414239,"time":120.0,"track_section":"T1"},{"offset":3162.563990754671,"path_offset":3212.563990754671,"time":126.0,"track_section":"T1"},{"offset":3746.816363054769,"path_offset":3796.816363054769,"time":138.0,"track_section":"T1"},{"offset":4368.668343729119,"path_offset":4418.668343729119,"time":150.0,"track_section":"T1"},{"offset":5024.620000705183,"path_offset":5074.620000705183,"time":162.0,"track_section":"T1"},{"offset":5594.904367362632,"path_offset":5644.904367362632,"time":172.0,"track_section":"T1"},{"offset":6466.0,"path_offset":6516.0,"time":186.75118927192338,"track_section":"T1"},{"offset":6805.0,"path_offset":6855.0,"time":192.75118927192338,"track_section":"T1"},{"offset":7229.0,"path_offset":7279.0,"time":200.75118927192338,"track_section":"T1"},{"offset":7429.0,"path_offset":7479.0,"time":204.75118927192338,"track_section":"T1"},{"offset":7714.0,"path_offset":7764.0,"time":210.75118927192338,"track_section":"T1"},{"offset":7894.0,"path_offset":7944.0,"time":214.75118927192338,"track_section":"T1"},{"offset":8149.0,"path_offset":8199.0,"time":220.75118927192338,"track_section":"T1"},{"offset":8386.0,"path_offset":8436.0,"time":226.75118927192338,"track_section":"T1"},{"offset":8605.0,"path_offset":8655.0,"time":232.75118927192338,"track_section":"T1"},{"offset":8806.0,"path_offset":8856.0,"time":238.75118927192338,"track_section":"T1"},{"offset":8989.0,"path_offset":9039.0,"time":244.75118927192338,"track_section":"T1"},{"offset":9154.0,"path_offset":9204.0,"time":250.75118927192338,"track_section":"T1"},{"offset":9301.0,"path_offset":9351.0,"time":256.7511892719234,"track_section":"T1"},{"offset":9469.0,"path_offset":9519.0,"time":264.7511892719234,"track_section":"T1"},{"offset":9541.0,"path_offset":9591.0,"time":268.7511892719234,"track_section":"T1"},{"offset":9634.0,"path_offset":9684.0,"time":274.7511892719234,"track_section":"T1"},{"offset":9686.0,"path_offset":9736.0,"time":278.7511892719234,"track_section":"T1"},{"offset":9749.0,"path_offset":9799.0,"time":284.7511892719234,"track_section":"T1"},{"offset":9781.0,"path_offset":9831.0,"time":288.7511892719234,"track_section":"T1"},{"offset":9814.0,"path_offset":9864.0,"time":294.7511892719234,"track_section":"T1"},{"offset":9830.0,"path_offset":9880.0,"time":302.7511892719234,"track_section":"T1"},{"offset":9830.92225286443,"path_offset":9880.92225286443,"time":404.7511892719234,"track_section":"T1"},{"offset":9844.737564131869,"path_offset":9894.737564131869,"time":410.7511892719234,"track_section":"T1"},{"offset":9888.828024738028,"path_offset":9938.828024738028,"time":418.7511892719234,"track_section":"T1"},{"offset":9941.014205997206,"path_offset":9991.014205997206,"time":424.7511892719234,"track_section":"T1"},{"offset":9.43211440477171,"path_offset":10059.432114404772,"time":430.7511892719234,"track_section":"T2"},{"offset":93.87671506148035,"path_offset":10143.87671506148,"time":436.7511892719234,"track_section":"T2"},{"offset":230.76358301729852,"path_offset":10280.763583017299,"time":444.7511892719234,"track_section":"T2"},{"offset":350.808522375135,"path_offset":10400.808522375135,"time":450.7511892719234,"track_section":"T2"},{"offset":484.3298865361303,"path_offset":10534.32988653613,"time":456.7511892719234,"track_section":"T2"},{"offset":630.5561023962673,"path_offset":10680.556102396267,"time":462.7511892719234,"track_section":"T2"},{"offset":845.0493607740427,"path_offset":10895.049360774043,"time":470.7511892719234,"track_section":"T2"},{"offset":1020.4351510240813,"path_offset":11070.435151024081,"time":476.7511892719234,"track_section":"T2"},{"offset":1273.488407958821,"path_offset":11323.488407958821,"time":484.7511892719234,"track_section":"T2"},{"offset":1548.279279346758,"path_offset":11598.279279346758,"time":492.7511892719234,"track_section":"T2"},{"offset":1844.5180331911397,"path_offset":11894.51803319114,"time":500.7511892719234,"track_section":"T2"},{"offset":2080.513266886119,"path_offset":12130.513266886119,"time":506.7511892719234,"track_section":"T2"},{"offset":2413.1464038237827,"path_offset":12463.146403823783,"time":514.7511892719234,"track_section":"T2"},{"offset":2765.6589264142385,"path_offset":12815.658926414239,"time":522.7511892719234,"track_section":"T2"},{"offset":3137.175859372781,"path_offset":13187.17585937278,"time":530.7511892719234,"track_section":"T2"},{"offset":3526.7340515028445,"path_offset":13576.734051502845,"time":538.7511892719234,"track_section":"T2"},{"offset":3933.262445218208,"path_offset":13983.262445218208,"time":546.7511892719234,"track_section":"T2"},{"offset":4355.718669486176,"path_offset":14405.718669486176,"time":554.7511892719234,"track_section":"T2"},{"offset":4793.070957520327,"path_offset":14843.070957520327,"time":562.7511892719234,"track_section":"T2"},{"offset":5244.337054455422,"path_offset":15294.337054455422,"time":570.7511892719234,"track_section":"T2"},{"offset":5708.628002220636,"path_offset":15758.628002220636,"time":578.7511892719234,"track_section":"T2"},{"offset":7076.0,"path_offset":17126.0,"time":601.5003186791109,"track_section":"T2"},{"offset":7304.0,"path_offset":17354.0,"time":605.5003186791109,"track_section":"T2"},{"offset":7631.0,"path_offset":17681.0,"time":611.5003186791109,"track_section":"T2"},{"offset":7940.0,"path_offset":17990.0,"time":617.5003186791109,"track_section":"T2"},{"offset":8324.0,"path_offset":18374.0,"time":625.5003186791109,"track_section":"T2"},{"offset":8591.0,"path_offset":18641.0,"time":631.5003186791109,"track_section":"T2"},{"offset":8919.0,"path_offset":18969.0,"time":639.5003186791109,"track_section":"T2"},{"offset":9071.0,"path_offset":19121.0,"time":643.5003186791109,"track_section":"T2"},{"offset":9284.0,"path_offset":19334.0,"time":649.5003186791109,"track_section":"T2"},{"offset":9416.0,"path_offset":19466.0,"time":653.5003186791109,"track_section":"T2"},{"offset":9599.0,"path_offset":19649.0,"time":659.5003186791109,"track_section":"T2"},{"offset":9711.0,"path_offset":19761.0,"time":663.5003186791109,"track_section":"T2"},{"offset":9864.0,"path_offset":19914.0,"time":669.5003186791109,"track_section":"T2"},{"offset":9956.0,"path_offset":20006.0,"time":673.5003186791109,"track_section":"T2"},{"offset":79.0,"path_offset":20129.0,"time":679.5003186791109,"track_section":"EAST_Q1"},{"offset":151.0,"path_offset":20201.0,"time":683.5003186791109,"track_section":"EAST_Q1"},{"offset":244.0,"path_offset":20294.0,"time":689.5003186791109,"track_section":"EAST_Q1"},{"offset":296.0,"path_offset":20346.0,"time":693.5003186791109,"track_section":"EAST_Q1"},{"offset":359.0,"path_offset":20409.0,"time":699.5003186791109,"track_section":"EAST_Q1"},{"offset":391.0,"path_offset":20441.0,"time":703.5003186791109,"track_section":"EAST_Q1"},{"offset":424.0,"path_offset":20474.0,"time":709.5003186791109,"track_section":"EAST_Q1"},{"offset":440.0,"path_offset":20490.0,"time":718.5003186791109,"track_section":"EAST_Q1"}],"mechanical_energy_consumed":4.0160806879309626E9,"route_occupancies":{"rt.buffer_stop.0->DA1":{"time_head_occupy":0.0,"time_tail_free":43.529},"rt.DA1->DA_out":{"time_head_occupy":11.418,"time_tail_free":47.008},"rt.DA2->DA_out":{"time_head_occupy":11.418,"time_tail_free":47.008},"rt.DA_out->D0":{"time_head_occupy":20.876,"time_tail_free":108.377},"rt.D0->D1":{"time_head_occupy":98.402,"time_tail_free":149.837},"rt.D1->D2":{"time_head_occupy":142.192,"time_tail_free":184.597},"rt.D2->D3":{"time_head_occupy":177.887,"time_tail_free":225.032},"rt.D3->D4":{"time_head_occupy":215.342,"time_tail_free":448.296},"rt.D4->D5":{"time_head_occupy":420.207,"time_tail_free":513.973},"rt.DC1->D5":{"time_head_occupy":420.207,"time_tail_free":513.973},"rt.D5->D6":{"time_head_occupy":504.23,"time_tail_free":554.829},"rt.D6->D7":{"time_head_occupy":547.265,"time_tail_free":589.307},"rt.D7->D8":{"time_head_occupy":582.659,"time_tail_free":625.412},"rt.D8->DB_in":{"time_head_occupy":617.099,"time_tail_free":700.765},"rt.DB_in->DB2":{"time_head_occupy":674.14,"time_tail_free":711.174},"rt.DB_in->DB1":{"time_head_occupy":674.14,"time_tail_free":711.174},"rt.DB1->buffer_stop.2":{"time_head_occupy":677.002,"time_tail_free":718.499}},"signal_sightings":[{"offset":0.0,"signal":"signal.0","state":"VL","time":0.0},{"offset":0.0,"signal":"signal.2","state":"VL","time":0.0},{"offset":1630.0,"signal":"signal.6","state":"VL","time":87.497},{"offset":3610.0,"signal":"signal.7","state":"VL","time":134.249},{"offset":5590.0,"signal":"signal.8","state":"VL","time":171.052},{"offset":7570.0,"signal":"signal.9","state":"VL","time":206.625},{"offset":9550.0,"signal":"signal.10","state":"VL","time":266.418},{"offset":11630.0,"signal":"signal.11","state":"VL","time":493.634},{"offset":13610.0,"signal":"signal.12","state":"VL","time":539.4169999999999},{"offset":15590.0,"signal":"signal.13","state":"VL","time":575.869},{"offset":17570.0,"signal":"signal.14","state":"VL","time":609.424},{"offset":19620.0,"signal":"signal.3","state":"VL","time":658.507},{"offset":19680.0,"signal":"signal.4","state":"VL","time":660.578}],"speeds":[{"position":0.0,"speed":0.0,"time":0.0},{"position":0.922252864428832,"speed":0.922252864428832,"time":2.0},{"position":3.6877089403523287,"speed":1.8432032114946646,"time":4.0},{"position":8.293722075391658,"speed":2.7628099235446646,"time":6.0},{"position":23.01636855729334,"speed":4.5977722924939375,"time":10.0},{"position":45.065584085305474,"speed":6.425802688220971,"time":14.0},{"position":91.80694364871871,"speed":9.151702521168463,"time":20.0},{"position":132.02578194409776,"speed":10.956016119575583,"time":24.0},{"position":205.8111505355178,"speed":13.633851147514424,"time":30.0},{"position":364.0010855583903,"speed":17.964203409991594,"time":40.0},{"position":520.8085223751327,"speed":21.17627237751497,"time":48.0},{"position":750.4119675638053,"speed":24.722507504211322,"time":58.0},{"position":1015.0493607740393,"speed":28.197139397822923,"time":68.0},{"position":1314.2283967487497,"speed":31.632946392440452,"time":78.0},{"position":1718.2792793467538,"speed":35.69620951388874,"time":90.0},{"position":2091.8814950553574,"speed":39.008946430666164,"time":100.0},{"position":2583.146403823782,"speed":42.840044617476885,"time":112.0},{"position":3026.7909750048643,"speed":45.8612809589621,"time":122.0},{"position":4000.0966608720946,"speed":51.331952899835336,"time":142.0},{"position":5187.023560238864,"speed":56.41357869517583,"time":164.0},{"position":6273.23006908473,"speed":60.056389592742505,"time":182.63841008643837},{"position":7279.0,"speed":51.0,"time":200.75118927192338},{"position":7671.0,"speed":47.0,"time":208.75118927192338},{"position":8116.0,"speed":42.0,"time":218.75118927192338},{"position":8511.0,"speed":37.0,"time":228.75118927192338},{"position":8856.0,"speed":32.0,"time":238.75118927192338},{"position":9151.0,"speed":27.0,"time":248.75118927192338},{"position":9439.0,"speed":21.0,"time":260.7511892719234},{"position":9624.0,"speed":16.0,"time":270.7511892719234},{"position":9684.0,"speed":14.0,"time":274.7511892719234},{"position":9759.0,"speed":11.0,"time":280.7511892719234},{"position":9799.0,"speed":9.0,"time":284.7511892719234},{"position":9844.0,"speed":6.0,"time":290.7511892719234},{"position":9855.0,"speed":5.0,"time":292.7511892719234},{"position":9871.0,"speed":3.0,"time":296.7511892719234},{"position":9876.0,"speed":2.0,"time":298.7511892719234},{"position":9879.0,"speed":1.0,"time":300.7511892719234},{"position":9880.0,"speed":0.0,"time":302.7511892719234},{"position":9880.92225286443,"speed":0.922252864428832,"time":404.7511892719234},{"position":9883.687708940353,"speed":1.8432032114946646,"time":406.7511892719234},{"position":9888.293722075392,"speed":2.7628099235446646,"time":408.7511892719234},{"position":9894.737564131869,"speed":3.6810321329315396,"time":410.7511892719234},{"position":9913.126961123437,"speed":5.5128202736486145,"time":414.7511892719234},{"position":9954.40995191504,"speed":8.245289212510947,"time":420.7511892719234},{"position":10012.0257819441,"speed":10.956016119575583,"time":426.7511892719234},{"position":10085.81115053552,"speed":13.633851147514424,"time":432.7511892719234},{"position":10175.535523665854,"speed":16.26304555554944,"time":438.7511892719234},{"position":10359.215594888605,"speed":20.416655109014798,"time":448.7511892719234},{"position":10630.411967563809,"speed":24.722507504211322,"time":460.7511892719234},{"position":10952.133630424389,"speed":28.887130252522393,"time":472.7511892719234},{"position":11323.488407958821,"speed":32.99601920421478,"time":484.7511892719234},{"position":11743.73948472267,"speed":37.03257709012569,"time":496.7511892719234},{"position":12211.764211636006,"speed":40.94617596393437,"time":508.7511892719234},{"position":12725.71471107888,"speed":44.67344770369652,"time":520.7511892719234},{"position":13282.916017107687,"speed":48.14996944158808,"time":532.7511892719234},{"position":13880.096660872097,"speed":51.331952899835336,"time":544.7511892719234},{"position":14513.699691247775,"speed":54.22120451481157,"time":556.7511892719234},{"position":15180.267199690905,"speed":56.83006075685937,"time":568.7511892719234},{"position":16693.21710989736,"speed":61.61804029748626,"time":594.2642380841384},{"position":17574.0,"speed":54.0,"time":609.5003186791109},{"position":18374.0,"speed":46.0,"time":625.5003186791109},{"position":18969.0,"speed":39.0,"time":639.5003186791109},{"position":19265.0,"speed":35.0,"time":647.5003186791109},{"position":19529.0,"speed":31.0,"time":655.5003186791109},{"position":19706.0,"speed":28.0,"time":661.5003186791109},{"position":19914.0,"speed":24.0,"time":669.5003186791109},{"position":20090.0,"speed":20.0,"time":677.5003186791109},{"position":20234.0,"speed":16.0,"time":685.5003186791109},{"position":20346.0,"speed":12.0,"time":693.5003186791109},{"position":20426.0,"speed":8.0,"time":701.5003186791109},{"position":20454.0,"speed":6.0,"time":705.5003186791109},{"position":20474.0,"speed":4.0,"time":709.5003186791109},{"position":20486.0,"speed":2.0,"time":713.5003186791109},{"position":20489.0,"speed":1.0,"time":715.5003186791109},{"position":20490.0,"speed":0.0,"time":718.5003186791109}],"stops":[{"duration":100.0,"position":9880.0,"time":302.7511892719234},{"duration":1.0,"position":20490.0,"time":718.5003186791109}],"zone_updates":[{"isEntry":true,"offset":0.0,"time":0.0,"zone":"zone.DA1:REVERSE"},{"isEntry":true,"offset":30.0,"time":11.418,"zone":"zone.DA1:NORMAL"},{"isEntry":true,"offset":100.0,"time":20.876,"zone":"zone.D0:REVERSE"},{"isEntry":false,"offset":430.0,"time":43.529,"zone":"zone.DA1:REVERSE"},{"isEntry":false,"offset":500.0,"time":47.008,"zone":"zone.DA1:NORMAL"},{"isEntry":true,"offset":2030.0,"time":98.402,"zone":"zone.D0:NORMAL"},{"isEntry":false,"offset":2430.0,"time":108.377,"zone":"zone.D0:REVERSE"},{"isEntry":true,"offset":4010.0,"time":142.192,"zone":"zone.D1:NORMAL"},{"isEntry":false,"offset":4410.0,"time":149.837,"zone":"zone.D0:NORMAL"},{"isEntry":true,"offset":5990.0,"time":177.887,"zone":"zone.D2:NORMAL"},{"isEntry":false,"offset":6390.0,"time":184.597,"zone":"zone.D1:NORMAL"},{"isEntry":true,"offset":7970.0,"time":215.342,"zone":"zone.D3:NORMAL"},{"isEntry":false,"offset":8370.0,"time":225.032,"zone":"zone.D2:NORMAL"},{"isEntry":true,"offset":9950.0,"time":420.207,"zone":"zone.D4:NORMAL"},{"isEntry":false,"offset":10350.0,"time":448.296,"zone":"zone.D3:NORMAL"},{"isEntry":true,"offset":12030.0,"time":504.23,"zone":"zone.D5:NORMAL"},{"isEntry":false,"offset":12430.0,"time":513.973,"zone":"zone.D4:NORMAL"},{"isEntry":true,"offset":14010.0,"time":547.265,"zone":"zone.D6:NORMAL"},{"isEntry":false,"offset":14410.0,"time":554.829,"zone":"zone.D5:NORMAL"},{"isEntry":true,"offset":15990.0,"time":582.659,"zone":"zone.D7:NORMAL"},{"isEntry":false,"offset":16390.0,"time":589.307,"zone":"zone.D6:NORMAL"},{"isEntry":true,"offset":17970.0,"time":617.099,"zone":"zone.D8:NORMAL"},{"isEntry":false,"offset":18370.0,"time":625.412,"zone":"zone.D7:NORMAL"},{"isEntry":true,"offset":20020.0,"time":674.14,"zone":"zone.DB1:REVERSE"},{"isEntry":true,"offset":20080.0,"time":677.002,"zone":"zone.DB1:NORMAL"},{"isEntry":false,"offset":20420.0,"time":700.765,"zone":"zone.D8:NORMAL"},{"isEntry":false,"offset":20480.0,"time":711.174,"zone":"zone.DB1:REVERSE"}]}],"eco_simulations":[{"head_positions":[{"offset":400.0,"path_offset":0.0,"time":0.0,"track_section":"WEST_Q1"},{"offset":403.6877089403523,"path_offset":3.6877089403523287,"time":4.227559352678131,"track_section":"WEST_Q1"},{"offset":423.01636855729333,"path_offset":23.01636855729334,"time":10.568898381695329,"track_section":"WEST_Q1"},{"offset":8.828024738027402,"path_offset":58.8280247380274,"time":16.910237410712526,"track_section":"T1"},{"offset":61.014205997204684,"path_offset":111.01420599720468,"time":23.25157643972972,"track_section":"T1"},{"offset":104.83436374260492,"path_offset":154.83436374260492,"time":27.479135792407856,"track_section":"T1"},{"offset":183.96297684784363,"path_offset":233.96297684784363,"time":33.82047482142505,"track_section":"T1"},{"offset":278.91772568490126,"path_offset":328.91772568490126,"time":40.16181385044224,"track_section":"T1"},{"offset":389.1804084229013,"path_offset":439.1804084229013,"time":46.50315287945944,"track_section":"T1"},{"offset":513.8872106029471,"path_offset":563.8872106029471,"time":52.844491908476634,"track_section":"T1"},{"offset":651.6683698059925,"path_offset":701.6683698059925,"time":59.18583093749382,"track_section":"T1"},{"offset":802.0961623123302,"path_offset":852.0961623123302,"time":65.52716996651101,"track_section":"T1"},{"offset":965.0493607740393,"path_offset":1015.0493607740393,"time":71.8685089955282,"track_section":"T1"},{"offset":1140.4351510240772,"path_offset":1190.4351510240772,"time":78.20984802454538,"track_section":"T1"},{"offset":1328.1768659478962,"path_offset":1378.1768659478962,"time":84.55118705356257,"track_section":"T1"},{"offset":1528.183637413785,"path_offset":1578.183637413785,"time":90.89252608257976,"track_section":"T1"},{"offset":1740.3411982465916,"path_offset":1790.3411982465916,"time":97.23386511159696,"track_section":"T1"},{"offset":2120.549469793094,"path_offset":2170.549469793094,"time":107.80276349329229,"track_section":"T1"},{"offset":2364.2934790995873,"path_offset":2414.2934790995873,"time":114.1441025223095,"track_section":"T1"},{"offset":2619.444595070302,"path_offset":2669.444595070302,"time":120.4854415513267,"track_section":"T1"},{"offset":2885.658926414239,"path_offset":2935.658926414239,"time":126.8267805803439,"track_section":"T1"},{"offset":3162.563990754671,"path_offset":3212.563990754671,"time":133.1681196093611,"track_section":"T1"},{"offset":3746.816363054769,"path_offset":3796.816363054769,"time":145.85079766739545,"track_section":"T1"},{"offset":4368.668343729119,"path_offset":4418.668343729119,"time":158.5334757254298,"track_section":"T1"},{"offset":5024.620000705183,"path_offset":5074.620000705183,"time":171.2161537834642,"track_section":"T1"},{"offset":5594.904367362632,"path_offset":5644.904367362632,"time":181.7850521651595,"track_section":"T1"},{"offset":6466.0,"path_offset":6516.0,"time":197.37543420757078,"track_section":"T1"},{"offset":6805.0,"path_offset":6855.0,"time":203.71677323658798,"track_section":"T1"},{"offset":7229.0,"path_offset":7279.0,"time":212.17189194194427,"track_section":"T1"},{"offset":7526.0,"path_offset":7576.0,"time":218.51323097096147,"track_section":"T1"},{"offset":7714.0,"path_offset":7764.0,"time":222.7407903236396,"track_section":"T1"},{"offset":7894.0,"path_offset":7944.0,"time":226.96834967631773,"track_section":"T1"},{"offset":8149.0,"path_offset":8199.0,"time":233.30968870533493,"track_section":"T1"},{"offset":8386.0,"path_offset":8436.0,"time":239.65102773435217,"track_section":"T1"},{"offset":8605.0,"path_offset":8655.0,"time":245.99236676336935,"track_section":"T1"},{"offset":8806.0,"path_offset":8856.0,"time":252.33370579238655,"track_section":"T1"},{"offset":8989.0,"path_offset":9039.0,"time":258.67504482140373,"track_section":"T1"},{"offset":9154.0,"path_offset":9204.0,"time":265.0163838504209,"track_section":"T1"},{"offset":9301.0,"path_offset":9351.0,"time":271.35772287943803,"track_section":"T1"},{"offset":9469.0,"path_offset":9519.0,"time":279.8128415847942,"track_section":"T1"},{"offset":9541.0,"path_offset":9591.0,"time":284.0404009374723,"track_section":"T1"},{"offset":9634.0,"path_offset":9684.0,"time":290.3817399664895,"track_section":"T1"},{"offset":9686.0,"path_offset":9736.0,"time":294.6092993191676,"track_section":"T1"},{"offset":9749.0,"path_offset":9799.0,"time":300.9506383481847,"track_section":"T1"},{"offset":9781.0,"path_offset":9831.0,"time":305.1781977008628,"track_section":"T1"},{"offset":9814.0,"path_offset":9864.0,"time":311.51953672988,"track_section":"T1"},{"offset":9830.0,"path_offset":9880.0,"time":319.9746554352362,"track_section":"T1"},{"offset":9830.92225286443,"path_offset":9880.92225286443,"time":422.0739333645,"track_section":"T1"},{"offset":9844.737564131869,"path_offset":9894.737564131869,"time":428.37176715228685,"track_section":"T1"},{"offset":9888.828024738028,"path_offset":9938.828024738028,"time":436.7688788693358,"track_section":"T1"},{"offset":9941.014205997206,"path_offset":9991.014205997206,"time":443.06671265712265,"track_section":"T1"},{"offset":9.43211440477171,"path_offset":10059.432114404772,"time":449.3645464449095,"track_section":"T2"},{"offset":93.87671506148035,"path_offset":10143.87671506148,"time":455.6623802326961,"track_section":"T2"},{"offset":230.76358301729852,"path_offset":10280.763583017299,"time":464.05949194974505,"track_section":"T2"},{"offset":350.808522375135,"path_offset":10400.808522375135,"time":470.3573257375319,"track_section":"T2"},{"offset":531.6683698059951,"path_offset":10581.668369805995,"time":478.7544374545809,"track_section":"T2"},{"offset":682.096162312333,"path_offset":10732.096162312333,"time":485.0522712423677,"track_section":"T2"},{"offset":902.1336304243887,"path_offset":10952.133630424389,"time":493.4493829594167,"track_section":"T2"},{"offset":1081.6467632837848,"path_offset":11131.646763283785,"time":499.7472167472035,"track_section":"T2"},{"offset":1340.1587794434472,"path_offset":11390.158779443447,"time":508.1443284642525,"track_section":"T2"},{"offset":1620.341198246595,"path_offset":11670.341198246595,"time":516.5414401813015,"track_section":"T2"},{"offset":1921.8814950553588,"path_offset":11971.881495055359,"time":524.9385518983505,"track_section":"T2"},{"offset":2161.7642116360057,"path_offset":12211.764211636006,"time":531.2363856861373,"track_section":"T2"},{"offset":2499.444595070303,"path_offset":12549.444595070303,"time":539.6334974031863,"track_section":"T2"},{"offset":2856.790975004864,"path_offset":12906.790975004864,"time":548.0306091202353,"track_section":"T2"},{"offset":3232.9160171076874,"path_offset":13282.916017107687,"time":556.4277208372844,"track_section":"T2"},{"offset":3626.8163630547715,"path_offset":13676.816363054772,"time":564.8248325543334,"track_section":"T2"},{"offset":4037.4239024554863,"path_offset":14087.423902455486,"time":573.2219442713824,"track_section":"T2"},{"offset":4463.699691247775,"path_offset":14513.699691247775,"time":581.6190559884315,"track_section":"T2"},{"offset":4904.620000705188,"path_offset":14954.620000705188,"time":590.0161677054805,"track_section":"T2"},{"offset":5359.220187876708,"path_offset":15409.220187876708,"time":598.4132794225295,"track_section":"T2"},{"offset":5826.643936233011,"path_offset":15876.643936233011,"time":606.8103911395785,"track_section":"T2"},{"offset":7076.0,"path_offset":17126.0,"time":628.5894858475361,"track_section":"T2"},{"offset":7304.0,"path_offset":17354.0,"time":632.7880417060607,"track_section":"T2"},{"offset":7631.0,"path_offset":17681.0,"time":639.0858754938474,"track_section":"T2"},{"offset":7940.0,"path_offset":17990.0,"time":645.3837092816342,"track_section":"T2"},{"offset":8324.0,"path_offset":18374.0,"time":653.7808209986832,"track_section":"T2"},{"offset":8591.0,"path_offset":18641.0,"time":660.07865478647,"track_section":"T2"},{"offset":8919.0,"path_offset":18969.0,"time":668.475766503519,"track_section":"T2"},{"offset":9071.0,"path_offset":19121.0,"time":672.6743223620435,"track_section":"T2"},{"offset":9284.0,"path_offset":19334.0,"time":678.9721561498303,"track_section":"T2"},{"offset":9416.0,"path_offset":19466.0,"time":683.1707120083548,"track_section":"T2"},{"offset":9599.0,"path_offset":19649.0,"time":689.4685457961416,"track_section":"T2"},{"offset":9711.0,"path_offset":19761.0,"time":693.6671016546661,"track_section":"T2"},{"offset":9864.0,"path_offset":19914.0,"time":699.9649354424529,"track_section":"T2"},{"offset":9956.0,"path_offset":20006.0,"time":704.1634913009774,"track_section":"T2"},{"offset":79.0,"path_offset":20129.0,"time":710.4613250887642,"track_section":"EAST_Q1"},{"offset":151.0,"path_offset":20201.0,"time":714.6598809472887,"track_section":"EAST_Q1"},{"offset":244.0,"path_offset":20294.0,"time":720.9577147350755,"track_section":"EAST_Q1"},{"offset":296.0,"path_offset":20346.0,"time":725.1562705936,"track_section":"EAST_Q1"},{"offset":359.0,"path_offset":20409.0,"time":731.4541043813867,"track_section":"EAST_Q1"},{"offset":391.0,"path_offset":20441.0,"time":735.6526602399113,"track_section":"EAST_Q1"},{"offset":424.0,"path_offset":20474.0,"time":741.950494027698,"track_section":"EAST_Q1"},{"offset":440.0,"path_offset":20490.0,"time":751.347605744747,"track_section":"EAST_Q1"}],"mechanical_energy_consumed":3.6334961820468435E9,"route_occupancies":{"rt.buffer_stop.0->DA1":{"time_head_occupy":0.0,"time_tail_free":45.989},"rt.DA1->DA_out":{"time_head_occupy":12.064,"time_tail_free":49.664},"rt.DA2->DA_out":{"time_head_occupy":12.064,"time_tail_free":49.664},"rt.DA_out->D0":{"time_head_occupy":22.056,"time_tail_free":114.5},"rt.D0->D1":{"time_head_occupy":103.962,"time_tail_free":158.303},"rt.D1->D2":{"time_head_occupy":150.226,"time_tail_free":195.028},"rt.D2->D3":{"time_head_occupy":187.939,"time_tail_free":237.747},"rt.D3->D4":{"time_head_occupy":227.51,"time_tail_free":467.657},"rt.D4->D5":{"time_head_occupy":438.177,"time_tail_free":536.585},"rt.DC1->D5":{"time_head_occupy":438.177,"time_tail_free":536.585},"rt.D5->D6":{"time_head_occupy":526.36,"time_tail_free":579.463},"rt.D6->D7":{"time_head_occupy":571.524,"time_tail_free":615.648},"rt.D7->D8":{"time_head_occupy":608.67,"time_tail_free":653.54},"rt.D8->DB_in":{"time_head_occupy":644.816,"time_tail_free":732.623},"rt.DB_in->DB2":{"time_head_occupy":704.679,"time_tail_free":743.547},"rt.DB_in->DB1":{"time_head_occupy":704.679,"time_tail_free":743.547},"rt.DB1->buffer_stop.2":{"time_head_occupy":707.683,"time_tail_free":751.185}},"signal_sightings":[{"offset":0.0,"signal":"signal.0","state":"VL","time":0.0},{"offset":0.0,"signal":"signal.2","state":"VL","time":0.0},{"offset":1630.0,"signal":"signal.6","state":"VL","time":92.441},{"offset":3610.0,"signal":"signal.7","state":"VL","time":141.834},{"offset":5590.0,"signal":"signal.8","state":"VL","time":180.717},{"offset":7570.0,"signal":"signal.9","state":"VL","time":218.3},{"offset":9550.0,"signal":"signal.10","state":"VL","time":281.472},{"offset":11630.0,"signal":"signal.11","state":"VL","time":515.239},{"offset":13610.0,"signal":"signal.12","state":"VL","time":563.288},{"offset":15590.0,"signal":"signal.13","state":"VL","time":601.5450000000001},{"offset":17570.0,"signal":"signal.14","state":"VL","time":636.761},{"offset":19620.0,"signal":"signal.3","state":"VL","time":688.273},{"offset":19680.0,"signal":"signal.4","state":"VL","time":690.446}],"speeds":[{"position":0.0,"speed":0.0,"time":0.0},{"position":0.922252864428832,"speed":0.8726102107539574,"time":2.1137796763390657},{"position":3.6877089403523287,"speed":1.7439880155220127,"time":4.227559352678131},{"position":8.293722075391658,"speed":2.6140945099156965,"time":6.341339029017197},{"position":23.01636855729334,"speed":4.350285267627316,"time":10.568898381695329},{"position":45.065584085305474,"speed":6.079917183563861,"time":14.796457734373458},{"position":91.80694364871871,"speed":8.659088384290495,"time":21.137796763390657},{"position":132.02578194409776,"speed":10.36628012106798,"time":25.36535611606879},{"position":205.8111505355178,"speed":12.899973729643765,"time":31.706695145085988},{"position":364.0010855583903,"speed":16.99723354432518,"time":42.275593526781314},{"position":520.8085223751327,"speed":20.03640456434982,"time":50.73071223213757},{"position":750.4119675638053,"speed":23.391754382868474,"time":61.29961061383289},{"position":1015.0493607740393,"speed":26.679355198133617,"time":71.8685089955282},{"position":1314.2283967487497,"speed":29.93022096534369,"time":82.43740737722351},{"position":1718.2792793467538,"speed":33.77476840510866,"time":95.12008543525789},{"position":2091.8814950553574,"speed":36.90918866078533,"time":105.68898381695323},{"position":2583.146403823782,"speed":40.53406804598781,"time":118.37166187498762},{"position":3026.7909750048643,"speed":43.39267850128162,"time":128.94056025668297},{"position":4000.0966608720946,"speed":48.56887732853887,"time":150.07835702007358},{"position":5187.023560238864,"speed":53.37697142862176,"time":173.32993345980324},{"position":6273.23006908473,"speed":56.82369857652943,"time":193.02867967979648},{"position":7279.0,"speed":48.25479265495523,"time":212.17189194194427},{"position":7671.0,"speed":44.47010303495875,"time":220.62701064730052},{"position":8116.0,"speed":39.73924100996314,"time":231.19590902899589},{"position":8511.0,"speed":35.00837898496752,"time":241.76480741069125},{"position":8856.0,"speed":30.277516959971912,"time":252.33370579238655},{"position":9204.0,"speed":24.600482529977178,"time":265.0163838504209},{"position":9439.0,"speed":19.86962050498157,"time":275.5852822321161},{"position":9624.0,"speed":15.138758479985956,"time":286.1541806138114},{"position":9684.0,"speed":13.246413669987712,"time":290.3817399664895},{"position":9759.0,"speed":10.407896454990345,"time":296.7230789955066},{"position":9799.0,"speed":8.515551644992101,"time":300.9506383481847},{"position":9844.0,"speed":5.677034429994734,"time":307.2919773772019},{"position":9864.0,"speed":3.784689619996489,"time":311.51953672988},{"position":9871.0,"speed":2.838517214997367,"time":313.633316406219},{"position":9876.0,"speed":1.8923448099982445,"time":315.7470960825581},{"position":9879.0,"speed":0.9461724049991223,"time":317.8608757588971},{"position":9880.0,"speed":0.0,"time":319.9746554352362},{"position":9880.92225286443,"speed":0.878638175129996,"time":422.0739333645},{"position":9883.687708940353,"speed":1.756035430851615,"time":424.1732112937625},{"position":9888.293722075392,"speed":2.6321525940260746,"time":426.2724892230245},{"position":9913.126961123437,"speed":5.252110925194145,"time":432.5703230108113},{"position":9954.40995191504,"speed":7.855357404160939,"time":438.86815679859814},{"position":10012.0257819441,"speed":10.437890063871473,"time":445.16599058638496},{"position":10085.81115053552,"speed":12.989086349615217,"time":451.4638243741717},{"position":10175.535523665854,"speed":15.49394230164153,"time":457.7616581619583},{"position":10359.215594888605,"speed":19.45112157320664,"time":468.2580478082696},{"position":10630.411967563809,"speed":23.553343899442137,"time":480.85371538384317},{"position":10952.133630424389,"speed":27.521015535731514,"time":493.4493829594167},{"position":11323.488407958821,"speed":31.435589108308793,"time":506.04505053499025},{"position":11743.73948472267,"speed":35.2812522571892,"time":518.6407181105637},{"position":12211.764211636006,"speed":39.00977130581658,"time":531.2363856861373},{"position":12725.71471107888,"speed":42.56077490358414,"time":543.8320532617108},{"position":13282.916017107687,"speed":45.87288683448345,"time":556.4277208372844},{"position":13880.096660872097,"speed":48.90438963255793,"time":569.0233884128579},{"position":15180.267199690905,"speed":54.14248391286718,"time":594.214723564005},{"position":16693.21710989736,"speed":58.704032885384144,"time":620.9942137038418},{"position":17574.0,"speed":51.44626087597379,"time":636.9865975645852},{"position":18374.0,"speed":43.82459259805175,"time":653.7808209986832},{"position":18969.0,"speed":37.155632854869964,"time":668.475766503519},{"position":19265.0,"speed":33.34479871590894,"time":676.872878220568},{"position":19529.0,"speed":29.533964576947916,"time":685.2699899376171},{"position":19761.0,"speed":25.723130437986896,"time":693.6671016546661},{"position":19961.0,"speed":21.912296299025876,"time":702.0642133717151},{"position":20129.0,"speed":18.10146216006485,"time":710.4613250887642},{"position":20265.0,"speed":14.290628021103831,"time":718.8584368058132},{"position":20346.0,"speed":11.432502416883064,"time":725.1562705936},{"position":20426.0,"speed":7.621668277922043,"time":733.553382310649},{"position":20454.0,"speed":5.716251208441532,"time":737.7519381691735},{"position":20474.0,"speed":3.8108341389610216,"time":741.950494027698},{"position":20486.0,"speed":1.9054170694805108,"time":746.1490498862225},{"position":20489.0,"speed":0.9527085347402554,"time":748.2483278154848},{"position":20490.0,"speed":0.0,"time":751.347605744747}],"stops":[{"duration":100.0,"position":9880.0,"time":319.9746554352362},{"duration":1.0,"position":20490.0,"time":751.347605744747}],"zone_updates":[{"isEntry":true,"offset":0.0,"time":0.0,"zone":"zone.DA1:REVERSE"},{"isEntry":true,"offset":30.0,"time":12.064,"zone":"zone.DA1:NORMAL"},{"isEntry":true,"offset":100.0,"time":22.056,"zone":"zone.D0:REVERSE"},{"isEntry":false,"offset":430.0,"time":45.989,"zone":"zone.DA1:REVERSE"},{"isEntry":false,"offset":500.0,"time":49.664,"zone":"zone.DA1:NORMAL"},{"isEntry":true,"offset":2030.0,"time":103.962,"zone":"zone.D0:NORMAL"},{"isEntry":false,"offset":2430.0,"time":114.5,"zone":"zone.D0:REVERSE"},{"isEntry":true,"offset":4010.0,"time":150.226,"zone":"zone.D1:NORMAL"},{"isEntry":false,"offset":4410.0,"time":158.303,"zone":"zone.D0:NORMAL"},{"isEntry":true,"offset":5990.0,"time":187.939,"zone":"zone.D2:NORMAL"},{"isEntry":false,"offset":6390.0,"time":195.028,"zone":"zone.D1:NORMAL"},{"isEntry":true,"offset":7970.0,"time":227.51,"zone":"zone.D3:NORMAL"},{"isEntry":false,"offset":8370.0,"time":237.747,"zone":"zone.D2:NORMAL"},{"isEntry":true,"offset":9950.0,"time":438.177,"zone":"zone.D4:NORMAL"},{"isEntry":false,"offset":10350.0,"time":467.657,"zone":"zone.D3:NORMAL"},{"isEntry":true,"offset":12030.0,"time":526.36,"zone":"zone.D5:NORMAL"},{"isEntry":false,"offset":12430.0,"time":536.585,"zone":"zone.D4:NORMAL"},{"isEntry":true,"offset":14010.0,"time":571.524,"zone":"zone.D6:NORMAL"},{"isEntry":false,"offset":14410.0,"time":579.463,"zone":"zone.D5:NORMAL"},{"isEntry":true,"offset":15990.0,"time":608.67,"zone":"zone.D7:NORMAL"},{"isEntry":false,"offset":16390.0,"time":615.648,"zone":"zone.D6:NORMAL"},{"isEntry":true,"offset":17970.0,"time":644.816,"zone":"zone.D8:NORMAL"},{"isEntry":false,"offset":18370.0,"time":653.54,"zone":"zone.D7:NORMAL"},{"isEntry":true,"offset":20020.0,"time":704.679,"zone":"zone.DB1:REVERSE"},{"isEntry":true,"offset":20080.0,"time":707.683,"zone":"zone.DB1:NORMAL"},{"isEntry":false,"offset":20420.0,"time":732.623,"zone":"zone.D8:NORMAL"},{"isEntry":false,"offset":20480.0,"time":743.547,"zone":"zone.DB1:REVERSE"}]}],"electrification_conditions":[[{"seen_mode":"","start":0.0,"stop":20490.0,"used_mode":"thermal"}]],"speed_limits":[[{"position":0.0,"speed":80.0},{"position":20490.0,"speed":80.0}]],"warnings":[]}]
+[
+  {
+    "base_simulations": [
+      {
+        "head_positions": [
+          {
+            "offset": 400.0,
+            "path_offset": 0.0,
+            "time": 0.0,
+            "track_section": "WEST_Q1"
+          },
+          {
+            "offset": 403.6877089403523,
+            "path_offset": 3.6877089403523287,
+            "time": 4.0,
+            "track_section": "WEST_Q1"
+          },
+          {
+            "offset": 423.01636855729333,
+            "path_offset": 23.01636855729334,
+            "time": 10.0,
+            "track_section": "WEST_Q1"
+          },
+          {
+            "offset": 8.828024738027402,
+            "path_offset": 58.8280247380274,
+            "time": 16.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 61.014205997204684,
+            "path_offset": 111.01420599720468,
+            "time": 22.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 104.83436374260492,
+            "path_offset": 154.83436374260492,
+            "time": 26.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 183.96297684784363,
+            "path_offset": 233.96297684784363,
+            "time": 32.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 278.91772568490126,
+            "path_offset": 328.91772568490126,
+            "time": 38.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 389.1804084229013,
+            "path_offset": 439.1804084229013,
+            "time": 44.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 513.8872106029471,
+            "path_offset": 563.8872106029471,
+            "time": 50.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 651.6683698059925,
+            "path_offset": 701.6683698059925,
+            "time": 56.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 802.0961623123302,
+            "path_offset": 852.0961623123302,
+            "time": 62.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 965.0493607740393,
+            "path_offset": 1015.0493607740393,
+            "time": 68.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1140.4351510240772,
+            "path_offset": 1190.4351510240772,
+            "time": 74.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1328.1768659478962,
+            "path_offset": 1378.1768659478962,
+            "time": 80.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1528.183637413785,
+            "path_offset": 1578.183637413785,
+            "time": 86.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1740.3411982465916,
+            "path_offset": 1790.3411982465916,
+            "time": 92.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2120.549469793094,
+            "path_offset": 2170.549469793094,
+            "time": 102.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2364.2934790995873,
+            "path_offset": 2414.2934790995873,
+            "time": 108.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2619.444595070302,
+            "path_offset": 2669.444595070302,
+            "time": 114.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2885.658926414239,
+            "path_offset": 2935.658926414239,
+            "time": 120.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 3162.563990754671,
+            "path_offset": 3212.563990754671,
+            "time": 126.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 3746.816363054769,
+            "path_offset": 3796.816363054769,
+            "time": 138.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 4368.668343729119,
+            "path_offset": 4418.668343729119,
+            "time": 150.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 5024.620000705183,
+            "path_offset": 5074.620000705183,
+            "time": 162.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 5594.904367362632,
+            "path_offset": 5644.904367362632,
+            "time": 172.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 6466.0,
+            "path_offset": 6516.0,
+            "time": 186.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 6805.0,
+            "path_offset": 6855.0,
+            "time": 192.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7229.0,
+            "path_offset": 7279.0,
+            "time": 200.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7429.0,
+            "path_offset": 7479.0,
+            "time": 204.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7714.0,
+            "path_offset": 7764.0,
+            "time": 210.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7894.0,
+            "path_offset": 7944.0,
+            "time": 214.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8149.0,
+            "path_offset": 8199.0,
+            "time": 220.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8386.0,
+            "path_offset": 8436.0,
+            "time": 226.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8605.0,
+            "path_offset": 8655.0,
+            "time": 232.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8806.0,
+            "path_offset": 8856.0,
+            "time": 238.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8989.0,
+            "path_offset": 9039.0,
+            "time": 244.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9154.0,
+            "path_offset": 9204.0,
+            "time": 250.75118927192338,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9301.0,
+            "path_offset": 9351.0,
+            "time": 256.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9469.0,
+            "path_offset": 9519.0,
+            "time": 264.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9541.0,
+            "path_offset": 9591.0,
+            "time": 268.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9634.0,
+            "path_offset": 9684.0,
+            "time": 274.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9686.0,
+            "path_offset": 9736.0,
+            "time": 278.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9749.0,
+            "path_offset": 9799.0,
+            "time": 284.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9781.0,
+            "path_offset": 9831.0,
+            "time": 288.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9814.0,
+            "path_offset": 9864.0,
+            "time": 294.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9830.0,
+            "path_offset": 9880.0,
+            "time": 302.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9830.92225286443,
+            "path_offset": 9880.92225286443,
+            "time": 404.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9844.737564131869,
+            "path_offset": 9894.737564131869,
+            "time": 410.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9888.828024738028,
+            "path_offset": 9938.828024738028,
+            "time": 418.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9941.014205997206,
+            "path_offset": 9991.014205997206,
+            "time": 424.7511892719234,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9.43211440477171,
+            "path_offset": 10059.432114404772,
+            "time": 430.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 93.87671506148035,
+            "path_offset": 10143.87671506148,
+            "time": 436.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 230.76358301729852,
+            "path_offset": 10280.763583017299,
+            "time": 444.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 350.808522375135,
+            "path_offset": 10400.808522375135,
+            "time": 450.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 484.3298865361303,
+            "path_offset": 10534.32988653613,
+            "time": 456.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 630.5561023962673,
+            "path_offset": 10680.556102396267,
+            "time": 462.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 845.0493607740427,
+            "path_offset": 10895.049360774043,
+            "time": 470.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1020.4351510240813,
+            "path_offset": 11070.435151024081,
+            "time": 476.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1273.488407958821,
+            "path_offset": 11323.488407958821,
+            "time": 484.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1548.279279346758,
+            "path_offset": 11598.279279346758,
+            "time": 492.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1844.5180331911397,
+            "path_offset": 11894.51803319114,
+            "time": 500.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2080.513266886119,
+            "path_offset": 12130.513266886119,
+            "time": 506.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2413.1464038237827,
+            "path_offset": 12463.146403823783,
+            "time": 514.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2765.6589264142385,
+            "path_offset": 12815.658926414239,
+            "time": 522.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3137.175859372781,
+            "path_offset": 13187.17585937278,
+            "time": 530.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3526.7340515028445,
+            "path_offset": 13576.734051502845,
+            "time": 538.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3933.262445218208,
+            "path_offset": 13983.262445218208,
+            "time": 546.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4355.718669486176,
+            "path_offset": 14405.718669486176,
+            "time": 554.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4793.070957520327,
+            "path_offset": 14843.070957520327,
+            "time": 562.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5244.337054455422,
+            "path_offset": 15294.337054455422,
+            "time": 570.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5708.628002220636,
+            "path_offset": 15758.628002220636,
+            "time": 578.7511892719234,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7076.0,
+            "path_offset": 17126.0,
+            "time": 601.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7304.0,
+            "path_offset": 17354.0,
+            "time": 605.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7631.0,
+            "path_offset": 17681.0,
+            "time": 611.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7940.0,
+            "path_offset": 17990.0,
+            "time": 617.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8324.0,
+            "path_offset": 18374.0,
+            "time": 625.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8591.0,
+            "path_offset": 18641.0,
+            "time": 631.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8919.0,
+            "path_offset": 18969.0,
+            "time": 639.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9071.0,
+            "path_offset": 19121.0,
+            "time": 643.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9284.0,
+            "path_offset": 19334.0,
+            "time": 649.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9416.0,
+            "path_offset": 19466.0,
+            "time": 653.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9599.0,
+            "path_offset": 19649.0,
+            "time": 659.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9711.0,
+            "path_offset": 19761.0,
+            "time": 663.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9864.0,
+            "path_offset": 19914.0,
+            "time": 669.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9956.0,
+            "path_offset": 20006.0,
+            "time": 673.5003186791109,
+            "track_section": "T2"
+          },
+          {
+            "offset": 79.0,
+            "path_offset": 20129.0,
+            "time": 679.5003186791109,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 151.0,
+            "path_offset": 20201.0,
+            "time": 683.5003186791109,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 244.0,
+            "path_offset": 20294.0,
+            "time": 689.5003186791109,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 296.0,
+            "path_offset": 20346.0,
+            "time": 693.5003186791109,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 359.0,
+            "path_offset": 20409.0,
+            "time": 699.5003186791109,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 391.0,
+            "path_offset": 20441.0,
+            "time": 703.5003186791109,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 424.0,
+            "path_offset": 20474.0,
+            "time": 709.5003186791109,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 440.0,
+            "path_offset": 20490.0,
+            "time": 718.5003186791109,
+            "track_section": "EAST_Q1"
+          }
+        ],
+        "mechanical_energy_consumed": 4.0160806879309626e9,
+        "route_occupancies": {
+          "rt.buffer_stop.0->DA1": {
+            "time_head_occupy": 0.0,
+            "time_tail_free": 43.529
+          },
+          "rt.DA1->DA_out": {
+            "time_head_occupy": 11.418,
+            "time_tail_free": 47.008
+          },
+          "rt.DA2->DA_out": {
+            "time_head_occupy": 11.418,
+            "time_tail_free": 47.008
+          },
+          "rt.DA_out->D0": {
+            "time_head_occupy": 20.876,
+            "time_tail_free": 108.377
+          },
+          "rt.D0->D1": {
+            "time_head_occupy": 98.402,
+            "time_tail_free": 149.837
+          },
+          "rt.D1->D2": {
+            "time_head_occupy": 142.192,
+            "time_tail_free": 184.597
+          },
+          "rt.D2->D3": {
+            "time_head_occupy": 177.887,
+            "time_tail_free": 225.032
+          },
+          "rt.D3->D4": {
+            "time_head_occupy": 215.342,
+            "time_tail_free": 448.296
+          },
+          "rt.D4->D5": {
+            "time_head_occupy": 420.207,
+            "time_tail_free": 513.973
+          },
+          "rt.DC1->D5": {
+            "time_head_occupy": 420.207,
+            "time_tail_free": 513.973
+          },
+          "rt.D5->D6": {
+            "time_head_occupy": 504.23,
+            "time_tail_free": 554.829
+          },
+          "rt.D6->D7": {
+            "time_head_occupy": 547.265,
+            "time_tail_free": 589.307
+          },
+          "rt.D7->D8": {
+            "time_head_occupy": 582.659,
+            "time_tail_free": 625.412
+          },
+          "rt.D8->DB_in": {
+            "time_head_occupy": 617.099,
+            "time_tail_free": 700.765
+          },
+          "rt.DB_in->DB2": {
+            "time_head_occupy": 674.14,
+            "time_tail_free": 711.174
+          },
+          "rt.DB_in->DB1": {
+            "time_head_occupy": 674.14,
+            "time_tail_free": 711.174
+          },
+          "rt.DB1->buffer_stop.2": {
+            "time_head_occupy": 677.002,
+            "time_tail_free": 718.499
+          }
+        },
+        "signal_sightings": [
+          { "offset": 0.0, "signal": "SA1", "state": "VL", "time": 0.0 },
+          { "offset": 0.0, "signal": "SA3", "state": "VL", "time": 0.0 },
+          { "offset": 1630.0, "signal": "S0", "state": "VL", "time": 87.497 },
+          { "offset": 3610.0, "signal": "S1", "state": "VL", "time": 134.249 },
+          { "offset": 5590.0, "signal": "S2", "state": "VL", "time": 171.052 },
+          { "offset": 7570.0, "signal": "S3", "state": "VL", "time": 206.625 },
+          { "offset": 9550.0, "signal": "S4", "state": "VL", "time": 266.418 },
+          { "offset": 11630.0, "signal": "S5", "state": "VL", "time": 493.634 },
+          {
+            "offset": 13610.0,
+            "signal": "S6",
+            "state": "VL",
+            "time": 539.4169999999999
+          },
+          { "offset": 15590.0, "signal": "S7", "state": "VL", "time": 575.869 },
+          { "offset": 17570.0, "signal": "S8", "state": "VL", "time": 609.424 },
+          {
+            "offset": 19620.0,
+            "signal": "SB_in",
+            "state": "VL",
+            "time": 658.507
+          },
+          { "offset": 19680.0, "signal": "SB1", "state": "VL", "time": 660.578 }
+        ],
+        "speeds": [
+          { "position": 0.0, "speed": 0.0, "time": 0.0 },
+          {
+            "position": 0.922252864428832,
+            "speed": 0.922252864428832,
+            "time": 2.0
+          },
+          {
+            "position": 3.6877089403523287,
+            "speed": 1.8432032114946646,
+            "time": 4.0
+          },
+          {
+            "position": 8.293722075391658,
+            "speed": 2.7628099235446646,
+            "time": 6.0
+          },
+          {
+            "position": 23.01636855729334,
+            "speed": 4.5977722924939375,
+            "time": 10.0
+          },
+          {
+            "position": 45.065584085305474,
+            "speed": 6.425802688220971,
+            "time": 14.0
+          },
+          {
+            "position": 91.80694364871871,
+            "speed": 9.151702521168463,
+            "time": 20.0
+          },
+          {
+            "position": 132.02578194409776,
+            "speed": 10.956016119575583,
+            "time": 24.0
+          },
+          {
+            "position": 205.8111505355178,
+            "speed": 13.633851147514424,
+            "time": 30.0
+          },
+          {
+            "position": 364.0010855583903,
+            "speed": 17.964203409991594,
+            "time": 40.0
+          },
+          {
+            "position": 520.8085223751327,
+            "speed": 21.17627237751497,
+            "time": 48.0
+          },
+          {
+            "position": 750.4119675638053,
+            "speed": 24.722507504211322,
+            "time": 58.0
+          },
+          {
+            "position": 1015.0493607740393,
+            "speed": 28.197139397822923,
+            "time": 68.0
+          },
+          {
+            "position": 1314.2283967487497,
+            "speed": 31.632946392440452,
+            "time": 78.0
+          },
+          {
+            "position": 1718.2792793467538,
+            "speed": 35.69620951388874,
+            "time": 90.0
+          },
+          {
+            "position": 2091.8814950553574,
+            "speed": 39.008946430666164,
+            "time": 100.0
+          },
+          {
+            "position": 2583.146403823782,
+            "speed": 42.840044617476885,
+            "time": 112.0
+          },
+          {
+            "position": 3026.7909750048643,
+            "speed": 45.8612809589621,
+            "time": 122.0
+          },
+          {
+            "position": 4000.0966608720946,
+            "speed": 51.331952899835336,
+            "time": 142.0
+          },
+          {
+            "position": 5187.023560238864,
+            "speed": 56.41357869517583,
+            "time": 164.0
+          },
+          {
+            "position": 6273.23006908473,
+            "speed": 60.056389592742505,
+            "time": 182.63841008643837
+          },
+          { "position": 7279.0, "speed": 51.0, "time": 200.75118927192338 },
+          { "position": 7671.0, "speed": 47.0, "time": 208.75118927192338 },
+          { "position": 8116.0, "speed": 42.0, "time": 218.75118927192338 },
+          { "position": 8511.0, "speed": 37.0, "time": 228.75118927192338 },
+          { "position": 8856.0, "speed": 32.0, "time": 238.75118927192338 },
+          { "position": 9151.0, "speed": 27.0, "time": 248.75118927192338 },
+          { "position": 9439.0, "speed": 21.0, "time": 260.7511892719234 },
+          { "position": 9624.0, "speed": 16.0, "time": 270.7511892719234 },
+          { "position": 9684.0, "speed": 14.0, "time": 274.7511892719234 },
+          { "position": 9759.0, "speed": 11.0, "time": 280.7511892719234 },
+          { "position": 9799.0, "speed": 9.0, "time": 284.7511892719234 },
+          { "position": 9844.0, "speed": 6.0, "time": 290.7511892719234 },
+          { "position": 9855.0, "speed": 5.0, "time": 292.7511892719234 },
+          { "position": 9871.0, "speed": 3.0, "time": 296.7511892719234 },
+          { "position": 9876.0, "speed": 2.0, "time": 298.7511892719234 },
+          { "position": 9879.0, "speed": 1.0, "time": 300.7511892719234 },
+          { "position": 9880.0, "speed": 0.0, "time": 302.7511892719234 },
+          {
+            "position": 9880.92225286443,
+            "speed": 0.922252864428832,
+            "time": 404.7511892719234
+          },
+          {
+            "position": 9883.687708940353,
+            "speed": 1.8432032114946646,
+            "time": 406.7511892719234
+          },
+          {
+            "position": 9888.293722075392,
+            "speed": 2.7628099235446646,
+            "time": 408.7511892719234
+          },
+          {
+            "position": 9894.737564131869,
+            "speed": 3.6810321329315396,
+            "time": 410.7511892719234
+          },
+          {
+            "position": 9913.126961123437,
+            "speed": 5.5128202736486145,
+            "time": 414.7511892719234
+          },
+          {
+            "position": 9954.40995191504,
+            "speed": 8.245289212510947,
+            "time": 420.7511892719234
+          },
+          {
+            "position": 10012.0257819441,
+            "speed": 10.956016119575583,
+            "time": 426.7511892719234
+          },
+          {
+            "position": 10085.81115053552,
+            "speed": 13.633851147514424,
+            "time": 432.7511892719234
+          },
+          {
+            "position": 10175.535523665854,
+            "speed": 16.26304555554944,
+            "time": 438.7511892719234
+          },
+          {
+            "position": 10359.215594888605,
+            "speed": 20.416655109014798,
+            "time": 448.7511892719234
+          },
+          {
+            "position": 10630.411967563809,
+            "speed": 24.722507504211322,
+            "time": 460.7511892719234
+          },
+          {
+            "position": 10952.133630424389,
+            "speed": 28.887130252522393,
+            "time": 472.7511892719234
+          },
+          {
+            "position": 11323.488407958821,
+            "speed": 32.99601920421478,
+            "time": 484.7511892719234
+          },
+          {
+            "position": 11743.73948472267,
+            "speed": 37.03257709012569,
+            "time": 496.7511892719234
+          },
+          {
+            "position": 12211.764211636006,
+            "speed": 40.94617596393437,
+            "time": 508.7511892719234
+          },
+          {
+            "position": 12725.71471107888,
+            "speed": 44.67344770369652,
+            "time": 520.7511892719234
+          },
+          {
+            "position": 13282.916017107687,
+            "speed": 48.14996944158808,
+            "time": 532.7511892719234
+          },
+          {
+            "position": 13880.096660872097,
+            "speed": 51.331952899835336,
+            "time": 544.7511892719234
+          },
+          {
+            "position": 14513.699691247775,
+            "speed": 54.22120451481157,
+            "time": 556.7511892719234
+          },
+          {
+            "position": 15180.267199690905,
+            "speed": 56.83006075685937,
+            "time": 568.7511892719234
+          },
+          {
+            "position": 16693.21710989736,
+            "speed": 61.61804029748626,
+            "time": 594.2642380841384
+          },
+          { "position": 17574.0, "speed": 54.0, "time": 609.5003186791109 },
+          { "position": 18374.0, "speed": 46.0, "time": 625.5003186791109 },
+          { "position": 18969.0, "speed": 39.0, "time": 639.5003186791109 },
+          { "position": 19265.0, "speed": 35.0, "time": 647.5003186791109 },
+          { "position": 19529.0, "speed": 31.0, "time": 655.5003186791109 },
+          { "position": 19706.0, "speed": 28.0, "time": 661.5003186791109 },
+          { "position": 19914.0, "speed": 24.0, "time": 669.5003186791109 },
+          { "position": 20090.0, "speed": 20.0, "time": 677.5003186791109 },
+          { "position": 20234.0, "speed": 16.0, "time": 685.5003186791109 },
+          { "position": 20346.0, "speed": 12.0, "time": 693.5003186791109 },
+          { "position": 20426.0, "speed": 8.0, "time": 701.5003186791109 },
+          { "position": 20454.0, "speed": 6.0, "time": 705.5003186791109 },
+          { "position": 20474.0, "speed": 4.0, "time": 709.5003186791109 },
+          { "position": 20486.0, "speed": 2.0, "time": 713.5003186791109 },
+          { "position": 20489.0, "speed": 1.0, "time": 715.5003186791109 },
+          { "position": 20490.0, "speed": 0.0, "time": 718.5003186791109 }
+        ],
+        "stops": [
+          { "duration": 100.0, "position": 9880.0, "time": 302.7511892719234 },
+          { "duration": 1.0, "position": 20490.0, "time": 718.5003186791109 }
+        ],
+        "zone_updates": [
+          {
+            "isEntry": true,
+            "offset": 0.0,
+            "time": 0.0,
+            "zone": "zone.DA1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 30.0,
+            "time": 11.418,
+            "zone": "zone.DA1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 100.0,
+            "time": 20.876,
+            "zone": "zone.D0:REVERSE"
+          },
+          {
+            "isEntry": false,
+            "offset": 430.0,
+            "time": 43.529,
+            "zone": "zone.DA1:REVERSE"
+          },
+          {
+            "isEntry": false,
+            "offset": 500.0,
+            "time": 47.008,
+            "zone": "zone.DA1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 2030.0,
+            "time": 98.402,
+            "zone": "zone.D0:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 2430.0,
+            "time": 108.377,
+            "zone": "zone.D0:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 4010.0,
+            "time": 142.192,
+            "zone": "zone.D1:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 4410.0,
+            "time": 149.837,
+            "zone": "zone.D0:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 5990.0,
+            "time": 177.887,
+            "zone": "zone.D2:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 6390.0,
+            "time": 184.597,
+            "zone": "zone.D1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 7970.0,
+            "time": 215.342,
+            "zone": "zone.D3:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 8370.0,
+            "time": 225.032,
+            "zone": "zone.D2:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 9950.0,
+            "time": 420.207,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 10350.0,
+            "time": 448.296,
+            "zone": "zone.D3:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 12030.0,
+            "time": 504.23,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 12430.0,
+            "time": 513.973,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 14010.0,
+            "time": 547.265,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 14410.0,
+            "time": 554.829,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 15990.0,
+            "time": 582.659,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 16390.0,
+            "time": 589.307,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 17970.0,
+            "time": 617.099,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 18370.0,
+            "time": 625.412,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 20020.0,
+            "time": 674.14,
+            "zone": "zone.DB1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 20080.0,
+            "time": 677.002,
+            "zone": "zone.DB1:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 20420.0,
+            "time": 700.765,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 20480.0,
+            "time": 711.174,
+            "zone": "zone.DB1:REVERSE"
+          }
+        ]
+      }
+    ],
+    "eco_simulations": [
+      {
+        "head_positions": [
+          {
+            "offset": 400.0,
+            "path_offset": 0.0,
+            "time": 0.0,
+            "track_section": "WEST_Q1"
+          },
+          {
+            "offset": 403.6877089403523,
+            "path_offset": 3.6877089403523287,
+            "time": 4.227559352678131,
+            "track_section": "WEST_Q1"
+          },
+          {
+            "offset": 423.01636855729333,
+            "path_offset": 23.01636855729334,
+            "time": 10.568898381695329,
+            "track_section": "WEST_Q1"
+          },
+          {
+            "offset": 8.828024738027402,
+            "path_offset": 58.8280247380274,
+            "time": 16.910237410712526,
+            "track_section": "T1"
+          },
+          {
+            "offset": 61.014205997204684,
+            "path_offset": 111.01420599720468,
+            "time": 23.25157643972972,
+            "track_section": "T1"
+          },
+          {
+            "offset": 104.83436374260492,
+            "path_offset": 154.83436374260492,
+            "time": 27.479135792407856,
+            "track_section": "T1"
+          },
+          {
+            "offset": 183.96297684784363,
+            "path_offset": 233.96297684784363,
+            "time": 33.82047482142505,
+            "track_section": "T1"
+          },
+          {
+            "offset": 278.91772568490126,
+            "path_offset": 328.91772568490126,
+            "time": 40.16181385044224,
+            "track_section": "T1"
+          },
+          {
+            "offset": 389.1804084229013,
+            "path_offset": 439.1804084229013,
+            "time": 46.50315287945944,
+            "track_section": "T1"
+          },
+          {
+            "offset": 513.8872106029471,
+            "path_offset": 563.8872106029471,
+            "time": 52.844491908476634,
+            "track_section": "T1"
+          },
+          {
+            "offset": 651.6683698059925,
+            "path_offset": 701.6683698059925,
+            "time": 59.18583093749382,
+            "track_section": "T1"
+          },
+          {
+            "offset": 802.0961623123302,
+            "path_offset": 852.0961623123302,
+            "time": 65.52716996651101,
+            "track_section": "T1"
+          },
+          {
+            "offset": 965.0493607740393,
+            "path_offset": 1015.0493607740393,
+            "time": 71.8685089955282,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1140.4351510240772,
+            "path_offset": 1190.4351510240772,
+            "time": 78.20984802454538,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1328.1768659478962,
+            "path_offset": 1378.1768659478962,
+            "time": 84.55118705356257,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1528.183637413785,
+            "path_offset": 1578.183637413785,
+            "time": 90.89252608257976,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1740.3411982465916,
+            "path_offset": 1790.3411982465916,
+            "time": 97.23386511159696,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2120.549469793094,
+            "path_offset": 2170.549469793094,
+            "time": 107.80276349329229,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2364.2934790995873,
+            "path_offset": 2414.2934790995873,
+            "time": 114.1441025223095,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2619.444595070302,
+            "path_offset": 2669.444595070302,
+            "time": 120.4854415513267,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2885.658926414239,
+            "path_offset": 2935.658926414239,
+            "time": 126.8267805803439,
+            "track_section": "T1"
+          },
+          {
+            "offset": 3162.563990754671,
+            "path_offset": 3212.563990754671,
+            "time": 133.1681196093611,
+            "track_section": "T1"
+          },
+          {
+            "offset": 3746.816363054769,
+            "path_offset": 3796.816363054769,
+            "time": 145.85079766739545,
+            "track_section": "T1"
+          },
+          {
+            "offset": 4368.668343729119,
+            "path_offset": 4418.668343729119,
+            "time": 158.5334757254298,
+            "track_section": "T1"
+          },
+          {
+            "offset": 5024.620000705183,
+            "path_offset": 5074.620000705183,
+            "time": 171.2161537834642,
+            "track_section": "T1"
+          },
+          {
+            "offset": 5594.904367362632,
+            "path_offset": 5644.904367362632,
+            "time": 181.7850521651595,
+            "track_section": "T1"
+          },
+          {
+            "offset": 6466.0,
+            "path_offset": 6516.0,
+            "time": 197.37543420757078,
+            "track_section": "T1"
+          },
+          {
+            "offset": 6805.0,
+            "path_offset": 6855.0,
+            "time": 203.71677323658798,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7229.0,
+            "path_offset": 7279.0,
+            "time": 212.17189194194427,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7526.0,
+            "path_offset": 7576.0,
+            "time": 218.51323097096147,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7714.0,
+            "path_offset": 7764.0,
+            "time": 222.7407903236396,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7894.0,
+            "path_offset": 7944.0,
+            "time": 226.96834967631773,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8149.0,
+            "path_offset": 8199.0,
+            "time": 233.30968870533493,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8386.0,
+            "path_offset": 8436.0,
+            "time": 239.65102773435217,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8605.0,
+            "path_offset": 8655.0,
+            "time": 245.99236676336935,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8806.0,
+            "path_offset": 8856.0,
+            "time": 252.33370579238655,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8989.0,
+            "path_offset": 9039.0,
+            "time": 258.67504482140373,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9154.0,
+            "path_offset": 9204.0,
+            "time": 265.0163838504209,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9301.0,
+            "path_offset": 9351.0,
+            "time": 271.35772287943803,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9469.0,
+            "path_offset": 9519.0,
+            "time": 279.8128415847942,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9541.0,
+            "path_offset": 9591.0,
+            "time": 284.0404009374723,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9634.0,
+            "path_offset": 9684.0,
+            "time": 290.3817399664895,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9686.0,
+            "path_offset": 9736.0,
+            "time": 294.6092993191676,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9749.0,
+            "path_offset": 9799.0,
+            "time": 300.9506383481847,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9781.0,
+            "path_offset": 9831.0,
+            "time": 305.1781977008628,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9814.0,
+            "path_offset": 9864.0,
+            "time": 311.51953672988,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9830.0,
+            "path_offset": 9880.0,
+            "time": 319.9746554352362,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9830.92225286443,
+            "path_offset": 9880.92225286443,
+            "time": 422.0739333645,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9844.737564131869,
+            "path_offset": 9894.737564131869,
+            "time": 428.37176715228685,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9888.828024738028,
+            "path_offset": 9938.828024738028,
+            "time": 436.7688788693358,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9941.014205997206,
+            "path_offset": 9991.014205997206,
+            "time": 443.06671265712265,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9.43211440477171,
+            "path_offset": 10059.432114404772,
+            "time": 449.3645464449095,
+            "track_section": "T2"
+          },
+          {
+            "offset": 93.87671506148035,
+            "path_offset": 10143.87671506148,
+            "time": 455.6623802326961,
+            "track_section": "T2"
+          },
+          {
+            "offset": 230.76358301729852,
+            "path_offset": 10280.763583017299,
+            "time": 464.05949194974505,
+            "track_section": "T2"
+          },
+          {
+            "offset": 350.808522375135,
+            "path_offset": 10400.808522375135,
+            "time": 470.3573257375319,
+            "track_section": "T2"
+          },
+          {
+            "offset": 531.6683698059951,
+            "path_offset": 10581.668369805995,
+            "time": 478.7544374545809,
+            "track_section": "T2"
+          },
+          {
+            "offset": 682.096162312333,
+            "path_offset": 10732.096162312333,
+            "time": 485.0522712423677,
+            "track_section": "T2"
+          },
+          {
+            "offset": 902.1336304243887,
+            "path_offset": 10952.133630424389,
+            "time": 493.4493829594167,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1081.6467632837848,
+            "path_offset": 11131.646763283785,
+            "time": 499.7472167472035,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1340.1587794434472,
+            "path_offset": 11390.158779443447,
+            "time": 508.1443284642525,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1620.341198246595,
+            "path_offset": 11670.341198246595,
+            "time": 516.5414401813015,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1921.8814950553588,
+            "path_offset": 11971.881495055359,
+            "time": 524.9385518983505,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2161.7642116360057,
+            "path_offset": 12211.764211636006,
+            "time": 531.2363856861373,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2499.444595070303,
+            "path_offset": 12549.444595070303,
+            "time": 539.6334974031863,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2856.790975004864,
+            "path_offset": 12906.790975004864,
+            "time": 548.0306091202353,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3232.9160171076874,
+            "path_offset": 13282.916017107687,
+            "time": 556.4277208372844,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3626.8163630547715,
+            "path_offset": 13676.816363054772,
+            "time": 564.8248325543334,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4037.4239024554863,
+            "path_offset": 14087.423902455486,
+            "time": 573.2219442713824,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4463.699691247775,
+            "path_offset": 14513.699691247775,
+            "time": 581.6190559884315,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4904.620000705188,
+            "path_offset": 14954.620000705188,
+            "time": 590.0161677054805,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5359.220187876708,
+            "path_offset": 15409.220187876708,
+            "time": 598.4132794225295,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5826.643936233011,
+            "path_offset": 15876.643936233011,
+            "time": 606.8103911395785,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7076.0,
+            "path_offset": 17126.0,
+            "time": 628.5894858475361,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7304.0,
+            "path_offset": 17354.0,
+            "time": 632.7880417060607,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7631.0,
+            "path_offset": 17681.0,
+            "time": 639.0858754938474,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7940.0,
+            "path_offset": 17990.0,
+            "time": 645.3837092816342,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8324.0,
+            "path_offset": 18374.0,
+            "time": 653.7808209986832,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8591.0,
+            "path_offset": 18641.0,
+            "time": 660.07865478647,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8919.0,
+            "path_offset": 18969.0,
+            "time": 668.475766503519,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9071.0,
+            "path_offset": 19121.0,
+            "time": 672.6743223620435,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9284.0,
+            "path_offset": 19334.0,
+            "time": 678.9721561498303,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9416.0,
+            "path_offset": 19466.0,
+            "time": 683.1707120083548,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9599.0,
+            "path_offset": 19649.0,
+            "time": 689.4685457961416,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9711.0,
+            "path_offset": 19761.0,
+            "time": 693.6671016546661,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9864.0,
+            "path_offset": 19914.0,
+            "time": 699.9649354424529,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9956.0,
+            "path_offset": 20006.0,
+            "time": 704.1634913009774,
+            "track_section": "T2"
+          },
+          {
+            "offset": 79.0,
+            "path_offset": 20129.0,
+            "time": 710.4613250887642,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 151.0,
+            "path_offset": 20201.0,
+            "time": 714.6598809472887,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 244.0,
+            "path_offset": 20294.0,
+            "time": 720.9577147350755,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 296.0,
+            "path_offset": 20346.0,
+            "time": 725.1562705936,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 359.0,
+            "path_offset": 20409.0,
+            "time": 731.4541043813867,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 391.0,
+            "path_offset": 20441.0,
+            "time": 735.6526602399113,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 424.0,
+            "path_offset": 20474.0,
+            "time": 741.950494027698,
+            "track_section": "EAST_Q1"
+          },
+          {
+            "offset": 440.0,
+            "path_offset": 20490.0,
+            "time": 751.347605744747,
+            "track_section": "EAST_Q1"
+          }
+        ],
+        "mechanical_energy_consumed": 3.6334961820468435e9,
+        "route_occupancies": {
+          "rt.buffer_stop.0->DA1": {
+            "time_head_occupy": 0.0,
+            "time_tail_free": 45.989
+          },
+          "rt.DA1->DA_out": {
+            "time_head_occupy": 12.064,
+            "time_tail_free": 49.664
+          },
+          "rt.DA2->DA_out": {
+            "time_head_occupy": 12.064,
+            "time_tail_free": 49.664
+          },
+          "rt.DA_out->D0": {
+            "time_head_occupy": 22.056,
+            "time_tail_free": 114.5
+          },
+          "rt.D0->D1": {
+            "time_head_occupy": 103.962,
+            "time_tail_free": 158.303
+          },
+          "rt.D1->D2": {
+            "time_head_occupy": 150.226,
+            "time_tail_free": 195.028
+          },
+          "rt.D2->D3": {
+            "time_head_occupy": 187.939,
+            "time_tail_free": 237.747
+          },
+          "rt.D3->D4": {
+            "time_head_occupy": 227.51,
+            "time_tail_free": 467.657
+          },
+          "rt.D4->D5": {
+            "time_head_occupy": 438.177,
+            "time_tail_free": 536.585
+          },
+          "rt.DC1->D5": {
+            "time_head_occupy": 438.177,
+            "time_tail_free": 536.585
+          },
+          "rt.D5->D6": {
+            "time_head_occupy": 526.36,
+            "time_tail_free": 579.463
+          },
+          "rt.D6->D7": {
+            "time_head_occupy": 571.524,
+            "time_tail_free": 615.648
+          },
+          "rt.D7->D8": { "time_head_occupy": 608.67, "time_tail_free": 653.54 },
+          "rt.D8->DB_in": {
+            "time_head_occupy": 644.816,
+            "time_tail_free": 732.623
+          },
+          "rt.DB_in->DB2": {
+            "time_head_occupy": 704.679,
+            "time_tail_free": 743.547
+          },
+          "rt.DB_in->DB1": {
+            "time_head_occupy": 704.679,
+            "time_tail_free": 743.547
+          },
+          "rt.DB1->buffer_stop.2": {
+            "time_head_occupy": 707.683,
+            "time_tail_free": 751.185
+          }
+        },
+        "signal_sightings": [
+          { "offset": 0.0, "signal": "SA1", "state": "VL", "time": 0.0 },
+          { "offset": 0.0, "signal": "SA3", "state": "VL", "time": 0.0 },
+          { "offset": 1630.0, "signal": "S0", "state": "VL", "time": 92.441 },
+          { "offset": 3610.0, "signal": "S1", "state": "VL", "time": 141.834 },
+          { "offset": 5590.0, "signal": "S2", "state": "VL", "time": 180.717 },
+          { "offset": 7570.0, "signal": "S3", "state": "VL", "time": 218.3 },
+          { "offset": 9550.0, "signal": "S4", "state": "VL", "time": 281.472 },
+          { "offset": 11630.0, "signal": "S5", "state": "VL", "time": 515.239 },
+          { "offset": 13610.0, "signal": "S6", "state": "VL", "time": 563.288 },
+          {
+            "offset": 15590.0,
+            "signal": "S7",
+            "state": "VL",
+            "time": 601.5450000000001
+          },
+          { "offset": 17570.0, "signal": "S8", "state": "VL", "time": 636.761 },
+          {
+            "offset": 19620.0,
+            "signal": "SB_in",
+            "state": "VL",
+            "time": 688.273
+          },
+          { "offset": 19680.0, "signal": "SB1", "state": "VL", "time": 690.446 }
+        ],
+        "speeds": [
+          { "position": 0.0, "speed": 0.0, "time": 0.0 },
+          {
+            "position": 0.922252864428832,
+            "speed": 0.8726102107539574,
+            "time": 2.1137796763390657
+          },
+          {
+            "position": 3.6877089403523287,
+            "speed": 1.7439880155220127,
+            "time": 4.227559352678131
+          },
+          {
+            "position": 8.293722075391658,
+            "speed": 2.6140945099156965,
+            "time": 6.341339029017197
+          },
+          {
+            "position": 23.01636855729334,
+            "speed": 4.350285267627316,
+            "time": 10.568898381695329
+          },
+          {
+            "position": 45.065584085305474,
+            "speed": 6.079917183563861,
+            "time": 14.796457734373458
+          },
+          {
+            "position": 91.80694364871871,
+            "speed": 8.659088384290495,
+            "time": 21.137796763390657
+          },
+          {
+            "position": 132.02578194409776,
+            "speed": 10.36628012106798,
+            "time": 25.36535611606879
+          },
+          {
+            "position": 205.8111505355178,
+            "speed": 12.899973729643765,
+            "time": 31.706695145085988
+          },
+          {
+            "position": 364.0010855583903,
+            "speed": 16.99723354432518,
+            "time": 42.275593526781314
+          },
+          {
+            "position": 520.8085223751327,
+            "speed": 20.03640456434982,
+            "time": 50.73071223213757
+          },
+          {
+            "position": 750.4119675638053,
+            "speed": 23.391754382868474,
+            "time": 61.29961061383289
+          },
+          {
+            "position": 1015.0493607740393,
+            "speed": 26.679355198133617,
+            "time": 71.8685089955282
+          },
+          {
+            "position": 1314.2283967487497,
+            "speed": 29.93022096534369,
+            "time": 82.43740737722351
+          },
+          {
+            "position": 1718.2792793467538,
+            "speed": 33.77476840510866,
+            "time": 95.12008543525789
+          },
+          {
+            "position": 2091.8814950553574,
+            "speed": 36.90918866078533,
+            "time": 105.68898381695323
+          },
+          {
+            "position": 2583.146403823782,
+            "speed": 40.53406804598781,
+            "time": 118.37166187498762
+          },
+          {
+            "position": 3026.7909750048643,
+            "speed": 43.39267850128162,
+            "time": 128.94056025668297
+          },
+          {
+            "position": 4000.0966608720946,
+            "speed": 48.56887732853887,
+            "time": 150.07835702007358
+          },
+          {
+            "position": 5187.023560238864,
+            "speed": 53.37697142862176,
+            "time": 173.32993345980324
+          },
+          {
+            "position": 6273.23006908473,
+            "speed": 56.82369857652943,
+            "time": 193.02867967979648
+          },
+          {
+            "position": 7279.0,
+            "speed": 48.25479265495523,
+            "time": 212.17189194194427
+          },
+          {
+            "position": 7671.0,
+            "speed": 44.47010303495875,
+            "time": 220.62701064730052
+          },
+          {
+            "position": 8116.0,
+            "speed": 39.73924100996314,
+            "time": 231.19590902899589
+          },
+          {
+            "position": 8511.0,
+            "speed": 35.00837898496752,
+            "time": 241.76480741069125
+          },
+          {
+            "position": 8856.0,
+            "speed": 30.277516959971912,
+            "time": 252.33370579238655
+          },
+          {
+            "position": 9204.0,
+            "speed": 24.600482529977178,
+            "time": 265.0163838504209
+          },
+          {
+            "position": 9439.0,
+            "speed": 19.86962050498157,
+            "time": 275.5852822321161
+          },
+          {
+            "position": 9624.0,
+            "speed": 15.138758479985956,
+            "time": 286.1541806138114
+          },
+          {
+            "position": 9684.0,
+            "speed": 13.246413669987712,
+            "time": 290.3817399664895
+          },
+          {
+            "position": 9759.0,
+            "speed": 10.407896454990345,
+            "time": 296.7230789955066
+          },
+          {
+            "position": 9799.0,
+            "speed": 8.515551644992101,
+            "time": 300.9506383481847
+          },
+          {
+            "position": 9844.0,
+            "speed": 5.677034429994734,
+            "time": 307.2919773772019
+          },
+          {
+            "position": 9864.0,
+            "speed": 3.784689619996489,
+            "time": 311.51953672988
+          },
+          {
+            "position": 9871.0,
+            "speed": 2.838517214997367,
+            "time": 313.633316406219
+          },
+          {
+            "position": 9876.0,
+            "speed": 1.8923448099982445,
+            "time": 315.7470960825581
+          },
+          {
+            "position": 9879.0,
+            "speed": 0.9461724049991223,
+            "time": 317.8608757588971
+          },
+          { "position": 9880.0, "speed": 0.0, "time": 319.9746554352362 },
+          {
+            "position": 9880.92225286443,
+            "speed": 0.878638175129996,
+            "time": 422.0739333645
+          },
+          {
+            "position": 9883.687708940353,
+            "speed": 1.756035430851615,
+            "time": 424.1732112937625
+          },
+          {
+            "position": 9888.293722075392,
+            "speed": 2.6321525940260746,
+            "time": 426.2724892230245
+          },
+          {
+            "position": 9913.126961123437,
+            "speed": 5.252110925194145,
+            "time": 432.5703230108113
+          },
+          {
+            "position": 9954.40995191504,
+            "speed": 7.855357404160939,
+            "time": 438.86815679859814
+          },
+          {
+            "position": 10012.0257819441,
+            "speed": 10.437890063871473,
+            "time": 445.16599058638496
+          },
+          {
+            "position": 10085.81115053552,
+            "speed": 12.989086349615217,
+            "time": 451.4638243741717
+          },
+          {
+            "position": 10175.535523665854,
+            "speed": 15.49394230164153,
+            "time": 457.7616581619583
+          },
+          {
+            "position": 10359.215594888605,
+            "speed": 19.45112157320664,
+            "time": 468.2580478082696
+          },
+          {
+            "position": 10630.411967563809,
+            "speed": 23.553343899442137,
+            "time": 480.85371538384317
+          },
+          {
+            "position": 10952.133630424389,
+            "speed": 27.521015535731514,
+            "time": 493.4493829594167
+          },
+          {
+            "position": 11323.488407958821,
+            "speed": 31.435589108308793,
+            "time": 506.04505053499025
+          },
+          {
+            "position": 11743.73948472267,
+            "speed": 35.2812522571892,
+            "time": 518.6407181105637
+          },
+          {
+            "position": 12211.764211636006,
+            "speed": 39.00977130581658,
+            "time": 531.2363856861373
+          },
+          {
+            "position": 12725.71471107888,
+            "speed": 42.56077490358414,
+            "time": 543.8320532617108
+          },
+          {
+            "position": 13282.916017107687,
+            "speed": 45.87288683448345,
+            "time": 556.4277208372844
+          },
+          {
+            "position": 13880.096660872097,
+            "speed": 48.90438963255793,
+            "time": 569.0233884128579
+          },
+          {
+            "position": 15180.267199690905,
+            "speed": 54.14248391286718,
+            "time": 594.214723564005
+          },
+          {
+            "position": 16693.21710989736,
+            "speed": 58.704032885384144,
+            "time": 620.9942137038418
+          },
+          {
+            "position": 17574.0,
+            "speed": 51.44626087597379,
+            "time": 636.9865975645852
+          },
+          {
+            "position": 18374.0,
+            "speed": 43.82459259805175,
+            "time": 653.7808209986832
+          },
+          {
+            "position": 18969.0,
+            "speed": 37.155632854869964,
+            "time": 668.475766503519
+          },
+          {
+            "position": 19265.0,
+            "speed": 33.34479871590894,
+            "time": 676.872878220568
+          },
+          {
+            "position": 19529.0,
+            "speed": 29.533964576947916,
+            "time": 685.2699899376171
+          },
+          {
+            "position": 19761.0,
+            "speed": 25.723130437986896,
+            "time": 693.6671016546661
+          },
+          {
+            "position": 19961.0,
+            "speed": 21.912296299025876,
+            "time": 702.0642133717151
+          },
+          {
+            "position": 20129.0,
+            "speed": 18.10146216006485,
+            "time": 710.4613250887642
+          },
+          {
+            "position": 20265.0,
+            "speed": 14.290628021103831,
+            "time": 718.8584368058132
+          },
+          {
+            "position": 20346.0,
+            "speed": 11.432502416883064,
+            "time": 725.1562705936
+          },
+          {
+            "position": 20426.0,
+            "speed": 7.621668277922043,
+            "time": 733.553382310649
+          },
+          {
+            "position": 20454.0,
+            "speed": 5.716251208441532,
+            "time": 737.7519381691735
+          },
+          {
+            "position": 20474.0,
+            "speed": 3.8108341389610216,
+            "time": 741.950494027698
+          },
+          {
+            "position": 20486.0,
+            "speed": 1.9054170694805108,
+            "time": 746.1490498862225
+          },
+          {
+            "position": 20489.0,
+            "speed": 0.9527085347402554,
+            "time": 748.2483278154848
+          },
+          { "position": 20490.0, "speed": 0.0, "time": 751.347605744747 }
+        ],
+        "stops": [
+          { "duration": 100.0, "position": 9880.0, "time": 319.9746554352362 },
+          { "duration": 1.0, "position": 20490.0, "time": 751.347605744747 }
+        ],
+        "zone_updates": [
+          {
+            "isEntry": true,
+            "offset": 0.0,
+            "time": 0.0,
+            "zone": "zone.DA1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 30.0,
+            "time": 12.064,
+            "zone": "zone.DA1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 100.0,
+            "time": 22.056,
+            "zone": "zone.D0:REVERSE"
+          },
+          {
+            "isEntry": false,
+            "offset": 430.0,
+            "time": 45.989,
+            "zone": "zone.DA1:REVERSE"
+          },
+          {
+            "isEntry": false,
+            "offset": 500.0,
+            "time": 49.664,
+            "zone": "zone.DA1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 2030.0,
+            "time": 103.962,
+            "zone": "zone.D0:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 2430.0,
+            "time": 114.5,
+            "zone": "zone.D0:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 4010.0,
+            "time": 150.226,
+            "zone": "zone.D1:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 4410.0,
+            "time": 158.303,
+            "zone": "zone.D0:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 5990.0,
+            "time": 187.939,
+            "zone": "zone.D2:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 6390.0,
+            "time": 195.028,
+            "zone": "zone.D1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 7970.0,
+            "time": 227.51,
+            "zone": "zone.D3:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 8370.0,
+            "time": 237.747,
+            "zone": "zone.D2:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 9950.0,
+            "time": 438.177,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 10350.0,
+            "time": 467.657,
+            "zone": "zone.D3:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 12030.0,
+            "time": 526.36,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 12430.0,
+            "time": 536.585,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 14010.0,
+            "time": 571.524,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 14410.0,
+            "time": 579.463,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 15990.0,
+            "time": 608.67,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 16390.0,
+            "time": 615.648,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 17970.0,
+            "time": 644.816,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 18370.0,
+            "time": 653.54,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 20020.0,
+            "time": 704.679,
+            "zone": "zone.DB1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 20080.0,
+            "time": 707.683,
+            "zone": "zone.DB1:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 20420.0,
+            "time": 732.623,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 20480.0,
+            "time": 743.547,
+            "zone": "zone.DB1:REVERSE"
+          }
+        ]
+      }
+    ],
+    "electrification_conditions": [
+      [
+        {
+          "seen_mode": "",
+          "start": 0.0,
+          "stop": 20490.0,
+          "used_mode": "thermal"
+        }
+      ]
+    ],
+    "speed_limits": [
+      [
+        { "position": 0.0, "speed": 80.0 },
+        { "position": 20490.0, "speed": 80.0 }
+      ]
+    ],
+    "warnings": []
+  },
+  {
+    "base_simulations": [
+      {
+        "head_positions": [
+          {
+            "offset": 400.0,
+            "path_offset": 0.0,
+            "time": 0.0,
+            "track_section": "SOUTH_Q1"
+          },
+          {
+            "offset": 403.6877089403523,
+            "path_offset": 3.6877089403523287,
+            "time": 4.0,
+            "track_section": "SOUTH_Q1"
+          },
+          {
+            "offset": 423.01636855729333,
+            "path_offset": 23.01636855729334,
+            "time": 10.0,
+            "track_section": "SOUTH_Q1"
+          },
+          {
+            "offset": 445.0655840853055,
+            "path_offset": 45.065584085305474,
+            "time": 14.0,
+            "track_section": "SOUTH_Q1"
+          },
+          {
+            "offset": 41.806943648718715,
+            "path_offset": 91.80694364871871,
+            "time": 20.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 82.02578194409776,
+            "path_offset": 132.02578194409776,
+            "time": 24.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 155.8111505355178,
+            "path_offset": 205.8111505355178,
+            "time": 30.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 213.87671506148,
+            "path_offset": 263.87671506148,
+            "time": 34.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 314.0010855583903,
+            "path_offset": 364.0010855583903,
+            "time": 40.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 513.8872106029471,
+            "path_offset": 563.8872106029471,
+            "time": 50.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 651.6683698059925,
+            "path_offset": 701.6683698059925,
+            "time": 56.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 802.0961623123302,
+            "path_offset": 852.0961623123302,
+            "time": 62.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1080.596493256904,
+            "path_offset": 1130.596493256904,
+            "time": 72.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1264.2283967487497,
+            "path_offset": 1314.2283967487497,
+            "time": 78.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1460.1587794434436,
+            "path_offset": 1510.1587794434436,
+            "time": 84.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1668.2792793467538,
+            "path_offset": 1718.2792793467538,
+            "time": 90.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1888.4677897851884,
+            "path_offset": 1938.4677897851884,
+            "time": 96.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2120.549469793094,
+            "path_offset": 2170.549469793094,
+            "time": 102.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2364.2934790995873,
+            "path_offset": 2414.2934790995873,
+            "time": 108.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2619.444595070302,
+            "path_offset": 2669.444595070302,
+            "time": 114.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2885.658926414239,
+            "path_offset": 2935.658926414239,
+            "time": 120.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3162.563990754671,
+            "path_offset": 3212.563990754671,
+            "time": 126.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3547.7120954580014,
+            "path_offset": 3597.7120954580014,
+            "time": 134.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3847.942625418014,
+            "path_offset": 3897.942625418014,
+            "time": 140.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4262.56468173267,
+            "path_offset": 4312.56468173267,
+            "time": 148.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4583.699691247772,
+            "path_offset": 4633.699691247772,
+            "time": 154.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5024.620000705183,
+            "path_offset": 5074.620000705183,
+            "time": 162.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5828.62800222063,
+            "path_offset": 5878.62800222063,
+            "time": 176.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7076.0,
+            "path_offset": 7126.0,
+            "time": 196.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7304.0,
+            "path_offset": 7354.0,
+            "time": 200.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7631.0,
+            "path_offset": 7681.0,
+            "time": 206.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7940.0,
+            "path_offset": 7990.0,
+            "time": 212.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8324.0,
+            "path_offset": 8374.0,
+            "time": 220.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8591.0,
+            "path_offset": 8641.0,
+            "time": 226.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8919.0,
+            "path_offset": 8969.0,
+            "time": 234.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9071.0,
+            "path_offset": 9121.0,
+            "time": 238.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9284.0,
+            "path_offset": 9334.0,
+            "time": 244.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9416.0,
+            "path_offset": 9466.0,
+            "time": 248.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9599.0,
+            "path_offset": 9649.0,
+            "time": 254.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9711.0,
+            "path_offset": 9761.0,
+            "time": 258.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9864.0,
+            "path_offset": 9914.0,
+            "time": 264.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9956.0,
+            "path_offset": 10006.0,
+            "time": 268.79771482222225,
+            "track_section": "T2"
+          },
+          {
+            "offset": 79.0,
+            "path_offset": 10129.0,
+            "time": 274.79771482222225,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 151.0,
+            "path_offset": 10201.0,
+            "time": 278.79771482222225,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 244.0,
+            "path_offset": 10294.0,
+            "time": 284.79771482222225,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 296.0,
+            "path_offset": 10346.0,
+            "time": 288.79771482222225,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 359.0,
+            "path_offset": 10409.0,
+            "time": 294.79771482222225,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 391.0,
+            "path_offset": 10441.0,
+            "time": 298.79771482222225,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 424.0,
+            "path_offset": 10474.0,
+            "time": 304.79771482222225,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 440.0,
+            "path_offset": 10490.0,
+            "time": 313.79771482222225,
+            "track_section": "EAST_Q2"
+          }
+        ],
+        "mechanical_energy_consumed": 2.04959556795802e9,
+        "route_occupancies": {
+          "rt.buffer_stop.4->DC1": {
+            "time_head_occupy": 0.0,
+            "time_tail_free": 43.529
+          },
+          "rt.D4->D5": {
+            "time_head_occupy": 11.418,
+            "time_tail_free": 108.377
+          },
+          "rt.DC1->D5": {
+            "time_head_occupy": 11.418,
+            "time_tail_free": 108.377
+          },
+          "rt.D5->D6": {
+            "time_head_occupy": 98.402,
+            "time_tail_free": 149.837
+          },
+          "rt.D6->D7": {
+            "time_head_occupy": 142.192,
+            "time_tail_free": 184.577
+          },
+          "rt.D7->D8": {
+            "time_head_occupy": 177.887,
+            "time_tail_free": 220.71
+          },
+          "rt.D8->DB_in": {
+            "time_head_occupy": 212.397,
+            "time_tail_free": 296.063
+          },
+          "rt.DB_in->DB2": {
+            "time_head_occupy": 269.438,
+            "time_tail_free": 306.472
+          },
+          "rt.DB_in->DB1": {
+            "time_head_occupy": 269.438,
+            "time_tail_free": 306.472
+          },
+          "rt.DB2->buffer_stop.3": {
+            "time_head_occupy": 272.3,
+            "time_tail_free": 313.797
+          }
+        },
+        "signal_sightings": [
+          { "offset": 0.0, "signal": "SC1", "state": "VL", "time": 0.0 },
+          { "offset": 1630.0, "signal": "S5", "state": "VL", "time": 87.497 },
+          { "offset": 3610.0, "signal": "S6", "state": "VL", "time": 134.249 },
+          { "offset": 5590.0, "signal": "S7", "state": "VL", "time": 171.052 },
+          { "offset": 7570.0, "signal": "S8", "state": "VL", "time": 204.722 },
+          {
+            "offset": 9620.0,
+            "signal": "SB_in",
+            "state": "VL",
+            "time": 253.805
+          },
+          { "offset": 9680.0, "signal": "SB2", "state": "VL", "time": 255.876 }
+        ],
+        "speeds": [
+          { "position": 0.0, "speed": 0.0, "time": 0.0 },
+          {
+            "position": 0.922252864428832,
+            "speed": 0.922252864428832,
+            "time": 2.0
+          },
+          {
+            "position": 3.6877089403523287,
+            "speed": 1.8432032114946646,
+            "time": 4.0
+          },
+          {
+            "position": 8.293722075391658,
+            "speed": 2.7628099235446646,
+            "time": 6.0
+          },
+          {
+            "position": 23.01636855729334,
+            "speed": 4.5977722924939375,
+            "time": 10.0
+          },
+          {
+            "position": 58.8280247380274,
+            "speed": 7.336637964500956,
+            "time": 16.0
+          },
+          {
+            "position": 111.01420599720468,
+            "speed": 10.055559827317502,
+            "time": 22.0
+          },
+          {
+            "position": 179.43211440476995,
+            "speed": 12.745184983233454,
+            "time": 28.0
+          },
+          {
+            "position": 263.87671506148,
+            "speed": 15.395763048824946,
+            "time": 34.0
+          },
+          {
+            "position": 439.1804084229013,
+            "speed": 19.6185313566869,
+            "time": 44.0
+          },
+          {
+            "position": 654.3298865361286,
+            "speed": 23.31739301626245,
+            "time": 54.0
+          },
+          {
+            "position": 1015.0493607740393,
+            "speed": 28.197139397822923,
+            "time": 68.0
+          },
+          {
+            "position": 1378.1768659478962,
+            "speed": 32.31552280670609,
+            "time": 80.0
+          },
+          {
+            "position": 1790.3411982465916,
+            "speed": 36.36570938594909,
+            "time": 92.0
+          },
+          {
+            "position": 2250.5132668861165,
+            "speed": 40.30476878595238,
+            "time": 104.0
+          },
+          {
+            "position": 2756.972002537264,
+            "speed": 44.06926083791856,
+            "time": 116.0
+          },
+          {
+            "position": 3307.1758593727805,
+            "speed": 47.59018829331906,
+            "time": 128.0
+          },
+          {
+            "position": 3897.942625418014,
+            "speed": 50.822082554245334,
+            "time": 140.0
+          },
+          {
+            "position": 4525.718669486172,
+            "speed": 53.759817246788124,
+            "time": 152.0
+          },
+          {
+            "position": 5187.023560238864,
+            "speed": 56.41357869517583,
+            "time": 164.0
+          },
+          {
+            "position": 6723.764336596783,
+            "speed": 61.36966403202169,
+            "time": 190.05838675817887
+          },
+          { "position": 7574.0, "speed": 54.0, "time": 204.79771482222225 },
+          { "position": 8374.0, "speed": 46.0, "time": 220.79771482222225 },
+          { "position": 8969.0, "speed": 39.0, "time": 234.79771482222225 },
+          { "position": 9265.0, "speed": 35.0, "time": 242.79771482222225 },
+          { "position": 9529.0, "speed": 31.0, "time": 250.79771482222225 },
+          { "position": 9706.0, "speed": 28.0, "time": 256.79771482222225 },
+          { "position": 9914.0, "speed": 24.0, "time": 264.79771482222225 },
+          { "position": 10090.0, "speed": 20.0, "time": 272.79771482222225 },
+          { "position": 10234.0, "speed": 16.0, "time": 280.79771482222225 },
+          { "position": 10346.0, "speed": 12.0, "time": 288.79771482222225 },
+          { "position": 10426.0, "speed": 8.0, "time": 296.79771482222225 },
+          { "position": 10454.0, "speed": 6.0, "time": 300.79771482222225 },
+          { "position": 10474.0, "speed": 4.0, "time": 304.79771482222225 },
+          { "position": 10486.0, "speed": 2.0, "time": 308.79771482222225 },
+          { "position": 10489.0, "speed": 1.0, "time": 310.79771482222225 },
+          { "position": 10490.0, "speed": 0.0, "time": 313.79771482222225 }
+        ],
+        "stops": [
+          { "duration": 1.0, "position": 10490.0, "time": 313.79771482222225 }
+        ],
+        "zone_updates": [
+          {
+            "isEntry": true,
+            "offset": 0.0,
+            "time": 0.0,
+            "zone": "zone.DC1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 30.0,
+            "time": 11.418,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 430.0,
+            "time": 43.529,
+            "zone": "zone.DC1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 2030.0,
+            "time": 98.402,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 2430.0,
+            "time": 108.377,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 4010.0,
+            "time": 142.192,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 4410.0,
+            "time": 149.837,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 5990.0,
+            "time": 177.887,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 6390.0,
+            "time": 184.577,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 7970.0,
+            "time": 212.397,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 8370.0,
+            "time": 220.71,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 10020.0,
+            "time": 269.438,
+            "zone": "zone.DB1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 10080.0,
+            "time": 272.3,
+            "zone": "zone.DB2:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 10420.0,
+            "time": 296.063,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 10480.0,
+            "time": 306.472,
+            "zone": "zone.DB1:REVERSE"
+          }
+        ]
+      }
+    ],
+    "eco_simulations": [
+      {
+        "head_positions": [
+          {
+            "offset": 400.0,
+            "path_offset": 0.0,
+            "time": 0.0,
+            "track_section": "SOUTH_Q1"
+          },
+          {
+            "offset": 403.6877089403523,
+            "path_offset": 3.6877089403523287,
+            "time": 4.198423947369129,
+            "track_section": "SOUTH_Q1"
+          },
+          {
+            "offset": 423.01636855729333,
+            "path_offset": 23.01636855729334,
+            "time": 10.496059868422822,
+            "track_section": "SOUTH_Q1"
+          },
+          {
+            "offset": 445.0655840853055,
+            "path_offset": 45.065584085305474,
+            "time": 14.694483815791951,
+            "track_section": "SOUTH_Q1"
+          },
+          {
+            "offset": 41.806943648718715,
+            "path_offset": 91.80694364871871,
+            "time": 20.992119736845645,
+            "track_section": "T2"
+          },
+          {
+            "offset": 82.02578194409776,
+            "path_offset": 132.02578194409776,
+            "time": 25.190543684214774,
+            "track_section": "T2"
+          },
+          {
+            "offset": 155.8111505355178,
+            "path_offset": 205.8111505355178,
+            "time": 31.488179605268463,
+            "track_section": "T2"
+          },
+          {
+            "offset": 213.87671506148,
+            "path_offset": 263.87671506148,
+            "time": 35.6866035526376,
+            "track_section": "T2"
+          },
+          {
+            "offset": 314.0010855583903,
+            "path_offset": 364.0010855583903,
+            "time": 41.9842394736913,
+            "track_section": "T2"
+          },
+          {
+            "offset": 513.8872106029471,
+            "path_offset": 563.8872106029471,
+            "time": 52.480299342114115,
+            "track_section": "T2"
+          },
+          {
+            "offset": 651.6683698059925,
+            "path_offset": 701.6683698059925,
+            "time": 58.777935263167805,
+            "track_section": "T2"
+          },
+          {
+            "offset": 802.0961623123302,
+            "path_offset": 852.0961623123302,
+            "time": 65.0755711842215,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1080.596493256904,
+            "path_offset": 1130.596493256904,
+            "time": 75.57163105264432,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1264.2283967487497,
+            "path_offset": 1314.2283967487497,
+            "time": 81.869266973698,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1460.1587794434436,
+            "path_offset": 1510.1587794434436,
+            "time": 88.16690289475169,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1668.2792793467538,
+            "path_offset": 1718.2792793467538,
+            "time": 94.46453881580538,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1888.4677897851884,
+            "path_offset": 1938.4677897851884,
+            "time": 100.76217473685908,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2120.549469793094,
+            "path_offset": 2170.549469793094,
+            "time": 107.05981065791278,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2364.2934790995873,
+            "path_offset": 2414.2934790995873,
+            "time": 113.35744657896647,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2619.444595070302,
+            "path_offset": 2669.444595070302,
+            "time": 119.65508250002016,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2885.658926414239,
+            "path_offset": 2935.658926414239,
+            "time": 125.95271842107387,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3162.563990754671,
+            "path_offset": 3212.563990754671,
+            "time": 132.25035434212757,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3547.7120954580014,
+            "path_offset": 3597.7120954580014,
+            "time": 140.64720223686584,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3847.942625418014,
+            "path_offset": 3897.942625418014,
+            "time": 146.94483815791952,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4262.56468173267,
+            "path_offset": 4312.56468173267,
+            "time": 155.3416860526578,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4583.699691247772,
+            "path_offset": 4633.699691247772,
+            "time": 161.63932197371147,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5024.620000705183,
+            "path_offset": 5074.620000705183,
+            "time": 170.03616986844972,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5828.62800222063,
+            "path_offset": 5878.62800222063,
+            "time": 184.73065368424162,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7076.0,
+            "path_offset": 7126.0,
+            "time": 206.5600596742846,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7304.0,
+            "path_offset": 7354.0,
+            "time": 210.7584836216537,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7631.0,
+            "path_offset": 7681.0,
+            "time": 217.0561195427074,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7940.0,
+            "path_offset": 7990.0,
+            "time": 223.35375546376108,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8324.0,
+            "path_offset": 8374.0,
+            "time": 231.75060335849932,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8591.0,
+            "path_offset": 8641.0,
+            "time": 238.048239279553,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8919.0,
+            "path_offset": 8969.0,
+            "time": 246.44508717429125,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9071.0,
+            "path_offset": 9121.0,
+            "time": 250.64351112166037,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9284.0,
+            "path_offset": 9334.0,
+            "time": 256.9411470427141,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9416.0,
+            "path_offset": 9466.0,
+            "time": 261.13957099008326,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9599.0,
+            "path_offset": 9649.0,
+            "time": 267.437206911137,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9711.0,
+            "path_offset": 9761.0,
+            "time": 271.6356308585062,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9864.0,
+            "path_offset": 9914.0,
+            "time": 277.93326677956,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9956.0,
+            "path_offset": 10006.0,
+            "time": 282.13169072692915,
+            "track_section": "T2"
+          },
+          {
+            "offset": 79.0,
+            "path_offset": 10129.0,
+            "time": 288.4293266479829,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 151.0,
+            "path_offset": 10201.0,
+            "time": 292.6277505953521,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 244.0,
+            "path_offset": 10294.0,
+            "time": 298.92538651640587,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 296.0,
+            "path_offset": 10346.0,
+            "time": 303.12381046377504,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 359.0,
+            "path_offset": 10409.0,
+            "time": 309.4214463848288,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 391.0,
+            "path_offset": 10441.0,
+            "time": 313.619870332198,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 424.0,
+            "path_offset": 10474.0,
+            "time": 319.91750625325176,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 440.0,
+            "path_offset": 10490.0,
+            "time": 329.3143541479901,
+            "track_section": "EAST_Q2"
+          }
+        ],
+        "mechanical_energy_consumed": 1.8664769046236548e9,
+        "route_occupancies": {
+          "rt.buffer_stop.4->DC1": {
+            "time_head_occupy": 0.0,
+            "time_tail_free": 45.684
+          },
+          "rt.D4->D5": {
+            "time_head_occupy": 11.984,
+            "time_tail_free": 113.741
+          },
+          "rt.DC1->D5": {
+            "time_head_occupy": 11.984,
+            "time_tail_free": 113.741
+          },
+          "rt.D5->D6": {
+            "time_head_occupy": 103.273,
+            "time_tail_free": 157.254
+          },
+          "rt.D6->D7": {
+            "time_head_occupy": 149.231,
+            "time_tail_free": 193.713
+          },
+          "rt.D7->D8": {
+            "time_head_occupy": 186.693,
+            "time_tail_free": 231.635
+          },
+          "rt.D8->DB_in": {
+            "time_head_occupy": 222.912,
+            "time_tail_free": 310.719
+          },
+          "rt.DB_in->DB2": {
+            "time_head_occupy": 282.775,
+            "time_tail_free": 321.643
+          },
+          "rt.DB_in->DB1": {
+            "time_head_occupy": 282.775,
+            "time_tail_free": 321.643
+          },
+          "rt.DB2->buffer_stop.3": {
+            "time_head_occupy": 285.779,
+            "time_tail_free": 329.281
+          }
+        },
+        "signal_sightings": [
+          { "offset": 0.0, "signal": "SC1", "state": "VL", "time": 0.0 },
+          { "offset": 1630.0, "signal": "S5", "state": "VL", "time": 91.828 },
+          { "offset": 3610.0, "signal": "S6", "state": "VL", "time": 140.894 },
+          { "offset": 5590.0, "signal": "S7", "state": "VL", "time": 179.519 },
+          { "offset": 7570.0, "signal": "S8", "state": "VL", "time": 214.857 },
+          {
+            "offset": 9620.0,
+            "signal": "SB_in",
+            "state": "VL",
+            "time": 266.369
+          },
+          { "offset": 9680.0, "signal": "SB2", "state": "VL", "time": 268.542 }
+        ],
+        "speeds": [
+          { "position": 0.0, "speed": 0.0, "time": 0.0 },
+          {
+            "position": 0.922252864428832,
+            "speed": 0.8786657812455991,
+            "time": 2.0992119736845645
+          },
+          {
+            "position": 3.6877089403523287,
+            "speed": 1.7560906040941162,
+            "time": 4.198423947369129
+          },
+          {
+            "position": 8.293722075391658,
+            "speed": 2.6322352941759797,
+            "time": 6.297635921053693
+          },
+          {
+            "position": 23.01636855729334,
+            "speed": 4.380474530567646,
+            "time": 10.496059868422822
+          },
+          {
+            "position": 58.8280247380274,
+            "speed": 6.989897215214138,
+            "time": 16.793695789476516
+          },
+          {
+            "position": 111.01420599720468,
+            "speed": 9.580318665644661,
+            "time": 23.09133171053021
+          },
+          {
+            "position": 179.43211440476995,
+            "speed": 12.142828016422692,
+            "time": 29.388967631583903
+          },
+          {
+            "position": 263.87671506148,
+            "speed": 14.66813570218171,
+            "time": 35.6866035526376
+          },
+          {
+            "position": 439.1804084229013,
+            "speed": 18.69132951090422,
+            "time": 46.18266342106042
+          },
+          {
+            "position": 654.3298865361286,
+            "speed": 22.215377302117282,
+            "time": 56.678723289483244
+          },
+          {
+            "position": 1015.0493607740393,
+            "speed": 26.86449939434266,
+            "time": 71.37320710527518
+          },
+          {
+            "position": 1378.1768659478962,
+            "speed": 30.788241694320615,
+            "time": 83.96847894738256
+          },
+          {
+            "position": 1790.3411982465916,
+            "speed": 34.647010251298745,
+            "time": 96.56375078948994
+          },
+          {
+            "position": 2250.5132668861165,
+            "speed": 38.39990366976511,
+            "time": 109.15902263159734
+          },
+          {
+            "position": 2756.972002537264,
+            "speed": 41.986480060484425,
+            "time": 121.75429447370473
+          },
+          {
+            "position": 3307.1758593727805,
+            "speed": 45.34100309059131,
+            "time": 134.34956631581213
+          },
+          {
+            "position": 3897.942625418014,
+            "speed": 48.42015307776827,
+            "time": 146.94483815791952
+          },
+          {
+            "position": 4525.718669486172,
+            "speed": 51.21904592839015,
+            "time": 159.5401100000269
+          },
+          {
+            "position": 5187.023560238864,
+            "speed": 53.74738654539777,
+            "time": 172.13538184213428
+          },
+          {
+            "position": 6723.764336596783,
+            "speed": 58.46923969693717,
+            "time": 199.48642059097045
+          },
+          {
+            "position": 7574.0,
+            "speed": 51.44787727674637,
+            "time": 214.95690756902283
+          },
+          {
+            "position": 8374.0,
+            "speed": 43.8259695320432,
+            "time": 231.75060335849932
+          },
+          {
+            "position": 8969.0,
+            "speed": 37.15680025542793,
+            "time": 246.44508717429125
+          },
+          {
+            "position": 9265.0,
+            "speed": 33.34584638307635,
+            "time": 254.8419350690295
+          },
+          {
+            "position": 9529.0,
+            "speed": 29.534892510724767,
+            "time": 263.23878296376785
+          },
+          {
+            "position": 9706.0,
+            "speed": 26.676677106461078,
+            "time": 269.5364188848216
+          },
+          {
+            "position": 9914.0,
+            "speed": 22.865723234109495,
+            "time": 277.93326677956
+          },
+          {
+            "position": 10090.0,
+            "speed": 19.054769361757913,
+            "time": 286.33011467429833
+          },
+          {
+            "position": 10234.0,
+            "speed": 15.24381548940633,
+            "time": 294.7269625690367
+          },
+          {
+            "position": 10346.0,
+            "speed": 11.432861617054748,
+            "time": 303.12381046377504
+          },
+          {
+            "position": 10426.0,
+            "speed": 7.621907744703165,
+            "time": 311.5206583585134
+          },
+          {
+            "position": 10454.0,
+            "speed": 5.716430808527374,
+            "time": 315.7190823058826
+          },
+          {
+            "position": 10474.0,
+            "speed": 3.8109538723515826,
+            "time": 319.91750625325176
+          },
+          {
+            "position": 10486.0,
+            "speed": 1.9054769361757913,
+            "time": 324.11593020062094
+          },
+          {
+            "position": 10489.0,
+            "speed": 0.9527384680878956,
+            "time": 326.2151421743055
+          },
+          { "position": 10490.0, "speed": 0.0, "time": 329.3143541479901 }
+        ],
+        "stops": [
+          { "duration": 1.0, "position": 10490.0, "time": 329.3143541479901 }
+        ],
+        "zone_updates": [
+          {
+            "isEntry": true,
+            "offset": 0.0,
+            "time": 0.0,
+            "zone": "zone.DC1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 30.0,
+            "time": 11.984,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 430.0,
+            "time": 45.684,
+            "zone": "zone.DC1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 2030.0,
+            "time": 103.273,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 2430.0,
+            "time": 113.741,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 4010.0,
+            "time": 149.231,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 4410.0,
+            "time": 157.254,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 5990.0,
+            "time": 186.693,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 6390.0,
+            "time": 193.713,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 7970.0,
+            "time": 222.912,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 8370.0,
+            "time": 231.635,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 10020.0,
+            "time": 282.775,
+            "zone": "zone.DB1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 10080.0,
+            "time": 285.779,
+            "zone": "zone.DB2:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 10420.0,
+            "time": 310.719,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 10480.0,
+            "time": 321.643,
+            "zone": "zone.DB1:REVERSE"
+          }
+        ]
+      }
+    ],
+    "electrification_conditions": [
+      [
+        {
+          "seen_mode": "",
+          "start": 0.0,
+          "stop": 10490.0,
+          "used_mode": "thermal"
+        }
+      ]
+    ],
+    "speed_limits": [
+      [
+        { "position": 0.0, "speed": 80.0 },
+        { "position": 10490.0, "speed": 80.0 }
+      ]
+    ],
+    "warnings": []
+  },
+  {
+    "base_simulations": [
+      {
+        "head_positions": [
+          {
+            "offset": 400.0,
+            "path_offset": 0.0,
+            "time": 0.0,
+            "track_section": "WEST_Q2"
+          },
+          {
+            "offset": 408.29372207539166,
+            "path_offset": 8.293722075391658,
+            "time": 6.0,
+            "track_section": "WEST_Q2"
+          },
+          {
+            "offset": 445.0655840853055,
+            "path_offset": 45.065584085305474,
+            "time": 14.0,
+            "track_section": "WEST_Q2"
+          },
+          {
+            "offset": 41.806943648718715,
+            "path_offset": 91.80694364871871,
+            "time": 20.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 129.43211440476995,
+            "path_offset": 179.43211440476995,
+            "time": 28.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 213.87671506148,
+            "path_offset": 263.87671506148,
+            "time": 34.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 350.7635830172981,
+            "path_offset": 400.7635830172981,
+            "time": 42.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 470.8085223751327,
+            "path_offset": 520.8085223751327,
+            "time": 48.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 651.6683698059925,
+            "path_offset": 701.6683698059925,
+            "time": 56.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 802.0961623123302,
+            "path_offset": 852.0961623123302,
+            "time": 62.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1022.1336304243846,
+            "path_offset": 1072.1336304243846,
+            "time": 70.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1264.2283967487497,
+            "path_offset": 1314.2283967487497,
+            "time": 78.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1528.183637413785,
+            "path_offset": 1578.183637413785,
+            "time": 86.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1813.7394847226665,
+            "path_offset": 1863.7394847226665,
+            "time": 94.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2120.549469793094,
+            "path_offset": 2170.549469793094,
+            "time": 102.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2448.091464902771,
+            "path_offset": 2498.091464902771,
+            "time": 110.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2795.714711078879,
+            "path_offset": 2845.714711078879,
+            "time": 118.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 3257.1758593727805,
+            "path_offset": 3307.1758593727805,
+            "time": 128.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 3746.816363054769,
+            "path_offset": 3796.816363054769,
+            "time": 138.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 4262.56468173267,
+            "path_offset": 4312.56468173267,
+            "time": 148.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 4802.391189042472,
+            "path_offset": 4852.391189042472,
+            "time": 158.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 5364.337054455416,
+            "path_offset": 5414.337054455416,
+            "time": 168.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 6065.413870034641,
+            "path_offset": 6115.413870034641,
+            "time": 180.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 6793.242331460419,
+            "path_offset": 6843.242331460419,
+            "time": 192.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7545.560828033282,
+            "path_offset": 7595.560828033282,
+            "time": 204.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8320.648282748025,
+            "path_offset": 8370.648282748025,
+            "time": 216.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9117.014256390048,
+            "path_offset": 9167.014256390048,
+            "time": 228.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9933.381299779358,
+            "path_offset": 9983.381299779358,
+            "time": 240.0,
+            "track_section": "T1"
+          },
+          {
+            "offset": 909.8530210889548,
+            "path_offset": 10959.853021088955,
+            "time": 254.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1622.475951310551,
+            "path_offset": 11672.475951310551,
+            "time": 264.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2493.5660966820196,
+            "path_offset": 12543.56609668202,
+            "time": 276.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3531.072809065805,
+            "path_offset": 13581.072809065805,
+            "time": 290.0,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4964.0,
+            "path_offset": 15014.0,
+            "time": 308.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5399.0,
+            "path_offset": 15449.0,
+            "time": 314.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5816.0,
+            "path_offset": 15866.0,
+            "time": 320.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 6344.0,
+            "path_offset": 16394.0,
+            "time": 328.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 6840.0,
+            "path_offset": 16890.0,
+            "time": 336.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7304.0,
+            "path_offset": 17354.0,
+            "time": 344.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7736.0,
+            "path_offset": 17786.0,
+            "time": 352.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8039.0,
+            "path_offset": 18089.0,
+            "time": 358.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8324.0,
+            "path_offset": 18374.0,
+            "time": 364.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8591.0,
+            "path_offset": 18641.0,
+            "time": 370.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8919.0,
+            "path_offset": 18969.0,
+            "time": 378.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9144.0,
+            "path_offset": 19194.0,
+            "time": 384.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9351.0,
+            "path_offset": 19401.0,
+            "time": 390.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9540.0,
+            "path_offset": 19590.0,
+            "time": 396.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9764.0,
+            "path_offset": 19814.0,
+            "time": 404.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9911.0,
+            "path_offset": 19961.0,
+            "time": 410.9623918550993,
+            "track_section": "T2"
+          },
+          {
+            "offset": 40.0,
+            "path_offset": 20090.0,
+            "time": 416.9623918550993,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 151.0,
+            "path_offset": 20201.0,
+            "time": 422.9623918550993,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 271.0,
+            "path_offset": 20321.0,
+            "time": 430.9623918550993,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 340.0,
+            "path_offset": 20390.0,
+            "time": 436.9623918550993,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 404.0,
+            "path_offset": 20454.0,
+            "time": 444.9623918550993,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 431.0,
+            "path_offset": 20481.0,
+            "time": 450.9623918550993,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 440.0,
+            "path_offset": 20490.0,
+            "time": 457.9623918550993,
+            "track_section": "EAST_Q2"
+          }
+        ],
+        "mechanical_energy_consumed": 3.6494829962427273e9,
+        "route_occupancies": {
+          "rt.buffer_stop.1->DA2": {
+            "time_head_occupy": 0.0,
+            "time_tail_free": 43.529
+          },
+          "rt.DA1->DA_out": {
+            "time_head_occupy": 11.418,
+            "time_tail_free": 47.008
+          },
+          "rt.DA2->DA_out": {
+            "time_head_occupy": 11.418,
+            "time_tail_free": 47.008
+          },
+          "rt.DA_out->D0": {
+            "time_head_occupy": 20.876,
+            "time_tail_free": 108.377
+          },
+          "rt.D0->D1": {
+            "time_head_occupy": 98.402,
+            "time_tail_free": 149.837
+          },
+          "rt.D1->D2": {
+            "time_head_occupy": 142.192,
+            "time_tail_free": 184.577
+          },
+          "rt.D2->D3": {
+            "time_head_occupy": 177.887,
+            "time_tail_free": 215.99
+          },
+          "rt.D3->D4": {
+            "time_head_occupy": 209.839,
+            "time_tail_free": 245.299
+          },
+          "rt.D4->D5": {
+            "time_head_occupy": 239.514,
+            "time_tail_free": 274.448
+          },
+          "rt.DC1->D5": {
+            "time_head_occupy": 239.514,
+            "time_tail_free": 274.448
+          },
+          "rt.D5->D6": {
+            "time_head_occupy": 268.953,
+            "time_tail_free": 300.976
+          },
+          "rt.D6->D7": {
+            "time_head_occupy": 295.701,
+            "time_tail_free": 328.898
+          },
+          "rt.D7->D8": {
+            "time_head_occupy": 322.796,
+            "time_tail_free": 364.874
+          },
+          "rt.D8->DB_in": {
+            "time_head_occupy": 356.561,
+            "time_tail_free": 440.227
+          },
+          "rt.DB_in->DB2": {
+            "time_head_occupy": 413.602,
+            "time_tail_free": 450.636
+          },
+          "rt.DB_in->DB1": {
+            "time_head_occupy": 413.602,
+            "time_tail_free": 450.636
+          },
+          "rt.DB2->buffer_stop.3": {
+            "time_head_occupy": 416.464,
+            "time_tail_free": 457.961
+          }
+        },
+        "signal_sightings": [
+          { "offset": 0.0, "signal": "SA2", "state": "VL", "time": 0.0 },
+          { "offset": 0.0, "signal": "SA3", "state": "VL", "time": 0.0 },
+          { "offset": 1630.0, "signal": "S0", "state": "VL", "time": 87.497 },
+          { "offset": 3610.0, "signal": "S1", "state": "VL", "time": 134.249 },
+          { "offset": 5590.0, "signal": "S2", "state": "VL", "time": 171.052 },
+          { "offset": 7570.0, "signal": "S3", "state": "VL", "time": 203.598 },
+          { "offset": 9550.0, "signal": "S4", "state": "VL", "time": 233.665 },
+          { "offset": 11630.0, "signal": "S5", "state": "VL", "time": 263.408 },
+          { "offset": 13610.0, "signal": "S6", "state": "VL", "time": 290.386 },
+          { "offset": 15590.0, "signal": "S7", "state": "VL", "time": 316.961 },
+          { "offset": 17570.0, "signal": "S8", "state": "VL", "time": 348.886 },
+          {
+            "offset": 19620.0,
+            "signal": "SB_in",
+            "state": "VL",
+            "time": 397.969
+          },
+          { "offset": 19680.0, "signal": "SB2", "state": "VL", "time": 400.04 }
+        ],
+        "speeds": [
+          { "position": 0.0, "speed": 0.0, "time": 0.0 },
+          {
+            "position": 0.922252864428832,
+            "speed": 0.922252864428832,
+            "time": 2.0
+          },
+          {
+            "position": 3.6877089403523287,
+            "speed": 1.8432032114946646,
+            "time": 4.0
+          },
+          {
+            "position": 14.737564131867863,
+            "speed": 3.6810321329315396,
+            "time": 8.0
+          },
+          {
+            "position": 33.12696112343589,
+            "speed": 5.5128202736486145,
+            "time": 12.0
+          },
+          {
+            "position": 58.8280247380274,
+            "speed": 7.336637964500956,
+            "time": 16.0
+          },
+          {
+            "position": 132.02578194409776,
+            "speed": 10.956016119575583,
+            "time": 24.0
+          },
+          {
+            "position": 233.96297684784363,
+            "speed": 14.51797516481141,
+            "time": 32.0
+          },
+          {
+            "position": 364.0010855583903,
+            "speed": 17.964203409991594,
+            "time": 40.0
+          },
+          {
+            "position": 479.215594888603,
+            "speed": 20.416655109014798,
+            "time": 46.0
+          },
+          {
+            "position": 654.3298865361286,
+            "speed": 23.31739301626245,
+            "time": 54.0
+          },
+          {
+            "position": 852.0961623123302,
+            "speed": 26.118432587818077,
+            "time": 62.0
+          },
+          {
+            "position": 1130.596493256904,
+            "speed": 29.575732579997187,
+            "time": 72.0
+          },
+          {
+            "position": 1443.488407958817,
+            "speed": 32.99601920421478,
+            "time": 82.0
+          },
+          {
+            "position": 2170.549469793094,
+            "speed": 39.65902830707021,
+            "time": 102.0
+          },
+          {
+            "position": 2935.658926414239,
+            "speed": 45.27076763166317,
+            "time": 120.0
+          },
+          {
+            "position": 3796.816363054769,
+            "speed": 50.304179808999535,
+            "time": 138.0
+          },
+          {
+            "position": 4633.699691247772,
+            "speed": 54.22120451481157,
+            "time": 154.0
+          },
+          {
+            "position": 5529.220187876703,
+            "speed": 57.643339413629676,
+            "time": 170.0
+          },
+          {
+            "position": 6597.808778015903,
+            "speed": 61.012979098247925,
+            "time": 188.0
+          },
+          {
+            "position": 7851.468939801544,
+            "speed": 64.28873906536334,
+            "time": 208.0
+          },
+          {
+            "position": 9167.014256390048,
+            "speed": 67.21180229416723,
+            "time": 228.0
+          },
+          {
+            "position": 10818.819513487679,
+            "speed": 70.39074052552772,
+            "time": 252.0
+          },
+          {
+            "position": 14644.570346576238,
+            "speed": 76.45540957593361,
+            "time": 304.05157270323207
+          },
+          { "position": 16001.0, "speed": 67.0, "time": 322.9623918550993 },
+          { "position": 16646.0, "speed": 62.0, "time": 332.9623918550993 },
+          { "position": 17241.0, "speed": 57.0, "time": 342.9623918550993 },
+          { "position": 18186.0, "speed": 48.0, "time": 360.9623918550993 },
+          { "position": 18641.0, "speed": 43.0, "time": 370.9623918550993 },
+          { "position": 19046.0, "speed": 38.0, "time": 380.9623918550993 },
+          { "position": 19334.0, "speed": 34.0, "time": 388.9623918550993 },
+          { "position": 19649.0, "speed": 29.0, "time": 398.9623918550993 },
+          { "position": 19914.0, "speed": 24.0, "time": 408.9623918550993 },
+          { "position": 20129.0, "speed": 19.0, "time": 418.9623918550993 },
+          { "position": 20265.0, "speed": 15.0, "time": 426.9623918550993 },
+          { "position": 20321.0, "speed": 13.0, "time": 430.9623918550993 },
+          { "position": 20390.0, "speed": 10.0, "time": 436.9623918550993 },
+          { "position": 20426.0, "speed": 8.0, "time": 440.9623918550993 },
+          { "position": 20465.0, "speed": 5.0, "time": 446.9623918550993 },
+          { "position": 20481.0, "speed": 3.0, "time": 450.9623918550993 },
+          { "position": 20486.0, "speed": 2.0, "time": 452.9623918550993 },
+          { "position": 20489.0, "speed": 1.0, "time": 454.9623918550993 },
+          { "position": 20490.0, "speed": 0.0, "time": 457.9623918550993 }
+        ],
+        "stops": [
+          { "duration": 1.0, "position": 20490.0, "time": 457.9623918550993 }
+        ],
+        "zone_updates": [
+          {
+            "isEntry": true,
+            "offset": 0.0,
+            "time": 0.0,
+            "zone": "zone.DA2:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 30.0,
+            "time": 11.418,
+            "zone": "zone.DA1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 100.0,
+            "time": 20.876,
+            "zone": "zone.D0:REVERSE"
+          },
+          {
+            "isEntry": false,
+            "offset": 430.0,
+            "time": 43.529,
+            "zone": "zone.DA2:REVERSE"
+          },
+          {
+            "isEntry": false,
+            "offset": 500.0,
+            "time": 47.008,
+            "zone": "zone.DA1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 2030.0,
+            "time": 98.402,
+            "zone": "zone.D0:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 2430.0,
+            "time": 108.377,
+            "zone": "zone.D0:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 4010.0,
+            "time": 142.192,
+            "zone": "zone.D1:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 4410.0,
+            "time": 149.837,
+            "zone": "zone.D0:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 5990.0,
+            "time": 177.887,
+            "zone": "zone.D2:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 6390.0,
+            "time": 184.577,
+            "zone": "zone.D1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 7970.0,
+            "time": 209.839,
+            "zone": "zone.D3:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 8370.0,
+            "time": 215.99,
+            "zone": "zone.D2:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 9950.0,
+            "time": 239.514,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 10350.0,
+            "time": 245.299,
+            "zone": "zone.D3:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 12030.0,
+            "time": 268.953,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 12430.0,
+            "time": 274.448,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 14010.0,
+            "time": 295.701,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 14410.0,
+            "time": 300.976,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 15990.0,
+            "time": 322.796,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 16390.0,
+            "time": 328.898,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 17970.0,
+            "time": 356.561,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 18370.0,
+            "time": 364.874,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 20020.0,
+            "time": 413.602,
+            "zone": "zone.DB1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 20080.0,
+            "time": 416.464,
+            "zone": "zone.DB2:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 20420.0,
+            "time": 440.227,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 20480.0,
+            "time": 450.636,
+            "zone": "zone.DB1:REVERSE"
+          }
+        ]
+      }
+    ],
+    "eco_simulations": [
+      {
+        "head_positions": [
+          {
+            "offset": 400.0,
+            "path_offset": 0.0,
+            "time": 0.0,
+            "track_section": "WEST_Q2"
+          },
+          {
+            "offset": 408.29372207539166,
+            "path_offset": 8.293722075391658,
+            "time": 6.307336193159564,
+            "track_section": "WEST_Q2"
+          },
+          {
+            "offset": 445.0655840853055,
+            "path_offset": 45.065584085305474,
+            "time": 14.717117784038981,
+            "track_section": "WEST_Q2"
+          },
+          {
+            "offset": 41.806943648718715,
+            "path_offset": 91.80694364871871,
+            "time": 21.024453977198547,
+            "track_section": "T1"
+          },
+          {
+            "offset": 129.43211440476995,
+            "path_offset": 179.43211440476995,
+            "time": 29.434235568077966,
+            "track_section": "T1"
+          },
+          {
+            "offset": 213.87671506148,
+            "path_offset": 263.87671506148,
+            "time": 35.74157176123753,
+            "track_section": "T1"
+          },
+          {
+            "offset": 350.7635830172981,
+            "path_offset": 400.7635830172981,
+            "time": 44.15135335211695,
+            "track_section": "T1"
+          },
+          {
+            "offset": 470.8085223751327,
+            "path_offset": 520.8085223751327,
+            "time": 50.458689545276506,
+            "track_section": "T1"
+          },
+          {
+            "offset": 651.6683698059925,
+            "path_offset": 701.6683698059925,
+            "time": 58.86847113615592,
+            "track_section": "T1"
+          },
+          {
+            "offset": 802.0961623123302,
+            "path_offset": 852.0961623123302,
+            "time": 65.17580732931549,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1022.1336304243846,
+            "path_offset": 1072.1336304243846,
+            "time": 73.5855889201949,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1264.2283967487497,
+            "path_offset": 1314.2283967487497,
+            "time": 81.99537051107431,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1528.183637413785,
+            "path_offset": 1578.183637413785,
+            "time": 90.40515210195373,
+            "track_section": "T1"
+          },
+          {
+            "offset": 1813.7394847226665,
+            "path_offset": 1863.7394847226665,
+            "time": 98.81493369283315,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2120.549469793094,
+            "path_offset": 2170.549469793094,
+            "time": 107.22471528371258,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2448.091464902771,
+            "path_offset": 2498.091464902771,
+            "time": 115.63449687459202,
+            "track_section": "T1"
+          },
+          {
+            "offset": 2795.714711078879,
+            "path_offset": 2845.714711078879,
+            "time": 124.04427846547145,
+            "track_section": "T1"
+          },
+          {
+            "offset": 3257.1758593727805,
+            "path_offset": 3307.1758593727805,
+            "time": 134.55650545407073,
+            "track_section": "T1"
+          },
+          {
+            "offset": 3746.816363054769,
+            "path_offset": 3796.816363054769,
+            "time": 145.06873244267,
+            "track_section": "T1"
+          },
+          {
+            "offset": 4262.56468173267,
+            "path_offset": 4312.56468173267,
+            "time": 155.5809594312693,
+            "track_section": "T1"
+          },
+          {
+            "offset": 4802.391189042472,
+            "path_offset": 4852.391189042472,
+            "time": 166.09318641986854,
+            "track_section": "T1"
+          },
+          {
+            "offset": 5364.337054455416,
+            "path_offset": 5414.337054455416,
+            "time": 176.60541340846783,
+            "track_section": "T1"
+          },
+          {
+            "offset": 6065.413870034641,
+            "path_offset": 6115.413870034641,
+            "time": 189.2200857947869,
+            "track_section": "T1"
+          },
+          {
+            "offset": 6793.242331460419,
+            "path_offset": 6843.242331460419,
+            "time": 201.83475818110603,
+            "track_section": "T1"
+          },
+          {
+            "offset": 7545.560828033282,
+            "path_offset": 7595.560828033282,
+            "time": 214.44943056742514,
+            "track_section": "T1"
+          },
+          {
+            "offset": 8320.648282748025,
+            "path_offset": 8370.648282748025,
+            "time": 227.06410295374428,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9117.014256390048,
+            "path_offset": 9167.014256390048,
+            "time": 239.67877534006345,
+            "track_section": "T1"
+          },
+          {
+            "offset": 9933.381299779358,
+            "path_offset": 9983.381299779358,
+            "time": 252.29344772638257,
+            "track_section": "T1"
+          },
+          {
+            "offset": 909.8530210889548,
+            "path_offset": 10959.853021088955,
+            "time": 267.01056551042154,
+            "track_section": "T2"
+          },
+          {
+            "offset": 1622.475951310551,
+            "path_offset": 11672.475951310551,
+            "time": 277.52279249902085,
+            "track_section": "T2"
+          },
+          {
+            "offset": 2493.5660966820196,
+            "path_offset": 12543.56609668202,
+            "time": 290.13746488533997,
+            "track_section": "T2"
+          },
+          {
+            "offset": 3531.072809065805,
+            "path_offset": 13581.072809065805,
+            "time": 304.8545826693789,
+            "track_section": "T2"
+          },
+          {
+            "offset": 4964.0,
+            "path_offset": 15014.0,
+            "time": 324.78827941213586,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5399.0,
+            "path_offset": 15449.0,
+            "time": 331.09561560529545,
+            "track_section": "T2"
+          },
+          {
+            "offset": 5816.0,
+            "path_offset": 15866.0,
+            "time": 337.40295179845504,
+            "track_section": "T2"
+          },
+          {
+            "offset": 6344.0,
+            "path_offset": 16394.0,
+            "time": 345.8127333893345,
+            "track_section": "T2"
+          },
+          {
+            "offset": 6840.0,
+            "path_offset": 16890.0,
+            "time": 354.22251498021393,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7304.0,
+            "path_offset": 17354.0,
+            "time": 362.6322965710934,
+            "track_section": "T2"
+          },
+          {
+            "offset": 7736.0,
+            "path_offset": 17786.0,
+            "time": 371.0420781619728,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8039.0,
+            "path_offset": 18089.0,
+            "time": 377.3494143551324,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8324.0,
+            "path_offset": 18374.0,
+            "time": 383.656750548292,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8591.0,
+            "path_offset": 18641.0,
+            "time": 389.9640867414516,
+            "track_section": "T2"
+          },
+          {
+            "offset": 8919.0,
+            "path_offset": 18969.0,
+            "time": 398.373868332331,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9144.0,
+            "path_offset": 19194.0,
+            "time": 404.6812045254906,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9351.0,
+            "path_offset": 19401.0,
+            "time": 410.9885407186502,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9540.0,
+            "path_offset": 19590.0,
+            "time": 417.2958769118098,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9764.0,
+            "path_offset": 19814.0,
+            "time": 425.70565850268923,
+            "track_section": "T2"
+          },
+          {
+            "offset": 9911.0,
+            "path_offset": 19961.0,
+            "time": 432.0129946958488,
+            "track_section": "T2"
+          },
+          {
+            "offset": 40.0,
+            "path_offset": 20090.0,
+            "time": 438.3203308890084,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 151.0,
+            "path_offset": 20201.0,
+            "time": 444.627667082168,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 271.0,
+            "path_offset": 20321.0,
+            "time": 453.03744867304744,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 340.0,
+            "path_offset": 20390.0,
+            "time": 459.344784866207,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 404.0,
+            "path_offset": 20454.0,
+            "time": 467.75456645708647,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 431.0,
+            "path_offset": 20481.0,
+            "time": 474.06190265024605,
+            "track_section": "EAST_Q2"
+          },
+          {
+            "offset": 440.0,
+            "path_offset": 20490.0,
+            "time": 481.36923884340564,
+            "track_section": "EAST_Q2"
+          }
+        ],
+        "mechanical_energy_consumed": 3.3178991363668485e9,
+        "route_occupancies": {
+          "rt.buffer_stop.1->DA2": {
+            "time_head_occupy": 0.0,
+            "time_tail_free": 45.75
+          },
+          "rt.DA1->DA_out": {
+            "time_head_occupy": 12.001,
+            "time_tail_free": 49.406
+          },
+          "rt.DA2->DA_out": {
+            "time_head_occupy": 12.001,
+            "time_tail_free": 49.406
+          },
+          "rt.DA_out->D0": {
+            "time_head_occupy": 21.941,
+            "time_tail_free": 113.904
+          },
+          "rt.D0->D1": {
+            "time_head_occupy": 103.421,
+            "time_tail_free": 157.479
+          },
+          "rt.D1->D2": {
+            "time_head_occupy": 149.444,
+            "time_tail_free": 193.99
+          },
+          "rt.D2->D3": {
+            "time_head_occupy": 186.96,
+            "time_tail_free": 227.006
+          },
+          "rt.D3->D4": {
+            "time_head_occupy": 220.541,
+            "time_tail_free": 257.809
+          },
+          "rt.D4->D5": {
+            "time_head_occupy": 251.73,
+            "time_tail_free": 288.445
+          },
+          "rt.DC1->D5": {
+            "time_head_occupy": 251.73,
+            "time_tail_free": 288.445
+          },
+          "rt.D5->D6": {
+            "time_head_occupy": 282.67,
+            "time_tail_free": 316.326
+          },
+          "rt.D6->D7": {
+            "time_head_occupy": 310.783,
+            "time_tail_free": 345.673
+          },
+          "rt.D7->D8": {
+            "time_head_occupy": 339.26,
+            "time_tail_free": 383.484
+          },
+          "rt.D8->DB_in": {
+            "time_head_occupy": 374.747,
+            "time_tail_free": 462.68
+          },
+          "rt.DB_in->DB2": {
+            "time_head_occupy": 434.696,
+            "time_tail_free": 473.62
+          },
+          "rt.DB_in->DB1": {
+            "time_head_occupy": 434.696,
+            "time_tail_free": 473.62
+          },
+          "rt.DB2->buffer_stop.3": {
+            "time_head_occupy": 437.705,
+            "time_tail_free": 481.267
+          }
+        },
+        "signal_sightings": [
+          { "offset": 0.0, "signal": "SA2", "state": "VL", "time": 0.0 },
+          { "offset": 0.0, "signal": "SA3", "state": "VL", "time": 0.0 },
+          { "offset": 1630.0, "signal": "S0", "state": "VL", "time": 91.96 },
+          { "offset": 3610.0, "signal": "S1", "state": "VL", "time": 141.096 },
+          { "offset": 5590.0, "signal": "S2", "state": "VL", "time": 179.776 },
+          { "offset": 7570.0, "signal": "S3", "state": "VL", "time": 213.982 },
+          { "offset": 9550.0, "signal": "S4", "state": "VL", "time": 245.582 },
+          { "offset": 11630.0, "signal": "S5", "state": "VL", "time": 276.842 },
+          { "offset": 13610.0, "signal": "S6", "state": "VL", "time": 305.195 },
+          { "offset": 15590.0, "signal": "S7", "state": "VL", "time": 333.127 },
+          { "offset": 17570.0, "signal": "S8", "state": "VL", "time": 366.681 },
+          {
+            "offset": 19620.0,
+            "signal": "SB_in",
+            "state": "VL",
+            "time": 418.267
+          },
+          { "offset": 19680.0, "signal": "SB2", "state": "VL", "time": 420.443 }
+        ],
+        "speeds": [
+          { "position": 0.0, "speed": 0.0, "time": 0.0 },
+          {
+            "position": 0.922252864428832,
+            "speed": 0.87731445052417,
+            "time": 2.1024453977198547
+          },
+          {
+            "position": 3.6877089403523287,
+            "speed": 1.753389851164417,
+            "time": 4.2048907954397094
+          },
+          {
+            "position": 14.737564131867863,
+            "speed": 3.501667284128944,
+            "time": 8.409781590879419
+          },
+          {
+            "position": 33.12696112343589,
+            "speed": 5.244198284176495,
+            "time": 12.614672386319127
+          },
+          {
+            "position": 58.8280247380274,
+            "speed": 6.979147208729123,
+            "time": 16.819563181758838
+          },
+          {
+            "position": 132.02578194409776,
+            "speed": 10.422164714914937,
+            "time": 25.229344772638257
+          },
+          {
+            "position": 233.96297684784363,
+            "speed": 13.810560959686711,
+            "time": 33.639126363517676
+          },
+          {
+            "position": 364.0010855583903,
+            "speed": 17.088865593821502,
+            "time": 42.048907954397094
+          },
+          {
+            "position": 479.215594888603,
+            "speed": 19.42181721452275,
+            "time": 48.35624414755666
+          },
+          {
+            "position": 654.3298865361286,
+            "speed": 22.18121149928616,
+            "time": 56.76602573843607
+          },
+          {
+            "position": 852.0961623123302,
+            "speed": 24.84576542738666,
+            "time": 65.17580732931549
+          },
+          {
+            "position": 1130.596493256904,
+            "speed": 28.134602317922436,
+            "time": 75.68803431791474
+          },
+          {
+            "position": 1443.488407958817,
+            "speed": 31.388229382793625,
+            "time": 86.20026130651402
+          },
+          {
+            "position": 2170.549469793094,
+            "speed": 37.72657149629783,
+            "time": 107.22471528371258
+          },
+          {
+            "position": 2935.658926414239,
+            "speed": 43.064868824427265,
+            "time": 126.14672386319131
+          },
+          {
+            "position": 3796.816363054769,
+            "speed": 47.853019025897616,
+            "time": 145.06873244267
+          },
+          {
+            "position": 4633.699691247772,
+            "speed": 51.57917972434917,
+            "time": 161.88829562442882
+          },
+          {
+            "position": 5529.220187876703,
+            "speed": 54.834565003348075,
+            "time": 178.70785880618766
+          },
+          {
+            "position": 6597.808778015903,
+            "speed": 58.040012990984465,
+            "time": 197.62986738566633
+          },
+          {
+            "position": 7851.468939801544,
+            "speed": 61.15615571760942,
+            "time": 218.65432136286483
+          },
+          {
+            "position": 9167.014256390048,
+            "speed": 63.936787482861455,
+            "time": 239.67877534006345
+          },
+          {
+            "position": 10818.819513487679,
+            "speed": 66.96082628530371,
+            "time": 264.9081201127017
+          },
+          {
+            "position": 14644.570346576238,
+            "speed": 72.72998353141641,
+            "time": 319.625914849697
+          },
+          {
+            "position": 16001.0,
+            "speed": 63.735305632824414,
+            "time": 339.5053971961749
+          },
+          {
+            "position": 17241.0,
+            "speed": 54.22257344882077,
+            "time": 360.5298511733735
+          },
+          {
+            "position": 17786.0,
+            "speed": 49.46620735681895,
+            "time": 371.0420781619728
+          },
+          {
+            "position": 18281.0,
+            "speed": 44.70984126481713,
+            "time": 381.55430515057213
+          },
+          {
+            "position": 18641.0,
+            "speed": 40.90474839121567,
+            "time": 389.9640867414516
+          },
+          {
+            "position": 19046.0,
+            "speed": 36.14838229921385,
+            "time": 400.4763137300509
+          },
+          {
+            "position": 19401.0,
+            "speed": 31.392016207212023,
+            "time": 410.9885407186502
+          },
+          {
+            "position": 19706.0,
+            "speed": 26.635650115210204,
+            "time": 421.5007677072495
+          },
+          {
+            "position": 19914.0,
+            "speed": 22.830557241608744,
+            "time": 429.91054929812896
+          },
+          {
+            "position": 20129.0,
+            "speed": 18.074191149606925,
+            "time": 440.42277628672826
+          },
+          {
+            "position": 20294.0,
+            "speed": 13.317825057605102,
+            "time": 450.9350032753276
+          },
+          {
+            "position": 20390.0,
+            "speed": 9.512732184003644,
+            "time": 459.344784866207
+          },
+          {
+            "position": 20441.0,
+            "speed": 6.658912528802551,
+            "time": 465.6521210593666
+          },
+          {
+            "position": 20465.0,
+            "speed": 4.756366092001822,
+            "time": 469.85701185480633
+          },
+          {
+            "position": 20481.0,
+            "speed": 2.853819655201093,
+            "time": 474.06190265024605
+          },
+          {
+            "position": 20486.0,
+            "speed": 1.9025464368007288,
+            "time": 476.1643480479659
+          },
+          {
+            "position": 20489.0,
+            "speed": 0.9512732184003644,
+            "time": 478.2667934456858
+          },
+          { "position": 20490.0, "speed": 0.0, "time": 481.36923884340564 }
+        ],
+        "stops": [
+          { "duration": 1.0, "position": 20490.0, "time": 481.36923884340564 }
+        ],
+        "zone_updates": [
+          {
+            "isEntry": true,
+            "offset": 0.0,
+            "time": 0.0,
+            "zone": "zone.DA2:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 30.0,
+            "time": 12.001,
+            "zone": "zone.DA1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 100.0,
+            "time": 21.941,
+            "zone": "zone.D0:REVERSE"
+          },
+          {
+            "isEntry": false,
+            "offset": 430.0,
+            "time": 45.75,
+            "zone": "zone.DA2:REVERSE"
+          },
+          {
+            "isEntry": false,
+            "offset": 500.0,
+            "time": 49.406,
+            "zone": "zone.DA1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 2030.0,
+            "time": 103.421,
+            "zone": "zone.D0:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 2430.0,
+            "time": 113.904,
+            "zone": "zone.D0:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 4010.0,
+            "time": 149.444,
+            "zone": "zone.D1:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 4410.0,
+            "time": 157.479,
+            "zone": "zone.D0:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 5990.0,
+            "time": 186.96,
+            "zone": "zone.D2:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 6390.0,
+            "time": 193.99,
+            "zone": "zone.D1:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 7970.0,
+            "time": 220.541,
+            "zone": "zone.D3:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 8370.0,
+            "time": 227.006,
+            "zone": "zone.D2:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 9950.0,
+            "time": 251.73,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 10350.0,
+            "time": 257.809,
+            "zone": "zone.D3:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 12030.0,
+            "time": 282.67,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 12430.0,
+            "time": 288.445,
+            "zone": "zone.D4:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 14010.0,
+            "time": 310.783,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 14410.0,
+            "time": 316.326,
+            "zone": "zone.D5:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 15990.0,
+            "time": 339.26,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 16390.0,
+            "time": 345.673,
+            "zone": "zone.D6:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 17970.0,
+            "time": 374.747,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 18370.0,
+            "time": 383.484,
+            "zone": "zone.D7:NORMAL"
+          },
+          {
+            "isEntry": true,
+            "offset": 20020.0,
+            "time": 434.696,
+            "zone": "zone.DB1:REVERSE"
+          },
+          {
+            "isEntry": true,
+            "offset": 20080.0,
+            "time": 437.705,
+            "zone": "zone.DB2:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 20420.0,
+            "time": 462.68,
+            "zone": "zone.D8:NORMAL"
+          },
+          {
+            "isEntry": false,
+            "offset": 20480.0,
+            "time": 473.62,
+            "zone": "zone.DB1:REVERSE"
+          }
+        ]
+      }
+    ],
+    "electrification_conditions": [
+      [
+        {
+          "seen_mode": "",
+          "start": 0.0,
+          "stop": 20490.0,
+          "used_mode": "thermal"
+        }
+      ]
+    ],
+    "speed_limits": [
+      [
+        { "position": 0.0, "speed": 80.0 },
+        { "position": 20490.0, "speed": 80.0 }
+      ]
+    ],
+    "warnings": []
+  }
+]

@@ -1,6 +1,81 @@
 {
   "version": "3.2.0",
-  "operational_points": [],
+  "operational_points": [
+    {
+      "id": "Station_WEST",
+      "parts": [
+        {
+          "track": "WEST_Q1",
+          "position": 400.0
+        },
+        {
+          "track": "WEST_Q2",
+          "position": 400.0
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "ci": 0,
+          "ch": "aa",
+          "ch_short_label": "aa",
+          "ch_long_label": "0",
+          "trigram": "STA"
+        },
+        "identifier": {
+          "name": "Station_WEST",
+          "uic": 0
+        }
+      }
+    },
+    {
+      "id": "Station_EAST",
+      "parts": [
+        {
+          "track": "EAST_Q1",
+          "position": 400.0
+        },
+        {
+          "track": "EAST_Q2",
+          "position": 400.0
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "ci": 0,
+          "ch": "aa",
+          "ch_short_label": "aa",
+          "ch_long_label": "0",
+          "trigram": "STA"
+        },
+        "identifier": {
+          "name": "Station_EAST",
+          "uic": 0
+        }
+      }
+    },
+    {
+      "id": "Station_SOUTH",
+      "parts": [
+        {
+          "track": "SOUTH_Q1",
+          "position": 400.0
+        }
+      ],
+      "extensions": {
+        "sncf": {
+          "ci": 0,
+          "ch": "aa",
+          "ch_short_label": "aa",
+          "ch_long_label": "0",
+          "trigram": "STA"
+        },
+        "identifier": {
+          "name": "Station_SOUTH",
+          "uic": 0
+        }
+      }
+    }
+  ],
   "routes": [
     {
       "id": "rt.DA1->DA_out",
@@ -453,12 +528,12 @@
     {
       "id": "link.0",
       "src": {
-        "endpoint": "END",
+        "endpoint": "BEGIN",
         "track": "T1"
       },
       "dst": {
-        "endpoint": "BEGIN",
-        "track": "T2"
+        "endpoint": "END",
+        "track": "WEST_Q1"
       }
     },
     {
@@ -469,22 +544,11 @@
       },
       "dst": {
         "endpoint": "END",
-        "track": "WEST_Q1"
-      }
-    },
-    {
-      "id": "link.2",
-      "src": {
-        "endpoint": "BEGIN",
-        "track": "T1"
-      },
-      "dst": {
-        "endpoint": "END",
         "track": "WEST_Q2"
       }
     },
     {
-      "id": "link.3",
+      "id": "link.2",
       "src": {
         "endpoint": "END",
         "track": "T2"
@@ -495,7 +559,7 @@
       }
     },
     {
-      "id": "link.4",
+      "id": "link.3",
       "src": {
         "endpoint": "END",
         "track": "T2"
@@ -506,7 +570,7 @@
       }
     },
     {
-      "id": "link.5",
+      "id": "link.4",
       "src": {
         "endpoint": "BEGIN",
         "track": "T2"
@@ -517,7 +581,7 @@
       }
     },
     {
-      "id": "link.6",
+      "id": "link.5",
       "src": {
         "endpoint": "BEGIN",
         "track": "T2"
@@ -823,7 +887,7 @@
     {
       "track": "WEST_Q1",
       "position": 410.0,
-      "id": "signal.0",
+      "id": "SA1",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DA1",
@@ -847,7 +911,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.0",
+          "label": "SA1",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -858,7 +922,7 @@
     {
       "track": "WEST_Q2",
       "position": 410.0,
-      "id": "signal.1",
+      "id": "SA2",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DA2",
@@ -882,7 +946,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.1",
+          "label": "SA2",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -893,7 +957,7 @@
     {
       "track": "T1",
       "position": 30.0,
-      "id": "signal.2",
+      "id": "SA3",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DA_out",
@@ -917,7 +981,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.2",
+          "label": "SA3",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -928,7 +992,7 @@
     {
       "track": "T1",
       "position": 1960.0,
-      "id": "signal.6",
+      "id": "S0",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D0",
@@ -952,7 +1016,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.6",
+          "label": "S0",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -963,7 +1027,7 @@
     {
       "track": "T1",
       "position": 3940.0,
-      "id": "signal.7",
+      "id": "S1",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D1",
@@ -987,7 +1051,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.7",
+          "label": "S1",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -998,7 +1062,7 @@
     {
       "track": "T1",
       "position": 5920.0,
-      "id": "signal.8",
+      "id": "S2",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D2",
@@ -1022,7 +1086,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.8",
+          "label": "S2",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1033,7 +1097,7 @@
     {
       "track": "T1",
       "position": 7900.0,
-      "id": "signal.9",
+      "id": "S3",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D3",
@@ -1057,7 +1121,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.9",
+          "label": "S3",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1068,7 +1132,7 @@
     {
       "track": "T1",
       "position": 9880.0,
-      "id": "signal.10",
+      "id": "S4",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D4",
@@ -1092,7 +1156,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.10",
+          "label": "S4",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1103,7 +1167,7 @@
     {
       "track": "T2",
       "position": 1960.0,
-      "id": "signal.11",
+      "id": "S5",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D5",
@@ -1127,7 +1191,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.11",
+          "label": "S5",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1138,7 +1202,7 @@
     {
       "track": "T2",
       "position": 3940.0,
-      "id": "signal.12",
+      "id": "S6",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D6",
@@ -1162,7 +1226,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.12",
+          "label": "S6",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1173,7 +1237,7 @@
     {
       "track": "T2",
       "position": 5920.0,
-      "id": "signal.13",
+      "id": "S7",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D7",
@@ -1197,7 +1261,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.13",
+          "label": "S7",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1208,7 +1272,7 @@
     {
       "track": "T2",
       "position": 7900.0,
-      "id": "signal.14",
+      "id": "S8",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "D8",
@@ -1232,7 +1296,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.14",
+          "label": "S8",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1243,7 +1307,7 @@
     {
       "track": "T2",
       "position": 9950.0,
-      "id": "signal.3",
+      "id": "SB_in",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DB_in",
@@ -1267,7 +1331,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.3",
+          "label": "SB_in",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1278,7 +1342,7 @@
     {
       "track": "EAST_Q1",
       "position": 10.0,
-      "id": "signal.4",
+      "id": "SB1",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DB1",
@@ -1302,7 +1366,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.4",
+          "label": "SB1",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1313,7 +1377,7 @@
     {
       "track": "EAST_Q2",
       "position": 10.0,
-      "id": "signal.5",
+      "id": "SB2",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DB2",
@@ -1337,7 +1401,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.5",
+          "label": "SB2",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -1348,7 +1412,7 @@
     {
       "track": "SOUTH_Q1",
       "position": 410.0,
-      "id": "signal.15",
+      "id": "SC1",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
       "linked_detector": "DC1",
@@ -1372,7 +1436,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "signal.15",
+          "label": "SC1",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
