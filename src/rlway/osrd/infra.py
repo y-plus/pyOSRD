@@ -113,6 +113,72 @@ def num_stations(infra: Dict) -> int:
     return len(station_capacities(infra))
 
 
+def convergence_entry_signals(infra: Dict) -> List[str]:
+    """List of signal labels at convergences entries"""
+    G = nx.DiGraph()
+    G.add_edges_from([
+        (
+            route['id'].replace('rt.', '').split('->')[0],
+            route['id'].replace('rt.', '').split('->')[1],
+        )
+        for route in infra['routes']
+    ])
+
+    convergence_entry_detectors = []
+    for node in G:
+        if len(list(G.predecessors(node))) > 1:
+            convergence_entry_detectors += list(G.predecessors(node))
+
+    return [
+        s['id']
+        for d in convergence_entry_detectors
+        for s in infra['signals'] if s['linked_detector'] == d
+    ]
+
+
+def points_on_track_sections(infra: Dict) -> Dict:
+    """For each track, points of interests and their positions"""
+
+    points = {
+        track['id']: {
+            # track['id']+"_BEGIN": (0, 'begin'),
+            # track['id']+"_END": (track["length"], 'end'),
+        }
+        for track in infra['track_sections']
+    }
+
+    for detector in infra['detectors']:
+        track = detector['track']
+        id = detector['id']
+        points[track][id] = (detector['position'], 'detector')
+
+    for signal in infra['signals']:
+        track = signal['track']
+        id = signal['id']
+        tag = (
+            'cvg_signal'
+            if id in convergence_entry_signals(infra)
+            else 'signal'
+        )
+        points[track][id] = (signal['position'], tag)
+
+    for station in infra['operational_points']:
+        id = station['id']
+        for part in station['parts']:
+            track = part['track']
+            points[track][id] = (part['position'], 'station')
+
+    for track in points:
+        points[track] = {
+            k: v for k, v in sorted(
+                points[track].items(),
+                key=lambda item: item[1]
+            )
+        }
+
+    return points
+
+
 def draw_infra(
     infra: Dict,
     remove_bufferstop_to_bufferstop: bool = True,

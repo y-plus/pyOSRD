@@ -91,8 +91,49 @@ def test_infra_points_of_interest(infra_test):
 
 
 def test_infra_station_capacities(infra_test):
-    assert infr.station_capacities(infra_test) == {'station0': 2, 'station1': 2}
+    assert (
+        infr.station_capacities(infra_test) == {'station0': 2, 'station1': 2}
+    )
 
 
 def test_infra_num_stations(infra_test):
     assert infr.num_stations(infra_test) == 2
+
+
+def test_convergence_entry_signals(infra_test):
+    assert infr.convergence_entry_signals(infra_test) == ['S0', 'S1']
+
+
+def test_points_on_tracks(infra_test):
+    expected = {
+        "T0": {
+            "station0": (300, 'station'),
+            "S0": (430, 'cvg_signal'),
+            "D0": (450, 'detector'),
+        },
+        "T1": {
+            "station0": (300, 'station'),
+            "S1": (430, 'cvg_signal'),
+            "D1": (450, 'detector'),
+        },
+        "T2": {
+            "S2": (30, 'signal'),
+            "D2": (50, 'detector'),
+        },
+        "T3": {
+            "S3": (430, 'signal'),
+            "D3": (450, 'detector'),
+        },
+        "T4": {
+            "S4": (30, 'signal'),
+            "D4": (50, 'detector'),
+            "station1": (300, 'station'),
+        },
+        "T5": {
+            "S5": (30, 'signal'),
+            "D5": (50, 'detector'),
+            "station1": (300, 'station'),
+        },
+    }
+
+    assert infr.points_on_track_sections(infra_test) == expected

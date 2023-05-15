@@ -9,5 +9,9 @@ def test_simulation_num_trains(simulation_test):
     assert sim.num_trains(simulation_test) == 2
 
 
+def test_simulation_trains(simulation_test):
+    assert sim.trains(simulation_test) == ['train0', 'train1']
+
+
 def test_simulation_departure_times(simulation_test):
     assert sim.departure_times(simulation_test) == [0, 0]

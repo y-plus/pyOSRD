@@ -9,7 +9,7 @@ from railjson_generator.schema.infra.infra import Infra
 
 def infra_cvg_dvg() -> Infra:
     """
-    station1 (2 tracks)                        station2 (2 tracks)
+    station0 (2 tracks)                        station1 (2 tracks)
 
     (T0)--S0-D0-                               -S4-D4-(T4)-->
                 |                             |
@@ -39,13 +39,18 @@ def infra_cvg_dvg() -> Infra:
         label='DVG',
     )
     D = [
-        T[i].add_detector(label='D'+str(i), position=450)
+        T[i].add_detector(label=f"D{i}", position=450)
         if i in [0, 1, 3]
-        else T[i].add_detector(label='D'+str(i), position=50)
+        else T[i].add_detector(label=f"D{i}", position=50)
         for i in range(6)
     ]
     S = [
-        T[i].add_signal(D[i].position-20, Direction.START_TO_STOP, D[i])
+        T[i].add_signal(
+            D[i].position-20,
+            Direction.START_TO_STOP,
+            D[i],
+            label=f"S{i}"
+        )
         for i, _ in enumerate(D)
     ]
     for signal in S:
