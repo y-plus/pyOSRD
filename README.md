@@ -20,7 +20,7 @@ sudo apt install openjdk-17-jdk openjdk-17-jre
 pip install poetry
 ```
 
-## Get OSRD
+## Latest version
 
 in your home directory
 
@@ -36,6 +36,7 @@ git clone git@github.com:DGEXSolutions/osrd.git
 ```bash
 cd ~/osrd/core
 git pull
+cd -
 ```
 
 ## Build core
@@ -44,6 +45,7 @@ git pull
 cd ~/osrd/core
 poetry --directory=../python/railjson_generator install
 ./gradlew processTestResources shadowJar
+cd -
 ```
 
 # Regulation

@@ -59,14 +59,16 @@ train0 = builder.add_train_schedule(
     Location(STA_Q1, 300),
     Location(STB_Q1, 300),
     label='train0',
-    departure_time=0
+    departure_time=0,
+    rolling_stock="short_fast_rolling_stock",
 )
-# train1 = builder.add_train_schedule(
-#     Location(STA_Q2, 300),
-#     Location(STB_Q2, 300),
-#     label='train1',
-#     departure_time=350
-# )
+train1 = builder.add_train_schedule(
+    Location(STA_Q2, 300),
+    Location(STB_Q2, 300),
+    label='train1',
+    departure_time=350,
+    rolling_stock="short_fast_rolling_stock",
+)
 
 sim = builder.build()
 

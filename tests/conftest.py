@@ -1,3 +1,4 @@
+from typing import Dict
 import pytest
 from rlway.schedules import Schedule
 
@@ -67,10 +68,10 @@ built_simulation = simulation_cvg_dvg_two_trains(built_infra)
 
 
 @pytest.fixture()
-def infra_test():
+def infra_test() -> Dict:
     return built_infra.to_rjs().dict()
 
 
 @pytest.fixture
-def simulation_test():
+def simulation_test() -> Dict:
     return built_simulation.format()

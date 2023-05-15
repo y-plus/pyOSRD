@@ -25,9 +25,12 @@ builder.add_point_switch(T1.begin(), WEST_Q1.end(), WEST_Q2.end(), label='CVG')
 DA1 = WEST_Q1.add_detector(position=430, label='DA1')
 DA2 = WEST_Q2.add_detector(position=430, label='DA2')
 SA1 = WEST_Q1.add_signal(DA1.position-20, Direction.START_TO_STOP, DA1)
+SA1.add_logical_signal("BAL", settings={"Nf": "true"})
 SA2 = WEST_Q2.add_signal(DA2.position-20, Direction.START_TO_STOP, DA2)
+SA2.add_logical_signal("BAL", settings={"Nf": "true"})
 DA_out = T1.add_detector(position=50, label='DA_out')
 SA_OUT = T1.add_signal(DA_out.position-20, Direction.START_TO_STOP, DA_out)
+SA_OUT.add_logical_signal("BAL", settings={"Nf": "true"})
 
 EAST_Q1 = builder.add_track_section(label='EAST_Q1', length=450)
 EAST_Q2 = builder.add_track_section(label='EAST_Q2', length=450)
@@ -40,19 +43,18 @@ DB2 = EAST_Q2.add_detector(position=30, label='DB2')
 SB_in = T2.add_signal(DB_in.position-20, Direction.START_TO_STOP, DB_in)
 SB1 = EAST_Q1.add_signal(DB1.position-20, Direction.START_TO_STOP, DB1)
 SB2 = EAST_Q2.add_signal(DB2.position-20, Direction.START_TO_STOP, DB2)
-
-# WEST_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-# WEST_Q2.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-# EAST_Q1.add_buffer_stop(position=EAST_Q1.length, applicable_direction=ApplicableDirection.START_TO_STOP)
-# EAST_Q2.add_buffer_stop(position=EAST_Q2.length, applicable_direction=ApplicableDirection.START_TO_STOP)
+for signal in [SB_in, SB1, SB2]:
+    signal.add_logical_signal("BAL", settings={"Nf": "true"})
 
 D, S = [], []
 for pos in range(5):
     D.append(T1.add_detector(position=1980.*(1+pos), label=f"D{str(pos)}"))
-    T1.add_signal(D[pos].position-20, Direction.START_TO_STOP, D[pos])
+    S.append(T1.add_signal(D[pos].position-20, Direction.START_TO_STOP, D[pos]))
+    S[pos].add_logical_signal("BAL", settings={"Nf": "true"})
 for pos in range(4):
     D.append(T2.add_detector(position=1980.*(1+pos), label=f"D{str(5+pos)}"))
-    T2.add_signal(D[5+pos].position-20, Direction.START_TO_STOP, D[5+pos])
+    S.append(T2.add_signal(D[5+pos].position-20, Direction.START_TO_STOP, D[5+pos]))
+    S[5+pos].add_logical_signal("BAL", settings={"Nf": "true"})
 
 
 SOUTH_Q1 = builder.add_track_section(label='SOUTH_Q1', length=450)
@@ -63,8 +65,9 @@ builder.add_point_switch(
     label='CVG2'
 )
 # SOUTH_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-DS1 = SOUTH_Q1.add_detector(position=430, label='DS1')
-SA1 = SOUTH_Q1.add_signal(DS1.position-20, Direction.START_TO_STOP, DS1)
+DC1 = SOUTH_Q1.add_detector(position=430, label='DC1')
+SC1 = SOUTH_Q1.add_signal(DC1.position-20, Direction.START_TO_STOP, DC1)
+SC1.add_logical_signal("BAL", settings={"Nf": "true"})
 
 infra = builder.build()
 
@@ -78,25 +81,27 @@ train0 = builder.add_train_schedule(
     departure_time=0,
     # rolling_stock="short_fast_rolling_stock",
 )
+
 # train0.add_stop(100, location=Location(T1, 4500))
+train0.add_stop(100, position=S[4].position)
 
 
-train1 = builder.add_train_schedule(
-    Location(SOUTH_Q1, 400),
-    Location(EAST_Q2, 440),
-    label='train1',
-    departure_time=300,
-    # rolling_stock="short_fast_rolling_stock"
-)
+# train1 = builder.add_train_schedule(
+#     Location(SOUTH_Q1, 400),
+#     Location(EAST_Q2, 440),
+#     label='train1',
+#     departure_time=300,
+#     # rolling_stock="short_fast_rolling_stock"
+# )
 
-train2 = builder.add_train_schedule(
-    Location(WEST_Q2, 400),
-    Location(EAST_Q2, 440),
-    label='train0',
-    departure_time=600,
-    # rolling_stock="short_fast_rolling_stock",
-)
-# train0.add_stop(100, location=Location(T1, 4500))
+# train2 = builder.add_train_schedule(
+#     Location(WEST_Q2, 400),
+#     Location(EAST_Q2, 440),
+#     label='train0',
+#     departure_time=600,
+#     # rolling_stock="short_fast_rolling_stock",
+# )
+# # train0.add_stop(100, location=Location(T1, 4500))
 
 
 sim = builder.build()

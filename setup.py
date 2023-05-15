@@ -19,7 +19,7 @@ setup(
         # 'pyg-lib==0.1.0+pt113cu117',
         # 'torch-scatter==2.1.0+pt113cu117',
         # 'torch-sparse==0.6.16+pt113cu117',
-        # 'torch==1.13.1',
-        # 'torch-geometric==2.2.0',
+        'torch==2.0.0',
+        'torch-geometric==2.2.0',
     ],
 )

@@ -15,6 +15,10 @@
       },
       "stops": [
         {
+          "duration": 100,
+          "position": 9880.0
+        },
+        {
           "duration": 1,
           "position": -1
         }
@@ -34,72 +38,6 @@
         "rt.D8->DB_in",
         "rt.DB_in->DB1",
         "rt.DB1->buffer_stop.2"
-      ]
-    },
-    {
-      "id": "train1",
-      "rolling_stock": "fast_rolling_stock",
-      "departure_time": 300,
-      "initial_head_location": {
-        "track_section": "SOUTH_Q1",
-        "offset": 400
-      },
-      "initial_speed": 0.0,
-      "final_head_location": {
-        "track_section": "EAST_Q2",
-        "offset": 440
-      },
-      "stops": [
-        {
-          "duration": 1,
-          "position": -1
-        }
-      ],
-      "routes": [
-        "rt.buffer_stop.4->DS1",
-        "rt.DS1->D5",
-        "rt.D5->D6",
-        "rt.D6->D7",
-        "rt.D7->D8",
-        "rt.D8->DB_in",
-        "rt.DB_in->DB2",
-        "rt.DB2->buffer_stop.3"
-      ]
-    },
-    {
-      "id": "train0",
-      "rolling_stock": "fast_rolling_stock",
-      "departure_time": 600,
-      "initial_head_location": {
-        "track_section": "WEST_Q2",
-        "offset": 400
-      },
-      "initial_speed": 0.0,
-      "final_head_location": {
-        "track_section": "EAST_Q2",
-        "offset": 440
-      },
-      "stops": [
-        {
-          "duration": 1,
-          "position": -1
-        }
-      ],
-      "routes": [
-        "rt.buffer_stop.1->DA2",
-        "rt.DA2->DA_out",
-        "rt.DA_out->D0",
-        "rt.D0->D1",
-        "rt.D1->D2",
-        "rt.D2->D3",
-        "rt.D3->D4",
-        "rt.D4->D5",
-        "rt.D5->D6",
-        "rt.D6->D7",
-        "rt.D7->D8",
-        "rt.D8->DB_in",
-        "rt.DB_in->DB2",
-        "rt.DB2->buffer_stop.3"
       ]
     }
   ],

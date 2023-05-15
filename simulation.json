@@ -23,7 +23,35 @@
         "rt.buffer_stop.0->DA1",
         "rt.DA1->DA_out",
         "rt.DA_out->DB_in",
-        "rt.DB_in->buffer_stop.2"
+        "rt.DB_in->DB1",
+        "rt.DB1->buffer_stop.2"
+      ]
+    },
+    {
+      "id": "train1",
+      "rolling_stock": "short_fast_rolling_stock",
+      "departure_time": 350,
+      "initial_head_location": {
+        "track_section": "STA_Q2",
+        "offset": 300
+      },
+      "initial_speed": 0.0,
+      "final_head_location": {
+        "track_section": "STB_Q2",
+        "offset": 300
+      },
+      "stops": [
+        {
+          "duration": 1,
+          "position": -1
+        }
+      ],
+      "routes": [
+        "rt.buffer_stop.1->DA2",
+        "rt.DA2->DA_out",
+        "rt.DA_out->DB_in",
+        "rt.DB_in->DB2",
+        "rt.DB2->buffer_stop.3"
       ]
     }
   ],
