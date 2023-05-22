@@ -1,12 +1,9 @@
-import rlway.osrd.infra as infr
+def test_osrd_infra(osrd_case):
+    assert isinstance(osrd_case.infra, dict)
 
 
-def test_infra(infra_test):
-    assert isinstance(infra_test, dict)
-
-
-def test_infra_routes(infra_test):
-    assert set(infr.routes(infra_test)) == \
+def test_osrd_infra_routes(osrd_case):
+    assert set(osrd_case.routes) == \
         set([
             'rt.D0->D2',
             'rt.buffer_stop.0->D0',
@@ -20,8 +17,8 @@ def test_infra_routes(infra_test):
         ])
 
 
-def test_infra_route_switches(infra_test):
-    assert infr.route_switches(infra_test) == \
+def test_osrd_infra_route_switches(osrd_case):
+    assert osrd_case.route_switches == \
         {
             'rt.D0->D2': 'CVG',
             'rt.D1->D2': 'CVG',
@@ -30,8 +27,8 @@ def test_infra_route_switches(infra_test):
         }
 
 
-def test_infra_route_limits(infra_test):
-    assert infr.route_limits(infra_test) == \
+def test_osrd_infra_route_limits(osrd_case):
+    assert osrd_case.route_limits == \
         {
             'D0': ('T0', 450.0),
             'D1': ('T1', 450.0),
@@ -46,8 +43,8 @@ def test_infra_route_limits(infra_test):
         }
 
 
-def test_infra_track_section_lengths(infra_test):
-    assert infr.track_section_lengths(infra_test) == \
+def test_osrd_infra_track_section_lengths(osrd_case):
+    assert osrd_case.track_section_lengths == \
         {
             'T0': 500.0,
             'T1': 500.0,
@@ -58,8 +55,8 @@ def test_infra_track_section_lengths(infra_test):
         }
 
 
-def test_infra_route_lengths(infra_test):
-    assert infr.route_lengths(infra_test) == \
+def test_osrd_infra_route_lengths(osrd_case):
+    assert osrd_case.route_lengths == \
         {
             'rt.D0->D2': 100.0,
             'rt.buffer_stop.0->D0': 450.0,
@@ -73,38 +70,38 @@ def test_infra_route_lengths(infra_test):
         }
 
 
-def test_infra_num_switches(infra_test):
-    assert infr.num_switches(infra_test) == 2
+def test_osrd_infra_num_switches(osrd_case):
+    assert osrd_case.num_switches == 2
 
 
-def test_infra_draw_infra_not_fail(infra_test):
+def test_osrd_infra_draw_infra_not_fail(osrd_case):
     """Test if it does not raise an exception"""
     try:
-        infr.draw_infra(infra_test)
+        osrd_case.draw_infra()
     except:  # noqa
         assert False
 
 
-def test_infra_points_of_interest(infra_test):
-    poi = infr.points_of_interest(infra_test)
+def test_osrd_infra_points_of_interest(osrd_case):
+    poi = osrd_case.points_of_interest
     assert set(poi.keys()) == {'CVG', 'DVG', 'station0', 'station1'}
 
 
-def test_infra_station_capacities(infra_test):
+def test_osrd_infra_station_capacities(osrd_case):
     assert (
-        infr.station_capacities(infra_test) == {'station0': 2, 'station1': 2}
+        osrd_case.station_capacities == {'station0': 2, 'station1': 2}
     )
 
 
-def test_infra_num_stations(infra_test):
-    assert infr.num_stations(infra_test) == 2
+def test_osrd_infra_num_stations(osrd_case):
+    assert osrd_case.num_stations == 2
 
 
-def test_convergence_entry_signals(infra_test):
-    assert infr.convergence_entry_signals(infra_test) == ['S0', 'S1']
+def test_osrd_convergence_entry_signals(osrd_case):
+    assert osrd_case.convergence_entry_signals == ['S0', 'S1']
 
 
-def test_points_on_tracks(infra_test):
+def test_osrd_points_on_tracks(osrd_case):
     expected = {
         "T0": {
             "station0": (300, 'station'),
@@ -136,4 +133,20 @@ def test_points_on_tracks(infra_test):
         },
     }
 
-    assert infr.points_on_track_sections(infra_test) == expected
+    assert osrd_case.points_on_track_sections == expected
+
+
+def test_osrd_simulation_type(osrd_case):
+    assert isinstance(osrd_case.simulation, dict)
+
+
+def test_osrd_simulation_num_trains(osrd_case):
+    assert osrd_case.num_trains == 2
+
+
+def test_osrd_simulation_trains(osrd_case):
+    assert osrd_case.trains == ['train0', 'train1']
+
+
+def test_osrd_simulation_departure_times(osrd_case):
+    assert osrd_case.departure_times == [0, 0]

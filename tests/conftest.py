@@ -1,6 +1,7 @@
 from typing import Dict
 import pytest
 from rlway.schedules import Schedule
+from rlway.osrd import OSRD
 
 from _build_infra_sim_test import infra_cvg_dvg, simulation_cvg_dvg_two_trains
 
@@ -67,11 +68,9 @@ built_infra = infra_cvg_dvg()
 built_simulation = simulation_cvg_dvg_two_trains(built_infra)
 
 
-@pytest.fixture()
-def infra_test() -> Dict:
-    return built_infra.to_rjs().dict()
-
-
 @pytest.fixture
-def simulation_test() -> Dict:
-    return built_simulation.format()
+def osrd_case() -> OSRD:
+    case_ = OSRD()
+    case_.infra = built_infra.to_rjs().dict()
+    case_.simulation = built_simulation.format()
+    return case_
