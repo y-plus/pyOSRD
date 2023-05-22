@@ -21,5 +21,6 @@ setup(
         # 'torch-sparse==0.6.16+pt113cu117',
         'torch==2.0.0',
         'torch-geometric==2.2.0',
+        "python-dotenv"
     ],
 )

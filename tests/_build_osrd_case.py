@@ -1,3 +1,5 @@
+import os
+
 from railjson_generator import (
     InfraBuilder,
     SimulationBuilder,
@@ -5,6 +7,8 @@ from railjson_generator import (
 )
 from railjson_generator.schema.infra.direction import Direction
 from railjson_generator.schema.infra.infra import Infra
+
+from rlway.osrd import OSRD
 
 
 def infra_cvg_dvg() -> Infra:
@@ -76,9 +80,10 @@ def simulation_cvg_dvg_two_trains(built_infra: Infra):
     for train_id in range(2):
         sim_builder.add_train_schedule(
             Location(built_infra.track_sections[train_id], 300),
-            Location(built_infra.track_sections[train_id+3], 300),
+            Location(built_infra.track_sections[train_id+4], 300),
             label='train'+str(train_id),
-            departure_time=0
+            departure_time=train_id*100.
         )
     built_simulation = sim_builder.build()
     return built_simulation
+

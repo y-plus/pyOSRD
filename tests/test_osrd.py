@@ -1,3 +1,7 @@
+import pytest
+import matplotlib.pyplot as plt
+
+
 def test_osrd_infra(osrd_case):
     assert isinstance(osrd_case.infra, dict)
 
@@ -149,4 +153,65 @@ def test_osrd_simulation_trains(osrd_case):
 
 
 def test_osrd_simulation_departure_times(osrd_case):
-    assert osrd_case.departure_times == [0, 0]
+    assert osrd_case.departure_times == [0, 100]
+
+
+def test_osrd_run_arror(osrd_case_missing_sim):
+    match = "Missing json file to run OSRD"
+    with pytest.raises(ValueError, match=match):
+        osrd_case_missing_sim.run()
+
+
+def test_osrd_has_results(osrd_case):
+    assert osrd_case.has_results
+
+
+def test_osrd_has_no_results(osrd_case_before_run):
+    assert not osrd_case_before_run.has_results
+
+
+def test_osrd_results_length(osrd_case):
+    assert len(osrd_case.results) == osrd_case.num_trains
+
+
+def test_osrd_results_train_track_sections(osrd_case):
+    assert osrd_case.train_track_sections(0) == ['T0', 'T2', 'T3', 'T4']
+    assert osrd_case.train_track_sections(1) == ['T1', 'T2', 'T3', 'T5']
+
+
+def test_osrd_results_points_encountered_by_train(osrd_case):
+    points = [
+        {
+            k: v for k, v in d.items()
+            if k not in ['t', 't_min']
+        }
+        for d in osrd_case.points_encountered_by_train(0)
+    ]
+    expected = [
+        {'id': 'station0', 'type': 'station', 'offset': 300.0},
+        {'id': 'S0', 'type': 'cvg_signal', 'offset': 430.0},
+        {'id': 'D0', 'type': 'detector', 'offset': 450.0},
+        {'id': 'S2', 'type': 'signal', 'offset': 530.0},
+        {'id': 'D2', 'type': 'detector', 'offset': 550.0},
+        {'id': 'S3', 'type': 'signal', 'offset': 1430.0},
+        {'id': 'D3', 'type': 'detector', 'offset': 1450.0},
+        {'id': 'S4', 'type': 'signal', 'offset': 1530.0},
+        {'id': 'D4', 'type': 'detector', 'offset': 1550.0},
+        {'id': 'station1', 'type': 'station', 'offset': 1800.0},
+    ]
+    assert points == expected
+
+
+def test_osrd_space_time_graph(osrd_case):
+
+    ax = osrd_case.space_time_graph(0, types_to_show=['station'])
+
+    assert ax.dataLim.xmin == 0.
+    assert round(ax.dataLim.ymin) == 300.
+    assert round(ax.dataLim.ymax) == 1800.
+    assert (
+        [label._text for label in ax.get_yticklabels()]
+        == ['station0', 'station1']
+    )
+    assert ax.get_title() == "train0 (eco)"
+    plt.close()

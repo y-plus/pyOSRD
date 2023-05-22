@@ -1,9 +1,10 @@
-from typing import Dict
+import os
+
 import pytest
 from rlway.schedules import Schedule
 from rlway.osrd import OSRD
 
-from _build_infra_sim_test import infra_cvg_dvg, simulation_cvg_dvg_two_trains
+from _build_osrd_case import infra_cvg_dvg, simulation_cvg_dvg_two_trains
 
 
 @pytest.fixture
@@ -64,13 +65,34 @@ def two_trains_two_blocks_before_dvg() -> Schedule:
     return schedule
 
 
+# Done outside of the fixture function
+# because otherwise it would be done each time the fixture is used
+
 built_infra = infra_cvg_dvg()
 built_simulation = simulation_cvg_dvg_two_trains(built_infra)
+
+built_infra.save('infra.json')
+built_simulation.save('simulation.json')
+
+case_ = OSRD()
+case_.run()
+for file in ['infra', 'simulation', 'results']:
+    os.remove(file+'.json')
+
+
+@pytest.fixture
+def osrd_case_missing_sim():
+    return OSRD(
+        results_json="missing.json",
+        simulation_json="missing.json",
+    )
+
+
+@pytest.fixture
+def osrd_case_before_run():
+    return OSRD(results_json="missing.json")
 
 
 @pytest.fixture
 def osrd_case() -> OSRD:
-    case_ = OSRD()
-    case_.infra = built_infra.to_rjs().dict()
-    case_.simulation = built_simulation.format()
     return case_

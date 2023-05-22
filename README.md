@@ -50,7 +50,19 @@ cd -
 
 # Regulation
 
+## OSRD PATH
+
+Make sure the path to OSRD is indicated in the file `.env`
+
+```
+OSRD_PATH=/home/<your user name>/osrd
+```
+
+## Python
+
 Make sure you have python3>=3.9 installed
+
+## Virtual env
 
 ```bash
 python3 -m venv venv

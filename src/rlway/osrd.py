@@ -5,7 +5,13 @@ from typing import Dict, List, Union, Tuple, Any
 
 import base64
 from IPython.display import Image, display
+
+from dotenv import load_dotenv
 import networkx as nx
+import numpy as np
+
+import matplotlib.pyplot as plt
+from matplotlib.axes._axes import Axes
 
 
 def _read_json(json_file: str) -> Union[Dict, List]:
@@ -46,7 +52,12 @@ class OSRD():
         if self.infra == {} or self.simulation == {}:
             raise ValueError("Missing json file to run OSRD")
 
-        # Run the simulation after reading the path in a file ?
+        load_dotenv()
+        os.system(
+            f"java -jar {os.getenv('OSRD_PATH')}/core/build/libs/osrd-all.jar "
+            f"standalone-simulation --infra_path {self.infra_json} "
+            f"--sim_path {self.simulation_json} --res_path {self.results_json}"
+        )
 
         self.results = _read_json(os.path.join(self.dir, self.results_json))
 
@@ -221,7 +232,7 @@ class OSRD():
         self,
         remove_bufferstop_to_bufferstop: bool = True,
     ) -> None:
-        """Use mermaid.js to display the infra as a DAG with detectors as nodes"""
+        """Use mermaid.js to display the infra with detectors as nodes"""
 
         def mm(graph):
             graphbytes = graph.encode("ascii")
@@ -257,3 +268,118 @@ class OSRD():
             train_schedule['departure_time']
             for train_schedule in self.simulation['train_schedules']
         ]
+
+    def train_track_sections(self, train: int) -> List[str]:
+        """List of tracks during train trajectory"""
+
+        head_positions = \
+            self.results[train]['base_simulations'][0]['head_positions']
+        return list(
+            dict.fromkeys([
+                time["track_section"]
+                for time in head_positions
+            ]))
+
+    def points_encountered_by_train(
+        self,
+        train: int,
+        types: List[str] = [
+            'signal',
+            'detector',
+            'cvg_signal',
+            'station',
+        ]
+    ) -> List[Tuple[str, str, float, float, float]]:
+        """Points encountered by a train during its trajectory
+        Parameters
+        ----------
+        infra : Dict
+        result : Dict
+        train : int
+        types : List[str], optional
+            Types of points, by default
+            ['signal', 'detector', 'cvg_signal', 'station']
+        Returns
+        -------
+        List[Tuple[str, str, float, float, float]]
+            Points encountered (label, type, offset, t_min, t)
+        """
+
+        lengths = [
+            self.track_section_lengths[ts]
+            for ts in self.train_track_sections(train)
+        ]
+
+        track_offsets = [
+            sum(lengths[: i]) for i, _ in enumerate(lengths)
+        ]
+
+        records_min = \
+            self.results[train]['base_simulations'][0]['head_positions']
+        offset = records_min[0]['offset']
+        offsets_min = [offset + t['path_offset'] for t in records_min]
+        t_min = [t['time'] for t in records_min]
+
+        records_eco = \
+            self.results[train]['eco_simulations'][0]['head_positions']
+        offsets_eco = [offset + t['path_offset'] for t in records_eco]
+        t = [t['time'] for t in records_eco]
+
+        points = []
+        for i, ts in enumerate(self.train_track_sections(train)):
+            points += [{
+                'id': pt,
+                'type': tag,
+                'offset': pos + track_offsets[i],
+                't_min': np.interp(
+                    [pos + track_offsets[i]],
+                    offsets_min,
+                    t_min
+                ).item(),
+                't': np.interp([pos+track_offsets[i]], offsets_eco, t).item(),
+                }
+                for pt, (pos, tag) in self.points_on_track_sections[ts].items()
+                if tag in types
+            ]
+
+        return points
+
+    def space_time_graph(
+        self,
+        train: int,
+        eco_or_base: str = 'eco',
+        types_to_show: List[str] = ['station', 'cvg_signal'],
+    ) -> Axes:
+
+        _, ax = plt.subplots()
+
+        points = self.points_encountered_by_train(
+            train,
+            types_to_show
+        )
+
+        simulation = eco_or_base+'_simulations'
+        records_min = \
+            self.results[train][simulation][0]['head_positions']
+        offset = records_min[0]['offset']
+        offsets = [offset + t['path_offset'] for t in records_min]
+        times = [t['time']/60 for t in records_min]
+
+        ax.plot(
+            times,
+            offsets,
+        )
+        for point in points:
+            ax.axhline(point['offset'], color='k', linestyle=':');  # noqa
+
+        ax.set_yticks(
+            [point['offset'] for point in points],
+            [point['id'] for point in points]
+        );  # noqa
+
+        ax.set_title(
+            self.trains[train]
+            + f" ({eco_or_base})"
+        );  # noqa
+
+        return ax
