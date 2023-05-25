@@ -22,6 +22,25 @@ def _read_json(json_file: str) -> Union[Dict, List]:
 
 @dataclass
 class OSRD():
+    """Class with methods to run OSRD simulations and read infra and results
+
+    Parameters
+    ----------
+    dir: str, optionnal
+        Directory path, by default current directory
+    infra_json: str, optionnal
+        Name of the file containing the infrastructure in rail_json format.
+        If the file does not exist, attribute infra will be empty,
+        by default 'infra.json'
+    simulation_json: str, optionnal
+        Name of the file containing the simulation parameters.
+        If the file does not exist, attribute simulation will be empty,
+        by default 'simulation.json'
+    results_json: str, optionnal
+        Name of the file containing the simulation results.
+        If the file does not exist, attribute results will be empty,
+        by default 'results.json'
+    """
     dir: str = '.'
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
@@ -48,7 +67,16 @@ class OSRD():
         )
 
     def run(self) -> None:
+        """run the simulation and store the results in attribute results.
 
+        OSRD must be installed on the machine and the path defined
+        in `.env` at the root of the project
+
+        Raises
+        ------
+        ValueError
+            If missing infra or simulation json file.
+        """
         if self.infra == {} or self.simulation == {}:
             raise ValueError("Missing json file to run OSRD")
 
@@ -63,16 +91,17 @@ class OSRD():
 
     @property
     def has_results(self) -> bool:
+        """True if the object has simulation results"""
         return self.results != []
 
     @property
     def routes(self) -> List[str]:
-        """List of routes ids"""
+        """List of routes labels"""
         return [route['id'] for route in self.infra['routes']]
 
     @property
     def route_switches(self) -> Dict[str, str]:
-
+        """Dict of routes that are switches and corresponding switch name"""
         return {
             route['id']: list(route['switches_directions'].keys())[0]
             for route in self.infra['routes']
@@ -88,7 +117,8 @@ class OSRD():
         Returns
         -------
         Dict[str, Tuple[str, float]]
-        Keys are points labels, values are tuples (associated track, position)
+            Keys are points labels,
+            values are tuples (associated track, position)
         """
 
         points_dict = {
@@ -139,7 +169,7 @@ class OSRD():
 
     @property
     def points_of_interest(self) -> Dict[str, Any]:
-        """Points of interest are stations and switches"""
+        """Dict of points of interest (stations and switches)"""
         return {
             point['id']: point
             for point in (
@@ -163,7 +193,7 @@ class OSRD():
 
     @property
     def convergence_entry_signals(self) -> List[str]:
-        """List of signal labels at convergences entries"""
+        """List of signal labels located at convergences entries"""
         G = nx.DiGraph()
         G.add_edges_from([
             (
@@ -186,7 +216,7 @@ class OSRD():
 
     @property
     def points_on_track_sections(self) -> Dict:
-        """For each track, points of interests and their positions"""
+        """Dict with for each track, points of interests and their positions"""
 
         points = {
             track['id']: {
@@ -259,18 +289,19 @@ class OSRD():
 
     @property
     def trains(self) -> List[str]:
-        """List of train ids in the simulation"""
+        """List of train labels in the simulation"""
         return [train['id'] for train in self.simulation['train_schedules']]
 
     @property
     def departure_times(self) -> List[float]:
+        """List of trains departure times"""
         return [
             train_schedule['departure_time']
             for train_schedule in self.simulation['train_schedules']
         ]
 
     def train_track_sections(self, train: int) -> List[str]:
-        """List of tracks during train trajectory"""
+        """List of tracks for a given train trajectory"""
 
         head_positions = \
             self.results[train]['base_simulations'][0]['head_positions']
@@ -291,6 +322,7 @@ class OSRD():
         ]
     ) -> List[Tuple[str, str, float, float, float]]:
         """Points encountered by a train during its trajectory
+
         Parameters
         ----------
         infra : Dict
@@ -350,7 +382,26 @@ class OSRD():
         eco_or_base: str = 'eco',
         types_to_show: List[str] = ['station', 'cvg_signal'],
     ) -> Axes:
+        """Draw space-time graph for a given train
 
+        >>> ax = sim.space_time_graph(train=0, ...)
+
+        Parameters
+        ----------
+        train : int
+            Train index
+        eco_or_base : str, optional
+            Draw eco or base simulation ?, by default 'eco'
+        types_to_show : List[str], optional
+            List of points types shown on y-axis.
+            Possible choices are 'signal', 'detector', 'cvg_signal', 'station'.
+            by default ['station', 'cvg_signal']
+
+        Returns
+        -------
+        Axes
+            Matplotlib axe object
+        """
         _, ax = plt.subplots()
 
         points = self.points_encountered_by_train(

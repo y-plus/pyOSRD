@@ -1,5 +1,3 @@
-import os
-
 from railjson_generator import (
     InfraBuilder,
     SimulationBuilder,
@@ -7,8 +5,6 @@ from railjson_generator import (
 )
 from railjson_generator.schema.infra.direction import Direction
 from railjson_generator.schema.infra.infra import Infra
-
-from rlway.osrd import OSRD
 
 
 def infra_cvg_dvg() -> Infra:
@@ -86,4 +82,3 @@ def simulation_cvg_dvg_two_trains(built_infra: Infra):
         )
     built_simulation = sim_builder.build()
     return built_simulation
-

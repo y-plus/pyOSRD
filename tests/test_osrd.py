@@ -1,3 +1,21 @@
+"""
+osrd_case
+---------
+
+
+station0 (2 tracks)                        station1 (2 tracks)
+
+(T0)--S0-D0-                               -S4-D4-(T4)-->
+            |                             |
+        (CVG)>-(T2)-S2-D2--o--S3-D3-(T3)-<(DVG)
+            |                             |
+(T1)--S1-D1-                               -S5-D5-(T5)-->
+
+All tracks are 500m long
+Train 0 starts from T0 at t=0 and arrives at T4
+Train 1 starts from T1 at t=100 and arrives at T5
+"""
+
 import pytest
 import matplotlib.pyplot as plt
 
