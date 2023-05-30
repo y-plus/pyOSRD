@@ -1,6 +1,4 @@
 import os
-import sys
-sys.path.append("/home/renan/osrd/core/examples/generated/lib/")
 
 from railjson_generator import (
     InfraBuilder,
@@ -38,11 +36,6 @@ SB_in = T.add_signal(DB_in.position-20, Direction.START_TO_STOP, DB_in)
 SB1 = STB_Q1.add_signal(DB1.position-20, Direction.START_TO_STOP, DB1)
 SB2 = STB_Q2.add_signal(DB2.position-20, Direction.START_TO_STOP, DB2)
 
-# STA_Q1.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-# STA_Q2.add_buffer_stop(position=0, applicable_direction=ApplicableDirection.START_TO_STOP)
-# STB_Q1.add_buffer_stop(position=STB_Q1.length, applicable_direction=ApplicableDirection.START_TO_STOP)
-# STB_Q2.add_buffer_stop(position=STB_Q2.length, applicable_direction=ApplicableDirection.START_TO_STOP)
-
 D, S = [], []
 for pos in range(4):
     D.append(T.add_detector(position=2_000.*(1+pos), label=f"D{str(pos)}"))
@@ -76,4 +69,9 @@ sim = builder.build()
 
 infra.save("infra.json")
 sim.save('simulation.json')
-os.system("java -jar /home/renan/osrd/core/build/libs/osrd-all.jar standalone-simulation --infra_path infra.json --sim_path simulation.json --res_path results.json")
+
+os.system(
+    "java -jar /home/renan/osrd/core/build/libs/osrd-all.jar "
+    "standalone-simulation --infra_path infra.json "
+    "--sim_path simulation.json --res_path results.json"
+)

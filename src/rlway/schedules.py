@@ -10,28 +10,28 @@ import networkx as nx
 
 class Schedule(object):
 
-    def __init__(self, num_track_sections: int, num_trains: int):
+    def __init__(self, num_blocks: int, num_trains: int):
 
-        self._num_track_sections = num_track_sections
+        self._num_blocks = num_blocks
         self._num_trains = num_trains
         self._df = pd.DataFrame(
             columns=pd.MultiIndex.from_product(
                 [range(self._num_trains), ['s', 'e']]
             ),
-            index=range(num_track_sections)
+            index=range(num_blocks)
         )
 
     def __repr__(self) -> str:
         return str(self._df)
 
     @property
-    def num_track_sections(self) -> int:
-        """Number of track sections"""
+    def num_blocks(self) -> int:
+        """Number of blocks"""
         return len(self._df)
 
     @property
-    def track_sections(self) -> List[int]:
-        """List of track sections"""
+    def blocks(self) -> List[int]:
+        """List of blocks"""
         return self._df.index.to_list()
 
     @property
@@ -49,13 +49,13 @@ class Schedule(object):
         """ Schedule as a pandas DataFrale"""
         return self._df
 
-    def set(self, train, track, interval):
-        """Set times for a train at a given track section"""
-        self._df.at[track, train] = interval
+    def set(self, train, block, interval):
+        """Set times for a train at a given block"""
+        self._df.at[block, train] = interval
 
     @property
     def starts(self) -> pd.DataFrame:
-        """Times when the trains enter the track section"""
+        """Times when the trains enter the blocks"""
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 's']
@@ -63,7 +63,7 @@ class Schedule(object):
 
     @property
     def ends(self) -> pd.DataFrame:
-        """Times when the trains leave the track section"""
+        """Times when the trains leave the block"""
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 'e']
@@ -71,7 +71,7 @@ class Schedule(object):
 
     @property
     def lengths(self) -> pd.DataFrame:
-        """How much time do the train occupy the track section"""
+        """How much time do the train occupy the block"""
         return self.ends - self.starts
 
     def trajectory(self, train: int) -> List[int]:
@@ -81,54 +81,54 @@ class Schedule(object):
             .index
         )
 
-    def previous_track_section(
+    def previous_block(
         self,
         train: int,
-        track_section: Union[int, str],
+        block: Union[int, str],
     ) -> Union[int, str, None]:
-        """"Previous track section index in train's trajectory (None if 1st)
+        """"Previous block index in train's trajectory (None if 1st)
 
         Parameters
         ----------
         train : int
             Train index
-        track_section : Union[int, str]
+        block : Union[int, str]
             Track section index (integer or string)
 
         Returns
         -------
         Union[int, str, None]
-            Previous track section index or None
+            Previous block index or None
         """
         t = self.trajectory(train)
-        idx = list(t).index(track_section)
+        idx = list(t).index(block)
 
         if idx != 0:
             return t[idx-1]
         return None
 
-    def next_track_section(
+    def next_block(
         self,
         train: int,
-        track_section: Union[int, str],
+        block: Union[int, str],
     ) -> Union[int, str, None]:
-        """Next track section index in train's trajectory (None if last)
+        """Next block index in train's trajectory (None if last)
 
         Parameters
         ----------
         train : int
             Train index
-        track_section : Union[int, str]
-            Track section index (integer or string)
+        block : Union[int, str]
+            Block index (integer or string)
 
         Returns
         -------
         Union[int, str, None]
-            Previous track section index or None
+            Previous block index or None
         """
 
         t = self.trajectory(train)
-        idx = list(t).index(track_section)
+        idx = list(t).index(block)
 
         if idx != len(t) - 1:
             return t[idx+1]
@@ -138,9 +138,9 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        track_section: Union[int, str]
+        block: Union[int, str]
     ) -> bool:
-        """Given two trains trajectories, is the track section a point switch ?
+        """Given two trains trajectories, is the block a point switch ?
 
         Parameters
         ----------
@@ -148,36 +148,36 @@ class Schedule(object):
             first train index
         train2 : int
             second train index
-        track_section : Union[int, str]
-            Track section index
+        block : Union[int, str]
+            Block index
 
         Returns
         -------
         bool
             True if it is point switch, False otherwise
-            False if the track section is not in the trajectory of
+            False if the block is not in the trajectory of
             one of the trains
         """
         if (
-            track_section not in self.trajectory(train1)
+            block not in self.trajectory(train1)
             or
-            track_section not in self.trajectory(train2)
+            block not in self.trajectory(train2)
         ):
             return False
 
         return (
-            self.previous_track_section(train1, track_section)
+            self.previous_block(train1, block)
             !=
-            self.previous_track_section(train2, track_section)
+            self.previous_block(train2, block)
             )
 
     def is_just_after_a_point_switch(
         self,
         train1: int,
         train2: int,
-        track_section
+        block
     ) -> bool:
-        """Given two trains, is the track section just after a point switch ?
+        """Given two trains, is the block just after a point switch ?
 
         Parameters
         ----------
@@ -185,30 +185,30 @@ class Schedule(object):
             first train index
         train2 : int
             second train index
-        track_section : Union[int, str]
+        block : Union[int, str]
             Track section index
 
         Returns
         -------
         bool
             True if it is just after a point switch, False otherwise
-            False if the track section is not in the trajectory
+            False if the block is not in the trajectory
             of one of the trains
         """
         if (
-            track_section not in self.trajectory(train1)
+            block not in self.trajectory(train1)
             or
-            track_section not in self.trajectory(train2)
+            block not in self.trajectory(train2)
         ):
             return False
 
         return (
-            ~self.is_a_point_switch(train1, train2, track_section)
+            ~self.is_a_point_switch(train1, train2, block)
             and
             self.is_a_point_switch(
                 train1,
                 train2,
-                self.previous_track_section(train1, track_section)
+                self.previous_block(train1, block)
             )
         )
 
@@ -241,17 +241,17 @@ class Schedule(object):
     def add_delay(
         self,
         train: int,
-        track_section: Union[int, str],
+        block: Union[int, str],
         delay: float
     ) -> 'Schedule':
 
-        start = self._df.loc[track_section, (train, 's')]
+        start = self._df.loc[block, (train, 's')]
         new_schedule = copy.deepcopy(self)
 
-        # extend length at given track section
-        new_schedule._df.loc[track_section, (train, 'e')] += delay
+        # extend length at given block
+        new_schedule._df.loc[block, (train, 'e')] += delay
 
-        # Add delay to all subsequent track sections
+        # Add delay to all subsequent blocks
         new_schedule._df.loc[
             self._df[pd.IndexSlice[train, 's']] > start,
             pd.IndexSlice[train, :]
@@ -263,35 +263,35 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        track_section: Union[int, str]
+        block: Union[int, str]
     ) -> 'Schedule':
-        """Train1 waits until train has freed track_section"""
+        """Train1 waits until train has freed block"""
 
-        train1_waits_at = self.previous_track_section(train1, track_section)
+        train1_waits_at = self.previous_block(train1, block)
 
-        # If the track section is the departure,
-        # it has no previous track section
+        # If the block is the departure,
+        # it has no previous block
         if train1_waits_at is None:
-            train1_waits_at = track_section
+            train1_waits_at = block
 
         # If the conflict occurs at a switch point,
-        # train 1 waits until the track section
+        # train 1 waits until the block
         # after the switch point is free
-        if self.is_a_point_switch(train1, train2, track_section):
-            track_section_shift = \
-                self.next_track_section(train1, track_section)
+        if self.is_a_point_switch(train1, train2, block):
+            block_shift = \
+                self.next_block(train1, block)
         else:
-            track_section_shift = track_section
+            block_shift = block
 
         # if the conflict occurs just after a switch point,
         # train shoud wait before the switch
-        if self.is_just_after_a_point_switch(train1, train2, track_section):
+        if self.is_just_after_a_point_switch(train1, train2, block):
             train1_waits_at = \
-                self.previous_track_section(train1, train1_waits_at)
+                self.previous_block(train1, train1_waits_at)
 
         train1_wait_time = (
-            self.ends.loc[track_section_shift, train2]
-            - self.starts.loc[track_section_shift, train1]
+            self.ends.loc[block_shift, train2]
+            - self.starts.loc[block_shift, train1]
         )
 
         new_schedule = self.add_delay(
@@ -300,9 +300,9 @@ class Schedule(object):
             train1_wait_time
         )
 
-        if not new_schedule.is_a_point_switch(train1, train2, track_section):
-            new_schedule._df.loc[track_section, (train1, 's')] = \
-                self.ends.loc[track_section, train2]
+        if not new_schedule.is_a_point_switch(train1, train2, block):
+            new_schedule._df.loc[block, (train1, 's')] = \
+                self.ends.loc[block, train2]
 
         return new_schedule
 
@@ -343,8 +343,8 @@ class Schedule(object):
     def first_conflict(self, train: int) -> Tuple[int, int]:
 
         c = self.conflicts(train).stack()
-        track_section, other_train = c.index[np.argmin(c)]
-        return track_section, other_train
+        block, other_train = c.index[np.argmin(c)]
+        return block, other_train
 
     def delays(self, initial_schedule: 'Schedule') -> pd.DataFrame:
 
@@ -371,12 +371,12 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        track_section: Union[int, str]
+        block: Union[int, str]
     ) -> int:
-        """Among two trains, which train first arrives at a track_section"""
+        """Among two trains, which train first arrives at a block"""
 
         trains_enter_at = (
-            self.starts.loc[track_section, [train1, train2]].astype(float)
+            self.starts.loc[block, [train1, train2]].astype(float)
         )
 
         trains = (
@@ -392,14 +392,14 @@ class Schedule(object):
 
         action_needed = False
         if self.has_conflicts(train):
-            track_section, other_train = self.first_conflict(train)
+            block, other_train = self.first_conflict(train)
             action_needed = (
-                self.is_a_point_switch(train, other_train, track_section)
+                self.is_a_point_switch(train, other_train, block)
                 or
                 self.is_just_after_a_point_switch(
                     train,
                     other_train,
-                    track_section
+                    block
                 )
             )
         return action_needed
@@ -456,7 +456,7 @@ class Schedule(object):
             decision = False
             if new_schedule.has_conflicts(delayed_train):
 
-                track_section, other_train = \
+                block, other_train = \
                     new_schedule.first_conflict(delayed_train)
                 decision = new_schedule.is_action_needed(delayed_train)
 
@@ -464,21 +464,21 @@ class Schedule(object):
                     first_in = new_schedule.first_in(
                         delayed_train,
                         other_train,
-                        track_section
+                        block
                     )
                     delayed_train = other_train \
                         if first_in == delayed_train else delayed_train
                     new_schedule = new_schedule.shift_train_after(
                         delayed_train,
                         first_in,
-                        track_section
+                        block
                     )
                 else:
                     break
         return new_schedule, delayed_train
 
     def earliest_conflict(self) -> Tuple[Union[int, str], int]:
-        """ Returns track section where earliest conflict occurs,
+        """ Returns block where earliest conflict occurs,
         first train in and last in."""
         conflicts_times = [
             np.min(self.conflicts(train).stack())

@@ -8,12 +8,12 @@ from networkx.utils import edges_equal, nodes_equal
 from rlway.schedules import Schedule
 
 
-def test_schedules_num_track_sections(three_trains):
-    assert three_trains.num_track_sections == 6
+def test_schedules_num_blocks(three_trains):
+    assert three_trains.num_blocks == 6
 
 
-def test_schedules_track_sections(three_trains):
-    assert three_trains.track_sections == [0, 1, 2, 3, 4, 5]
+def test_schedules_blocks(three_trains):
+    assert three_trains.blocks == [0, 1, 2, 3, 4, 5]
 
 
 def test_schedules_num_trains(three_trains):
@@ -73,22 +73,22 @@ def test_schedules_trajectory(three_trains):
     assert three_trains.trajectory(2) == [0, 2, 3, 4]
 
 
-def test_previous_track_section(three_trains):
-    assert three_trains.previous_track_section(0, 0) is None
-    assert three_trains.previous_track_section(0, 2) == 0
-    assert three_trains.previous_track_section(0, 4) == 3
+def test_previous_block(three_trains):
+    assert three_trains.previous_block(0, 0) is None
+    assert three_trains.previous_block(0, 2) == 0
+    assert three_trains.previous_block(0, 4) == 3
 
 
-def test_next_track_section(three_trains):
-    assert three_trains.next_track_section(0, 0) == 2
-    assert three_trains.next_track_section(0, 2) == 3
-    assert three_trains.next_track_section(0, 4) is None
+def test_next_block(three_trains):
+    assert three_trains.next_block(0, 0) == 2
+    assert three_trains.next_block(0, 2) == 3
+    assert three_trains.next_block(0, 4) is None
 
 
 def test_is_a_point_switch(two_trains):
     result = [
         two_trains.is_a_point_switch(0, 1, tr)
-        for tr in two_trains.track_sections
+        for tr in two_trains.blocks
     ]
     expected = [False, False, True, False, False, False]
     assert result == expected
@@ -97,7 +97,7 @@ def test_is_a_point_switch(two_trains):
 def test_is_just_after_a_point_switch(two_trains):
     result = [
         two_trains.is_just_after_a_point_switch(0, 1, tr)
-        for tr in two_trains.track_sections
+        for tr in two_trains.blocks
     ]
     expected = [False, False, False, True, False, False]
     assert result == expected

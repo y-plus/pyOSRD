@@ -1,39 +1,33 @@
-from typing import Dict, List
-
 import pandas as pd
 
 from rlway.schedules import Schedule
+from rlway.osrd import OSRD
 
 
-def schedule_from_simulation(
-        infra: Dict,
-        res: List,
+def schedule_from_osrd(
+        case: OSRD,
         simplify_route_names: bool = False,
 ) -> Schedule:
 
-    routes = [
-        route['id']
-        for route in [infra['routes']]
-    ]
-
-    s = Schedule(len(routes), len(res))
+    s = Schedule(len(case.routes), case.num_trains)
 
     routes_switches = {
         route['id']: list(route['switches_directions'].keys())[0]
-        for route in [infra['routes']]
+        for route in case.infra['routes']
         if len(list(route['switches_directions'].keys())) != 0
     }
     simulations = 'base_simulations'
     simulations = 'eco_simulations'
 
     for train in range(s.num_trains):
-        route_occupancies = res[train][simulations][0]['route_occupancies']
+        route_occupancies = \
+            case.results[train][simulations][0]['route_occupancies']
         for route, times in route_occupancies.items():
-            if route in routes:
-                idx = routes.index(route)
+            if route in case.routes:
+                idx = case.routes.index(route)
                 s._df.loc[idx, (train, 's')] = times['time_head_occupy']
                 s._df.loc[idx, (train, 'e')] = times['time_tail_free']
-    s._df.index = routes
+    s._df.index = case.routes
 
     s._df.index = (
         pd.Series(s.df.index.map(routes_switches))

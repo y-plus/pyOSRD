@@ -7,7 +7,7 @@ from pandas.testing import assert_frame_equal
 def test_schedules_conflicts(two_trains):
     delayed_schedule = two_trains.add_delay(
         train=0,
-        track_section=0,
+        block=0,
         delay=0.5
     )
     assert_frame_equal(
@@ -45,7 +45,7 @@ def test_schedules_has_conflicts(two_trains):
 def test_schedules_first_conflict(two_trains):
     delayed_schedule = two_trains.add_delay(
         train=0,
-        track_section=0,
+        block=0,
         delay=0.5
     )
     assert delayed_schedule.first_conflict(train=0) == (2, 1)
@@ -55,7 +55,7 @@ def test_schedules_first_conflict(two_trains):
 def test_schedules_earliest_conflict(two_trains):
     delayed_schedule = two_trains.add_delay(
         train=0,
-        track_section=0,
+        block=0,
         delay=0.5
     )
     assert delayed_schedule.earliest_conflict() == (2, 0, 1)
@@ -84,16 +84,16 @@ def test_schedules_is_action_needed(three_trains):
 
 
 def test_schedules_first_in(two_trains):
-    for track_section in (0, 2, 3, 4):
+    for block in (0, 2, 3, 4):
         assert (
             two_trains.add_delay(0, 0, 0.5)
-            .first_in(0, 1, track_section)
+            .first_in(0, 1, block)
             == 0
         )
-    for track_section in (1, 2, 3, 5):
+    for block in (1, 2, 3, 5):
         assert (
             two_trains.add_delay(0, 0, 1.5)
-            .first_in(0, 1, track_section)
+            .first_in(0, 1, block)
             == 1
         )
 

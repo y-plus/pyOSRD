@@ -65,7 +65,7 @@ def test_osrd_infra_route_limits(osrd_case):
         }
 
 
-def test_osrd_infra_track_section_lengths(osrd_case):
+def test_osrd_infra_block_lengths(osrd_case):
     assert osrd_case.track_section_lengths == \
         {
             'T0': 500.0,

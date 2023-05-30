@@ -89,14 +89,14 @@ def test_schedules_propagate_delay_action_needed(
     """
     propagated, delayed_train = (
         two_trains_two_blocks_before_dvg
-        .add_delay(train=0, track_section=2, delay=.5)
+        .add_delay(train=0, block=2, delay=.5)
         .propagate_delay(delayed_train=0)
     )
 
     assert_frame_equal(
         two_trains_two_blocks_before_dvg.add_delay(
             train=0,
-            track_section=2,
+            block=2,
             delay=.5
         ).df,
         propagated.df
@@ -108,7 +108,7 @@ def test_schedules_propagate_delay(
 ):
     propagated, _ = (
         two_trains_two_blocks_before_dvg
-        .add_delay(train=0, track_section=4, delay=.5)
+        .add_delay(train=0, block=4, delay=.5)
         .propagate_delay(delayed_train=0)
     )
 
