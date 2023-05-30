@@ -260,7 +260,6 @@ class OSRD():
 
     def draw_infra(
         self,
-        remove_bufferstop_to_bufferstop: bool = True,
     ) -> None:
         """Use mermaid.js to display the infra with detectors as nodes"""
 
@@ -270,15 +269,9 @@ class OSRD():
             base64_string = base64_bytes.decode("ascii")
             display(Image(url="https://mermaid.ink/img/" + base64_string))
 
-        displayed_routes = [
-            route
-            for route in self.routes
-            if not (('rt.buffer' in route) and ('->buffer' in route))
-        ] if remove_bufferstop_to_bufferstop else self.routes
-
         g = "graph LR;"+";".join([
             route.replace('rt.', '').replace('->', '-->')
-            for route in displayed_routes
+            for route in self.routes
         ])
         mm(g)
 

@@ -9,25 +9,18 @@ def schedule_from_simulation(
         infra: Dict,
         res: List,
         simplify_route_names: bool = False,
-        remove_bufferstop_to_bufferstop: bool = True,
 ) -> Schedule:
-
-    useful_routes = [
-        route
-        for route in infra['routes']
-        if not (('rt.buffer' in route['id']) and ('->buffer' in route['id']))
-    ] if remove_bufferstop_to_bufferstop else [infra['routes']]
 
     routes = [
         route['id']
-        for route in useful_routes
+        for route in [infra['routes']]
     ]
 
     s = Schedule(len(routes), len(res))
 
     routes_switches = {
         route['id']: list(route['switches_directions'].keys())[0]
-        for route in useful_routes
+        for route in [infra['routes']]
         if len(list(route['switches_directions'].keys())) != 0
     }
     simulations = 'base_simulations'
