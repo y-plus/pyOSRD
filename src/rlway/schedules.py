@@ -515,7 +515,7 @@ class Schedule(object):
                 height=1,
                 alpha=alpha
                 )
-        ax.invert_yaxis()
+        # ax.invert_yaxis()
         ax.set_xlabel('Time')
         ax.set_ylabel('Track sections')
         ax.legend()
