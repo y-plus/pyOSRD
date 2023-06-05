@@ -416,6 +416,7 @@ class OSRD():
         for point in points:
             ax.axhline(point['offset'], color='k', linestyle=':');  # noqa
 
+        ax.set_xlabel('Time [min]')
         ax.set_yticks(
             [point['offset'] for point in points],
             [point['id'] for point in points]

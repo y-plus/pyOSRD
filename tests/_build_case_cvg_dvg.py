@@ -13,7 +13,7 @@ def infra_cvg_dvg() -> Infra:
 
     (T0)--S0-D0-                               -S4-D4-(T4)-->
                 |                             |
-            (CVG)>-(T2)-S2-D2--o--S3-D3-(T3)-<(DVG)
+            (CVG)>-(T2)---------o--S3-D3-(T3)-<(DVG)
                 |                             |
     (T1)--S1-D1-                               -S5-D5-(T5)-->
 
@@ -38,20 +38,18 @@ def infra_cvg_dvg() -> Infra:
         T[5].begin(),
         label='DVG',
     )
-    D = [
-        T[i].add_detector(label=f"D{i}", position=450)
-        if i in [0, 1, 3]
-        else T[i].add_detector(label=f"D{i}", position=50)
-        for i in range(6)
-    ]
+    detectors = {
+        i: T[i].add_detector(label=f"D{i}", position=450)
+        for i in [0, 1, 3, 4, 5]
+    }
     S = [
         T[i].add_signal(
-            D[i].position-20,
+            detector.position-20,
             Direction.START_TO_STOP,
-            D[i],
+            detector,
             label=f"S{i}"
         )
-        for i, _ in enumerate(D)
+        for i, detector in detectors.items()
     ]
     for signal in S:
         signal.add_logical_signal("BAL", settings={"Nf": "true"})
@@ -62,7 +60,7 @@ def infra_cvg_dvg() -> Infra:
     for track in range(2):
         stations[0].add_part(T[track], 300)
     for track in range(4, 6):
-        stations[1].add_part(T[track], 300)
+        stations[1].add_part(T[track], 480)
 
     infra = infra_builder.build()
 

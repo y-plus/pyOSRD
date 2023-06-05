@@ -22,8 +22,8 @@ DA2 = STA_Q2.add_detector(position=430, label='DA2')
 SA1 = STA_Q1.add_signal(DA1.position-20, Direction.START_TO_STOP, DA1, label='SA1')
 SA2 = STA_Q2.add_signal(DA2.position-20, Direction.START_TO_STOP, DA2, label='SA2')
 DA_OUT = T.add_detector(position=50, label='DA_OUT')
-SA_OUT = T.add_signal(DA_OUT.position-20, Direction.START_TO_STOP, DA_OUT, label='SA_OUT')
-for signal in [SA1, SA2, SA_OUT]:
+# SA_OUT = T.add_signal(DA_OUT.position-20, Direction.START_TO_STOP, DA_OUT, label='SA_OUT')
+for signal in [SA1, SA2]:  # , SA_OUT
     signal.add_logical_signal("BAL", settings={"Nf": "true"})
 
 STB_Q1 = builder.add_track_section(label='STB_Q1', length=450)
@@ -38,9 +38,9 @@ SB_in = T.add_signal(DB_in.position-20, Direction.START_TO_STOP, DB_in, label='S
 
 DB1 = STB_Q1.add_detector(position=30, label='DB1')
 DB2 = STB_Q2.add_detector(position=30, label='DB2')
-SB1 = STB_Q1.add_signal(DB1.position-20, Direction.START_TO_STOP, DB1, label='SB1')
-SB2 = STB_Q2.add_signal(DB2.position-20, Direction.START_TO_STOP, DB2, label='SB2')
-for signal in [SB1, SB2, SB_in]:
+# SB1 = STB_Q1.add_signal(DB1.position-20, Direction.START_TO_STOP, DB1, label='SB1')
+# SB2 = STB_Q2.add_signal(DB2.position-20, Direction.START_TO_STOP, DB2, label='SB2')
+for signal in [SB_in]:  # SB1, SB2, 
     signal.add_logical_signal("BAL", settings={"Nf": "true"})
 
 station_A = builder.add_operational_point(label="Station_A")

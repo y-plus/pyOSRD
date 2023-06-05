@@ -56,7 +56,7 @@
   ],
   "routes": [
     {
-      "id": "rt.DA1->DA_OUT",
+      "id": "rt.DA1->DB_in",
       "entry_point": {
         "type": "Detector",
         "id": "DA1"
@@ -64,9 +64,11 @@
       "entry_point_direction": "START_TO_STOP",
       "exit_point": {
         "type": "Detector",
-        "id": "DA_OUT"
+        "id": "DB_in"
       },
-      "release_detectors": [],
+      "release_detectors": [
+        "DA_OUT"
+      ],
       "switches_directions": {
         "CVG": "LEFT"
       }
@@ -86,7 +88,7 @@
       "switches_directions": {}
     },
     {
-      "id": "rt.DA2->DA_OUT",
+      "id": "rt.DA2->DB_in",
       "entry_point": {
         "type": "Detector",
         "id": "DA2"
@@ -94,9 +96,11 @@
       "entry_point_direction": "START_TO_STOP",
       "exit_point": {
         "type": "Detector",
-        "id": "DA_OUT"
+        "id": "DB_in"
       },
-      "release_detectors": [],
+      "release_detectors": [
+        "DA_OUT"
+      ],
       "switches_directions": {
         "CVG": "RIGHT"
       }
@@ -116,78 +120,40 @@
       "switches_directions": {}
     },
     {
-      "id": "rt.DA_OUT->DB_in",
-      "entry_point": {
-        "type": "Detector",
-        "id": "DA_OUT"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "Detector",
-        "id": "DB_in"
-      },
-      "release_detectors": [],
-      "switches_directions": {}
-    },
-    {
-      "id": "rt.DB_in->DB2",
+      "id": "rt.DB_in->buffer_stop.3",
       "entry_point": {
         "type": "Detector",
         "id": "DB_in"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "Detector",
-        "id": "DB2"
-      },
-      "release_detectors": [],
-      "switches_directions": {
-        "DVG": "RIGHT"
-      }
-    },
-    {
-      "id": "rt.DB_in->DB1",
-      "entry_point": {
-        "type": "Detector",
-        "id": "DB_in"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "Detector",
-        "id": "DB1"
-      },
-      "release_detectors": [],
-      "switches_directions": {
-        "DVG": "LEFT"
-      }
-    },
-    {
-      "id": "rt.DB1->buffer_stop.2",
-      "entry_point": {
-        "type": "Detector",
-        "id": "DB1"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.2"
-      },
-      "release_detectors": [],
-      "switches_directions": {}
-    },
-    {
-      "id": "rt.DB2->buffer_stop.3",
-      "entry_point": {
-        "type": "Detector",
-        "id": "DB2"
       },
       "entry_point_direction": "START_TO_STOP",
       "exit_point": {
         "type": "BufferStop",
         "id": "buffer_stop.3"
       },
-      "release_detectors": [],
-      "switches_directions": {}
+      "release_detectors": [
+        "DB2"
+      ],
+      "switches_directions": {
+        "DVG": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.DB_in->buffer_stop.2",
+      "entry_point": {
+        "type": "Detector",
+        "id": "DB_in"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "BufferStop",
+        "id": "buffer_stop.2"
+      },
+      "release_detectors": [
+        "DB1"
+      ],
+      "switches_directions": {
+        "DVG": "LEFT"
+      }
     }
   ],
   "switch_types": [
@@ -644,39 +610,6 @@
     },
     {
       "track": "T",
-      "position": 30.0,
-      "id": "SA_OUT",
-      "direction": "START_TO_STOP",
-      "sight_distance": 400.0,
-      "linked_detector": "DA_OUT",
-      "logical_signals": [
-        {
-          "signaling_system": "BAL",
-          "next_signaling_systems": [],
-          "settings": {
-            "Nf": "true"
-          }
-        }
-      ],
-      "extensions": {
-        "sncf": {
-          "aspects": [],
-          "comment": "",
-          "default_aspect": "",
-          "installation_type": "CARRE",
-          "is_in_service": false,
-          "is_lightable": false,
-          "is_operational": false,
-          "label": "SA_OUT",
-          "side": "LEFT",
-          "support_type": "",
-          "type_code": "",
-          "value": ""
-        }
-      }
-    },
-    {
-      "track": "T",
       "position": 9950.0,
       "id": "SB_in",
       "direction": "START_TO_STOP",
@@ -701,72 +634,6 @@
           "is_lightable": false,
           "is_operational": false,
           "label": "SB_in",
-          "side": "LEFT",
-          "support_type": "",
-          "type_code": "",
-          "value": ""
-        }
-      }
-    },
-    {
-      "track": "STB_Q1",
-      "position": 10.0,
-      "id": "SB1",
-      "direction": "START_TO_STOP",
-      "sight_distance": 400.0,
-      "linked_detector": "DB1",
-      "logical_signals": [
-        {
-          "signaling_system": "BAL",
-          "next_signaling_systems": [],
-          "settings": {
-            "Nf": "true"
-          }
-        }
-      ],
-      "extensions": {
-        "sncf": {
-          "aspects": [],
-          "comment": "",
-          "default_aspect": "",
-          "installation_type": "CARRE",
-          "is_in_service": false,
-          "is_lightable": false,
-          "is_operational": false,
-          "label": "SB1",
-          "side": "LEFT",
-          "support_type": "",
-          "type_code": "",
-          "value": ""
-        }
-      }
-    },
-    {
-      "track": "STB_Q2",
-      "position": 10.0,
-      "id": "SB2",
-      "direction": "START_TO_STOP",
-      "sight_distance": 400.0,
-      "linked_detector": "DB2",
-      "logical_signals": [
-        {
-          "signaling_system": "BAL",
-          "next_signaling_systems": [],
-          "settings": {
-            "Nf": "true"
-          }
-        }
-      ],
-      "extensions": {
-        "sncf": {
-          "aspects": [],
-          "comment": "",
-          "default_aspect": "",
-          "installation_type": "CARRE",
-          "is_in_service": false,
-          "is_lightable": false,
-          "is_operational": false,
-          "label": "SB2",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",

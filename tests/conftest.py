@@ -4,7 +4,8 @@ import pytest
 from rlway.schedules import Schedule
 from rlway.osrd import OSRD
 
-from _build_osrd_case import infra_cvg_dvg, simulation_cvg_dvg_two_trains
+from ._build_case_cvg_dvg import infra_cvg_dvg, simulation_cvg_dvg_two_trains
+from ._build_case_two_lanes import infra_two_lanes, simulation_two_lanes_two_trains
 
 
 @pytest.fixture
@@ -74,14 +75,14 @@ built_simulation = simulation_cvg_dvg_two_trains(built_infra)
 built_infra.save('infra.json')
 built_simulation.save('simulation.json')
 
-case_ = OSRD()
-case_.run()
+cvg_dvg = OSRD()
+cvg_dvg.run()
 for file in ['infra', 'simulation', 'results']:
     os.remove(file+'.json')
 
 
 @pytest.fixture
-def osrd_case_missing_sim():
+def osrd_cvg_dvg_missing_sim():
     return OSRD(
         results_json="missing.json",
         simulation_json="missing.json",
@@ -89,10 +90,27 @@ def osrd_case_missing_sim():
 
 
 @pytest.fixture
-def osrd_case_before_run():
+def osrd_cvg_dvg_before_run():
     return OSRD(results_json="missing.json")
 
 
 @pytest.fixture
-def osrd_case() -> OSRD:
-    return case_
+def osrd_cvg_dvg() -> OSRD:
+    return cvg_dvg
+
+
+built_infra = infra_two_lanes()
+built_simulation = simulation_two_lanes_two_trains(built_infra)
+
+built_infra.save('infra.json')
+built_simulation.save('simulation.json')
+
+two_lanes = OSRD()
+two_lanes.run()
+for file in ['infra', 'simulation', 'results']:
+    os.remove(file+'.json')
+
+
+@pytest.fixture
+def osrd_two_lanes() -> OSRD:
+    return two_lanes

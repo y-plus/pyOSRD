@@ -21,10 +21,8 @@
       ],
       "routes": [
         "rt.buffer_stop.0->DA1",
-        "rt.DA1->DA_OUT",
-        "rt.DA_OUT->DB_in",
-        "rt.DB_in->DB1",
-        "rt.DB1->buffer_stop.2"
+        "rt.DA1->DB_in",
+        "rt.DB_in->buffer_stop.2"
       ]
     },
     {
@@ -48,10 +46,8 @@
       ],
       "routes": [
         "rt.buffer_stop.1->DA2",
-        "rt.DA2->DA_OUT",
-        "rt.DA_OUT->DB_in",
-        "rt.DB_in->DB2",
-        "rt.DB2->buffer_stop.3"
+        "rt.DA2->DB_in",
+        "rt.DB_in->buffer_stop.3"
       ]
     }
   ],

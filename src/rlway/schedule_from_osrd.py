@@ -11,11 +11,6 @@ def schedule_from_osrd(
 
     s = Schedule(len(case.routes), case.num_trains)
 
-    routes_switches = {
-        route['id']: list(route['switches_directions'].keys())[0]
-        for route in case.infra['routes']
-        if len(list(route['switches_directions'].keys())) != 0
-    }
     simulations = 'base_simulations'
     simulations = 'eco_simulations'
 
@@ -30,7 +25,7 @@ def schedule_from_osrd(
     s._df.index = case.routes
 
     s._df.index = (
-        pd.Series(s.df.index.map(routes_switches))
+        pd.Series(s.df.index.map(case.route_switches))
         .fillna(pd.Series(s.df.index))
     )
 

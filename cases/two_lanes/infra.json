@@ -2,15 +2,15 @@
   "version": "3.3.1",
   "operational_points": [
     {
-      "id": "Station_A",
+      "id": "station",
       "parts": [
         {
-          "track": "STA_Q1",
-          "position": 300.0
+          "track": "T1",
+          "position": 790.0
         },
         {
-          "track": "STA_Q2",
-          "position": 300.0
+          "track": "T2",
+          "position": 790.0
         }
       ],
       "extensions": {
@@ -22,33 +22,7 @@
           "trigram": "STA"
         },
         "identifier": {
-          "name": "Station_A",
-          "uic": 0
-        }
-      }
-    },
-    {
-      "id": "Station_B",
-      "parts": [
-        {
-          "track": "STB_Q1",
-          "position": 300.0
-        },
-        {
-          "track": "STB_Q2",
-          "position": 300.0
-        }
-      ],
-      "extensions": {
-        "sncf": {
-          "ci": 0,
-          "ch": "aa",
-          "ch_short_label": "aa",
-          "ch_long_label": "0",
-          "trigram": "STA"
-        },
-        "identifier": {
-          "name": "Station_B",
+          "name": "station",
           "uic": 0
         }
       }
@@ -56,89 +30,15 @@
   ],
   "routes": [
     {
-      "id": "rt.DA1->DA_OUT",
+      "id": "rt.D0->D2",
       "entry_point": {
         "type": "Detector",
-        "id": "DA1"
+        "id": "D0"
       },
       "entry_point_direction": "START_TO_STOP",
       "exit_point": {
         "type": "Detector",
-        "id": "DA_OUT"
-      },
-      "release_detectors": [],
-      "switches_directions": {
-        "CVG": "LEFT"
-      }
-    },
-    {
-      "id": "rt.buffer_stop.0->DA1",
-      "entry_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.0"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "Detector",
-        "id": "DA1"
-      },
-      "release_detectors": [],
-      "switches_directions": {}
-    },
-    {
-      "id": "rt.DA2->DA_OUT",
-      "entry_point": {
-        "type": "Detector",
-        "id": "DA2"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "Detector",
-        "id": "DA_OUT"
-      },
-      "release_detectors": [],
-      "switches_directions": {
-        "CVG": "RIGHT"
-      }
-    },
-    {
-      "id": "rt.buffer_stop.1->DA2",
-      "entry_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.1"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "Detector",
-        "id": "DA2"
-      },
-      "release_detectors": [],
-      "switches_directions": {}
-    },
-    {
-      "id": "rt.DA_OUT->DB_in",
-      "entry_point": {
-        "type": "Detector",
-        "id": "DA_OUT"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "Detector",
-        "id": "DB_in"
-      },
-      "release_detectors": [],
-      "switches_directions": {}
-    },
-    {
-      "id": "rt.DB_in->DB2",
-      "entry_point": {
-        "type": "Detector",
-        "id": "DB_in"
-      },
-      "entry_point_direction": "START_TO_STOP",
-      "exit_point": {
-        "type": "Detector",
-        "id": "DB2"
+        "id": "D2"
       },
       "release_detectors": [],
       "switches_directions": {
@@ -146,15 +46,15 @@
       }
     },
     {
-      "id": "rt.DB_in->DB1",
+      "id": "rt.D0->D1",
       "entry_point": {
         "type": "Detector",
-        "id": "DB_in"
+        "id": "D0"
       },
       "entry_point_direction": "START_TO_STOP",
       "exit_point": {
         "type": "Detector",
-        "id": "DB1"
+        "id": "D1"
       },
       "release_detectors": [],
       "switches_directions": {
@@ -162,29 +62,61 @@
       }
     },
     {
-      "id": "rt.DB1->buffer_stop.2",
+      "id": "rt.buffer_stop.0->D0",
       "entry_point": {
-        "type": "Detector",
-        "id": "DB1"
+        "type": "BufferStop",
+        "id": "buffer_stop.0"
       },
       "entry_point_direction": "START_TO_STOP",
       "exit_point": {
-        "type": "BufferStop",
-        "id": "buffer_stop.2"
+        "type": "Detector",
+        "id": "D0"
       },
       "release_detectors": [],
       "switches_directions": {}
     },
     {
-      "id": "rt.DB2->buffer_stop.3",
+      "id": "rt.D1->D3",
       "entry_point": {
         "type": "Detector",
-        "id": "DB2"
+        "id": "D1"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D3"
+      },
+      "release_detectors": [],
+      "switches_directions": {
+        "CVG": "LEFT"
+      }
+    },
+    {
+      "id": "rt.D2->D3",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D2"
+      },
+      "entry_point_direction": "START_TO_STOP",
+      "exit_point": {
+        "type": "Detector",
+        "id": "D3"
+      },
+      "release_detectors": [],
+      "switches_directions": {
+        "CVG": "RIGHT"
+      }
+    },
+    {
+      "id": "rt.D3->buffer_stop.1",
+      "entry_point": {
+        "type": "Detector",
+        "id": "D3"
       },
       "entry_point_direction": "START_TO_STOP",
       "exit_point": {
         "type": "BufferStop",
-        "id": "buffer_stop.3"
+        "id": "buffer_stop.1"
       },
       "release_detectors": [],
       "switches_directions": {}
@@ -278,15 +210,15 @@
       "ports": {
         "base": {
           "endpoint": "BEGIN",
-          "track": "T"
+          "track": "T3"
         },
         "left": {
           "endpoint": "END",
-          "track": "STA_Q1"
+          "track": "T1"
         },
         "right": {
           "endpoint": "END",
-          "track": "STA_Q2"
+          "track": "T2"
         }
       },
       "extensions": {
@@ -302,15 +234,15 @@
       "ports": {
         "base": {
           "endpoint": "END",
-          "track": "T"
+          "track": "T0"
         },
         "left": {
           "endpoint": "BEGIN",
-          "track": "STB_Q1"
+          "track": "T1"
         },
         "right": {
           "endpoint": "BEGIN",
-          "track": "STB_Q2"
+          "track": "T2"
         }
       },
       "extensions": {
@@ -325,44 +257,44 @@
       "id": "link.0",
       "src": {
         "endpoint": "BEGIN",
-        "track": "T"
+        "track": "T3"
       },
       "dst": {
         "endpoint": "END",
-        "track": "STA_Q1"
+        "track": "T1"
       }
     },
     {
       "id": "link.1",
       "src": {
         "endpoint": "BEGIN",
-        "track": "T"
+        "track": "T3"
       },
       "dst": {
         "endpoint": "END",
-        "track": "STA_Q2"
+        "track": "T2"
       }
     },
     {
       "id": "link.2",
       "src": {
         "endpoint": "END",
-        "track": "T"
+        "track": "T0"
       },
       "dst": {
         "endpoint": "BEGIN",
-        "track": "STB_Q1"
+        "track": "T1"
       }
     },
     {
       "id": "link.3",
       "src": {
         "endpoint": "END",
-        "track": "T"
+        "track": "T0"
       },
       "dst": {
         "endpoint": "BEGIN",
-        "track": "STB_Q2"
+        "track": "T2"
       }
     }
   ],
@@ -394,8 +326,8 @@
           ]
         ]
       },
-      "id": "STA_Q1",
-      "length": 450.0,
+      "id": "T0",
+      "length": 1000.0,
       "slopes": [],
       "curves": [],
       "loading_gauge_limits": [],
@@ -435,8 +367,8 @@
           ]
         ]
       },
-      "id": "STA_Q2",
-      "length": 450.0,
+      "id": "T1",
+      "length": 1000.0,
       "slopes": [],
       "curves": [],
       "loading_gauge_limits": [],
@@ -476,8 +408,8 @@
           ]
         ]
       },
-      "id": "T",
-      "length": 10000.0,
+      "id": "T2",
+      "length": 1000.0,
       "slopes": [],
       "curves": [],
       "loading_gauge_limits": [],
@@ -517,49 +449,8 @@
           ]
         ]
       },
-      "id": "STB_Q1",
-      "length": 450.0,
-      "slopes": [],
-      "curves": [],
-      "loading_gauge_limits": [],
-      "extensions": {
-        "sncf": {
-          "line_code": 0,
-          "line_name": "placeholder_line",
-          "track_number": 0,
-          "track_name": "placeholder_track"
-        }
-      }
-    },
-    {
-      "geo": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            0.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0
-          ]
-        ]
-      },
-      "sch": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            0.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0
-          ]
-        ]
-      },
-      "id": "STB_Q2",
-      "length": 450.0,
+      "id": "T3",
+      "length": 1000.0,
       "slopes": [],
       "curves": [],
       "loading_gauge_limits": [],
@@ -577,12 +468,12 @@
   "catenaries": [],
   "signals": [
     {
-      "track": "STA_Q1",
-      "position": 410.0,
-      "id": "SA1",
+      "track": "T0",
+      "position": 800.0,
+      "id": "S0",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
-      "linked_detector": "DA1",
+      "linked_detector": "D0",
       "logical_signals": [
         {
           "signaling_system": "BAL",
@@ -601,7 +492,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "SA1",
+          "label": "S0",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -610,12 +501,12 @@
       }
     },
     {
-      "track": "STA_Q2",
-      "position": 410.0,
-      "id": "SA2",
+      "track": "T1",
+      "position": 800.0,
+      "id": "S1",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
-      "linked_detector": "DA2",
+      "linked_detector": "D1",
       "logical_signals": [
         {
           "signaling_system": "BAL",
@@ -634,7 +525,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "SA2",
+          "label": "S1",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -643,12 +534,12 @@
       }
     },
     {
-      "track": "T",
-      "position": 30.0,
-      "id": "SA_OUT",
+      "track": "T2",
+      "position": 800.0,
+      "id": "S2",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
-      "linked_detector": "DA_OUT",
+      "linked_detector": "D2",
       "logical_signals": [
         {
           "signaling_system": "BAL",
@@ -667,7 +558,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "SA_OUT",
+          "label": "S2",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -676,12 +567,12 @@
       }
     },
     {
-      "track": "T",
-      "position": 9950.0,
-      "id": "SB_in",
+      "track": "T3",
+      "position": 800.0,
+      "id": "S3",
       "direction": "START_TO_STOP",
       "sight_distance": 400.0,
-      "linked_detector": "DB_in",
+      "linked_detector": "D3",
       "logical_signals": [
         {
           "signaling_system": "BAL",
@@ -700,73 +591,7 @@
           "is_in_service": false,
           "is_lightable": false,
           "is_operational": false,
-          "label": "SB_in",
-          "side": "LEFT",
-          "support_type": "",
-          "type_code": "",
-          "value": ""
-        }
-      }
-    },
-    {
-      "track": "STB_Q1",
-      "position": 10.0,
-      "id": "SB1",
-      "direction": "START_TO_STOP",
-      "sight_distance": 400.0,
-      "linked_detector": "DB1",
-      "logical_signals": [
-        {
-          "signaling_system": "BAL",
-          "next_signaling_systems": [],
-          "settings": {
-            "Nf": "true"
-          }
-        }
-      ],
-      "extensions": {
-        "sncf": {
-          "aspects": [],
-          "comment": "",
-          "default_aspect": "",
-          "installation_type": "CARRE",
-          "is_in_service": false,
-          "is_lightable": false,
-          "is_operational": false,
-          "label": "SB1",
-          "side": "LEFT",
-          "support_type": "",
-          "type_code": "",
-          "value": ""
-        }
-      }
-    },
-    {
-      "track": "STB_Q2",
-      "position": 10.0,
-      "id": "SB2",
-      "direction": "START_TO_STOP",
-      "sight_distance": 400.0,
-      "linked_detector": "DB2",
-      "logical_signals": [
-        {
-          "signaling_system": "BAL",
-          "next_signaling_systems": [],
-          "settings": {
-            "Nf": "true"
-          }
-        }
-      ],
-      "extensions": {
-        "sncf": {
-          "aspects": [],
-          "comment": "",
-          "default_aspect": "",
-          "installation_type": "CARRE",
-          "is_in_service": false,
-          "is_lightable": false,
-          "is_operational": false,
-          "label": "SB2",
+          "label": "S3",
           "side": "LEFT",
           "support_type": "",
           "type_code": "",
@@ -777,61 +602,39 @@
   ],
   "buffer_stops": [
     {
-      "track": "STA_Q1",
+      "track": "T0",
       "position": 0.0,
       "id": "buffer_stop.0"
     },
     {
-      "track": "STA_Q2",
-      "position": 0.0,
+      "track": "T3",
+      "position": 1000.0,
       "id": "buffer_stop.1"
-    },
-    {
-      "track": "STB_Q1",
-      "position": 450.0,
-      "id": "buffer_stop.2"
-    },
-    {
-      "track": "STB_Q2",
-      "position": 450.0,
-      "id": "buffer_stop.3"
     }
   ],
   "detectors": [
     {
-      "track": "STA_Q1",
-      "position": 430.0,
-      "id": "DA1",
+      "track": "T0",
+      "position": 820.0,
+      "id": "D0",
       "applicable_directions": "BOTH"
     },
     {
-      "track": "STA_Q2",
-      "position": 430.0,
-      "id": "DA2",
+      "track": "T1",
+      "position": 820.0,
+      "id": "D1",
       "applicable_directions": "BOTH"
     },
     {
-      "track": "T",
-      "position": 50.0,
-      "id": "DA_OUT",
+      "track": "T2",
+      "position": 820.0,
+      "id": "D2",
       "applicable_directions": "BOTH"
     },
     {
-      "track": "T",
-      "position": 9970.0,
-      "id": "DB_in",
-      "applicable_directions": "BOTH"
-    },
-    {
-      "track": "STB_Q1",
-      "position": 30.0,
-      "id": "DB1",
-      "applicable_directions": "BOTH"
-    },
-    {
-      "track": "STB_Q2",
-      "position": 30.0,
-      "id": "DB2",
+      "track": "T3",
+      "position": 820.0,
+      "id": "D3",
       "applicable_directions": "BOTH"
     }
   ],

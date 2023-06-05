@@ -2,9 +2,6 @@
 
 For more information, and a diagram of this infrastructure, see: https://osrd.fr/en/docs/explanation/data-model/
 """
-import sys
-sys.path.append('../')
-
 
 from railjson_generator import (
     InfraBuilder,
