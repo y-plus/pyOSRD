@@ -22,7 +22,8 @@ def infra_two_lanes() -> Infra:
     All tracks are 1 km long
     Train 0 starts from T0 at t=0s, stops at T1, and arrives at T3
     Train 1 starts from T at t=60s, stops at T2, and arrives at T3
-    """
+    """  # noqa
+
     infra_builder = InfraBuilder()
     T = [
         infra_builder.add_track_section(label='T'+str(id), length=1000)

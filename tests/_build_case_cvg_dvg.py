@@ -11,15 +11,16 @@ def infra_cvg_dvg() -> Infra:
     """
     station0 (2 tracks)                        station1 (2 tracks)
 
-    (T0)--S0-D0-                               -S4-D4-(T4)-->
-                |                             |
+    (T0)--S0-D0-                                -S4-D4-(T4)-->
+                \                              /
             (CVG)>-(T2)---------o--S3-D3-(T3)-<(DVG)
-                |                             |
-    (T1)--S1-D1-                               -S5-D5-(T5)-->
+                /                              \
+    (T1)--S1-D1-                                -S5-D5-(T5)-->
 
     All tracks are 500m long
 
-    """
+    """  # noqa
+
     infra_builder = InfraBuilder()
     T = [
         infra_builder.add_track_section(label='T'+str(id), length=500)
