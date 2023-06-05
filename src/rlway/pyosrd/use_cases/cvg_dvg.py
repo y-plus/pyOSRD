@@ -9,9 +9,9 @@ from railjson_generator.schema.infra.direction import Direction
 
 
 def cvg_dvg(
-        dir: str,
-        infra_json: str = 'infra.json',
-        simulation_json: str = 'simulation.json',
+    dir: str,
+    infra_json: str = 'infra.json',
+    simulation_json: str = 'simulation.json',
 ) -> None:
     """
     station0 (2 tracks)                        station1 (2 tracks)
@@ -23,6 +23,8 @@ def cvg_dvg(
     (T1)--S1-D1-                                  -S5-D5-(T5)-->
 
     All tracks are 500m long
+    Train 0 starts from T0 at t=0 and arrives at T4
+    Train 1 starts from T1 at t=100 and arrives at T5
 
     """  # noqa
 
@@ -32,6 +34,12 @@ def cvg_dvg(
         infra_builder.add_track_section(label='T'+str(id), length=500)
         for id in range(6)
     ]
+
+    for i in [0, 1]:
+        T[i].add_buffer_stop(0, label=f'buffer_stop.{i}')
+    for i in [4, 5]:
+        T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i-2}')
+
     infra_builder.add_link(T[2].end(), T[3].begin())
     infra_builder.add_point_switch(
         T[2].begin(),
@@ -45,6 +53,7 @@ def cvg_dvg(
         T[5].begin(),
         label='DVG',
     )
+
     detectors = {
         i: T[i].add_detector(label=f"D{i}", position=450)
         for i in [0, 1, 3, 4, 5]
@@ -60,6 +69,7 @@ def cvg_dvg(
     ]
     for signal in S:
         signal.add_logical_signal("BAL", settings={"Nf": "true"})
+
     stations = [
         infra_builder.add_operational_point(label='station'+str(i))
         for i in range(2)
