@@ -57,6 +57,12 @@ class OSRD():
     def __post_init__(self):
 
         if self.use_case:
+
+            if self.use_case not in self.use_cases:
+                raise ValueError(
+                    f"{self.use_case} is not a valid use case name."
+                )
+
             module = importlib.import_module(
                 f".{self.use_case}",
                 "rlway.pyosrd.use_cases"
