@@ -1,5 +1,5 @@
 import os
-# import rlway.osrd
+# import rlway.pyosrd
 
 from railjson_generator import (
     InfraBuilder,
