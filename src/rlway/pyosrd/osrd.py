@@ -1,6 +1,8 @@
 import os
 import json
 import base64
+import pkgutil
+import importlib
 
 from dataclasses import dataclass
 from typing import Dict, List, Union, Tuple, Any
@@ -12,6 +14,8 @@ import matplotlib.pyplot as plt
 from IPython.display import Image, display
 from dotenv import load_dotenv
 from matplotlib.axes._axes import Axes
+
+import rlway.pyosrd.use_cases as use_cases
 
 
 def _read_json(json_file: str) -> Union[Dict, List]:
@@ -26,27 +30,43 @@ class OSRD():
 
     Parameters
     ----------
-    dir: str, optionnal
+    dir: str, optional
         Directory path, by default current directory
-    infra_json: str, optionnal
+    use_case: str or None, optional
+        If set, build a use_case
+        among all availables given by `OSRD.use_cases`, by default None
+    infra_json: str, optional
         Name of the file containing the infrastructure in rail_json format.
         If the file does not exist, attribute infra will be empty,
         by default 'infra.json'
-    simulation_json: str, optionnal
+    simulation_json: str, optional
         Name of the file containing the simulation parameters.
         If the file does not exist, attribute simulation will be empty,
         by default 'simulation.json'
-    results_json: str, optionnal
+    results_json: str, optional
         Name of the file containing the simulation results.
         If the file does not exist, attribute results will be empty,
         by default 'results.json'
     """
     dir: str = '.'
+    use_case: Union[str, None] = None
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
 
     def __post_init__(self):
+
+        if self.use_case:
+            module = importlib.import_module(
+                f".{self.use_case}",
+                "rlway.pyosrd.use_cases"
+            )
+            function = getattr(module, self.use_case)
+            function(
+                self.dir,
+                self.infra_json,
+                self.simulation_json
+            )
 
         self.infra = (
             _read_json(os.path.join(self.dir, self.infra_json))
@@ -59,6 +79,9 @@ class OSRD():
             if os.path.exists(os.path.join(self.dir, self.simulation_json))
             else {}
         )
+
+        if self.use_case:
+            self.run()
 
         self.results = (
             _read_json(os.path.join(self.dir, self.results_json))
@@ -98,9 +121,12 @@ class OSRD():
 
     @classmethod
     @property
-    def use_cases(self) -> Dict:
+    def use_cases(self) -> List[str]:
         """List of available use cases"""
-        pass
+        return [
+            name
+            for _, name, _ in pkgutil.iter_modules(use_cases.__path__)
+        ]
 
     @property
     def routes(self) -> List[str]:
