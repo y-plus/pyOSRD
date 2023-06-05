@@ -1,16 +1,16 @@
 import os
 import json
+import base64
+
 from dataclasses import dataclass
 from typing import Dict, List, Union, Tuple, Any
 
-import base64
-from IPython.display import Image, display
-
-from dotenv import load_dotenv
 import networkx as nx
 import numpy as np
-
 import matplotlib.pyplot as plt
+
+from IPython.display import Image, display
+from dotenv import load_dotenv
 from matplotlib.axes._axes import Axes
 
 
