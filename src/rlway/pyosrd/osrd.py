@@ -83,8 +83,10 @@ class OSRD():
         load_dotenv()
         os.system(
             f"java -jar {os.getenv('OSRD_PATH')}/core/build/libs/osrd-all.jar "
-            f"standalone-simulation --infra_path {self.infra_json} "
-            f"--sim_path {self.simulation_json} --res_path {self.results_json}"
+            f"standalone-simulation "
+            f"--infra_path {os.path.join(self.dir, self.infra_json)} "
+            f"--sim_path {os.path.join(self.dir, self.simulation_json)} "
+            f"--res_path {os.path.join(self.dir, self.results_json)}"
         )
 
         self.results = _read_json(os.path.join(self.dir, self.results_json))
@@ -93,6 +95,12 @@ class OSRD():
     def has_results(self) -> bool:
         """True if the object has simulation results"""
         return self.results != []
+
+    @classmethod
+    @property
+    def use_cases(self) -> Dict:
+        """List of available use cases"""
+        pass
 
     @property
     def routes(self) -> List[str]:
@@ -318,12 +326,10 @@ class OSRD():
 
         Parameters
         ----------
-        infra : Dict
-        result : Dict
-        train : int
         types : List[str], optional
             Types of points, by default
             ['signal', 'detector', 'cvg_signal', 'station']
+
         Returns
         -------
         List[Tuple[str, str, float, float, float]]

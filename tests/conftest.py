@@ -5,7 +5,10 @@ from rlway.schedules import Schedule
 from rlway.pyosrd import OSRD
 
 from ._build_case_cvg_dvg import infra_cvg_dvg, simulation_cvg_dvg_two_trains
-from ._build_case_two_lanes import infra_two_lanes, simulation_two_lanes_two_trains
+from ._build_case_two_lanes import (
+    infra_two_lanes,
+    simulation_two_lanes_two_trains
+)
 
 
 @pytest.fixture
