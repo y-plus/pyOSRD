@@ -124,12 +124,12 @@ def testuse_case_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
     expected = {
         "T0": {
             "station0": (300, 'station'),
-            "S0": (430, 'cvg_signal'),
+            "S0": (430, 'signal'),
             "D0": (450, 'detector'),
         },
         "T1": {
             "station0": (300, 'station'),
-            "S1": (430, 'cvg_signal'),
+            "S1": (430, 'signal'),
             "D1": (450, 'detector'),
         },
         "T2": {},
@@ -201,7 +201,7 @@ def testuse_case_cvg_dvg_results_points_encountered_by_train(use_case_cvg_dvg):
     ]
     expected = [
         {'id': 'station0', 'type': 'station', 'offset': 300.0},
-        {'id': 'S0', 'type': 'cvg_signal', 'offset': 430.0},
+        {'id': 'S0', 'type': 'signal', 'offset': 430.0},
         {'id': 'D0', 'type': 'detector', 'offset': 450.0},
         {'id': 'S3', 'type': 'signal', 'offset': 1430.0},
         {'id': 'D3', 'type': 'detector', 'offset': 1450.0},

@@ -274,11 +274,7 @@ class OSRD():
         for signal in self.infra['signals']:
             track = signal['track']
             id = signal['id']
-            tag = (
-                'cvg_signal'
-                if id in self.convergence_entry_signals
-                else 'signal'
-            )
+            tag = 'signal'
             points[track][id] = (signal['position'], tag)
 
         for station in self.infra['operational_points']:
@@ -350,17 +346,20 @@ class OSRD():
         types: List[str] = [
             'signal',
             'detector',
-            'cvg_signal',
             'station',
-        ]
+        ],
+        tracks: Union[List[str], None] = None
     ) -> List[Tuple[str, str, float, float, float]]:
         """Points encountered by a train during its trajectory
 
         Parameters
         ----------
+        tracks: Union[List[str], None], optional
+            Tracks to consider,
+            by default all the tracks of the train's trajectory
         types : List[str], optional
             Types of points, by default
-            ['signal', 'detector', 'cvg_signal', 'station']
+            ['signal', 'detector', 'station']
 
         Returns
         -------
@@ -399,7 +398,10 @@ class OSRD():
                     offsets_min,
                     t_min
                 ).item(),
-                't': np.interp([pos+track_offsets[i]], offsets_eco, t).item(),
+                't': np.interp(
+                    [pos+track_offsets[i]],
+                    offsets_eco,
+                    t).item(),
                 }
                 for pt, (pos, tag) in self.points_on_track_sections[ts].items()
                 if tag in types
@@ -411,7 +413,7 @@ class OSRD():
         self,
         train: int,
         eco_or_base: str = 'eco',
-        types_to_show: List[str] = ['station', 'cvg_signal'],
+        types_to_show: List[str] = ['station'],
     ) -> Axes:
         """Draw space-time graph for a given train
 
@@ -425,8 +427,8 @@ class OSRD():
             Draw eco or base simulation ?, by default 'eco'
         types_to_show : List[str], optional
             List of points types shown on y-axis.
-            Possible choices are 'signal', 'detector', 'cvg_signal', 'station'.
-            by default ['station', 'cvg_signal']
+            Possible choices are 'signal', 'detector', 'station'.
+            by default ['station']
 
         Returns
         -------

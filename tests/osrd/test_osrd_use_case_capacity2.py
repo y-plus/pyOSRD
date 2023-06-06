@@ -117,12 +117,12 @@ def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
         },
         "T1": {
             "station": (790, 'station'),
-            "S1": (800, 'cvg_signal'),
+            "S1": (800, 'signal'),
             "D1": (820, 'detector'),
         },
         "T2": {
             "station": (790, 'station'),
-            "S2": (800, 'cvg_signal'),
+            "S2": (800, 'signal'),
             "D2": (820, 'detector'),
         },
 
@@ -173,7 +173,7 @@ def test_station_capacity2_results_points_encountered_by_train(use_case_station_
         {'id': 'S0', 'type': 'signal', 'offset': 800.0},
         {'id': 'D0', 'type': 'detector', 'offset': 820.0},
         {'id': 'station', 'type': 'station', 'offset': 1790.0},
-        {'id': 'S1', 'type': 'cvg_signal', 'offset': 1800.0},
+        {'id': 'S1', 'type': 'signal', 'offset': 1800.0},
         {'id': 'D1', 'type': 'detector', 'offset': 1820.0},
         {'id': 'S3', 'type': 'signal', 'offset': 2800.0},
         {'id': 'D3', 'type': 'detector', 'offset': 2820.0},
