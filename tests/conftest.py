@@ -90,4 +90,11 @@ def use_case_station_capacity2():
     return station_capacity2
 
 
+divergence = OSRD(dir='tmp', use_case='divergence')
+
+@pytest.fixture()
+def use_case_divergence():
+    return divergence
+
+
 shutil.rmtree('tmp')

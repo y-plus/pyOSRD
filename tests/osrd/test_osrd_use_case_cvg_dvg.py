@@ -6,9 +6,9 @@ osrd_cvg_dvg
 station0 (2 tracks)                        station1 (2 tracks)
 
 (T0)--S0-D0-                                  -S4-D4-(T4)-->
-                \                              /
-            (CVG)>-(T2)---------o--S3-D3-(T3)-<(DVG)
-                /                              \
+             \                              /
+         (CVG)>-(T2)---------o--S3-D3-(T3)-<(DVG)
+             /                              \
 (T1)--S1-D1-                                  -S5-D5-(T5)-->
 
 All tracks are 500m long
@@ -116,33 +116,36 @@ def testuse_case_cvg_dvg_infra_num_stations(use_case_cvg_dvg):
     assert use_case_cvg_dvg.num_stations == 2
 
 
-def testuse_case_cvg_dvg_convergence_entry_signals(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.convergence_entry_signals == ['S0', 'S1']
-
-
 def testuse_case_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
     expected = {
         "T0": {
             "station0": (300, 'station'),
             "S0": (430, 'signal'),
             "D0": (450, 'detector'),
+            "CVG": (500, 'switch', 'point'),
         },
         "T1": {
             "station0": (300, 'station'),
             "S1": (430, 'signal'),
             "D1": (450, 'detector'),
+            "CVG": (500, 'switch', 'point'),
         },
-        "T2": {},
+        "T2": {
+            "CVG": (0, 'switch', 'point'),
+        },
         "T3": {
             "S3": (430, 'signal'),
             "D3": (450, 'detector'),
+            "DVG": (500, 'switch', 'point'),
         },
         "T4": {
+            "DVG": (0, 'switch', 'point'),
             "S4": (430, 'signal'),
             "D4": (450, 'detector'),
             "station1": (480, 'station'),
         },
         "T5": {
+            "DVG": (0, 'switch', 'point'),
             "S5": (430, 'signal'),
             "D5": (450, 'detector'),
             "station1": (480, 'station'),
@@ -200,14 +203,19 @@ def testuse_case_cvg_dvg_results_points_encountered_by_train(use_case_cvg_dvg):
         for d in use_case_cvg_dvg.points_encountered_by_train(0)
     ]
     expected = [
+        {'id': 'DEPARTURE', 'type': 'start', 'offset': 300.0, },
         {'id': 'station0', 'type': 'station', 'offset': 300.0},
         {'id': 'S0', 'type': 'signal', 'offset': 430.0},
         {'id': 'D0', 'type': 'detector', 'offset': 450.0},
+        {'id': 'CVG', 'type': 'switch', 'offset': 500.0},
         {'id': 'S3', 'type': 'signal', 'offset': 1430.0},
         {'id': 'D3', 'type': 'detector', 'offset': 1450.0},
+        {'id': 'DVG', 'type': 'switch', 'offset': 1500.0},
+        {'id': 'END', 'type': 'end', 'offset': 1680.0, },
         {'id': 'S4', 'type': 'signal', 'offset': 1930.0},
         {'id': 'D4', 'type': 'detector', 'offset': 1950.0},
         {'id': 'station1', 'type': 'station', 'offset': 1980.0},
+
     ]
     assert points == expected
 

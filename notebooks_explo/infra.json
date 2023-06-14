@@ -308,7 +308,7 @@
   ],
   "track_section_links": [
     {
-      "id": "link.5",
+      "id": "link.0",
       "src": {
         "endpoint": "END",
         "track": "T2"
@@ -319,7 +319,7 @@
       }
     },
     {
-      "id": "link.6",
+      "id": "link.1",
       "src": {
         "endpoint": "BEGIN",
         "track": "T2"
@@ -330,7 +330,7 @@
       }
     },
     {
-      "id": "link.7",
+      "id": "link.2",
       "src": {
         "endpoint": "BEGIN",
         "track": "T2"
@@ -341,7 +341,7 @@
       }
     },
     {
-      "id": "link.8",
+      "id": "link.3",
       "src": {
         "endpoint": "END",
         "track": "T3"
@@ -352,7 +352,7 @@
       }
     },
     {
-      "id": "link.9",
+      "id": "link.4",
       "src": {
         "endpoint": "END",
         "track": "T3"

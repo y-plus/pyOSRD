@@ -56,6 +56,7 @@ class OSRD():
 
     def __post_init__(self):
 
+        print("OSRD post_init")
         if self.use_case:
 
             if self.use_case not in self.use_cases:
@@ -200,7 +201,8 @@ class OSRD():
                 for t in tracks[1:-1]:
                     lengths[route] += self.track_section_lengths[t]
                 lengths[route] += points[end][1]
-        return lengths
+
+        return {route: np.abs(length) for route, length in lengths.items()}
 
     @property
     def num_switches(self) -> int:
@@ -232,37 +234,11 @@ class OSRD():
         return len(self.station_capacities)
 
     @property
-    def convergence_entry_signals(self) -> List[str]:
-        """List of signal labels located at convergences entries"""
-        G = nx.DiGraph()
-        G.add_edges_from([
-            (
-                route['id'].replace('rt.', '').split('->')[0],
-                route['id'].replace('rt.', '').split('->')[1],
-            )
-            for route in self.infra['routes']
-        ])
-
-        convergence_entry_detectors = []
-        for node in G:
-            if len(list(G.predecessors(node))) > 1:
-                convergence_entry_detectors += list(G.predecessors(node))
-
-        return [
-            s['id']
-            for d in convergence_entry_detectors
-            for s in self.infra['signals'] if s['linked_detector'] == d
-        ]
-
-    @property
     def points_on_track_sections(self) -> Dict:
         """Dict with for each track, points of interests and their positions"""
 
         points = {
-            track['id']: {
-                # track['id']+"_BEGIN": (0, 'begin'),
-                # track['id']+"_END": (track["length"], 'end'),
-            }
+            track['id']: {}
             for track in self.infra['track_sections']
         }
 
@@ -282,6 +258,18 @@ class OSRD():
             for part in station['parts']:
                 track = part['track']
                 points[track][id] = (part['position'], 'station')
+
+        for switch in self.infra['switches']:
+            id = switch['id']
+            type = switch['switch_type']
+            for port in switch['ports'].values():
+                track = port['track']
+                position = (
+                    0
+                    if port['endpoint'] == 'BEGIN'
+                    else self.track_section_lengths[track]
+                )
+                points[track][id] = (position, 'switch', type)
 
         # sort points by position for each track
         for track in points:
@@ -334,19 +322,42 @@ class OSRD():
 
         head_positions = \
             self.results[train]['base_simulations'][0]['head_positions']
-        return list(
+
+        track_sections = list(
             dict.fromkeys([
                 time["track_section"]
                 for time in head_positions
             ]))
 
+        # bug fix: if there is no record at a given track,
+        # it won't appear in the list
+        # => insert them by inspecting the links between the tracks
+
+        ts = nx.Graph()
+        for t in self.infra['track_section_links']:
+            ts.add_edge(t['src']['track'], t['dst']['track'])
+
+        tracks = track_sections[:1]
+
+        for i, _ in enumerate(track_sections[:-1]):
+            tracks += nx.shortest_path(
+                ts,
+                track_sections[i],
+                track_sections[i+1]
+            )[1:]
+
+        return tracks
+
     def points_encountered_by_train(
         self,
         train: int,
         types: List[str] = [
+            'departure',
             'signal',
             'detector',
             'station',
+            'switch',
+            'arrival',
         ],
         tracks: Union[List[str], None] = None
     ) -> List[Tuple[str, str, float, float, float]]:
@@ -359,7 +370,7 @@ class OSRD():
             by default all the tracks of the train's trajectory
         types : List[str], optional
             Types of points, by default
-            ['signal', 'detector', 'station']
+            ['signal', 'detector', 'station', 'switch', 'departure', 'arrival']
 
         Returns
         -------
@@ -379,35 +390,59 @@ class OSRD():
         records_min = \
             self.results[train]['base_simulations'][0]['head_positions']
         offset = records_min[0]['offset']
-        offsets_min = [offset + t['path_offset'] for t in records_min]
+        offsets_min = [offset + t['offset'] for t in records_min]
         t_min = [t['time'] for t in records_min]
 
         records_eco = \
             self.results[train]['eco_simulations'][0]['head_positions']
-        offsets_eco = [offset + t['path_offset'] for t in records_eco]
+        offsets_eco = [offset + t['offset'] for t in records_eco]
         t = [t['time'] for t in records_eco]
 
-        points = []
+        points = [{
+            'id': 'DEPARTURE',
+            'type': 'departure',
+            'offset': records_eco[0]['offset'],
+            't_min': records_min[0]['time'],
+            't': records_eco[0]['time'],
+        }]
         for i, ts in enumerate(self.train_track_sections(train)):
-            points += [{
+            points_on_track = [{
                 'id': pt,
-                'type': tag,
-                'offset': pos + track_offsets[i],
+                'type': details[1],
+                'offset': details[0] + track_offsets[i],
                 't_min': np.interp(
-                    [pos + track_offsets[i]],
+                    [details[0] + track_offsets[i]],
                     offsets_min,
                     t_min
                 ).item(),
                 't': np.interp(
-                    [pos+track_offsets[i]],
+                    [details[0]+track_offsets[i]],
                     offsets_eco,
                     t).item(),
                 }
-                for pt, (pos, tag) in self.points_on_track_sections[ts].items()
-                if tag in types
+                for pt, details in self.points_on_track_sections[ts].items()
             ]
 
-        return points
+            # sort by time to account for train direction
+            points = sorted(
+                points,
+                key=lambda d: d['t']
+            )
+            # switches are defined on both tracks, add them only once
+            if i > 0 and points_on_track[0] == points[-1]:
+                points_on_track = points_on_track[1:]
+
+            points += points_on_track
+
+        points += [{
+            'id': 'ARRIVAL',
+            'type': 'arrival',
+            'offset': records_eco[-1]['path_offset'],
+            't_min': records_min[-1]['time'],
+            't': records_eco[-1]['time'],
+        }]
+
+        return [point for point in points if point['type'] in types]
 
     def space_time_graph(
         self,
