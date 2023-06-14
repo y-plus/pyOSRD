@@ -143,6 +143,13 @@ def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
     assert use_case_station_capacity2.points_on_track_sections == expected
 
 
+def test_use_case_divergence_route_tvds(use_case_divergence):
+    expected = {
+            # TODO
+        }
+    assert use_case_divergence.route_tvds == expected
+
+
 def test_station_capacity2_simulation_type(use_case_station_capacity2):
     assert isinstance(use_case_station_capacity2.simulation, dict)
 
@@ -169,9 +176,17 @@ def test_station_capacity2_results_length(use_case_station_capacity2):
 def test_station_capacity2_results_train_track_sections(
     use_case_station_capacity2
 ):
-    tracks_0 = ['T0', 'T1', 'T3']
+    tracks_0 = {
+        'T0': 'START_TO_STOP',
+        'T1': 'START_TO_STOP',
+        'T3': 'START_TO_STOP',
+    }
     assert use_case_station_capacity2.train_track_sections(0) == tracks_0
-    tracks_1 = ['T0', 'T2', 'T3']
+    tracks_1 = {
+        'T0': 'START_TO_STOP',
+        'T2': 'START_TO_STOP',
+        'T3': 'START_TO_STOP',
+    }
     assert use_case_station_capacity2.train_track_sections(1) == tracks_1
 
 

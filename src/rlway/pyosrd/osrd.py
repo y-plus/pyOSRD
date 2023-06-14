@@ -300,6 +300,17 @@ class OSRD():
         mm(g)
 
     @property
+    def route_tvds(self) -> Dict[str, str]:
+        """Routes and their associated TVDs (Track Vacancy Detections)"""
+        return {
+            route['id']:
+            '<->'.join(sorted(route['id'].replace('rt.','').split('->')))
+            if not route['switches_directions']
+            else list(route['switches_directions'].keys())[0]
+            for route in self.infra['routes']
+        }
+
+    @property
     def num_trains(self) -> int:
         """Number of trains in the simulation"""
         return len(self.simulation['train_schedules'])
@@ -317,7 +328,7 @@ class OSRD():
             for train_schedule in self.simulation['train_schedules']
         ]
 
-    def train_track_sections(self, train: int) -> List[str]:
+    def train_track_sections(self, train: int) -> Dict[str, str]:
         """List of tracks for a given train trajectory"""
 
         head_positions = \
@@ -346,7 +357,35 @@ class OSRD():
                 track_sections[i+1]
             )[1:]
 
-        return tracks
+        track_links_by = {
+                track_id: {}
+                for track_id in self.track_section_lengths
+        }
+
+        for link in self.infra['track_section_links']:
+
+            track_links_by[link['src']['track']][link['dst']['track']] =\
+                link['src']['endpoint']
+            track_links_by[link['dst']['track']][link['src']['track']] =\
+                link['dst']['endpoint']
+
+        DIRECTION_FROM_ENTRY = {
+            'BEGIN': 'START_TO_STOP',
+            'END': 'STOP_TO_START',
+        }
+
+        tracks_directions = {}
+
+        if len(tracks) > 0:
+            for i, t in enumerate(tracks):
+                if i == 0:
+                    linked_to_next = track_links_by[tracks[0]][tracks[i+1]]
+                    entry = 'BEGIN' if linked_to_next == 'END' else 'END'
+                if i > 0:
+                    entry = track_links_by[t][tracks[i-1]]
+                tracks_directions[t] = DIRECTION_FROM_ENTRY[entry]
+
+        return tracks_directions
 
     def points_encountered_by_train(
         self,
@@ -398,49 +437,79 @@ class OSRD():
         offsets_eco = [offset + t['offset'] for t in records_eco]
         t = [t['time'] for t in records_eco]
 
-        points = [{
+        points = []
+
+        for i, (ts, direction) in enumerate(self.train_track_sections(train).items()):
+            points_on_track = []
+
+            for pt, details in self.points_on_track_sections[ts].items():
+                if direction == 'START_TO_STOP':
+                    relative_pos = details[0]
+                else:
+                    relative_pos = self.track_section_lengths[ts] - details[0]
+                points_on_track.append({
+                    'id': pt,
+                    'type': details[1],
+                    'path_offset': relative_pos + track_offsets[i],
+                    't_min': np.interp(
+                        [relative_pos + track_offsets[i]],
+                        offsets_min,
+                        t_min
+                    ).item(),
+                    't': np.interp(
+                        [relative_pos + track_offsets[i]],
+                        offsets_eco,
+                        t).item(),
+                })
+
+                points_on_track = sorted(
+                    points_on_track,
+                    key=lambda d: d['path_offset']
+                )
+                # switches are defined on both tracks, add them only once
+                if i > 0 and points_on_track[0] == points[-1]:
+                    points_on_track = points_on_track[1:]
+
+            points += points_on_track
+
+        departure_track = records_eco[0]['track_section']
+        if self.train_track_sections(train)[departure_track] == 'START_TO_STOP':
+            departure_offset = records_eco[0]['path_offset']
+        else:
+            departure_offset = (
+                self.track_section_lengths[departure_track]
+                - records_eco[0]['path_offset']
+            )
+
+        arrival_track = records_eco[-1]['track_section']
+        if self.train_track_sections(train)[arrival_track] == 'START_TO_STOP':
+            arrival_offset = records_eco[-1]['path_offset']
+        else:
+            arrival_offset = (
+                self.track_section_lengths[arrival_track]
+                - records_eco[-1]['path_offset']
+            )
+
+        points += [{
             'id': 'DEPARTURE',
             'type': 'departure',
-            'offset': records_eco[0]['offset'],
+            'path_offset': departure_offset,
             't_min': records_min[0]['time'],
             't': records_eco[0]['time'],
         }]
-        for i, ts in enumerate(self.train_track_sections(train)):
-            points_on_track = [{
-                'id': pt,
-                'type': details[1],
-                'offset': details[0] + track_offsets[i],
-                't_min': np.interp(
-                    [details[0] + track_offsets[i]],
-                    offsets_min,
-                    t_min
-                ).item(),
-                't': np.interp(
-                    [details[0]+track_offsets[i]],
-                    offsets_eco,
-                    t).item(),
-                }
-                for pt, details in self.points_on_track_sections[ts].items()
-            ]
-
-            # sort by time to account for train direction
-            points = sorted(
-                points,
-                key=lambda d: d['t']
-            )
-            # switches are defined on both tracks, add them only once
-            if i > 0 and points_on_track[0] == points[-1]:
-                points_on_track = points_on_track[1:]
-
-            points += points_on_track
 
         points += [{
             'id': 'ARRIVAL',
             'type': 'arrival',
-            'offset': records_eco[-1]['path_offset'],
+            'path_offset': arrival_offset,
             't_min': records_min[-1]['time'],
             't': records_eco[-1]['time'],
         }]
+
+        points = sorted(
+            points,
+            key=lambda d: d['path_offset']
+        )
 
         return [point for point in points if point['type'] in types]
 
@@ -480,20 +549,19 @@ class OSRD():
         simulation = eco_or_base+'_simulations'
         records_min = \
             self.results[train][simulation][0]['head_positions']
-        offset = records_min[0]['offset']
-        offsets = [offset + t['path_offset'] for t in records_min]
+        path_offset = [t['path_offset'] for t in records_min]
         times = [t['time']/60 for t in records_min]
 
         ax.plot(
             times,
-            offsets,
+            path_offset,
         )
         for point in points:
-            ax.axhline(point['offset'], color='k', linestyle=':');  # noqa
+            ax.axhline(point['path_offset'], color='k', linestyle=':');  # noqa
 
         ax.set_xlabel('Time [min]')
         ax.set_yticks(
-            [point['offset'] for point in points],
+            [point['path_offset'] for point in points],
             [point['id'] for point in points]
         );  # noqa
 

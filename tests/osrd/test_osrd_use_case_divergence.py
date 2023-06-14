@@ -128,6 +128,20 @@ def test_use_case_divergence_points_on_tracks(use_case_divergence):
     assert use_case_divergence.points_on_track_sections == expected
 
 
+def test_use_case_divergence_route_tvds(use_case_divergence):
+    expected = {
+        'rt.D0->buffer_stop.2': 'DVG',
+        'rt.D0->buffer_stop.1': 'DVG',
+        'rt.buffer_stop.0->D0': 'D0<->buffer_stop.0',
+        'rt.D1->buffer_stop.0': 'DVG',
+        'rt.buffer_stop.1->D1': 'D1<->buffer_stop.1',
+        'rt.D2->buffer_stop.0': 'DVG',
+        'rt.buffer_stop.2->D2': 'D2<->buffer_stop.2'
+    }
+
+    assert use_case_divergence.route_tvds == expected
+
+
 def test_use_case_divergence_simulation_type(use_case_divergence):
     assert isinstance(use_case_divergence.simulation, dict)
 
@@ -149,8 +163,14 @@ def test_use_case_divergence_results_length(use_case_divergence):
 
 
 def test_use_case_divergence_results_train_track_sections(use_case_divergence):
-    assert use_case_divergence.train_track_sections(0) == ['T0', 'T1', ]
-    assert use_case_divergence.train_track_sections(1) == ['T2', 'T0', ]
+    assert use_case_divergence.train_track_sections(0) == {
+        'T0': 'START_TO_STOP',
+        'T1': 'START_TO_STOP',
+    }
+    assert use_case_divergence.train_track_sections(1) == {
+        'T2': 'STOP_TO_START',
+        'T0': 'STOP_TO_START',
+    }
 
 
 def test_use_case_divergence_points_encountered_by_train0(use_case_divergence):

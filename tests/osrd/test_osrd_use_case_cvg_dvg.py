@@ -155,6 +155,13 @@ def testuse_case_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
     assert use_case_cvg_dvg.points_on_track_sections == expected
 
 
+def test_use_case_divergence_route_tvds(use_case_divergence):
+    expected = {
+            # TODO
+        }
+    assert use_case_divergence.route_tvds == expected
+
+
 def testuse_case_cvg_dvg_simulation_type(use_case_cvg_dvg):
     assert isinstance(use_case_cvg_dvg.simulation, dict)
 
@@ -190,8 +197,18 @@ def testuse_case_cvg_dvg_results_length(use_case_cvg_dvg):
 
 
 def testuse_case_cvg_dvg_results_train_track_sections(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.train_track_sections(0) == ['T0', 'T2', 'T3', 'T4']
-    assert use_case_cvg_dvg.train_track_sections(1) == ['T1', 'T2', 'T3', 'T5']
+    assert use_case_cvg_dvg.train_track_sections(0) == {
+        'T0': 'START_TO_STOP',
+        'T2': 'START_TO_STOP',
+        'T3': 'START_TO_STOP',
+        'T4': 'START_TO_STOP',
+    }
+    assert use_case_cvg_dvg.train_track_sections(1) == {
+        'T1': 'START_TO_STOP',
+        'T2': 'START_TO_STOP',
+        'T3': 'START_TO_STOP',
+        'T5': 'START_TO_STOP',
+    }
 
 
 def testuse_case_cvg_dvg_results_points_encountered_by_train(use_case_cvg_dvg):
