@@ -16,16 +16,16 @@ def cvg_dvg(
     """
     station0 (2 tracks)                        station1 (2 tracks)
 
-    (T0)--S0-D0-                                  -S4-D4-(T4)-->
-                 \                              /
-             (CVG)>-(T2)---------o--S3-D3-(T3)-<(DVG)
-                 /                              \
-    (T1)--S1-D1-                                  -S5-D5-(T5)-->
+           ┎S0                                      S4┐
+    (T0)-----D0-                                  --D4---------(T4)-->
+                \   S2┐                    ┎S3  /
+               CVG>-D2-----(T2)--+--(T3)----D3-<DVG
+           ┎S1   /                              \   S5┐
+    (T1)-----D1-                                  --D5---------(T5)-->
 
     All tracks are 500m long
     Train 0 starts from T0 at t=0 and arrives at T4
     Train 1 starts from T1 at t=100 and arrives at T5
-
     """  # noqa
 
     infra_builder = InfraBuilder()
@@ -40,13 +40,13 @@ def cvg_dvg(
     for i in [4, 5]:
         T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i-2}')
 
-    infra_builder.add_link(T[2].end(), T[3].begin())
     infra_builder.add_point_switch(
         T[2].begin(),
         T[0].end(),
         T[1].end(),
         label='CVG',
     )
+    infra_builder.add_link(T[2].end(), T[3].begin())
     infra_builder.add_point_switch(
         T[3].end(),
         T[4].begin(),
@@ -54,20 +54,33 @@ def cvg_dvg(
         label='DVG',
     )
 
-    detectors = {
-        i: T[i].add_detector(label=f"D{i}", position=450)
-        for i in [0, 1, 3, 4, 5]
-    }
-    S = [
+    detectors = [
+        T[i].add_detector(label=f"D{i}", position=450)
+        for i in [0, 1, 3]
+    ]
+    detectors += [
+        T[i].add_detector(label=f"D{i}", position=50)
+        for i in [2, 4, 5]
+    ]
+    signals = [
         T[i].add_signal(
-            detector.position-20,
+            detectors[i].position-20,
             Direction.START_TO_STOP,
-            detector,
+            linked_detector=detectors[i],
             label=f"S{i}"
         )
-        for i, detector in detectors.items()
+        for i in [0, 1, 3]
     ]
-    for signal in S:
+    signals += [
+        T[i].add_signal(
+            detectors[i].position+20,
+            Direction.STOP_TO_START,
+            linked_detector=detectors[i],
+            label=f"S{i}"
+        )
+        for i in [2, 4, 5]
+    ]
+    for signal in signals:
         signal.add_logical_signal("BAL", settings={"Nf": "true"})
 
     stations = [
@@ -79,20 +92,31 @@ def cvg_dvg(
     for track in range(4, 6):
         stations[1].add_part(T[track], 480)
 
-    built_infra = infra_builder.build()
+    os.makedirs(dir, exist_ok=True)
 
-    sim_builder = SimulationBuilder(built_infra)
+    try:
+        built_infra = infra_builder.build()
+        built_infra.save(os.path.join(dir, infra_json))
+    except RuntimeError as e:
+        print(e)
 
-    for train_id in range(2):
+        sim_builder = SimulationBuilder(built_infra)
+
         sim_builder.add_train_schedule(
-            Location(built_infra.track_sections[train_id], 300),
-            Location(built_infra.track_sections[train_id+4], 480),
-            label='train'+str(train_id),
-            departure_time=train_id*100.
+            Location(T[3], 10),
+            Location(T[4], 490),
+            label='train0',
+            departure_time=0.,
+        )
+        sim_builder.add_train_schedule(
+            Location(T[1], 300),
+            Location(T[5], 480),
+            label='train1',
+            departure_time=100.,
         )
 
-    built_simulation = sim_builder.build()
-
-    os.makedirs(dir, exist_ok=True)
-    built_infra.save(os.path.join(dir, infra_json))
-    built_simulation.save(os.path.join(dir, simulation_json))
+    try:
+        built_simulation = sim_builder.build()
+        built_simulation.save(os.path.join(dir, simulation_json))
+    except RuntimeError as e:
+        print(e)

@@ -225,7 +225,7 @@
   ],
   "track_section_links": [
     {
-      "id": "link.0",
+      "id": "link.8",
       "src": {
         "endpoint": "END",
         "track": "T0"
@@ -236,7 +236,7 @@
       }
     },
     {
-      "id": "link.1",
+      "id": "link.9",
       "src": {
         "endpoint": "END",
         "track": "T0"

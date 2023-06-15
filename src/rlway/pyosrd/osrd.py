@@ -20,7 +20,10 @@ import rlway.pyosrd.use_cases as use_cases
 
 def _read_json(json_file: str) -> Union[Dict, List]:
     with open(json_file, 'r') as f:
-        dict_ = json.load(f)
+        try:
+            dict_ = json.load(f)
+        except ValueError:  # JSONDecodeError inherits from ValueError
+            dict_ = {}
     return dict_
 
 
@@ -56,7 +59,6 @@ class OSRD():
 
     def __post_init__(self):
 
-        print("OSRD post_init")
         if self.use_case:
 
             if self.use_case not in self.use_cases:
@@ -111,6 +113,7 @@ class OSRD():
             raise ValueError("Missing json file to run OSRD")
 
         load_dotenv()
+
         os.system(
             f"java -jar {os.getenv('OSRD_PATH')}/core/build/libs/osrd-all.jar "
             f"standalone-simulation "
@@ -304,7 +307,7 @@ class OSRD():
         """Routes and their associated TVDs (Track Vacancy Detections)"""
         return {
             route['id']:
-            '<->'.join(sorted(route['id'].replace('rt.','').split('->')))
+            '<->'.join(sorted(route['id'].replace('rt.', '').split('->')))
             if not route['switches_directions']
             else list(route['switches_directions'].keys())[0]
             for route in self.infra['routes']
@@ -439,7 +442,9 @@ class OSRD():
 
         points = []
 
-        for i, (ts, direction) in enumerate(self.train_track_sections(train).items()):
+        for i, (ts, direction) in enumerate(
+            self.train_track_sections(train).items()
+        ):
             points_on_track = []
 
             for pt, details in self.points_on_track_sections[ts].items():
@@ -473,7 +478,10 @@ class OSRD():
             points += points_on_track
 
         departure_track = records_eco[0]['track_section']
-        if self.train_track_sections(train)[departure_track] == 'START_TO_STOP':
+        if (
+            self.train_track_sections(train)[departure_track]
+            == 'START_TO_STOP'
+        ):
             departure_offset = records_eco[0]['path_offset']
         else:
             departure_offset = (

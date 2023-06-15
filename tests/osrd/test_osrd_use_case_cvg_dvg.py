@@ -5,11 +5,12 @@ osrd_cvg_dvg
 
 station0 (2 tracks)                        station1 (2 tracks)
 
-(T0)--S0-D0-                                  -S4-D4-(T4)-->
-             \                              /
-         (CVG)>-(T2)---------o--S3-D3-(T3)-<(DVG)
-             /                              \
-(T1)--S1-D1-                                  -S5-D5-(T5)-->
+       ┎S0                                      S4┐
+(T0)-----D0-                                  --D4---------(T4)-->
+             \  S2┐                    ┎S3  /
+           CVG>-D2-----(T2)--o--(T3)----D3-<DVG
+       ┎S1   /                              \   S5┐
+(T1)-----D1-                                  --D5---------(T5)-->
 
 All tracks are 500m long
 Train 0 starts from T0 at t=0 and arrives at T4
