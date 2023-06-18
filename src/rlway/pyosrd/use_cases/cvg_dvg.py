@@ -97,8 +97,6 @@ def cvg_dvg(
     try:
         built_infra = infra_builder.build()
         built_infra.save(os.path.join(dir, infra_json))
-    except RuntimeError as e:
-        print(e)
 
         sim_builder = SimulationBuilder(built_infra)
 
@@ -115,8 +113,8 @@ def cvg_dvg(
             departure_time=100.,
         )
 
-    try:
         built_simulation = sim_builder.build()
         built_simulation.save(os.path.join(dir, simulation_json))
+
     except RuntimeError as e:
         print(e)

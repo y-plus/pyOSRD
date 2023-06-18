@@ -78,6 +78,7 @@ def osrd_cvg_dvg_before_run():
 
 cvg_dvg = OSRD(dir='tmp', use_case='cvg_dvg')
 
+
 @pytest.fixture()
 def use_case_cvg_dvg():
     return cvg_dvg
@@ -85,12 +86,14 @@ def use_case_cvg_dvg():
 
 station_capacity2 = OSRD(dir='tmp', use_case='station_capacity2')
 
+
 @pytest.fixture()
 def use_case_station_capacity2():
     return station_capacity2
 
 
 divergence = OSRD(dir='tmp', use_case='divergence')
+
 
 @pytest.fixture()
 def use_case_divergence():
