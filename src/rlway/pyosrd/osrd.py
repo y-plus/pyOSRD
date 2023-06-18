@@ -94,7 +94,7 @@ class OSRD():
                 self.run()
             except ValueError:
                 self.results = []
-                
+
         self.results = (
             _read_json(os.path.join(self.dir, self.results_json))
             if os.path.exists(os.path.join(self.dir, self.results_json))
