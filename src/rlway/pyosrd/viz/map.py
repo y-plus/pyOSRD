@@ -77,31 +77,31 @@ def folium_map(osrd: OSRD) -> folium.folium.Map:
         for part in station['parts']
     }
 
-    # switch_geo_positions = {
-    #     switch['id']: coords_from_position_on_track(
-    #         switch['ports'][list(switch['ports'].keys())[0]]['track'],
-    #         0
-    #         if (
-    #             switch['ports'][list(switch['ports'].keys())[0]]['endpoint']
-    #             == 'BEGIN'
-    #         )
-    #         else osrd.track_section_lengths[
-    #             switch['ports'][list(switch['ports'].keys())[0]]['track']
-    #         ]
-    #     )
-    #     for switch in osrd.infra['switches']
-    # }
+    switch_geo_positions = {
+        switch['id']: coords_from_position_on_track(
+            switch['ports'][list(switch['ports'].keys())[0]]['track'],
+            0
+            if (
+                switch['ports'][list(switch['ports'].keys())[0]]['endpoint']
+                == 'BEGIN'
+            )
+            else osrd.track_section_lengths[
+                switch['ports'][list(switch['ports'].keys())[0]]['track']
+            ]
+        )
+        for switch in osrd.infra['switches']
+    }
 
     m = folium.Map(location=[49.5, -0.4])
 
-    tracks = folium.FeatureGroup(name='small_infra')
+    tracks = folium.FeatureGroup(name='Rails')
     for id, line in track_section_coordinates.items():
         folium.PolyLine(line, tooltip=id, color='black').add_to(tracks)
     tracks.add_to(m)
 
     m.fit_bounds(tracks.get_bounds())
 
-    detectors = folium.FeatureGroup('Detectors')
+    detectors = folium.FeatureGroup('Detectors', show=False)
     for id, position in detector_geo_positions.items():
         folium.Marker(
             position,
@@ -109,24 +109,24 @@ def folium_map(osrd: OSRD) -> folium.folium.Map:
             icon=folium.DivIcon(html="""
             <div><svg>
                 <rect x="-5" y="-5" width="20"
-                height="20", fill="green", opacity=".3" />
+                height="20", fill="green", opacity=".8" />
             </svg></div>"""),
             ).add_to(detectors)
     detectors.add_to(m)
 
-    signals = folium.FeatureGroup('Signals')
+    signals = folium.FeatureGroup('Signals', show=False)
     for id, position in signal_geo_positions.items():
         folium.Marker(
             position,
             popup=id,
             icon=folium.DivIcon(html="""
             <div><svg>
-                <circle cx="5" cy="5" r="5", fill="red", opacity=".3" />
+                <circle cx="5" cy="5" r="5", fill="red", opacity=".8" />
             </svg></div>"""),
             ).add_to(signals)
     signals.add_to(m)
 
-    stations = folium.FeatureGroup('Stations')
+    stations = folium.FeatureGroup('Stations', show=False)
     for id, position in station_geo_positions.items():
         folium.Marker(
             position,
@@ -139,17 +139,17 @@ def folium_map(osrd: OSRD) -> folium.folium.Map:
             ).add_to(stations)
     stations.add_to(m)
 
-    # switches = folium.FeatureGroup('Switches')
-    # for id, position in switch_geo_positions.items():
-    #     folium.Marker(
-    #         position,
-    #         popup=id,
-    #         icon=folium.DivIcon(html=""""
-    #         <div><svg>
-    #             <circle cx="5" cy="5" r="5", fill="black", opacity=".3" />
-    #         </svg></div>"""),
-    #         ).add_to(switches)
-    # switches.add_to(m)
+    switches = folium.FeatureGroup('Switches', show=False)
+    for id, position in switch_geo_positions.items():
+        folium.Marker(
+            position,
+            popup=id,
+            icon=folium.DivIcon(html="""
+            <div><svg>
+                <circle cx="5" cy="5" r="5", fill="black", opacity=".8" />
+            </svg></div>"""),
+            ).add_to(switches)
+    switches.add_to(m)
 
     folium.LayerControl().add_to(m)
 
