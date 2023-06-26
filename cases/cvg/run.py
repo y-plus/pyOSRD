@@ -43,7 +43,7 @@ station_B = builder.add_operational_point(label="Station_B")
 
 infra = builder.build()
 
-builder = SimulationBuilder(infra)
+builder = SimulationBuilder()
 
 train0 = builder.add_train_schedule(
     Location(STA_Q1, 300),

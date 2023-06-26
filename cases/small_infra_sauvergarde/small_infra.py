@@ -597,7 +597,7 @@ infra.save("infra.json")
 # Produce the simulation file
 # ================================
 
-builder = SimulationBuilder(infra)
+builder = SimulationBuilder()
 train_0 = builder.add_train_schedule(
     Location(ta1, 500),
     Location(tc0, 500),

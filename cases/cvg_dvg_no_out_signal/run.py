@@ -53,7 +53,7 @@ station_B.add_part(STB_Q2, 300)
 
 infra = builder.build()
 
-builder = SimulationBuilder(infra)
+builder = SimulationBuilder()
 
 train0 = builder.add_train_schedule(
     Location(STA_Q1, 300),

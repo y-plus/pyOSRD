@@ -44,7 +44,7 @@ SB_in.add_logical_signal("BAL", settings={"Nf": "false"})
 
 infra = builder.build()
 
-builder = SimulationBuilder(infra)
+builder = SimulationBuilder()
 
 train0 = builder.add_train_schedule(
     Location(STA_Q1, 300),
