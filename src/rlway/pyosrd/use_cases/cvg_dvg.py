@@ -8,7 +8,7 @@ from railjson_generator import (
 from railjson_generator.schema.infra.direction import Direction
 
 
-def cvg_dvg_no_link(
+def cvg_dvg(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
@@ -77,7 +77,14 @@ def cvg_dvg_no_link(
             label=f"S{i}"
         )
         for i in [2, 3, 4]
-    ] + [T[2].add_signal(450, Direction.START_TO_STOP, linked_detector=detectors[-1], label='S2a')]
+    ] + [
+        T[2].add_signal(
+            450,
+            Direction.START_TO_STOP,
+            linked_detector=detectors[-1],
+            label='S2a',
+            )
+    ]
     for signal in signals:
         signal.add_logical_signal("BAL", settings={"Nf": "true"})
 
