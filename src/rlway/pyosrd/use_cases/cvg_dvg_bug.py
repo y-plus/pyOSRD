@@ -8,7 +8,7 @@ from railjson_generator import (
 from railjson_generator.schema.infra.direction import Direction
 
 
-def cvg_dvg_no_link(
+def cvg_dvg(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
@@ -16,12 +16,12 @@ def cvg_dvg_no_link(
     """
     station0 (2 tracks)                        station1 (2 tracks)
 
-           ┎S0                                      S3┐
-    (T0)-----D0-                                  --D3---------(T3)-->
-                \   S2┐                   ┎S2a  /
-               CVG>-D2-----(T2)------------D2a-<DVG
-           ┎S1   /                              \   S4┐
-    (T1)-----D1-                                  --D4---------(T4)-->
+           ┎S0                                      S4┐
+    (T0)-----D0-                                  --D4---------(T4)-->
+                \   S2┐                    ┎S3  /
+               CVG>-D2-----(T2)--+--(T3)----D3-<DVG
+           ┎S1   /                              \   S5┐
+    (T1)-----D1-                                  --D5---------(T5)-->
 
     All tracks are 500m long
     Train 0 starts from T0 at t=0 and arrives at T4
@@ -32,13 +32,13 @@ def cvg_dvg_no_link(
 
     T = [
         infra_builder.add_track_section(label='T'+str(id), length=500)
-        for id in range(5)
+        for id in range(6)
     ]
 
     for i in [0, 1]:
         T[i].add_buffer_stop(0, label=f'buffer_stop.{i}')
-    for i in [3, 4]:
-        T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i-1}')
+    for i in [4, 5]:
+        T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i-2}')
 
     infra_builder.add_point_switch(
         T[2].begin(),
@@ -46,21 +46,23 @@ def cvg_dvg_no_link(
         T[1].end(),
         label='CVG',
     )
-    # infra_builder.add_link(T[2].end(), T[3].begin())
+    infra_builder.add_link(T[2].end(), T[3].begin())
     infra_builder.add_point_switch(
-        T[2].end(),
-        T[3].begin(),
+        T[3].end(),
         T[4].begin(),
+        T[5].begin(),
         label='DVG',
     )
 
     detectors = [
         T[i].add_detector(label=f"D{i}", position=450)
-        for i in [0, 1]
-    ] + [
+        for i in [0, 1, 3]
+    ]
+    detectors += [
         T[i].add_detector(label=f"D{i}", position=50)
-        for i in [2, 3, 4]
-    ] + [T[2].add_detector(label='D2a', position=450)]
+        for i in [2, 4, 5]
+    ]
+    
     signals = [
         T[i].add_signal(
             detectors[i].position-20,
@@ -68,16 +70,18 @@ def cvg_dvg_no_link(
             linked_detector=detectors[i],
             label=f"S{i}"
         )
-        for i in [0, 1]
-    ] + [
+        for i in [0, 1, 3]
+    ]
+    signals += [
         T[i].add_signal(
             detectors[i].position+20,
             Direction.STOP_TO_START,
             linked_detector=detectors[i],
             label=f"S{i}"
         )
-        for i in [2, 3, 4]
-    ] + [T[2].add_signal(450, Direction.START_TO_STOP, linked_detector=detectors[-1], label='S2a')]
+        for i in [2, 4, 5]
+    
+    ]
     for signal in signals:
         signal.add_logical_signal("BAL", settings={"Nf": "true"})
 
@@ -85,9 +89,9 @@ def cvg_dvg_no_link(
         infra_builder.add_operational_point(label='station'+str(i))
         for i in range(2)
     ]
-    for track in [0, 1]:
+    for track in range(2):
         stations[0].add_part(T[track], 300)
-    for track in [3, 4]:
+    for track in range(4, 6):
         stations[1].add_part(T[track], 480)
 
     os.makedirs(dir, exist_ok=True)
@@ -99,14 +103,14 @@ def cvg_dvg_no_link(
         sim_builder = SimulationBuilder()
 
         sim_builder.add_train_schedule(
-            Location(T[0], 10),
+            Location(T[3], 10),
             Location(T[4], 490),
             label='train0',
             departure_time=0.,
         )
         sim_builder.add_train_schedule(
-            Location(T[1], 10),
-            Location(T[3], 490),
+            Location(T[1], 300),
+            Location(T[5], 480),
             label='train1',
             departure_time=100.,
         )
