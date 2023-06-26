@@ -74,7 +74,7 @@ def divergence(
 
     built_infra = infra_builder.build()
 
-    sim_builder = SimulationBuilder(built_infra)
+    sim_builder = SimulationBuilder()
 
     sim_builder.add_train_schedule(
         Location(T[0], 50.),

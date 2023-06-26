@@ -104,7 +104,7 @@ def station_capacity2(
         print('infra: ', e)
 
     try:
-        sim_builder = SimulationBuilder(built_infra)
+        sim_builder = SimulationBuilder()
 
         sim_builder.add_train_schedule(
             Location(built_infra.track_sections[0], 10.),

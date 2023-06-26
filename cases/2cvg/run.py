@@ -89,7 +89,7 @@ station_SOUTH.add_part(SOUTH_Q1, 400)
 infra = builder.build()
 
 
-builder = SimulationBuilder(infra)
+builder = SimulationBuilder()
 
 train0 = builder.add_train_schedule(
     Location(WEST_Q1, 400),

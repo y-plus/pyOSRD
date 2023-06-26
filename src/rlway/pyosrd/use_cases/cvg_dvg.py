@@ -100,7 +100,7 @@ def cvg_dvg(
         built_infra = infra_builder.build()
         built_infra.save(os.path.join(dir, infra_json))
 
-        sim_builder = SimulationBuilder(built_infra)
+        sim_builder = SimulationBuilder()
 
         sim_builder.add_train_schedule(
             Location(T[3], 10),
