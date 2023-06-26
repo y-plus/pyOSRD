@@ -13,6 +13,7 @@ __pycache__
 .pytest_cache
 htmlcov/
 .coverage
+tmp/
 
 # Egg metadata
 *.egg-info
