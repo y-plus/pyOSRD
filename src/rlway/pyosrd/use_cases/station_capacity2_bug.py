@@ -8,7 +8,7 @@ from railjson_generator import (
 from railjson_generator.schema.infra.direction import Direction
 
 
-def station_capacity2(
+def station_capacity2_bug(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
