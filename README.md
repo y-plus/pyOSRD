@@ -1,12 +1,10 @@
 ![Logo](rlway.svg)
 
-# OSRD
+# Prerequisites
 
-On WSL/Ubuntu
-
-## Prerequisite
-
-### Java17
+- ssh keys to access github.com
+- Python >= 3.9
+- Java17
 
 ```bash
 sudo apt-get update
@@ -14,55 +12,20 @@ sudo apt-get upgrade
 sudo apt install openjdk-17-jdk openjdk-17-jre
 ```
 
-### Poetry
+# For users
 
 ```bash
-pip install poetry
+pip install git+ssh://git@github.com/y-plus/RLway.git
 ```
 
-## Latest version
+## Getting started
 
-in your home directory
-
-### First time
-
-```bash
-cd ~
-git clone git@github.com:DGEXSolutions/osrd.git
+```python3
+>>> from rlway.pyosrd import OSRD
+>>> sim = OSRD(use_case='divergence', dir='divergence')
 ```
 
-### Update
-
-```bash
-cd ~/osrd/core
-git pull
-cd -
-```
-
-## Build core
-
-```bash
-cd ~/osrd/core
-poetry --directory=../python/railjson_generator install
-./gradlew processTestResources shadowJar
-cd -
-```
-
-# Regulation
-
-## OSRD PATH
-
-Make sure the path to OSRD is indicated in the file `.env`
-
-```
-OSRD_PATH=/home/<your user name>/osrd
-```
-
-## Python
-
-Make sure you have python3>=3.9 installed
-
-## Virtual env
+# For developers
 
 ```bash
 python3 -m venv venv

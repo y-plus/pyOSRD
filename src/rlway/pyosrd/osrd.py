@@ -6,6 +6,8 @@ import importlib
 
 from dataclasses import dataclass
 from typing import Dict, List, Union, Tuple, Any
+from importlib.resources import files
+
 
 import networkx as nx
 import numpy as np
@@ -117,9 +119,9 @@ class OSRD():
 
         load_dotenv()
 
+        jar_file = files('rlway.pyosrd').joinpath('osrd-all.jar')
         os.system(
-            f"java -jar {os.getenv('OSRD_PATH')}/core/build/libs/osrd-all.jar "
-            f"standalone-simulation "
+            f"java -jar {jar_file} standalone-simulation "
             f"--infra_path {os.path.join(self.dir, self.infra_json)} "
             f"--sim_path {os.path.join(self.dir, self.simulation_json)} "
             f"--res_path {os.path.join(self.dir, self.results_json)}"

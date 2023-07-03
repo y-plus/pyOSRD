@@ -9,7 +9,8 @@ setup(
     description='Railway traffic regulation using AI/RL',
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    python_requires=">=3.6",
+    package_data={"": ["*.jar"]},
+    python_requires=">=3.9",
     setup_requires=["wheel"],
     install_requires=[
         # 'gymnasium',
@@ -26,7 +27,8 @@ setup(
         "plotly",
         "haversine",
         "typing-inspect==0.8.0",
-        "typing_extensions>=4.5.0",
+        "typing_extensions==4.5.0",
         'railjson_generator @ git+ssh://git@github.com/osrd-project/osrd.git#subdirectory=python/railjson_generator',
+        'ipython',
     ],
 )
