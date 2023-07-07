@@ -22,7 +22,7 @@ pip install git+ssh://git@github.com/y-plus/RLway.git
 
 ```python3
 >>> from rlway.pyosrd import OSRD
->>> sim = OSRD(use_case='divergence', dir='divergence')
+>>> sim = OSRD(use_case='point_switch', dir='point_switch')
 ```
 
 # For developers

@@ -70,7 +70,7 @@ def station_capacity2(
             detectors[i].position-20,
             Direction.START_TO_STOP,
             detectors[i],
-            label=f"S{i}s"
+            label=f"S{i}e"
         )
         for i in [0, 1, 2]
     ] + [
@@ -78,7 +78,7 @@ def station_capacity2(
             detectors[i].position+20,
             Direction.STOP_TO_START,
             detectors[i],
-            label=f"S{i}e",
+            label=f"S{i}s",
         )
         for i in [1, 2, 3]
     ]
