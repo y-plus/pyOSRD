@@ -1,20 +1,18 @@
-import os
-import json
 import base64
-import pkgutil
 import importlib
-
+import json
+import os
+import pkgutil
 from dataclasses import dataclass
-from typing import Dict, List, Union, Tuple, Any
 from importlib.resources import files
+from itertools import combinations
+from typing import Any, Dict, List, Tuple, Union
 
-
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-import matplotlib.pyplot as plt
-
-from IPython.display import Image, display
 from dotenv import load_dotenv
+from IPython.display import Image, display
 from matplotlib.axes._axes import Axes
 
 import rlway.pyosrd.use_cases as use_cases
@@ -193,6 +191,11 @@ class OSRD():
 
         for t in self.infra['track_section_links']:
             ts.add_edge(t['src']['track'], t['dst']['track'])
+        for t in self.infra['switches']:
+            tracks = [x['track'] for _,x in t['ports'].items()]
+            for t1, t2 in combinations(tracks, 2):
+                ts.add_edge(t1, t2)
+
         lengths = {}
         points = self.route_limits
         for route in self.routes:
@@ -347,22 +350,20 @@ class OSRD():
     @property
     def _train_schedule_group(self) -> Dict[str, int]:
         return {
-            train['id']: nb_group
-            for nb_group, group in enumerate(
-                self.simulation['train_schedule_groups']
-            )
-            for train in group['schedules']
+            train['id']: (group['id'], pos)
+            for group in self.simulation['train_schedule_groups']
+            for pos, train in enumerate(group['schedules'])
         }
 
     def train_track_sections(self, train: int) -> Dict[str, str]:
         """List of tracks for a given train trajectory"""
 
-        schedule_group = self._train_schedule_group[
+        group, idx = self._train_schedule_group[
             self.trains[train]
         ]
 
         head_positions = \
-            self.results[train]['base_simulations'][0]['head_positions']
+            self.results[group]['base_simulations'][idx]['head_positions']
 
         track_sections = list(
             dict.fromkeys([
@@ -377,6 +378,10 @@ class OSRD():
         ts = nx.Graph()
         for t in self.infra['track_section_links']:
             ts.add_edge(t['src']['track'], t['dst']['track'])
+        for t in self.infra['switches']:
+            tracks = [x['track'] for _,x in t['ports'].items()]
+            for t1, t2 in combinations(tracks, 2):
+                ts.add_edge(t1, t2)
 
         tracks = track_sections[:1]
 
@@ -393,11 +398,15 @@ class OSRD():
         }
 
         for link in self.infra['track_section_links']:
-
             track_links_by[link['src']['track']][link['dst']['track']] =\
                 link['src']['endpoint']
             track_links_by[link['dst']['track']][link['src']['track']] =\
                 link['dst']['endpoint']
+        for switch in self.infra['switches']:
+            ports = [port for _, port in switch['ports'].items()]
+            for t1, t2 in combinations(ports, 2):
+                track_links_by[t1['track']][t2['track']] = t1['endpoint']
+                track_links_by[t2['track']][t1['track']] = t2['endpoint']
 
         DIRECTION_FROM_ENTRY = {
             'BEGIN': 'START_TO_STOP',
@@ -456,14 +465,18 @@ class OSRD():
             sum(lengths[: i]) for i, _ in enumerate(lengths)
         ]
 
+        group, idx = self._train_schedule_group[
+            self.trains[train]
+        ]
+
         records_min = \
-            self.results[train]['base_simulations'][0]['head_positions']
+            self.results[group]['base_simulations'][idx]['head_positions']
         offset = records_min[0]['offset']
         offsets_min = [offset + t['offset'] for t in records_min]
         t_min = [t['time'] for t in records_min]
 
         records_eco = \
-            self.results[train]['eco_simulations'][0]['head_positions']
+            self.results[group]['eco_simulations'][idx]['head_positions']
         offsets_eco = [offset + t['offset'] for t in records_eco]
         t = [t['time'] for t in records_eco]
 
@@ -551,7 +564,7 @@ class OSRD():
     def space_time_graph(
         self,
         train: int,
-        eco_or_base: str = 'eco',
+        eco_or_base: str = 'base',
         types_to_show: List[str] = ['station'],
     ) -> Axes:
         """Draw space-time graph for a given train
@@ -563,7 +576,7 @@ class OSRD():
         train : int
             Train index
         eco_or_base : str, optional
-            Draw eco or base simulation ?, by default 'eco'
+            Draw eco or base simulation ?, by default 'base'
         types_to_show : List[str], optional
             List of points types shown on y-axis.
             Possible choices are 'signal', 'detector', 'station'.
@@ -581,9 +594,14 @@ class OSRD():
             types_to_show
         )
 
+        group, idx = self._train_schedule_group[
+            self.trains[train]
+        ]
+
         simulation = eco_or_base+'_simulations'
+
         records_min = \
-            self.results[train][simulation][0]['head_positions']
+            self.results[group][simulation][idx]['head_positions']
         path_offset = [t['path_offset'] for t in records_min]
         times = [t['time']/60 for t in records_min]
 

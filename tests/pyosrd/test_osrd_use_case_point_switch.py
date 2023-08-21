@@ -159,7 +159,8 @@ def test_point_switch_simulation_departure_times(use_case_point_switch):
 
 
 def test_point_switch_results_length(use_case_point_switch):
-    assert len(use_case_point_switch.results) == use_case_point_switch.num_trains
+    assert len(use_case_point_switch.results) == \
+        use_case_point_switch.num_trains
 
 
 def test_point_switch_results_train_track_sections(use_case_point_switch):

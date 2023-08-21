@@ -97,7 +97,7 @@ def test_cvg_dvg_infra_route_lengths(use_case_cvg_dvg):
             'rt.D3->buffer_stop.3': 550,
             'rt.buffer_stop.2->D4': 450,
             'rt.D4->D2': 1000,
-            'rt.buffer_stop.3->D5': 450 ,
+            'rt.buffer_stop.3->D5': 450,
             'rt.D5->D2': 1000,
         }
 
@@ -132,36 +132,38 @@ def test_cvg_dvg_infra_num_stations(use_case_cvg_dvg):
 def test_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
     expected = {
         "T0": {
-            "station0": (780, 'station'),
-            "S0": (800, 'signal'),
-            "D0": (820, 'detector'),
-            "CVG": (1_000, 'switch', 'point'),
+            "station0": (300, 'station'),
+            "S0": (430, 'signal'),
+            "D0": (450, 'detector'),
+            "CVG": (500, 'switch', 'point'),
         },
         "T1": {
-            "station0": (780, 'station'),
-            "S1": (800, 'signal'),
-            "D1": (820, 'detector'),
-            "CVG": (1_000, 'switch', 'point'),
+            "station0": (300, 'station'),
+            "S1": (430, 'signal'),
+            "D1": (450, 'detector'),
+            "CVG": (500, 'switch', 'point'),
         },
         "T2": {
             "CVG": (0, 'switch', 'point'),
-            "D2": (180, 'detector'),
-            "S2": (200, 'signal'),
-            "S2a": (800, 'signal'),
-            "D2a": (820, 'detector'),
-            "DVG": (1_000, 'switch', 'point'),
+            "D2": (50, 'detector'),
+            "S2": (70, 'signal'),
         },
         "T3": {
-            "DVG": (0, 'switch', 'point'),
-            "D3": (180, 'detector'),
-            "S3": (200, 'signal'),
-            "station1": (980, 'station'),
+            "S3": (430, 'signal'),
+            "D3": (450, 'detector'),
+            "DVG": (500, 'switch', 'point'),
         },
         "T4": {
             "DVG": (0, 'switch', 'point'),
-            "D4": (180, 'detector'),
-            "S4": (200, 'signal'),
-            "station1": (980, 'station'),
+            "D4": (50, 'detector'),
+            "S4": (70, 'signal'),
+            "station1": (480, 'station'),
+        },
+        "T5": {
+            "DVG": (0, 'switch', 'point'),
+            "D5": (50, 'detector'),
+            "S5": (70, 'signal'),
+            "station1": (480, 'station'),
         },
     }
 

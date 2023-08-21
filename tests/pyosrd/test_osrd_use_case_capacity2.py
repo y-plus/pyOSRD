@@ -130,30 +130,36 @@ def test_station_capacity2_infra_num_stations(use_case_station_capacity2):
 def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
     expected = {
         "T0": {
-            "S0": (800, 'signal'),
-            "D0": (820, 'detector'),
-            "DVG": (1000.0, 'switch', 'point'),
+            "S0": (800.0, "signal"),
+            "D0": (820.0, "detector"),
+            "DVG": (1000.0, "switch", "point"),
         },
         "T1": {
-            "DVG": (0.0, 'switch', 'point'),
-            "station": (790, 'station'),
-            "S1": (800, 'signal'),
-            "D1": (820, 'detector'),
-            "CVG": (1000.0, 'switch', 'point'),
+            "DVG": (0, "switch", "point"),
+            "D1": (180.0, "detector"),
+            "S1": (840.0, "signal"),
         },
         "T2": {
-            "DVG": (0.0, 'switch', 'point'),
-            "station": (790, 'station'),
-            "S2": (800, 'signal'),
-            "D2": (820, 'detector'),
-            "CVG": (1000.0, 'switch', 'point'),
+            "DVG": (0, "switch", "point"),
+            "D2": (180.0, "detector"),
+            "S2": (840.0, "signal"),
         },
         "T3": {
-            "CVG": (0.0, 'switch', 'point'),
-            "S3": (800, 'signal'),
-            "D3": (820, 'detector'),
+            "S3": (160.0, "signal"),
+            "D3": (820.0, "detector"),
+            "station": (830.0, "station"),
+            "CVG": (1000.0, "switch", "point"),
         },
-
+        "T4": {
+            "S4": (160.0, "signal"),
+            "D4": (820.0, "detector"),
+            "station": (830.0, "station"),
+            "CVG": (1000.0, "switch", "point"),
+        },
+        "T5": {
+            "CVG": (0, "switch", "point"),
+            "D5": (180.0, "detector"),
+            "S5": (200.0, "signal")}
     }
 
     assert use_case_station_capacity2.points_on_track_sections == expected
@@ -205,12 +211,14 @@ def test_station_capacity2_results_train_track_sections(
         'T0': 'START_TO_STOP',
         'T1': 'START_TO_STOP',
         'T3': 'START_TO_STOP',
+        'T5': 'START_TO_STOP',
     }
     assert use_case_station_capacity2.train_track_sections(0) == tracks_0
     tracks_1 = {
         'T0': 'START_TO_STOP',
         'T2': 'START_TO_STOP',
-        'T3': 'START_TO_STOP',
+        'T4': 'START_TO_STOP',
+        'T5': 'START_TO_STOP',
     }
     assert use_case_station_capacity2.train_track_sections(1) == tracks_1
 

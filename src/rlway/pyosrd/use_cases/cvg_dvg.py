@@ -115,7 +115,7 @@ def cvg_dvg(
         sim_builder = SimulationBuilder()
 
         sim_builder.add_train_schedule(
-            Location(T[3], 10),
+            Location(T[0], 300),
             Location(T[4], 490),
             label='train0',
             departure_time=0.,
