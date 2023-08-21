@@ -61,7 +61,7 @@ def cvg_dvg(
         T[i].add_signal(
             detectors[i].position-20,
             Direction.START_TO_STOP,
-            linked_detector=detectors[i],
+            is_route_delimiter=True,
             label=f"S{i}"
         )
         for i in [0, 1]
@@ -69,7 +69,7 @@ def cvg_dvg(
         T[i].add_signal(
             detectors[i].position+20,
             Direction.STOP_TO_START,
-            linked_detector=detectors[i],
+            is_route_delimiter=True,
             label=f"S{i}"
         )
         for i in [2, 3, 4]
@@ -77,7 +77,7 @@ def cvg_dvg(
         T[2].add_signal(
             T[2].length-180-20,
             Direction.START_TO_STOP,
-            linked_detector=detectors[-1],
+            is_route_delimiter=True,
             label='S2a',
             )
     ]

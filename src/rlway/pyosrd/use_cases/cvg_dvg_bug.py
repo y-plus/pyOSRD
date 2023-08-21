@@ -62,12 +62,12 @@ def cvg_dvg_bug(
         T[i].add_detector(label=f"D{i}", position=50)
         for i in [2, 4, 5]
     ]
-    
+
     signals = [
         T[i].add_signal(
             detectors[i].position-20,
             Direction.START_TO_STOP,
-            linked_detector=detectors[i],
+            is_route_delimiter=True,
             label=f"S{i}"
         )
         for i in [0, 1, 3]
@@ -76,11 +76,11 @@ def cvg_dvg_bug(
         T[i].add_signal(
             detectors[i].position+20,
             Direction.STOP_TO_START,
-            linked_detector=detectors[i],
+            is_route_delimiter=True,
             label=f"S{i}"
         )
         for i in [2, 4, 5]
-    
+
     ]
     for signal in signals:
         signal.add_logical_signal("BAL", settings={"Nf": "true"})

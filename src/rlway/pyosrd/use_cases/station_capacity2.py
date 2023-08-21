@@ -69,7 +69,7 @@ def station_capacity2(
         track_sections[i].add_signal(
             detectors[i].position-20,
             Direction.START_TO_STOP,
-            detectors[i],
+            is_route_delimiter=True,
             label=f"S{i}e"
         )
         for i in [0, 1, 2]
@@ -77,7 +77,7 @@ def station_capacity2(
         track_sections[i].add_signal(
             detectors[i].position+20,
             Direction.STOP_TO_START,
-            detectors[i],
+            is_route_delimiter=True,
             label=f"S{i}s",
         )
         for i in [1, 2, 3]

@@ -55,7 +55,7 @@ def point_switch(
         T[0].add_signal(
             detectors[0].position-20,
             Direction.START_TO_STOP,
-            detectors[0],
+            is_route_delimiter=True,
             label="S0"
         ),
     ]
@@ -63,7 +63,7 @@ def point_switch(
         T[i].add_signal(
             detectors[i].position+20,
             Direction.STOP_TO_START,
-            detectors[i],
+            is_route_delimiter=True,
             label=f"S{i}"
         )
         for i in [1, 2]
