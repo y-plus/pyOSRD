@@ -7,8 +7,7 @@
 - Java17
 
 ```bash
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt update && sudo apt upgrade -y
 sudo apt install openjdk-17-jdk openjdk-17-jre
 ```
 
