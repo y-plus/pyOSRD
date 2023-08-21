@@ -18,11 +18,11 @@ Train 1 starts from the end of T2 at t=60s, and arrives at the beginning of T0
 import matplotlib.pyplot as plt
 
 
-def test_use_case_point_switch_infra(use_case_point_switch):
+def test_point_switch_infra(use_case_point_switch):
     assert isinstance(use_case_point_switch.infra, dict)
 
 
-def test_use_case_point_switch_infra_routes(use_case_point_switch):
+def test_point_switch_infra_routes(use_case_point_switch):
     assert set(use_case_point_switch.routes) == \
         set([
             'rt.buffer_stop.0->D0',
@@ -35,7 +35,7 @@ def test_use_case_point_switch_infra_routes(use_case_point_switch):
         ])
 
 
-def test_use_case_point_switch_infra_route_switches(use_case_point_switch):
+def test_point_switch_infra_route_switches(use_case_point_switch):
     assert use_case_point_switch.route_switches == \
         {
             'rt.D0->buffer_stop.2': 'DVG',
@@ -45,7 +45,7 @@ def test_use_case_point_switch_infra_route_switches(use_case_point_switch):
         }
 
 
-def test_use_case_point_switch_infra_route_limits(use_case_point_switch):
+def test_point_switch_infra_route_limits(use_case_point_switch):
     assert use_case_point_switch.route_limits == \
         {
             'D0': ('T0', 9820.0),
@@ -57,7 +57,7 @@ def test_use_case_point_switch_infra_route_limits(use_case_point_switch):
         }
 
 
-def test_use_case_point_switch_infra_track_lengths(use_case_point_switch):
+def test_point_switch_infra_track_lengths(use_case_point_switch):
     assert use_case_point_switch.track_section_lengths == \
         {
             'T0': 10_000.0,
@@ -66,7 +66,7 @@ def test_use_case_point_switch_infra_track_lengths(use_case_point_switch):
         }
 
 
-def test_use_case_point_switch_infra_route_lengths(use_case_point_switch):
+def test_point_switch_infra_route_lengths(use_case_point_switch):
     assert use_case_point_switch.route_lengths == \
         {
             'rt.D0->buffer_stop.2': 10_180.,
@@ -79,11 +79,11 @@ def test_use_case_point_switch_infra_route_lengths(use_case_point_switch):
         }
 
 
-def test_use_case_point_switch_infra_num_switches(use_case_point_switch):
+def test_point_switch_infra_num_switches(use_case_point_switch):
     assert use_case_point_switch.num_switches == 1
 
 
-def test_use_case_point_switch_infra_draw_infra_not_fail(use_case_point_switch):
+def test_point_switch_infra_draw_infra_not_fail(use_case_point_switch):
     """Test if it does not raise an exception"""
     try:
         use_case_point_switch.draw_infra()
@@ -91,22 +91,22 @@ def test_use_case_point_switch_infra_draw_infra_not_fail(use_case_point_switch):
         assert False
 
 
-def test_use_case_point_switch_infra_points_of_interest(use_case_point_switch):
+def test_point_switch_infra_points_of_interest(use_case_point_switch):
     poi = use_case_point_switch.points_of_interest
     assert set(poi.keys()) == {'DVG'}
 
 
-def test_use_case_point_switch_infra_station_capacities(use_case_point_switch):
+def test_point_switch_infra_station_capacities(use_case_point_switch):
     assert (
         use_case_point_switch.station_capacities == {}
     )
 
 
-def test_use_case_point_switch_infra_num_stations(use_case_point_switch):
+def test_point_switch_infra_num_stations(use_case_point_switch):
     assert use_case_point_switch.num_stations == 0
 
 
-def test_use_case_point_switch_points_on_tracks(use_case_point_switch):
+def test_point_switch_points_on_tracks(use_case_point_switch):
     expected = {
         'T0': {
             'S0': (9800.0, 'signal'),
@@ -128,7 +128,7 @@ def test_use_case_point_switch_points_on_tracks(use_case_point_switch):
     assert use_case_point_switch.points_on_track_sections == expected
 
 
-def test_use_case_point_switch_route_tvds(use_case_point_switch):
+def test_point_switch_route_tvds(use_case_point_switch):
     expected = {
         'rt.D0->buffer_stop.2': 'DVG',
         'rt.D0->buffer_stop.1': 'DVG',
@@ -142,27 +142,27 @@ def test_use_case_point_switch_route_tvds(use_case_point_switch):
     assert use_case_point_switch.route_tvds == expected
 
 
-def test_use_case_point_switch_simulation_type(use_case_point_switch):
+def test_point_switch_simulation_type(use_case_point_switch):
     assert isinstance(use_case_point_switch.simulation, dict)
 
 
-def test_use_case_point_switch_simulation_num_trains(use_case_point_switch):
+def test_point_switch_simulation_num_trains(use_case_point_switch):
     assert use_case_point_switch.num_trains == 2
 
 
-def test_use_case_point_switch_simulation_trains(use_case_point_switch):
+def test_point_switch_simulation_trains(use_case_point_switch):
     assert use_case_point_switch.trains == ['train0', 'train1']
 
 
-def test_use_case_point_switch_simulation_departure_times(use_case_point_switch):
+def test_point_switch_simulation_departure_times(use_case_point_switch):
     assert use_case_point_switch.departure_times == [0, 100]
 
 
-def test_use_case_point_switch_results_length(use_case_point_switch):
+def test_point_switch_results_length(use_case_point_switch):
     assert len(use_case_point_switch.results) == use_case_point_switch.num_trains
 
 
-def test_use_case_point_switch_results_train_track_sections(use_case_point_switch):
+def test_point_switch_results_train_track_sections(use_case_point_switch):
     assert use_case_point_switch.train_track_sections(0) == {
         'T0': 'START_TO_STOP',
         'T1': 'START_TO_STOP',
@@ -173,7 +173,7 @@ def test_use_case_point_switch_results_train_track_sections(use_case_point_switc
     }
 
 
-def test_use_case_point_switch_points_encountered_by_train0(use_case_point_switch):
+def test_point_switch_points_encountered_by_train0(use_case_point_switch):
     points = [
         {
             k: v for k, v in d.items()
@@ -193,7 +193,7 @@ def test_use_case_point_switch_points_encountered_by_train0(use_case_point_switc
     assert points == expected
 
 
-def test_use_case_point_switch_points_encountered_by_train1_reverse(
+def test_point_switch_points_encountered_by_train1_reverse(
     use_case_point_switch
 ):
     points = [
@@ -215,7 +215,7 @@ def test_use_case_point_switch_points_encountered_by_train1_reverse(
     assert points == expected
 
 
-def test_use_case_point_switch_space_time_graph(use_case_point_switch):
+def test_point_switch_space_time_graph(use_case_point_switch):
 
     ax = use_case_point_switch.space_time_graph(0, types_to_show=['switch'])
 

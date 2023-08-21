@@ -321,23 +321,45 @@ class OSRD():
     @property
     def num_trains(self) -> int:
         """Number of trains in the simulation"""
-        return len(self.simulation['train_schedules'])
+        return sum(
+            len(group['schedules'])
+            for group in self.simulation['train_schedule_groups']
+        )
 
     @property
     def trains(self) -> List[str]:
         """List of train labels in the simulation"""
-        return [train['id'] for train in self.simulation['train_schedules']]
+        return [
+            train['id']
+            for group in self.simulation['train_schedule_groups']
+            for train in group['schedules']
+        ]
 
     @property
     def departure_times(self) -> List[float]:
         """List of trains departure times"""
         return [
-            train_schedule['departure_time']
-            for train_schedule in self.simulation['train_schedules']
+            train['departure_time']
+            for group in self.simulation['train_schedule_groups']
+            for train in group['schedules']
         ]
+
+    @property
+    def _train_schedule_group(self) -> Dict[str, int]:
+        return {
+            train['id']: nb_group
+            for nb_group, group in enumerate(
+                self.simulation['train_schedule_groups']
+            )
+            for train in group['schedules']
+        }
 
     def train_track_sections(self, train: int) -> Dict[str, str]:
         """List of tracks for a given train trajectory"""
+
+        schedule_group = self._train_schedule_group[
+            self.trains[train]
+        ]
 
         head_positions = \
             self.results[train]['base_simulations'][0]['head_positions']

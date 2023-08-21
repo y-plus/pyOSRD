@@ -1,111 +1,112 @@
 """
 osrd_cvg_dvg
 ---------
-
 station0 (2 tracks)                        station1 (2 tracks)
 
-        ┎S0                                      S3┐
-(T0)-----D0-                                  --D3---------(T3)-->
-                \  S2┐                   ┎S2a  /
-            CVG>-D2-----(T2)------------D2a-<DVG
-        ┎S1   /                              \   S4┐
-(T1)-----D1-                                  --D4---------(T4)-->
+        ┎S0                                      S4┐
+(T0)-----D0-                                  --D4---------(T4)-->
+            \   S2┐                    ┎S3  /
+            CVG>-D2-----(T2)--+--(T3)----D3-<DVG
+        ┎S1   /                              \   S5┐
+(T1)-----D1-                                  --D5---------(T5)-->
 
-All tracks are 1km long
+All tracks are 500m long
 Train 0 starts from T0 at t=0 and arrives at T4
-Train 1 starts from T1 at t=100s and arrives at T3
+Train 1 starts from T1 at t=100 and arrives at T5
 """  # noqa
 
 import pytest
 import matplotlib.pyplot as plt
 
 
-def test_use_case_cvg_dvg_infra(use_case_cvg_dvg):
+def test_cvg_dvg_infra(use_case_cvg_dvg):
     assert isinstance(use_case_cvg_dvg.infra, dict)
 
 
-def test_use_case_cvg_dvg_infra_routes(use_case_cvg_dvg):
+def test_cvg_dvg_infra_routes(use_case_cvg_dvg):
     assert set(use_case_cvg_dvg.routes) == \
         set([
             'rt.buffer_stop.0->D0',
-            'rt.D0->D2a',
+            'rt.D0->D3',
             'rt.buffer_stop.1->D1',
-            'rt.D1->D2a',
-            'rt.D2a->buffer_stop.3',
-            'rt.D2a->buffer_stop.4',
-            'rt.buffer_stop.3->D3',
-            'rt.D3->D2',
-            'rt.buffer_stop.4->D4',
+            'rt.D1->D3',
+            'rt.D3->buffer_stop.2',
+            'rt.D3->buffer_stop.3',
+            'rt.buffer_stop.3->D5',
+            'rt.D5->D2',
+            'rt.buffer_stop.2->D4',
             'rt.D4->D2',
             'rt.D2->buffer_stop.0',
             'rt.D2->buffer_stop.1',
         ])
 
 
-def test_use_case_cvg_dvg_infra_route_switches(use_case_cvg_dvg):
+def test_cvg_dvg_infra_route_switches(use_case_cvg_dvg):
     assert use_case_cvg_dvg.route_switches == \
         {
-            'rt.D0->D2a': 'CVG',
-            'rt.D1->D2a': 'CVG',
-            'rt.D2a->buffer_stop.3': 'DVG',
-            'rt.D2a->buffer_stop.4': 'DVG',
-            'rt.D3->D2': 'DVG',
-            'rt.D4->D2': 'DVG',
+            'rt.D0->D3': 'CVG',
+            'rt.D1->D3': 'CVG',
             'rt.D2->buffer_stop.0': 'CVG',
             'rt.D2->buffer_stop.1': 'CVG',
+            'rt.D3->buffer_stop.2': 'DVG',
+            'rt.D3->buffer_stop.3': 'DVG',
+            'rt.D4->D2': 'DVG',
+            'rt.D5->D2': 'DVG',
+
         }
 
 
-def test_use_case_cvg_dvg_infra_route_limits(use_case_cvg_dvg):
+def test_cvg_dvg_infra_route_limits(use_case_cvg_dvg):
     assert use_case_cvg_dvg.route_limits == \
         {
-            'D0': ('T0', 820.0),
-            'D1': ('T1', 820.0),
-            'D2': ('T2', 180.0),
-            'D2a': ('T2', 820.0),
-            'D3': ('T3', 180.0),
-            'D4': ('T4', 180.0),
+            'D0': ('T0', 450.0),
+            'D1': ('T1', 450.0),
+            'D2': ('T2', 50.0),
+            'D3': ('T3', 450.0),
+            'D4': ('T4', 50.0),
+            'D5': ('T5', 50.0),
             'buffer_stop.0': ('T0', 0.0),
             'buffer_stop.1': ('T1', 0.0),
-            'buffer_stop.3': ('T3', 1_000.0),
-            'buffer_stop.4': ('T4', 1_000.0)
+            'buffer_stop.2': ('T4', 500.0),
+            'buffer_stop.3': ('T5', 500.0)
         }
 
 
-def test_use_case_cvg_dvg_infra_block_lengths(use_case_cvg_dvg):
+def test_cvg_dvg_infra_block_lengths(use_case_cvg_dvg):
     assert use_case_cvg_dvg.track_section_lengths == \
         {
-            'T0': 1_000.0,
-            'T1': 1_000.0,
-            'T2': 1_000.0,
-            'T3': 1_000.0,
-            'T4': 1_000.0,
+            'T0': 500.,
+            'T1': 500.,
+            'T2': 500.,
+            'T3': 500.,
+            'T4': 500.,
+            'T5': 500.,
         }
 
 
-def test_use_case_cvg_dvg_infra_route_lengths(use_case_cvg_dvg):
+def test_cvg_dvg_infra_route_lengths(use_case_cvg_dvg):
     assert use_case_cvg_dvg.route_lengths == \
         {
-            'rt.buffer_stop.0->D0': 820.,
-            'rt.D0->D2a': 1_000.,
-            'rt.buffer_stop.1->D1': 820.,
-            'rt.D1->D2a': 1_000.,
-            'rt.D2a->buffer_stop.3': 1_180.,
-            'rt.D2a->buffer_stop.4': 1_180.,
-            'rt.buffer_stop.3->D3': 20.,
-            'rt.D3->D2': 1_000.,
-            'rt.buffer_stop.4->D4': 820.,
-            'rt.D4->D2': 1_000.,
-            'rt.D2->buffer_stop.0': 1_180.,
-            'rt.D2->buffer_stop.1': 1_180.,
+            'rt.buffer_stop.0->D0': 450,
+            'rt.D0->D3': 1000.,
+            'rt.buffer_stop.1->D1': 450,
+            'rt.D1->D3': 1000,
+            'rt.D2->buffer_stop.0': 550,
+            'rt.D2->buffer_stop.1': 550,
+            'rt.D3->buffer_stop.2': 550,
+            'rt.D3->buffer_stop.3': 550,
+            'rt.buffer_stop.2->D4': 450,
+            'rt.D4->D2': 1000,
+            'rt.buffer_stop.3->D5': 450 ,
+            'rt.D5->D2': 1000,
         }
 
 
-def test_use_case_cvg_dvg_infra_num_switches(use_case_cvg_dvg):
+def test_cvg_dvg_infra_num_switches(use_case_cvg_dvg):
     assert use_case_cvg_dvg.num_switches == 2
 
 
-def test_use_case_cvg_dvg_infra_draw_infra_not_fail(use_case_cvg_dvg):
+def test_cvg_dvg_infra_draw_infra_not_fail(use_case_cvg_dvg):
     """Test if it does not raise an exception"""
     try:
         use_case_cvg_dvg.draw_infra()
@@ -113,22 +114,22 @@ def test_use_case_cvg_dvg_infra_draw_infra_not_fail(use_case_cvg_dvg):
         assert False
 
 
-def test_use_case_cvg_dvg_infra_points_of_interest(use_case_cvg_dvg):
+def test_cvg_dvg_infra_points_of_interest(use_case_cvg_dvg):
     poi = use_case_cvg_dvg.points_of_interest
     assert set(poi.keys()) == {'CVG', 'DVG', 'station0', 'station1'}
 
 
-def test_use_case_cvg_dvg_infra_station_capacities(use_case_cvg_dvg):
+def test_cvg_dvg_infra_station_capacities(use_case_cvg_dvg):
     assert (
         use_case_cvg_dvg.station_capacities == {'station0': 2, 'station1': 2}
     )
 
 
-def test_use_case_cvg_dvg_infra_num_stations(use_case_cvg_dvg):
+def test_cvg_dvg_infra_num_stations(use_case_cvg_dvg):
     assert use_case_cvg_dvg.num_stations == 2
 
 
-def test_use_case_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
+def test_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
     expected = {
         "T0": {
             "station0": (780, 'station'),
@@ -167,48 +168,59 @@ def test_use_case_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
     assert use_case_cvg_dvg.points_on_track_sections == expected
 
 
-def test_use_case_cvg_dvg_route_tvds(use_case_cvg_dvg):
+def test_cvg_dvg_route_tvds(use_case_cvg_dvg):
     expected = {
-            # TODO
+            'rt.buffer_stop.0->D0': 'D0<->buffer_stop.0',
+            'rt.D0->D3': 'CVG',
+            'rt.buffer_stop.1->D1': 'D1<->buffer_stop.1',
+            'rt.D1->D3': 'CVG',
+            'rt.D2->buffer_stop.0': 'CVG',
+            'rt.D2->buffer_stop.1': 'CVG',
+            'rt.D3->buffer_stop.2': 'DVG',
+            'rt.D3->buffer_stop.3': 'DVG',
+            'rt.buffer_stop.2->D4': 'D4<->buffer_stop.2',
+            'rt.D4->D2': 'DVG',
+            'rt.buffer_stop.3->D5': 'D5<->buffer_stop.3',
+            'rt.D5->D2': 'DVG'
         }
     assert use_case_cvg_dvg.route_tvds == expected
 
 
-def test_use_case_cvg_dvg_simulation_type(use_case_cvg_dvg):
+def test_cvg_dvg_simulation_type(use_case_cvg_dvg):
     assert isinstance(use_case_cvg_dvg.simulation, dict)
 
 
-def test_use_case_cvg_dvg_simulation_num_trains(use_case_cvg_dvg):
+def test_cvg_dvg_simulation_num_trains(use_case_cvg_dvg):
     assert use_case_cvg_dvg.num_trains == 2
 
 
-def test_use_case_cvg_dvg_simulation_trains(use_case_cvg_dvg):
+def test_cvg_dvg_simulation_trains(use_case_cvg_dvg):
     assert use_case_cvg_dvg.trains == ['train0', 'train1']
 
 
-def test_use_case_cvg_dvg_simulation_departure_times(use_case_cvg_dvg):
+def test_cvg_dvg_simulation_departure_times(use_case_cvg_dvg):
     assert use_case_cvg_dvg.departure_times == [0, 100]
 
 
-def test_use_case_cvg_dvg_run_arror(osrd_cvg_dvg_missing_sim):
+def test_cvg_dvg_run_arror(osrd_cvg_dvg_missing_sim):
     match = "Missing json file to run OSRD"
     with pytest.raises(ValueError, match=match):
         osrd_cvg_dvg_missing_sim.run()
 
 
-def test_use_case_cvg_dvg_has_results(use_case_cvg_dvg):
+def test_cvg_dvg_has_results(use_case_cvg_dvg):
     assert use_case_cvg_dvg.has_results
 
 
-def test_use_case_cvg_dvg_has_no_results(osrd_cvg_dvg_before_run):
+def test_cvg_dvg_has_no_results(osrd_cvg_dvg_before_run):
     assert not osrd_cvg_dvg_before_run.has_results
 
 
-def test_use_case_cvg_dvg_results_length(use_case_cvg_dvg):
+def test_cvg_dvg_results_length(use_case_cvg_dvg):
     assert len(use_case_cvg_dvg.results) == use_case_cvg_dvg.num_trains
 
 
-def test_use_case_cvg_dvg_results_train_track_sections(use_case_cvg_dvg):
+def test_cvg_dvg_results_train_track_sections(use_case_cvg_dvg):
     assert use_case_cvg_dvg.train_track_sections(0) == {
         'T0': 'START_TO_STOP',
         'T2': 'START_TO_STOP',
@@ -223,7 +235,7 @@ def test_use_case_cvg_dvg_results_train_track_sections(use_case_cvg_dvg):
     }
 
 
-def test_use_case_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
+def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
     points = [
         {
             k: v for k, v in d.items()
@@ -249,7 +261,7 @@ def test_use_case_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
     assert points == expected
 
 
-def test_use_case_cvg_dvg_space_time_graph(use_case_cvg_dvg):
+def test_cvg_dvg_space_time_graph(use_case_cvg_dvg):
 
     ax = use_case_cvg_dvg.space_time_graph(0, types_to_show=['station'])
 
