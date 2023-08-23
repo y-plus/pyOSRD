@@ -5,7 +5,7 @@ station0 (2 tracks)                        station1 (2 tracks)
 
         ┎S0                                      S4┐
 (T0)-----D0-                                  --D4---------(T4)-->
-            \   S2┐                    ┎S3  /
+              \   S2┐                   ┎S3  /
             CVG>-D2-----(T2)--+--(T3)----D3-<DVG
         ┎S1   /                              \   S5┐
 (T1)-----D1-                                  --D5---------(T5)-->
@@ -17,6 +17,8 @@ Train 1 starts from T1 at t=100 and arrives at T5
 
 import pytest
 import matplotlib.pyplot as plt
+
+from rlway.pyosrd.osrd import Point
 
 
 def test_cvg_dvg_infra(use_case_cvg_dvg):
@@ -87,18 +89,18 @@ def test_cvg_dvg_infra_block_lengths(use_case_cvg_dvg):
 def test_cvg_dvg_infra_route_lengths(use_case_cvg_dvg):
     assert use_case_cvg_dvg.route_lengths == \
         {
-            'rt.buffer_stop.0->D0': 450,
-            'rt.D0->D3': 1000.,
-            'rt.buffer_stop.1->D1': 450,
-            'rt.D1->D3': 1000,
-            'rt.D2->buffer_stop.0': 550,
-            'rt.D2->buffer_stop.1': 550,
-            'rt.D3->buffer_stop.2': 550,
-            'rt.D3->buffer_stop.3': 550,
-            'rt.buffer_stop.2->D4': 450,
-            'rt.D4->D2': 1000,
-            'rt.buffer_stop.3->D5': 450,
-            'rt.D5->D2': 1000,
+            'rt.buffer_stop.0->D0': 450.0,
+            'rt.D0->D3': 1000.0,
+            'rt.buffer_stop.1->D1': 450.0,
+            'rt.D1->D3': 1000.0,
+            'rt.D2->buffer_stop.0': 550.0,
+            'rt.D2->buffer_stop.1': 550.0,
+            'rt.D3->buffer_stop.2': 550.0,
+            'rt.D3->buffer_stop.3': 550.0,
+            'rt.buffer_stop.2->D4': 450.0,
+            'rt.D4->D2': 1000.0,
+            'rt.buffer_stop.3->D5': 450.0,
+            'rt.D5->D2': 1000.0,
         }
 
 
@@ -114,11 +116,6 @@ def test_cvg_dvg_infra_draw_infra_not_fail(use_case_cvg_dvg):
         assert False
 
 
-def test_cvg_dvg_infra_points_of_interest(use_case_cvg_dvg):
-    poi = use_case_cvg_dvg.points_of_interest
-    assert set(poi.keys()) == {'CVG', 'DVG', 'station0', 'station1'}
-
-
 def test_cvg_dvg_infra_station_capacities(use_case_cvg_dvg):
     assert (
         use_case_cvg_dvg.station_capacities == {'station0': 2, 'station1': 2}
@@ -131,40 +128,44 @@ def test_cvg_dvg_infra_num_stations(use_case_cvg_dvg):
 
 def test_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
     expected = {
-        "T0": {
-            "station0": (300, 'station'),
-            "S0": (430, 'signal'),
-            "D0": (450, 'detector'),
-            "CVG": (500, 'switch', 'point'),
-        },
-        "T1": {
-            "station0": (300, 'station'),
-            "S1": (430, 'signal'),
-            "D1": (450, 'detector'),
-            "CVG": (500, 'switch', 'point'),
-        },
-        "T2": {
-            "CVG": (0, 'switch', 'point'),
-            "D2": (50, 'detector'),
-            "S2": (70, 'signal'),
-        },
-        "T3": {
-            "S3": (430, 'signal'),
-            "D3": (450, 'detector'),
-            "DVG": (500, 'switch', 'point'),
-        },
-        "T4": {
-            "DVG": (0, 'switch', 'point'),
-            "D4": (50, 'detector'),
-            "S4": (70, 'signal'),
-            "station1": (480, 'station'),
-        },
-        "T5": {
-            "DVG": (0, 'switch', 'point'),
-            "D5": (50, 'detector'),
-            "S5": (70, 'signal'),
-            "station1": (480, 'station'),
-        },
+        "T0": [
+            Point(id='buffer_stop.0', track_section='T0', position=0.0, type='buffer_stop'),  # noqa
+            Point(track_section='T0', id="station0", position=300, type='station'),  # noqa
+            Point(track_section='T0', id="S0", position=430, type='signal'),  # noqa
+            Point(track_section='T0', id="D0", position=450, type='detector'),  # noqa
+            Point(track_section='T0', id="CVG", position=500, type='switch'),  # noqa
+        ],
+        "T1": [
+            Point(id='buffer_stop.1', track_section='T1', position=0.0, type='buffer_stop'),  # noqa
+            Point(track_section='T1', id="station0", position=300, type='station'),  # noqa
+            Point(track_section='T1', id="S1", position=430, type='signal'),  # noqa
+            Point(track_section='T1', id="D1", position=450, type='detector'),  # noqa
+            Point(track_section='T1', id="CVG", position=500, type='switch'),  # noqa
+        ],
+        "T2": [
+            Point(track_section='T2', id="CVG", position=0, type='switch'),  # noqa
+            Point(track_section='T2', id="D2", position=50, type='detector'),  # noqa
+            Point(track_section='T2', id="S2", position=70, type='signal'),  # noqa
+        ],
+        "T3": [
+            Point(track_section='T3', id="S3", position=430, type='signal'),  # noqa
+            Point(track_section='T3', id="D3", position=450, type='detector'),  # noqa
+            Point(track_section='T3', id="DVG", position=500, type='switch'),  # noqa
+        ],
+        "T4": [
+            Point(track_section='T4', id="DVG", position=0, type='switch'),  # noqa
+            Point(track_section='T4', id="D4", position=50, type='detector'),  # noqa
+            Point(track_section='T4', id="S4", position=70, type='signal'),  # noqa
+            Point(track_section='T4', id="station1", position=480, type='station'),  # noqa
+            Point(id='buffer_stop.2', track_section='T4', position=500.0, type='buffer_stop'),  # noqa
+        ],
+        "T5": [
+            Point(track_section='T5', id="DVG", position=0, type='switch'),  # noqa
+            Point(track_section='T5', id="D5", position=50, type='detector'),  # noqa
+            Point(track_section='T5', id="S5", position=70, type='signal'),  # noqa
+            Point(track_section='T5', id="station1", position=480, type='station'),  # noqa
+            Point(id='buffer_stop.3', track_section='T5', position=500.0, type='buffer_stop'),  # noqa
+        ],
     }
 
     assert use_case_cvg_dvg.points_on_track_sections == expected
@@ -223,18 +224,18 @@ def test_cvg_dvg_results_length(use_case_cvg_dvg):
 
 
 def test_cvg_dvg_results_train_track_sections(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.train_track_sections(0) == {
-        'T0': 'START_TO_STOP',
-        'T2': 'START_TO_STOP',
-        'T3': 'START_TO_STOP',
-        'T4': 'START_TO_STOP',
-    }
-    assert use_case_cvg_dvg.train_track_sections(1) == {
-        'T1': 'START_TO_STOP',
-        'T2': 'START_TO_STOP',
-        'T3': 'START_TO_STOP',
-        'T5': 'START_TO_STOP',
-    }
+    assert use_case_cvg_dvg.train_track_sections(0) == [
+        {'id': 'T0', 'direction': 'START_TO_STOP'},
+        {'id': 'T2', 'direction': 'START_TO_STOP'},
+        {'id': 'T3', 'direction': 'START_TO_STOP'},
+        {'id': 'T4', 'direction': 'START_TO_STOP'},
+    ]
+    assert use_case_cvg_dvg.train_track_sections(1) == [
+        {'id': 'T1', 'direction': 'START_TO_STOP'},
+        {'id': 'T2', 'direction': 'START_TO_STOP'},
+        {'id': 'T3', 'direction': 'START_TO_STOP'},
+        {'id': 'T5', 'direction': 'START_TO_STOP'},
+    ]
 
 
 def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
@@ -246,33 +247,32 @@ def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
         for d in use_case_cvg_dvg.points_encountered_by_train(0)
     ]
     expected = [
-        {'id': 'DEPARTURE', 'type': 'start', 'offset': 300.0, },
-        {'id': 'station0', 'type': 'station', 'offset': 300.0},
-        {'id': 'S0', 'type': 'signal', 'offset': 430.0},
-        {'id': 'D0', 'type': 'detector', 'offset': 450.0},
-        {'id': 'CVG', 'type': 'switch', 'offset': 500.0},
-        {'id': 'S3', 'type': 'signal', 'offset': 1430.0},
-        {'id': 'D3', 'type': 'detector', 'offset': 1450.0},
-        {'id': 'DVG', 'type': 'switch', 'offset': 1500.0},
-        {'id': 'END', 'type': 'end', 'offset': 1680.0, },
-        {'id': 'S4', 'type': 'signal', 'offset': 1930.0},
-        {'id': 'D4', 'type': 'detector', 'offset': 1950.0},
-        {'id': 'station1', 'type': 'station', 'offset': 1980.0},
-
+        {'id': 'station0', 'offset': 0.0, 'type': 'station'},
+        {'id': 'S0', 'offset': 130.0, 'type': 'signal'},
+        {'id': 'D0', 'offset': 150.0, 'type': 'detector'},
+        {'id': 'CVG', 'offset': 200.0, 'type': 'switch'},
+        {'id': 'D2', 'offset': 250.0, 'type': 'detector'},
+        {'id': 'S2', 'offset': 270.0, 'type': 'signal'},
+        {'id': 'S3', 'offset': 1130.0, 'type': 'signal'},
+        {'id': 'D3', 'offset': 1150.0, 'type': 'detector'},
+        {'id': 'DVG', 'offset': 1200.0, 'type': 'switch'},
+        {'id': 'D4', 'offset': 1250.0, 'type': 'detector'},
+        {'id': 'S4', 'offset': 1270.0, 'type': 'signal'},
+        {'id': 'station1', 'offset': 1680.0, 'type': 'station'},  
     ]
     assert points == expected
 
 
 def test_cvg_dvg_space_time_graph(use_case_cvg_dvg):
 
-    ax = use_case_cvg_dvg.space_time_graph(0, types_to_show=['station'])
+    ax = use_case_cvg_dvg.space_time_graph(0, points_to_show=['station'])
 
     assert ax.dataLim.xmin == 0.
-    assert round(ax.dataLim.ymin) == 300.
-    assert round(ax.dataLim.ymax) == 1980.
+    assert round(ax.dataLim.ymin) == 0.
+    assert round(ax.dataLim.ymax) == (500. - 300.) + 2 * 500. + 490.
     assert (
         [label._text for label in ax.get_yticklabels()]
         == ['station0', 'station1']
     )
-    assert ax.get_title() == "train0 (eco)"
+    assert ax.get_title() == "train0 (base)"
     plt.close()

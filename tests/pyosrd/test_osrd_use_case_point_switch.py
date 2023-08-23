@@ -14,8 +14,11 @@ Train 0 starts from the beginning of T0 at t=0s, and arrives at the end of T1
 Train 1 starts from the end of T2 at t=60s, and arrives at the beginning of T0
 """  # noqa
 
+from dataclasses import asdict
 
 import matplotlib.pyplot as plt
+
+from rlway.pyosrd.osrd import Point
 
 
 def test_point_switch_infra(use_case_point_switch):
@@ -72,9 +75,9 @@ def test_point_switch_infra_route_lengths(use_case_point_switch):
             'rt.D0->buffer_stop.2': 10_180.,
             'rt.D0->buffer_stop.1': 10_180.,
             'rt.buffer_stop.0->D0': 9_820.,
-            'rt.D1->buffer_stop.0': 9_820.,
+            'rt.D1->buffer_stop.0': 10_180.,
             'rt.buffer_stop.1->D1': 9_820.,
-            'rt.D2->buffer_stop.0': 9_820.,
+            'rt.D2->buffer_stop.0': 10_180.,
             'rt.buffer_stop.2->D2': 9_820.,
         }
 
@@ -91,11 +94,6 @@ def test_point_switch_infra_draw_infra_not_fail(use_case_point_switch):
         assert False
 
 
-def test_point_switch_infra_points_of_interest(use_case_point_switch):
-    poi = use_case_point_switch.points_of_interest
-    assert set(poi.keys()) == {'DVG'}
-
-
 def test_point_switch_infra_station_capacities(use_case_point_switch):
     assert (
         use_case_point_switch.station_capacities == {}
@@ -108,21 +106,24 @@ def test_point_switch_infra_num_stations(use_case_point_switch):
 
 def test_point_switch_points_on_tracks(use_case_point_switch):
     expected = {
-        'T0': {
-            'S0': (9800.0, 'signal'),
-            'D0': (9820.0, 'detector'),
-            'DVG': (10000.0, 'switch', 'point')
-        },
-        'T1': {
-            'DVG': (0, 'switch', 'point'),
-            'D1': (180.0, 'detector'),
-            'S1': (200.0, 'signal'),
-        },
-        'T2': {
-            'DVG': (0, 'switch', 'point'),
-            'D2': (180.0, 'detector'),
-            'S2': (200.0, 'signal'),
-        }
+        'T0': [
+            Point(id='buffer_stop.0', track_section='T0', position=0.0, type='buffer_stop'),  # noqa
+            Point(track_section='T0', id='S0', position=9800.0, type='signal'),  # noqa
+            Point(track_section='T0', id='D0', position=9820.0, type='detector'),  # noqa
+            Point(track_section='T0', id='DVG', position=10000.0, type='switch'),  # noqa
+        ],
+        'T1': [
+            Point(track_section='T1', id='DVG', position=0, type='switch'),  # noqa
+            Point(track_section='T1', id='D1', position=180.0, type='detector'),  # noqa
+            Point(track_section='T1', id='S1', position=200.0, type='signal'),  # noqa
+             Point(id='buffer_stop.1', track_section='T1', position=10000.0, type='buffer_stop'),  # noqa
+        ],
+        'T2': [
+            Point(track_section='T2', id='DVG', position=0, type='switch'),  # noqa
+            Point(track_section='T2', id='D2', position=180.0, type='detector'),  # noqa
+            Point(track_section='T2', id='S2', position=200.0, type='signal'),  # noqa
+            Point(id='buffer_stop.2', track_section='T2', position=10000.0, type='buffer_stop'),  #  noqa
+        ],
     }
 
     assert use_case_point_switch.points_on_track_sections == expected
@@ -164,14 +165,87 @@ def test_point_switch_results_length(use_case_point_switch):
 
 
 def test_point_switch_results_train_track_sections(use_case_point_switch):
-    assert use_case_point_switch.train_track_sections(0) == {
-        'T0': 'START_TO_STOP',
-        'T1': 'START_TO_STOP',
+    assert use_case_point_switch.train_track_sections(0) == [
+        {'id': 'T0', 'direction': 'START_TO_STOP'},
+        {'id': 'T1', 'direction': 'START_TO_STOP'},
+    ]
+    assert use_case_point_switch.train_track_sections(1) == [
+        {'id': 'T2', 'direction': 'STOP_TO_START'},
+        {'id': 'T0', 'direction': 'STOP_TO_START'},
+    ]
+
+
+def test_point_switch_departure_arrival_0(use_case_point_switch):
+    assert asdict(use_case_point_switch.train_departure(0)) == {
+        'id': 'departure_train0',
+        'track_section': 'T0',
+        'position': 50.0,
+        'type': 'departure',
     }
-    assert use_case_point_switch.train_track_sections(1) == {
-        'T2': 'STOP_TO_START',
-        'T0': 'STOP_TO_START',
+    assert asdict(use_case_point_switch.train_arrival(0)) == {
+        'id': 'arrival_train0',
+        'track_section': 'T1',
+        'position': 9950.0,
+        'type': 'arrival',
     }
+
+
+def test_point_switch_departure_arrival_1(use_case_point_switch):
+    assert asdict(use_case_point_switch.train_departure(1)) == {
+        'id': 'departure_train1',
+        'track_section': 'T2',
+        'position': 9950.0,
+        'type': 'departure',
+    }
+    assert asdict(use_case_point_switch.train_arrival(1)) == {
+        'id': 'arrival_train1',
+        'track_section': 'T0',
+        'position': 50.0,
+        'type': 'arrival',
+    }
+
+
+def test_point_switch_offset_in_path(use_case_point_switch):
+    before_departure_0 = Point(
+        id='before_departure_0',
+        track_section='T0',
+        position=30.0,
+        type='point'
+    )
+    after_arrival_0 = Point(
+        id='after_arrival_0',
+        track_section='T1',
+        position=9980.0,
+        type='point'
+    )
+
+    before_departure_1 = Point(
+        id='before_departure_1',
+        track_section='T2',
+        position=9980.0,
+        type='point'
+    )
+    after_arrival_1 = Point(
+        id='after_arrival_1',
+        track_section='T0',
+        position=30.0,
+        type='point'
+    )
+
+    assert [
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_departure(0), train=0),  # noqa
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_departure(1), train=1),  # noqa
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_arrival(0), train=0),  # noqa
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_arrival(1), train=1),  # noqa
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_arrival(0), train=1),  # noqa
+        use_case_point_switch.offset_in_path_of_train(before_departure_0, train=0),  # noqa
+        use_case_point_switch.offset_in_path_of_train(after_arrival_0, train=0),  # noqa
+        use_case_point_switch.offset_in_path_of_train(before_departure_1, train=0),  # noqa
+        use_case_point_switch.offset_in_path_of_train(after_arrival_1, train=0),  # noqa
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch._points[-3], train=0),  # noqa
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch._points[-1], train=1),  # noqa
+
+    ] == [0.0, 0.0, 19900.0, 19900.0, None, None, 19930, None, None, 9950.0, 9950.0]  # noqa
 
 
 def test_point_switch_points_encountered_by_train0(use_case_point_switch):
@@ -183,13 +257,11 @@ def test_point_switch_points_encountered_by_train0(use_case_point_switch):
         for d in use_case_point_switch.points_encountered_by_train(0)
     ]
     expected = [
-        {'id': 'DEPARTURE', 'type': 'departure', 'offset': 50.0, },
-        {'id': 'S0', 'type': 'signal', 'offset': 9800.0, },
-        {'id': 'D0', 'type': 'detector', 'offset': 9820.0, },
-        {'id': 'DVG', 'type': 'switch', 'offset': 10000.0, },
-        {'id': 'D1', 'type': 'detector', 'offset': 10180.0, },
-        {'id': 'S1', 'type': 'signal', 'offset': 10200.0, },
-        {'id': 'ARRIVAL', 'type': 'arrival', 'offset': 19900.0, },
+        {'id': 'S0', 'offset': 9750.0, 'type': 'signal'},
+        {'id': 'D0', 'offset': 9770.0, 'type': 'detector'},
+        {'id': 'DVG', 'offset': 9950.0, 'type': 'switch'},
+        {'id': 'D1', 'offset': 10130.0, 'type': 'detector'},
+        {'id': 'S1', 'offset': 10150.0, 'type': 'signal'},
     ]
     assert points == expected
 
@@ -202,30 +274,28 @@ def test_point_switch_points_encountered_by_train1_reverse(
             k: v for k, v in d.items()
             if k not in ['t', 't_min']
         }
-        for d in use_case_point_switch.points_encountered_by_train(0)
+        for d in use_case_point_switch.points_encountered_by_train(1)
     ]
     expected = [
-        {'id': 'DEPARTURE', 'type': 'departure', 'offset': 50.0, },
-        {'id': 'S2', 'type': 'signal', 'offset': 9800.0, },
-        {'id': 'D2', 'type': 'detector', 'offset': 9820.0, },
-        {'id': 'DVG', 'type': 'switch', 'offset': 10000.0, },
-        {'id': 'D0', 'type': 'detector', 'offset': 10180.0, },
-        {'id': 'S0', 'type': 'signal', 'offset': 10200.0, },
-        {'id': 'ARRIVAL', 'type': 'arrival', 'offset': 19900.0, },
+        {'id': 'S2', 'type': 'signal', 'offset': 9750.0, },
+        {'id': 'D2', 'type': 'detector', 'offset': 9770.0, },
+        {'id': 'DVG', 'type': 'switch', 'offset': 9950.0, },
+        {'id': 'D0', 'type': 'detector', 'offset': 10130.0, },
+        {'id': 'S0', 'type': 'signal', 'offset': 10150.0, },
     ]
     assert points == expected
 
 
 def test_point_switch_space_time_graph(use_case_point_switch):
 
-    ax = use_case_point_switch.space_time_graph(0, types_to_show=['switch'])
+    ax = use_case_point_switch.space_time_graph(0, points_to_show=['switch'])
 
     assert ax.dataLim.xmin == 0.
-    assert round(ax.dataLim.ymin) == 50.
-    assert round(ax.dataLim.ymax) == 19_950.
+    assert round(ax.dataLim.ymin) == 0.
+    assert round(ax.dataLim.ymax) == 19_900.
     assert (
         [label._text for label in ax.get_yticklabels()]
         == ['DVG', ]
     )
-    assert ax.get_title() == "train0 (eco)"
+    assert ax.get_title() == "train0 (base)"
     plt.close()

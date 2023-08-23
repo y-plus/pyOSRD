@@ -61,41 +61,14 @@ def cvg_dvg(
         )
         s = T[i].add_signal(
             d.position + (-20 if i in [0, 1, 3] else 20),
-            Direction.START_TO_STOP if i in [0, 1, 3] else Direction.STOP_TO_START,
+            (
+                Direction.START_TO_STOP
+                if i in [0, 1, 3] else Direction.STOP_TO_START
+            ),
             is_route_delimiter=True,
             label=f"S{i}"
         )
         s.add_logical_signal("BAL", settings={"Nf": "true"})
-
-    # detectors = [
-    #     T[i].add_detector(label=f"D{i}", position=450)
-    #     for i in [0, 1, 3]
-    # ]
-    # detectors += [
-    #     T[i].add_detector(label=f"D{i}", position=50)
-    #     for i in [2, 4, 5]
-    # ]
-
-    # signals = [
-    #     T[i].add_signal(
-    #         detectors[i].position-20,
-    #         Direction.START_TO_STOP,
-    #         is_route_delimiter=True,
-    #         label=f"S{i}"
-    #     )
-    #     for i in [0, 1, 3]
-    # ]
-    # signals += [
-    #     T[i].add_signal(
-    #         detectors[i].position+20,
-    #         Direction.STOP_TO_START,
-    #         is_route_delimiter=True,
-    #         label=f"S{i}"
-    #     )
-    #     for i in [2, 4, 5]
-    # ]
-    # for signal in signals:
-    #     signal.add_logical_signal("BAL", settings={"Nf": "true"})
 
     stations = [
         infra_builder.add_operational_point(label='station'+str(i))

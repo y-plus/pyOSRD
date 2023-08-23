@@ -10,7 +10,6 @@ from typing import Any, Dict, List, Tuple, Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
 from dotenv import load_dotenv
 from IPython.display import Image, display
 from matplotlib.axes._axes import Axes
@@ -25,6 +24,14 @@ def _read_json(json_file: str) -> Union[Dict, List]:
         except ValueError:  # JSONDecodeError inherits from ValueError
             dict_ = {}
     return dict_
+
+
+@dataclass
+class Point:
+    id: str
+    track_section: str
+    position: float
+    type: str
 
 
 @dataclass
@@ -143,7 +150,7 @@ class OSRD():
 
     @property
     def routes(self) -> List[str]:
-        """List of routes labels"""
+        """List of routes ids"""
         return [route['id'] for route in self.infra['routes']]
 
     @property
@@ -159,12 +166,12 @@ class OSRD():
     def route_limits(self) -> Dict[str, Tuple[str, float]]:
         """Dict of routes limiting points (detectors and buffer stops)
 
-        >>> {'point_label' : ('track_id', position: float), ...}
+        >>> {'point_id' : ('track_id', position: float), ...}
 
         Returns
         -------
         Dict[str, Tuple[str, float]]
-            Keys are points labels,
+            Keys are points ids,
             values are tuples (associated track, position)
         """
 
@@ -187,33 +194,53 @@ class OSRD():
     def route_lengths(self) -> Dict[str, float]:
         """Dict of routes and their lengths"""
 
-        ts = nx.Graph()
+        ts = self._track_section_network
 
-        for t in self.infra['track_section_links']:
-            ts.add_edge(t['src']['track'], t['dst']['track'])
-        for t in self.infra['switches']:
-            tracks = [x['track'] for _,x in t['ports'].items()]
-            for t1, t2 in combinations(tracks, 2):
-                ts.add_edge(t1, t2)
+        route_lengths = dict()
 
-        lengths = {}
-        points = self.route_limits
         for route in self.routes:
-            start = route.replace('rt.', '').split('->')[0]
-            end = route.replace('rt.', '').split('->')[1]
-            tracks = nx.shortest_path(ts, points[start][0], points[end][0])
-            if len(tracks) == 1:
-                lengths[route] = points[end][1] - points[start][1]
-            else:
-                lengths[route] = (
-                    self.track_section_lengths[tracks[0]]
-                    - points[start][1]
-                )
-                for t in tracks[1:-1]:
-                    lengths[route] += self.track_section_lengths[t]
-                lengths[route] += points[end][1]
+            P1, P2 = route.replace('rt.', '').split('->')
+            point1 = [point for point in self._points if point.id == P1][0]
+            point2 = [point for point in self._points if point.id == P2][0]
+            tracks_between = nx.shortest_path(
+                ts,
+                point1.track_section,
+                point2.track_section
+            )
 
-        return {route: np.abs(length) for route, length in lengths.items()}
+            distance = 0
+            if len(tracks_between) == 1:
+                distance = abs(point1.position - point2.position)
+            else:
+                distance = (
+                    point1.position
+                    if nx.get_edge_attributes(ts, 'out_by')[
+                        tracks_between[0],
+                        tracks_between[1]
+                    ] == 'BEGIN'
+                    else (
+                        self.track_section_lengths[point1.track_section]
+                        - point1.position
+                    )
+                )
+                distance += sum(
+                    self.track_section_lengths[track]
+                    for track in tracks_between[1:-1]
+                )
+                distance += (
+                    point2.position
+                    if nx.get_edge_attributes(ts, 'in_by')[
+                        tracks_between[-2],
+                        tracks_between[-1]
+                    ] == 'BEGIN'
+                    else (
+                        self.track_section_lengths[point2.track_section]
+                        - point2.position
+                    )
+                )
+            route_lengths[route] = distance
+
+        return route_lengths
 
     @property
     def num_switches(self) -> int:
@@ -221,19 +248,8 @@ class OSRD():
         return len(self.infra['switches'])
 
     @property
-    def points_of_interest(self) -> Dict[str, Any]:
-        """Dict of points of interest (stations and switches)"""
-        return {
-            point['id']: point
-            for point in (
-                self.infra['switches']
-                + self.infra['operational_points']
-            )
-        }
-
-    @property
     def station_capacities(self) -> Dict[str, int]:
-        """Dict of stations labels (operational points) and their capacities"""
+        """Dict of stations ids (operational points) and their capacities"""
         return {
             station['id']: len(station['parts'])
             for station in self.infra['operational_points']
@@ -245,53 +261,145 @@ class OSRD():
         return len(self.station_capacities)
 
     @property
+    def _points(self) -> List[Point]:
+
+        points = []
+
+        for detector in self.infra['detectors']:
+            points.append(Point(
+                id=detector['id'],
+                track_section=detector['track'],
+                position=detector['position'],
+                type='detector'
+            ))
+        for signal in self.infra['signals']:
+            points.append(Point(
+                id=signal['id'],
+                track_section=signal['track'],
+                position=signal['position'],
+                type='signal'
+            ))
+        for buffer_stop in self.infra['buffer_stops']:
+            points.append(Point(
+                id=buffer_stop['id'],
+                track_section=buffer_stop['track'],
+                position=buffer_stop['position'],
+                type='buffer_stop'
+            ))
+        for op in self.infra['operational_points']:
+            for part in op['parts']:
+                points.append(Point(
+                    id=op['id'],
+                    track_section=part['track'],
+                    position=part['position'],
+                    type='station'
+                ))
+        for switch in self.infra['switches']:
+            for port in switch['ports'].values():
+                points.append(Point(
+                    id=switch['id'],
+                    track_section=port['track'],
+                    position=(
+                        0 if port['endpoint'] == "BEGIN"
+                        else self.track_section_lengths[port['track']]
+                    ),
+                    type='switch'
+
+                ))
+        return points
+
+    def train_departure(self, train: int) -> Point:
+        """Train departure point"""
+
+        departure = self._head_position(train)[0]
+        return Point(
+            id=f'departure_{self.trains[train]}',
+            track_section=departure['track_section'],
+            position=departure['offset'],
+            type='departure'
+        )
+
+    def train_arrival(self, train: int) -> Point:
+        """Train arrival point"""
+
+        arrival = self._head_position(train)[-1]
+        return Point(
+            id=f'arrival_{self.trains[train]}',
+            track_section=arrival['track_section'],
+            position=arrival['offset'],
+            type='arrival'
+        )
+
+    def _head_position(self, train, eco_or_base: str = 'base'):
+
+        group, idx = self._train_schedule_group[
+            self.trains[train]
+        ]
+
+        sim = f'{eco_or_base}_simulations'
+        return self.results[group][sim][idx]['head_positions']
+
+    @property
     def points_on_track_sections(self) -> Dict:
         """Dict with for each track, points of interests and their positions"""
 
-        points = {
-            track['id']: {}
-            for track in self.infra['track_sections']
-        }
+        points_on_track_sections = {}
 
-        for detector in self.infra['detectors']:
-            track = detector['track']
-            id = detector['id']
-            points[track][id] = (detector['position'], 'detector')
+        for t in self.track_section_lengths:
+            points = [p for p in self._points if p.track_section == t]
+            points.sort(key=lambda p: p.position)
+            points_on_track_sections[t] = points
 
-        for signal in self.infra['signals']:
-            track = signal['track']
-            id = signal['id']
-            tag = 'signal'
-            points[track][id] = (signal['position'], tag)
+        return points_on_track_sections
 
-        for station in self.infra['operational_points']:
-            id = station['id']
-            for part in station['parts']:
-                track = part['track']
-                points[track][id] = (part['position'], 'station')
+    def offset_in_path_of_train(
+        self,
+        point: Point,
+        train: int
+    ) -> float | None:
 
-        for switch in self.infra['switches']:
-            id = switch['id']
-            type = switch['switch_type']
-            for port in switch['ports'].values():
-                track = port['track']
-                position = (
-                    0
-                    if port['endpoint'] == 'BEGIN'
-                    else self.track_section_lengths[track]
+        tracks = self.train_track_sections(train)
+        track_ids = [t['id'] for t in tracks]
+
+        if point.track_section not in track_ids:
+            return None
+
+        idx_pt_tr = track_ids.index(point.track_section)
+
+        if idx_pt_tr == 0:
+            if tracks[0]['direction'] == 'START_TO_STOP':
+                offset = point.position - self.train_departure(train).position
+            else:
+                offset = self.train_departure(train).position - point.position
+            if offset < 0:
+                return None
+            return offset
+
+        if idx_pt_tr > 0:
+
+            if tracks[0]['direction'] == 'START_TO_STOP':
+                offset = (
+                    self.track_section_lengths[track_ids[0]]
+                    - self.train_departure(train).position
                 )
-                points[track][id] = (position, 'switch', type)
+            else:
+                offset = self.train_departure(train).position
 
-        # sort points by position for each track
-        for track in points:
-            points[track] = {
-                k: v for k, v in sorted(
-                    points[track].items(),
-                    key=lambda item: item[1]
+            for t in tracks[0:idx_pt_tr-1]:
+                offset += self.track_section_lengths[t['id']]
+
+            # if point.position > self.train_arrival(train).position:
+            #     return None
+
+            if tracks[0:idx_pt_tr][-1]['direction'] == 'START_TO_STOP':
+                offset += point.position
+            else:
+                offset += (
+                    self.track_section_lengths[tracks[0:idx_pt_tr][-1]['id']]
+                    - point.position
                 )
-            }
 
-        return points
+        return offset
 
     def draw_infra(
         self,
@@ -331,7 +439,7 @@ class OSRD():
 
     @property
     def trains(self) -> List[str]:
-        """List of train labels in the simulation"""
+        """List of train ids in the simulation"""
         return [
             train['id']
             for group in self.simulation['train_schedule_groups']
@@ -355,15 +463,44 @@ class OSRD():
             for pos, train in enumerate(group['schedules'])
         }
 
-    def train_track_sections(self, train: int) -> Dict[str, str]:
+    @property
+    def _track_section_network(self) -> nx.DiGraph:
+
+        ts = nx.DiGraph()
+        for t in self.infra['track_section_links']:
+            ts.add_edge(
+                t['src']['track'],
+                t['dst']['track'],
+                in_by=t['dst']['endpoint'],
+                out_by=t['src']['endpoint'],
+            )
+            ts.add_edge(
+                t['dst']['track'],
+                t['src']['track'],
+                in_by=t['src']['endpoint'],
+                out_by=t['dst']['endpoint'],
+                )
+        for switch in self.infra['switches']:
+            tracks = [track for _, track in switch['ports'].items()]
+            for track1, track2 in combinations(tracks, 2):
+                ts.add_edge(
+                    track1['track'],
+                    track2['track'],
+                    out_by=track1['endpoint'],
+                    in_by=track2['endpoint'],
+                )
+                ts.add_edge(
+                    track2['track'],
+                    track1['track'],
+                    out_by=track2['endpoint'],
+                    in_by=track1['endpoint'],
+                )
+        return ts
+
+    def train_track_sections(self, train: int) -> List[Dict[str, str]]:
         """List of tracks for a given train trajectory"""
 
-        group, idx = self._train_schedule_group[
-            self.trains[train]
-        ]
-
-        head_positions = \
-            self.results[group]['base_simulations'][idx]['head_positions']
+        head_positions = self._head_position(train=train)
 
         track_sections = list(
             dict.fromkeys([
@@ -375,13 +512,7 @@ class OSRD():
         # it won't appear in the list
         # => insert them by inspecting the links between the tracks
 
-        ts = nx.Graph()
-        for t in self.infra['track_section_links']:
-            ts.add_edge(t['src']['track'], t['dst']['track'])
-        for t in self.infra['switches']:
-            tracks = [x['track'] for _,x in t['ports'].items()]
-            for t1, t2 in combinations(tracks, 2):
-                ts.add_edge(t1, t2)
+        ts = self._track_section_network
 
         tracks = track_sections[:1]
 
@@ -392,37 +523,27 @@ class OSRD():
                 track_sections[i+1]
             )[1:]
 
-        track_links_by = {
-                track_id: {}
-                for track_id in self.track_section_lengths
-        }
-
-        for link in self.infra['track_section_links']:
-            track_links_by[link['src']['track']][link['dst']['track']] =\
-                link['src']['endpoint']
-            track_links_by[link['dst']['track']][link['src']['track']] =\
-                link['dst']['endpoint']
-        for switch in self.infra['switches']:
-            ports = [port for _, port in switch['ports'].items()]
-            for t1, t2 in combinations(ports, 2):
-                track_links_by[t1['track']][t2['track']] = t1['endpoint']
-                track_links_by[t2['track']][t1['track']] = t2['endpoint']
-
-        DIRECTION_FROM_ENTRY = {
+        DIRECTION_GIVEN_ENTRY = {
             'BEGIN': 'START_TO_STOP',
             'END': 'STOP_TO_START',
         }
 
-        tracks_directions = {}
+        tracks_directions = []
 
         if len(tracks) > 0:
             for i, t in enumerate(tracks):
                 if i == 0:
-                    linked_to_next = track_links_by[tracks[0]][tracks[i+1]]
-                    entry = 'BEGIN' if linked_to_next == 'END' else 'END'
-                if i > 0:
-                    entry = track_links_by[t][tracks[i-1]]
-                tracks_directions[t] = DIRECTION_FROM_ENTRY[entry]
+                    entry = nx.get_edge_attributes(ts, 'in_by')[
+                        (tracks[i], tracks[i+1])
+                    ]
+                else:
+                    entry = nx.get_edge_attributes(ts, 'in_by')[
+                        (tracks[i-1], tracks[i])
+                    ]
+                tracks_directions.append({
+                    'id': t,
+                    'direction': DIRECTION_GIVEN_ENTRY[entry],
+                })
 
         return tracks_directions
 
@@ -437,135 +558,42 @@ class OSRD():
             'switch',
             'arrival',
         ],
-        tracks: Union[List[str], None] = None
-    ) -> List[Tuple[str, str, float, float, float]]:
+    ) -> List[Dict[str, Any]]:
         """Points encountered by a train during its trajectory
 
         Parameters
         ----------
-        tracks: Union[List[str], None], optional
-            Tracks to consider,
-            by default all the tracks of the train's trajectory
         types : List[str], optional
             Types of points, by default
-            ['signal', 'detector', 'station', 'switch', 'departure', 'arrival']
+            ['signal', 'detector', 'station', 'switch']
 
         Returns
         -------
-        List[Tuple[str, str, float, float, float]]
-            Points encountered (label, type, offset, t_min, t)
+        List[TDict[str, Any]]
+            Points encountered (id, type, offset)
         """
 
-        lengths = [
-            self.track_section_lengths[ts]
-            for ts in self.train_track_sections(train)
-        ]
+        ids = [track['id'] for track in self.train_track_sections(train)]
 
-        track_offsets = [
-            sum(lengths[: i]) for i, _ in enumerate(lengths)
-        ]
+        points = {
+            point.id: {
+                'id': point.id,
+                'offset': self.offset_in_path_of_train(point, train),
+                'type': point.type
+            }
+            for point in self._points
+            if point.track_section in ids and point.type in types
+        }
 
-        group, idx = self._train_schedule_group[
-            self.trains[train]
-        ]
-
-        records_min = \
-            self.results[group]['base_simulations'][idx]['head_positions']
-        offset = records_min[0]['offset']
-        offsets_min = [offset + t['offset'] for t in records_min]
-        t_min = [t['time'] for t in records_min]
-
-        records_eco = \
-            self.results[group]['eco_simulations'][idx]['head_positions']
-        offsets_eco = [offset + t['offset'] for t in records_eco]
-        t = [t['time'] for t in records_eco]
-
-        points = []
-
-        for i, (ts, direction) in enumerate(
-            self.train_track_sections(train).items()
-        ):
-            points_on_track = []
-
-            for pt, details in self.points_on_track_sections[ts].items():
-                if direction == 'START_TO_STOP':
-                    relative_pos = details[0]
-                else:
-                    relative_pos = self.track_section_lengths[ts] - details[0]
-                points_on_track.append({
-                    'id': pt,
-                    'type': details[1],
-                    'path_offset': relative_pos + track_offsets[i],
-                    't_min': np.interp(
-                        [relative_pos + track_offsets[i]],
-                        offsets_min,
-                        t_min
-                    ).item(),
-                    't': np.interp(
-                        [relative_pos + track_offsets[i]],
-                        offsets_eco,
-                        t).item(),
-                })
-
-                points_on_track = sorted(
-                    points_on_track,
-                    key=lambda d: d['path_offset']
-                )
-                # switches are defined on both tracks, add them only once
-                if i > 0 and points_on_track[0] == points[-1]:
-                    points_on_track = points_on_track[1:]
-
-            points += points_on_track
-
-        departure_track = records_eco[0]['track_section']
-        if (
-            self.train_track_sections(train)[departure_track]
-            == 'START_TO_STOP'
-        ):
-            departure_offset = records_eco[0]['path_offset']
-        else:
-            departure_offset = (
-                self.track_section_lengths[departure_track]
-                - records_eco[0]['path_offset']
-            )
-
-        arrival_track = records_eco[-1]['track_section']
-        if self.train_track_sections(train)[arrival_track] == 'START_TO_STOP':
-            arrival_offset = records_eco[-1]['path_offset']
-        else:
-            arrival_offset = (
-                self.track_section_lengths[arrival_track]
-                - records_eco[-1]['path_offset']
-            )
-
-        points += [{
-            'id': 'DEPARTURE',
-            'type': 'departure',
-            'path_offset': departure_offset,
-            't_min': records_min[0]['time'],
-            't': records_eco[0]['time'],
-        }]
-
-        points += [{
-            'id': 'ARRIVAL',
-            'type': 'arrival',
-            'path_offset': arrival_offset,
-            't_min': records_min[-1]['time'],
-            't': records_eco[-1]['time'],
-        }]
-
-        points = sorted(
-            points,
-            key=lambda d: d['path_offset']
-        )
-
-        return [point for point in points if point['type'] in types]
+        list_ = [p for p in list(points.values()) if p['offset'] is not None]
+        list_.sort(key=lambda point: point['offset'])
+        return list_
 
     def space_time_graph(
         self,
         train: int,
         eco_or_base: str = 'base',
-        types_to_show: List[str] = ['station'],
+        points_to_show: List[str] = ['station', 'switch'],
     ) -> Axes:
         """Draw space-time graph for a given train
 
@@ -577,50 +605,58 @@ class OSRD():
             Train index
         eco_or_base : str, optional
             Draw eco or base simulation ?, by default 'base'
-        types_to_show : List[str], optional
+        points_to_show : List[str], optional
             List of points types shown on y-axis.
-            Possible choices are 'signal', 'detector', 'station'.
-            by default ['station']
+            Possible choices are 'signal', 'detector', 'station', 'switch'.
+            by default ['station', 'switch"]
 
         Returns
         -------
         Axes
             Matplotlib axe object
         """
+
         _, ax = plt.subplots()
 
-        points = self.points_encountered_by_train(
-            train,
-            types_to_show
-        )
+        for i, train_id in enumerate(self.trains):
+            t = [record['time'] / 60. for record in self._head_position(i)]
+            offset = [
+                self.offset_in_path_of_train(
+                    Point(
+                        id='',
+                        track_section=record['track_section'],
+                        type='record',
+                        position=record['offset']
+                    ),
+                    train
+                )
+                for record in self._head_position(i)
+            ]
+            ax.plot(t, offset, label=train_id, linewidth=3)
 
-        group, idx = self._train_schedule_group[
-            self.trains[train]
-        ]
+        ax.legend()
 
-        simulation = eco_or_base+'_simulations'
-
-        records_min = \
-            self.results[group][simulation][idx]['head_positions']
-        path_offset = [t['path_offset'] for t in records_min]
-        times = [t['time']/60 for t in records_min]
-
-        ax.plot(
-            times,
-            path_offset,
-        )
-        for point in points:
-            ax.axhline(point['path_offset'], color='k', linestyle=':');  # noqa
-
+        ax.set_xlim(left=0)
         ax.set_xlabel('Time [min]')
-        ax.set_yticks(
-            [point['path_offset'] for point in points],
-            [point['id'] for point in points]
-        );  # noqa
-
         ax.set_title(
             self.trains[train]
             + f" ({eco_or_base})"
-        );  # noqa
+        )
+
+        ids = [track['id'] for track in self.train_track_sections(train)]
+
+        points = {
+            point.id: self.offset_in_path_of_train(point, train)
+            for point in self._points
+            if point.track_section in ids and point.type in points_to_show
+        }
+
+        for offset in points.values():
+            ax.axhline(offset, linestyle='-', color='#aaa', linewidth=.5)
+
+        ax.set_yticks(
+            [offset for offset in points.values()],
+            [id for id in points],
+        )
 
         return ax

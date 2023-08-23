@@ -16,6 +16,8 @@ Train 1 starts from T0 at t=300s, stops at T4, and arrives at T5
 
 import matplotlib.pyplot as plt
 
+from rlway.pyosrd.osrd import Point
+
 
 def test_station_capacity2_infra(use_case_station_capacity2):
     assert isinstance(use_case_station_capacity2.infra, dict)
@@ -81,16 +83,16 @@ def test_station_capacity2_infra_block_lengths(use_case_station_capacity2):
 def test_station_capacity2_infra_route_lengths(use_case_station_capacity2):
     assert use_case_station_capacity2.route_lengths == \
         {
-            'rt.buffer_stop.0->D0': 820,
-            'rt.D0->D3': 2000,
-            'rt.D0->D4': 2000,
-            'rt.D1->buffer_stop.0': 1180,
-            'rt.D2->buffer_stop.0': 1180,
-            'rt.D3->buffer_stop.5': 1180,
-            'rt.D4->buffer_stop.5': 1180,
-            'rt.buffer_stop.5->D5': 820,
-            'rt.D5->D1': 2000,
-            'rt.D5->D2': 2000,
+            'rt.buffer_stop.0->D0': 820.0,
+            'rt.D0->D3': 2000.0,
+            'rt.D0->D4': 2000.0,
+            'rt.D1->buffer_stop.0': 1180.0,
+            'rt.D2->buffer_stop.0': 1180.0,
+            'rt.D3->buffer_stop.5': 1180.0,
+            'rt.D4->buffer_stop.5': 1180.0,
+            'rt.buffer_stop.5->D5': 820.0,
+            'rt.D5->D1': 2000.0,
+            'rt.D5->D2': 2000.0,
         }
 
 
@@ -108,13 +110,6 @@ def test_station_capacity2_infra_draw_infra_not_fail(
         assert False
 
 
-def test_station_capacity2_infra_points_of_interest(
-    use_case_station_capacity2
-):
-    poi = use_case_station_capacity2.points_of_interest
-    assert set(poi.keys()) == {'CVG', 'DVG', 'station'}
-
-
 def test_station_capacity2_infra_station_capacities(
     use_case_station_capacity2
 ):
@@ -129,37 +124,40 @@ def test_station_capacity2_infra_num_stations(use_case_station_capacity2):
 
 def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
     expected = {
-        "T0": {
-            "S0": (800.0, "signal"),
-            "D0": (820.0, "detector"),
-            "DVG": (1000.0, "switch", "point"),
-        },
-        "T1": {
-            "DVG": (0, "switch", "point"),
-            "D1": (180.0, "detector"),
-            "S1": (840.0, "signal"),
-        },
-        "T2": {
-            "DVG": (0, "switch", "point"),
-            "D2": (180.0, "detector"),
-            "S2": (840.0, "signal"),
-        },
-        "T3": {
-            "S3": (160.0, "signal"),
-            "D3": (820.0, "detector"),
-            "station": (830.0, "station"),
-            "CVG": (1000.0, "switch", "point"),
-        },
-        "T4": {
-            "S4": (160.0, "signal"),
-            "D4": (820.0, "detector"),
-            "station": (830.0, "station"),
-            "CVG": (1000.0, "switch", "point"),
-        },
-        "T5": {
-            "CVG": (0, "switch", "point"),
-            "D5": (180.0, "detector"),
-            "S5": (200.0, "signal")}
+        "T0": [
+            Point(id='buffer_stop.0', track_section='T0', position=0.0, type='buffer_stop'),  # noqa
+            Point(id='S0', track_section='T0', position=800.0, type="signal"),  # noqa
+            Point(id='D0', track_section='T0', position=820.0, type="detector"),  # noqa
+            Point(id='DVG', track_section='T0', position=1000.0, type="switch"),  # noqa
+        ],
+        "T1": [
+            Point(id='DVG', track_section='T1', position=0, type="switch"),  # noqa
+            Point(id='D1', track_section='T1', position=180.0, type="detector"),  # noqa
+            Point(id='S1', track_section='T1', position=840.0, type="signal"),  # noqa
+        ],
+        "T2": [
+            Point(id='DVG', track_section='T2', position=0, type="switch"),  # noqa
+            Point(id='D2', track_section='T2', position=180.0, type="detector"),  # noqa
+            Point(id='S2', track_section='T2', position=840.0, type="signal"),  # noqa
+        ],
+        "T3": [
+            Point(id='S3', track_section='T3', position=160.0, type="signal"),  # noqa
+            Point(id='D3', track_section='T3', position=820.0, type="detector"),  # noqa
+            Point(id='station', track_section='T3', position=830.0, type="station"),  # noqa
+            Point(id='CVG', track_section='T3', position=1000.0, type="switch"),  # noqa
+        ],
+        "T4": [
+            Point(id='S4', track_section='T4', position=160.0, type="signal"),  # noqa
+            Point(id='D4', track_section='T4', position=820.0, type="detector"),  # noqa
+            Point(id='station', track_section='T4', position=830.0, type="station"),  # noqa
+            Point(id='CVG', track_section='T4', position=1000.0, type="switch"),  # noqa
+        ],
+        "T5": [
+            Point(id='CVG', track_section='T5', position=0, type="switch"),  # noqa
+            Point(id='D5', track_section='T5', position=180.0, type="detector"),  # noqa
+            Point(id='S5', track_section='T5', position=200.0, type="signal"),  # noqa
+            Point(id='buffer_stop.5', track_section='T5', position=1000.0, type='buffer_stop'),  # noqa
+        ],
     }
 
     assert use_case_station_capacity2.points_on_track_sections == expected
@@ -207,19 +205,19 @@ def test_station_capacity2_results_length(use_case_station_capacity2):
 def test_station_capacity2_results_train_track_sections(
     use_case_station_capacity2
 ):
-    tracks_0 = {
-        'T0': 'START_TO_STOP',
-        'T1': 'START_TO_STOP',
-        'T3': 'START_TO_STOP',
-        'T5': 'START_TO_STOP',
-    }
+    tracks_0 = [
+        {'id': 'T0', 'direction': 'START_TO_STOP'},
+        {'id': 'T1', 'direction': 'START_TO_STOP'},
+        {'id': 'T3', 'direction': 'START_TO_STOP'},
+        {'id': 'T5', 'direction': 'START_TO_STOP'},
+    ]
     assert use_case_station_capacity2.train_track_sections(0) == tracks_0
-    tracks_1 = {
-        'T0': 'START_TO_STOP',
-        'T2': 'START_TO_STOP',
-        'T4': 'START_TO_STOP',
-        'T5': 'START_TO_STOP',
-    }
+    tracks_1 = [
+        {'id': 'T0', 'direction': 'START_TO_STOP'},
+        {'id': 'T2', 'direction': 'START_TO_STOP'},
+        {'id': 'T4', 'direction': 'START_TO_STOP'},
+        {'id': 'T5', 'direction': 'START_TO_STOP'},
+    ]
     assert use_case_station_capacity2.train_track_sections(1) == tracks_1
 
 
@@ -234,17 +232,17 @@ def test_station_capacity2_results_points_encountered_by_train(
         for d in use_case_station_capacity2.points_encountered_by_train(0)
     ]
     expected = [
-        {'id': 'DEPARTURE', 'type': 'departure', 'offset': 100.0, },
-        {'id': 'S0', 'type': 'signal', 'offset': 800.0},
-        {'id': 'D0', 'type': 'detector', 'offset': 820.0},
-        {'id': 'DVG', 'type': 'switch', 'offset': 1000.0},
-        {'id': 'station', 'type': 'station', 'offset': 1790.0},
-        {'id': 'S1', 'type': 'signal', 'offset': 1800.0},
-        {'id': 'D1', 'type': 'detector', 'offset': 1820.0},
-        {'id': 'CVG', 'type': 'switch', 'offset': 2000.0},
-        {'id': 'S3', 'type': 'signal', 'offset': 2800.0},
-        {'id': 'D3', 'type': 'detector', 'offset': 2820.0},
-        {'id': 'ARRIVAL', 'type': 'arrival', 'offset': 2880.0, },
+        {'id': 'S0', 'offset': 790.0, 'type': 'signal'},
+        {'id': 'D0', 'offset': 810.0, 'type': 'detector'},
+        {'id': 'DVG', 'offset': 990.0, 'type': 'switch'},
+        {'id': 'D1', 'offset': 1170.0, 'type': 'detector'},
+        {'id': 'S1', 'offset': 1830.0, 'type': 'signal'},
+        {'id': 'S3', 'offset': 2150.0, 'type': 'signal'},
+        {'id': 'D3', 'offset': 2810.0, 'type': 'detector'},
+        {'id': 'station', 'offset': 2820.0, 'type': 'station'},
+        {'id': 'CVG', 'offset': 2990.0, 'type': 'switch'},
+        {'id': 'D5', 'offset': 3170.0, 'type': 'detector'},
+        {'id': 'S5', 'offset': 3190.0, 'type': 'signal'},
     ]
     assert expected == points
 
@@ -253,15 +251,15 @@ def test_station_capacity2_space_time_graph(use_case_station_capacity2):
 
     ax = use_case_station_capacity2.space_time_graph(
         0,
-        types_to_show=['station']
+        points_to_show=['station']
     )
 
     assert ax.dataLim.xmin == 0.
-    assert round(ax.dataLim.ymin) == 100.
-    assert round(ax.dataLim.ymax) == 2980.
+    assert round(ax.dataLim.ymin) == 0.
+    assert round(ax.dataLim.ymax) == 3980.
     assert (
         [label._text for label in ax.get_yticklabels()]
         == ['station', ]
     )
-    assert ax.get_title() == "train0 (eco)"
+    assert ax.get_title() == "train0 (base)"
     plt.close()
