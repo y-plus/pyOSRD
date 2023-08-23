@@ -582,7 +582,11 @@ class OSRD():
                 'offset': self.offset_in_path_of_train(point, train),
                 'type': point.type
             }
-            for point in [self.train_departure(train)] + self._points + [self.train_arrival(train)]
+            for point in (
+                [self.train_departure(train)]
+                + self._points
+                + [self.train_arrival(train)]
+            )
             if point.track_section in ids and point.type in types
         }
 
@@ -591,7 +595,7 @@ class OSRD():
 
         simulations = ['base']
         try:
-            self._head_position(0,'eco')
+            self._head_position(train, 'eco')
             simulations += ['eco']
         except TypeError:
             pass
@@ -599,11 +603,11 @@ class OSRD():
         for eco_or_base in simulations:
             t = [
                 record['time']
-                for record in self._head_position(0, eco_or_base=eco_or_base)
+                for record in self._head_position(train, eco_or_base)
             ]
             path_offset = [
                 record['path_offset']
-                for record in self._head_position(0, eco_or_base=eco_or_base)
+                for record in self._head_position(train, eco_or_base)
             ]
             for point in list_:
                 point['t_'+eco_or_base] = np.interp(
