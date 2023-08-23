@@ -227,11 +227,12 @@ def test_station_capacity2_results_points_encountered_by_train(
     points = [
         {
             k: v for k, v in d.items()
-            if k not in ['t', 't_min']
+            if k not in ['t_base', 't_eco']
         }
         for d in use_case_station_capacity2.points_encountered_by_train(0)
     ]
     expected = [
+        {'id': 'departure_train0', 'offset': 0.0, 'type': 'departure'},
         {'id': 'S0', 'offset': 790.0, 'type': 'signal'},
         {'id': 'D0', 'offset': 810.0, 'type': 'detector'},
         {'id': 'DVG', 'offset': 990.0, 'type': 'switch'},
@@ -243,6 +244,7 @@ def test_station_capacity2_results_points_encountered_by_train(
         {'id': 'CVG', 'offset': 2990.0, 'type': 'switch'},
         {'id': 'D5', 'offset': 3170.0, 'type': 'detector'},
         {'id': 'S5', 'offset': 3190.0, 'type': 'signal'},
+        {'id': 'arrival_train0', 'offset': 3980.0, 'type': 'arrival'},
     ]
     assert expected == points
 

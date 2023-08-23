@@ -242,11 +242,12 @@ def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
     points = [
         {
             k: v for k, v in d.items()
-            if k not in ['t', 't_min']
+            if k not in ['t_base', 't_eco']
         }
         for d in use_case_cvg_dvg.points_encountered_by_train(0)
     ]
     expected = [
+        {'id': 'departure_train0', 'offset': 0.0, 'type': 'departure'},
         {'id': 'station0', 'offset': 0.0, 'type': 'station'},
         {'id': 'S0', 'offset': 130.0, 'type': 'signal'},
         {'id': 'D0', 'offset': 150.0, 'type': 'detector'},
@@ -258,7 +259,8 @@ def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
         {'id': 'DVG', 'offset': 1200.0, 'type': 'switch'},
         {'id': 'D4', 'offset': 1250.0, 'type': 'detector'},
         {'id': 'S4', 'offset': 1270.0, 'type': 'signal'},
-        {'id': 'station1', 'offset': 1680.0, 'type': 'station'},  
+        {'id': 'station1', 'offset': 1680.0, 'type': 'station'},
+        {'id': 'arrival_train0', 'offset': 1690.0, 'type': 'arrival'},
     ]
     assert points == expected
 

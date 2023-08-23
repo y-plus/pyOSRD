@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple, Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
 from dotenv import load_dotenv
 from IPython.display import Image, display
 from matplotlib.axes._axes import Axes
@@ -581,12 +582,36 @@ class OSRD():
                 'offset': self.offset_in_path_of_train(point, train),
                 'type': point.type
             }
-            for point in self._points
+            for point in [self.train_departure(train)] + self._points + [self.train_arrival(train)]
             if point.track_section in ids and point.type in types
         }
 
         list_ = [p for p in list(points.values()) if p['offset'] is not None]
         list_.sort(key=lambda point: point['offset'])
+
+        simulations = ['base']
+        try:
+            self._head_position(0,'eco')
+            simulations += ['eco']
+        except TypeError:
+            pass
+
+        for eco_or_base in simulations:
+            t = [
+                record['time']
+                for record in self._head_position(0, eco_or_base=eco_or_base)
+            ]
+            path_offset = [
+                record['path_offset']
+                for record in self._head_position(0, eco_or_base=eco_or_base)
+            ]
+            for point in list_:
+                point['t_'+eco_or_base] = np.interp(
+                    [point['offset']],
+                    path_offset,
+                    t
+                ).item()
+
         return list_
 
     def space_time_graph(

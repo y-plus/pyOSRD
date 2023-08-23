@@ -252,16 +252,18 @@ def test_point_switch_points_encountered_by_train0(use_case_point_switch):
     points = [
         {
             k: v for k, v in d.items()
-            if k not in ['t', 't_min']
+            if k not in ['t_base', 't_eco']
         }
         for d in use_case_point_switch.points_encountered_by_train(0)
     ]
     expected = [
+        {'id': 'departure_train0', 'type': 'departure', 'offset': 0, },
         {'id': 'S0', 'offset': 9750.0, 'type': 'signal'},
         {'id': 'D0', 'offset': 9770.0, 'type': 'detector'},
         {'id': 'DVG', 'offset': 9950.0, 'type': 'switch'},
         {'id': 'D1', 'offset': 10130.0, 'type': 'detector'},
         {'id': 'S1', 'offset': 10150.0, 'type': 'signal'},
+        {'id': 'arrival_train0', 'type': 'arrival', 'offset': 19900, },
     ]
     assert points == expected
 
@@ -272,16 +274,18 @@ def test_point_switch_points_encountered_by_train1_reverse(
     points = [
         {
             k: v for k, v in d.items()
-            if k not in ['t', 't_min']
+            if k not in ['t_base', 't_eco']
         }
         for d in use_case_point_switch.points_encountered_by_train(1)
     ]
     expected = [
+        {'id': 'departure_train1', 'type': 'departure', 'offset': 0, },
         {'id': 'S2', 'type': 'signal', 'offset': 9750.0, },
         {'id': 'D2', 'type': 'detector', 'offset': 9770.0, },
         {'id': 'DVG', 'type': 'switch', 'offset': 9950.0, },
         {'id': 'D0', 'type': 'detector', 'offset': 10130.0, },
         {'id': 'S0', 'type': 'signal', 'offset': 10150.0, },
+        {'id': 'arrival_train1', 'type': 'arrival', 'offset': 19900, },
     ]
     assert points == expected
 
