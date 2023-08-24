@@ -28,7 +28,7 @@ def three_trains() -> Schedule:
     return schedule
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def two_trains() -> Schedule:
     schedule = Schedule(6, 2)
 
@@ -45,7 +45,7 @@ def two_trains() -> Schedule:
     return schedule
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def two_trains_two_blocks_before_dvg() -> Schedule:
     schedule = Schedule(7, 2)
 
