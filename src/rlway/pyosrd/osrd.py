@@ -29,10 +29,10 @@ def _read_json(json_file: str) -> Union[Dict, List]:
 
 @dataclass
 class Point:
-    id: str
     track_section: str
     position: float
-    type: str
+    id: str = ''
+    type: str = ''
 
 
 @dataclass
@@ -386,11 +386,8 @@ class OSRD():
             else:
                 offset = self.train_departure(train).position
 
-            for t in tracks[0:idx_pt_tr-1]:
-                offset += self.track_section_lengths[t['id']]
-
-            # if point.position > self.train_arrival(train).position:
-            #     return None
+            for id in track_ids[1:idx_pt_tr]:
+                offset += self.track_section_lengths[id]
 
             if tracks[0:idx_pt_tr][-1]['direction'] == 'START_TO_STOP':
                 offset += point.position
@@ -622,7 +619,8 @@ class OSRD():
         self,
         train: int,
         eco_or_base: str = 'base',
-        points_to_show: List[str] = ['station', 'switch'],
+        points_to_show: List[str] =
+            ['station', 'switch' 'departure', 'arrival'],
     ) -> Axes:
         """Draw space-time graph for a given train
 
@@ -636,8 +634,9 @@ class OSRD():
             Draw eco or base simulation ?, by default 'base'
         points_to_show : List[str], optional
             List of points types shown on y-axis.
-            Possible choices are 'signal', 'detector', 'station', 'switch'.
-            by default ['station', 'switch"]
+            Possible choices are 'signal', 'detector', 'station', 'switch',
+            'arrival', 'departure'.
+            by default ['station', 'switch', 'departure', 'arrival']
 
         Returns
         -------
@@ -647,6 +646,7 @@ class OSRD():
 
         _, ax = plt.subplots()
 
+        data = []
         for i, train_id in enumerate(self.trains):
             t = [record['time'] / 60. for record in self._head_position(i)]
             offset = [
@@ -661,23 +661,12 @@ class OSRD():
                 )
                 for record in self._head_position(i)
             ]
-            ax.plot(t, offset, label=train_id, linewidth=3)
-
-        ax.legend()
-
-        ax.set_xlim(left=0)
-        ax.set_xlabel('Time [min]')
-        ax.set_title(
-            self.trains[train]
-            + f" ({eco_or_base})"
-        )
-
-        ids = [track['id'] for track in self.train_track_sections(train)]
+            data.append({"x": t, "y": offset, "label": train_id})
 
         points = {
-            point.id: self.offset_in_path_of_train(point, train)
-            for point in self._points
-            if point.track_section in ids and point.type in points_to_show
+            point['id']: point['offset']
+            for point in self.points_encountered_by_train(train)
+            if point['type'] in points_to_show
         }
 
         for offset in points.values():
@@ -686,6 +675,18 @@ class OSRD():
         ax.set_yticks(
             [offset for offset in points.values()],
             [id for id in points],
+        )
+
+        for t in data:
+            ax.plot(t['x'], t['y'], label=t["label"], linewidth=3)
+
+        ax.legend()
+
+        ax.set_xlim(left=0)
+        ax.set_xlabel('Time [min]')
+        ax.set_title(
+            self.trains[train]
+            + f" ({eco_or_base})"
         )
 
         return ax

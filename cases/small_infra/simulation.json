@@ -1,0 +1,528 @@
+{
+  "train_schedule_groups": [
+    {
+      "schedules": [
+        {
+          "id": "train.0",
+          "departure_time": 36000,
+          "initial_speed": 0.0,
+          "rolling_stock": "fast_rolling_stock",
+          "stops": [
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TA1",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TC0",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TE1",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TF1",
+                "offset": 4300
+              }
+            },
+            {
+              "duration": 1,
+              "position": -1
+            }
+          ],
+          "allowances": [
+            {
+              "allowance_type": "standard",
+              "default_value": {
+                "value_type": "percentage",
+                "percentage": 5.0
+              },
+              "ranges": [],
+              "distribution": "LINEAR",
+              "capacity_speed_limit": -1.0
+            }
+          ]
+        }
+      ],
+      "waypoints": [
+        [
+          {
+            "track_section": "TA1",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TA1",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TC0",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TC0",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TE1",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TE1",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TF1",
+            "offset": 4300,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TF1",
+            "offset": 4300,
+            "direction": "STOP_TO_START"
+          }
+        ]
+      ],
+      "id": "group.0"
+    },
+    {
+      "schedules": [
+        {
+          "id": "train.1",
+          "departure_time": 37200,
+          "initial_speed": 0.0,
+          "rolling_stock": "fast_rolling_stock",
+          "stops": [
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TA2",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TC2",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TD1",
+                "offset": 14000
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TG5",
+                "offset": 1500
+              }
+            },
+            {
+              "duration": 1,
+              "position": -1
+            }
+          ],
+          "allowances": [
+            {
+              "allowance_type": "standard",
+              "default_value": {
+                "value_type": "percentage",
+                "percentage": 5.0
+              },
+              "ranges": [],
+              "distribution": "MARECO",
+              "capacity_speed_limit": -1.0
+            }
+          ]
+        }
+      ],
+      "waypoints": [
+        [
+          {
+            "track_section": "TA2",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TA2",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TC2",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TC2",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TD1",
+            "offset": 14000,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TD1",
+            "offset": 14000,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TG5",
+            "offset": 1500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TG5",
+            "offset": 1500,
+            "direction": "STOP_TO_START"
+          }
+        ]
+      ],
+      "id": "group.1"
+    },
+    {
+      "schedules": [
+        {
+          "id": "train.2",
+          "departure_time": 38400,
+          "initial_speed": 0.0,
+          "rolling_stock": "fast_rolling_stock",
+          "stops": [
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TA0",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TC1",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TD0",
+                "offset": 14000
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TH1",
+                "offset": 1500
+              }
+            },
+            {
+              "duration": 1,
+              "position": -1
+            }
+          ],
+          "allowances": [
+            {
+              "allowance_type": "standard",
+              "default_value": {
+                "value_type": "time_per_distance",
+                "minutes": 10.0
+              },
+              "ranges": [],
+              "distribution": "LINEAR",
+              "capacity_speed_limit": -1.0
+            }
+          ]
+        }
+      ],
+      "waypoints": [
+        [
+          {
+            "track_section": "TA0",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TA0",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TC1",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TC1",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TD0",
+            "offset": 14000,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TD0",
+            "offset": 14000,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TH1",
+            "offset": 1500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TH1",
+            "offset": 1500,
+            "direction": "STOP_TO_START"
+          }
+        ]
+      ],
+      "id": "group.2"
+    },
+    {
+      "schedules": [
+        {
+          "id": "train.3",
+          "departure_time": 39600,
+          "initial_speed": 0.0,
+          "rolling_stock": "fast_rolling_stock",
+          "stops": [
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TA0",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TC0",
+                "offset": 500
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TD0",
+                "offset": 14000
+              }
+            },
+            {
+              "duration": 60,
+              "location": {
+                "track_section": "TH1",
+                "offset": 1500
+              }
+            },
+            {
+              "duration": 1,
+              "position": -1
+            }
+          ],
+          "allowances": [
+            {
+              "allowance_type": "standard",
+              "default_value": {
+                "value_type": "time",
+                "seconds": 300.0
+              },
+              "ranges": [],
+              "distribution": "LINEAR",
+              "capacity_speed_limit": -1.0
+            }
+          ]
+        }
+      ],
+      "waypoints": [
+        [
+          {
+            "track_section": "TA0",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TA0",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TC0",
+            "offset": 500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TC0",
+            "offset": 500,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TD0",
+            "offset": 14000,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TD0",
+            "offset": 14000,
+            "direction": "STOP_TO_START"
+          }
+        ],
+        [
+          {
+            "track_section": "TH1",
+            "offset": 1500,
+            "direction": "START_TO_STOP"
+          },
+          {
+            "track_section": "TH1",
+            "offset": 1500,
+            "direction": "STOP_TO_START"
+          }
+        ]
+      ],
+      "id": "group.3"
+    }
+  ],
+  "rolling_stocks": [
+    {
+      "railjson_version": "3.2",
+      "version": 0,
+      "length": 400,
+      "max_speed": 80,
+      "startup_time": 10,
+      "startup_acceleration": 0.05,
+      "comfort_acceleration": 0.25,
+      "inertia_coefficient": 1.05,
+      "features": [
+        "TVM300",
+        "TVM430",
+        "ETCS1",
+        "ETCS2",
+        "KVB"
+      ],
+      "name": "fast_rolling_stock",
+      "mass": 900000,
+      "loading_gauge": "G1",
+      "gamma": {
+        "value": 0.5,
+        "type": "CONST"
+      },
+      "rolling_resistance": {
+        "type": "davis",
+        "A": 5400,
+        "B": 200,
+        "C": 12
+      },
+      "effort_curves": {
+        "default_mode": "thermal",
+        "modes": {
+          "thermal": {
+            "curves": [],
+            "default_curve": {
+              "speeds": [
+                0,
+                5,
+                10,
+                15,
+                20,
+                22,
+                27,
+                32,
+                37,
+                42,
+                47,
+                52,
+                57,
+                62,
+                67,
+                72,
+                77
+              ],
+              "max_efforts": [
+                441666.6666666667,
+                439473.6842105263,
+                435714.28571428574,
+                427777.77777777775,
+                400000,
+                350971.5388299929,
+                347206.93642395496,
+                346938.7385068534,
+                344395.0325320009,
+                334314.2138640166,
+                313589.8108101956,
+                283584.5657113532,
+                250604.14937613969,
+                222698.71360301683,
+                204685.35097358702,
+                195984.55717992093,
+                192916.7642524637
+              ]
+            },
+            "is_electric": false
+          }
+        }
+      },
+      "base_power_class": "1",
+      "metadata": {
+        "detail": "",
+        "number": "1",
+        "reference": "",
+        "family": "",
+        "type": "",
+        "grouping": "",
+        "series": "",
+        "subseries": "",
+        "unit": ""
+      },
+      "power_restrictions": {},
+      "energy_sources": []
+    }
+  ],
+  "time_step": 2.0
+}

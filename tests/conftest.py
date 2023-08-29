@@ -1,5 +1,3 @@
-import shutil
-
 import pytest
 
 from rlway.pyosrd import OSRD
@@ -90,6 +88,3 @@ def use_case_station_capacity2():
 @pytest.fixture(scope='session')
 def use_case_point_switch():
     return OSRD(dir='tmp', use_case='point_switch')
-
-
-# shutil.rmtree('tmp')

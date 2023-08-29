@@ -12,6 +12,11 @@ from rlway.pyosrd import OSRD
 def folium_map(osrd: OSRD) -> folium.folium.Map:
     """Infra as a folium map"""
 
+    track_section_names = {
+        track['id']: track['extensions']['sncf']['track_name']
+        for track in osrd.infra['track_sections']
+    }
+
     track_section_coordinates = {
         ts['id']: [(point[1], point[0]) for point in ts['geo']['coordinates']]
         for ts in osrd.infra['track_sections']
@@ -68,13 +73,27 @@ def folium_map(osrd: OSRD) -> folium.folium.Map:
         for signal in osrd.infra['signals']
     }
 
-    station_geo_positions = {
-        station['id'] + '_' + part['track']: coords_from_position_on_track(
+    operational_point_names = {
+        (operational_point['id'], part['track']): (
+            (
+                operational_point['extensions']['sncf']['ch_long_label']
+                if 'sncf' in operational_point['extensions']
+                else ''
+            )
+            + ' ' + operational_point['extensions']['identifier']['name']
+            + ' ' + track_section_names[part['track']]
+        )
+        for operational_point in osrd.infra['operational_points']
+        for part in operational_point['parts']
+    }
+
+    operational_point_geo_positions = {
+        (operational_point['id'], part['track']): coords_from_position_on_track(
             part['track'],
             part['position']
         )
-        for station in osrd.infra['operational_points']
-        for part in station['parts']
+        for operational_point in osrd.infra['operational_points']
+        for part in operational_point['parts']
     }
 
     switch_geo_positions = {
@@ -96,7 +115,7 @@ def folium_map(osrd: OSRD) -> folium.folium.Map:
 
     tracks = folium.FeatureGroup(name='Rails')
     for id, line in track_section_coordinates.items():
-        folium.PolyLine(line, tooltip=id, color='black').add_to(tracks)
+        folium.PolyLine(line, tooltip=track_section_names[id], color='black').add_to(tracks)
     tracks.add_to(m)
 
     m.fit_bounds(tracks.get_bounds())
@@ -126,18 +145,17 @@ def folium_map(osrd: OSRD) -> folium.folium.Map:
             ).add_to(signals)
     signals.add_to(m)
 
-    stations = folium.FeatureGroup('Stations', show=False)
-    for id, position in station_geo_positions.items():
+    operational_points = folium.FeatureGroup('Operational Points', show=False)
+    for id, position in operational_point_geo_positions.items():
         folium.Marker(
             position,
-            popup=id,
+            popup=operational_point_names[id],
             icon=folium.DivIcon(html="""
             <div><svg>
-                <rect x="-10" y="-10" width="40" height="20",
-                fill="gray", opacity=".6" />
+                <circle cx="5" cy="5" r="5", fill="cyan", opacity=".9" />
             </svg></div>"""),
-            ).add_to(stations)
-    stations.add_to(m)
+            ).add_to(operational_points)
+    operational_points.add_to(m)
 
     switches = folium.FeatureGroup('Switches', show=False)
     for id, position in switch_geo_positions.items():
