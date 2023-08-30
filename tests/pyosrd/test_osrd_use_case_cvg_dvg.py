@@ -253,12 +253,10 @@ def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
         {'id': 'D0', 'offset': 150.0, 'type': 'detector'},
         {'id': 'CVG', 'offset': 200.0, 'type': 'switch'},
         {'id': 'D2', 'offset': 250.0, 'type': 'detector'},
-        {'id': 'S2', 'offset': 270.0, 'type': 'signal'},
         {'id': 'S3', 'offset': 1130.0, 'type': 'signal'},
         {'id': 'D3', 'offset': 1150.0, 'type': 'detector'},
         {'id': 'DVG', 'offset': 1200.0, 'type': 'switch'},
         {'id': 'D4', 'offset': 1250.0, 'type': 'detector'},
-        {'id': 'S4', 'offset': 1270.0, 'type': 'signal'},
         {'id': 'station1', 'offset': 1680.0, 'type': 'station'},
         {'id': 'arrival_train0', 'offset': 1690.0, 'type': 'arrival'},
     ]
