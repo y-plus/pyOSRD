@@ -574,11 +574,7 @@ class OSRD():
         ids = [track['id'] for track in self.train_track_sections(train)]
 
         points = {
-            point.id: {
-                'id': point.id,
-                'offset': self.offset_in_path_of_train(point, train),
-                'type': point.type
-            }
+            point.id: point
             for point in (
                 [self.train_departure(train)]
                 + self._points
@@ -587,7 +583,38 @@ class OSRD():
             if point.track_section in ids and point.type in types
         }
 
-        list_ = [p for p in list(points.values()) if p['offset'] is not None]
+        def point_direction(point: Point) -> str:
+            if point.type not in ['signal', 'detector']:
+                return 'BOTH'
+            if point.type == 'signal':
+                for signal in self.infra['signals']:
+                    if signal['id'] == point.id:
+                        return signal['direction']
+            if point.type == 'detector':
+                for detector in self.infra['detectors']:
+                    if detector['id'] == point.id:
+                        return detector['applicable_directions']
+
+        def train_direction(point: Point, train: int) -> str:
+            for track in self.train_track_sections(train):
+                if track['id'] == point.track_section:
+                    return track['direction']
+
+        list_ = [
+            {
+                'id': point.id,
+                'offset': self.offset_in_path_of_train(point, train),
+                'type': point.type,
+            }
+            for point in list(points.values())
+            if ((
+                    point_direction(point) == train_direction(point, train)
+                    or point_direction(point) == 'BOTH'
+                )
+                and self.offset_in_path_of_train(point, train) is not None
+            )
+        ]
+
         list_.sort(key=lambda point: point['offset'])
 
         simulations = ['base']

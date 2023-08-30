@@ -262,7 +262,6 @@ def test_point_switch_points_encountered_by_train0(use_case_point_switch):
         {'id': 'D0', 'offset': 9770.0, 'type': 'detector'},
         {'id': 'DVG', 'offset': 9950.0, 'type': 'switch'},
         {'id': 'D1', 'offset': 10130.0, 'type': 'detector'},
-        {'id': 'S1', 'offset': 10150.0, 'type': 'signal'},
         {'id': 'arrival_train0', 'type': 'arrival', 'offset': 19900, },
     ]
     assert points == expected
@@ -284,7 +283,6 @@ def test_point_switch_points_encountered_by_train1_reverse(
         {'id': 'D2', 'type': 'detector', 'offset': 9770.0, },
         {'id': 'DVG', 'type': 'switch', 'offset': 9950.0, },
         {'id': 'D0', 'type': 'detector', 'offset': 10130.0, },
-        {'id': 'S0', 'type': 'signal', 'offset': 10150.0, },
         {'id': 'arrival_train1', 'type': 'arrival', 'offset': 19900, },
     ]
     assert points == expected
