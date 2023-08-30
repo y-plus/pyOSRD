@@ -133,23 +133,23 @@ def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
         "T1": [
             Point(id='DVG', track_section='T1', position=0, type="switch"),  # noqa
             Point(id='D1', track_section='T1', position=180.0, type="detector"),  # noqa
-            Point(id='S1', track_section='T1', position=840.0, type="signal"),  # noqa
+            Point(id='S1', track_section='T1', position=200.0, type="signal"),  # noqa
         ],
         "T2": [
             Point(id='DVG', track_section='T2', position=0, type="switch"),  # noqa
             Point(id='D2', track_section='T2', position=180.0, type="detector"),  # noqa
-            Point(id='S2', track_section='T2', position=840.0, type="signal"),  # noqa
+            Point(id='S2', track_section='T2', position=200.0, type="signal"),  # noqa
         ],
         "T3": [
-            Point(id='S3', track_section='T3', position=160.0, type="signal"),  # noqa
+            Point(id='station', track_section='T3', position=790.0, type="station"),  # noqa
+            Point(id='S3', track_section='T3', position=800.0, type="signal"),  # noqa
             Point(id='D3', track_section='T3', position=820.0, type="detector"),  # noqa
-            Point(id='station', track_section='T3', position=830.0, type="station"),  # noqa
             Point(id='CVG', track_section='T3', position=1000.0, type="switch"),  # noqa
         ],
         "T4": [
-            Point(id='S4', track_section='T4', position=160.0, type="signal"),  # noqa
+            Point(id='station', track_section='T4', position=790.0, type="station"),  # noqa
+            Point(id='S4', track_section='T4', position=800.0, type="signal"),  # noqa
             Point(id='D4', track_section='T4', position=820.0, type="detector"),  # noqa
-            Point(id='station', track_section='T4', position=830.0, type="station"),  # noqa
             Point(id='CVG', track_section='T4', position=1000.0, type="switch"),  # noqa
         ],
         "T5": [
@@ -237,10 +237,10 @@ def test_station_capacity2_results_points_encountered_by_train(
         {'id': 'D0', 'offset': 810.0, 'type': 'detector'},
         {'id': 'DVG', 'offset': 990.0, 'type': 'switch'},
         {'id': 'D1', 'offset': 1170.0, 'type': 'detector'},
-        {'id': 'S1', 'offset': 1830.0, 'type': 'signal'},
-        {'id': 'S3', 'offset': 2150.0, 'type': 'signal'},
+        {'id': 'S1', 'offset': 1190.0, 'type': 'signal'},
+        {'id': 'station', 'offset': 2780.0, 'type': 'station'},
+        {'id': 'S3', 'offset': 2790.0, 'type': 'signal'},
         {'id': 'D3', 'offset': 2810.0, 'type': 'detector'},
-        {'id': 'station', 'offset': 2820.0, 'type': 'station'},
         {'id': 'CVG', 'offset': 2990.0, 'type': 'switch'},
         {'id': 'D5', 'offset': 3170.0, 'type': 'detector'},
         {'id': 'S5', 'offset': 3190.0, 'type': 'signal'},
