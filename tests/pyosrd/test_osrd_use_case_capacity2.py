@@ -227,7 +227,7 @@ def test_station_capacity2_results_points_encountered_by_train(
     points = [
         {
             k: v for k, v in d.items()
-            if k not in ['t_base', 't_eco']
+            if not k.startswith('t_')
         }
         for d in use_case_station_capacity2.points_encountered_by_train(0)
     ]

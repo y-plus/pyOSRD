@@ -265,7 +265,7 @@ class Schedule(object):
         train2: int,
         block: Union[int, str]
     ) -> 'Schedule':
-        """Train1 waits until train has freed block"""
+        """Train1 waits until train 2 has freed block"""
 
         train1_waits_at = self.previous_block(train1, block)
 

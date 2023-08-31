@@ -242,7 +242,7 @@ def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
     points = [
         {
             k: v for k, v in d.items()
-            if k not in ['t_base', 't_eco']
+            if not k.startswith('t_')
         }
         for d in use_case_cvg_dvg.points_encountered_by_train(0)
     ]

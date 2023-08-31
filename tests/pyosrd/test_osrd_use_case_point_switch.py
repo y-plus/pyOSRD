@@ -252,7 +252,7 @@ def test_point_switch_points_encountered_by_train0(use_case_point_switch):
     points = [
         {
             k: v for k, v in d.items()
-            if k not in ['t_base', 't_eco']
+            if not k.startswith('t_')
         }
         for d in use_case_point_switch.points_encountered_by_train(0)
     ]
@@ -273,7 +273,7 @@ def test_point_switch_points_encountered_by_train1_reverse(
     points = [
         {
             k: v for k, v in d.items()
-            if k not in ['t_base', 't_eco']
+            if not k.startswith('t_')
         }
         for d in use_case_point_switch.points_encountered_by_train(1)
     ]

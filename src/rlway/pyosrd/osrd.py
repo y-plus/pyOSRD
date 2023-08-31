@@ -607,7 +607,8 @@ class OSRD():
                 'type': point.type,
             }
             for point in list(points.values())
-            if ((
+            if (
+                (
                     point_direction(point) == train_direction(point, train)
                     or point_direction(point) == 'BOTH'
                 )
@@ -636,6 +637,11 @@ class OSRD():
             for point in list_:
                 point['t_'+eco_or_base] = np.interp(
                     [point['offset']],
+                    path_offset,
+                    t
+                ).item()
+                point['t_tail_'+eco_or_base] = np.interp(
+                    [point['offset'] + self.train_lengths[train]],
                     path_offset,
                     t
                 ).item()
@@ -717,3 +723,15 @@ class OSRD():
         )
 
         return ax
+
+    @property
+    def train_lengths(self) -> list[float]:
+        lengths = {
+            rs['name']: rs['length']
+            for rs in self.simulation['rolling_stocks']
+        }
+        return [
+            lengths[train['rolling_stock']]
+            for group in self.simulation['train_schedule_groups']
+            for train in group['schedules']
+        ]

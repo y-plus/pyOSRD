@@ -23,7 +23,7 @@ def point_switch(
 
     All tracks are 10 km long
     Train 0 starts from the beginning of T0 at t=0s, and arrives at the end of T1
-    Train 1 starts from the end of T2 at t=60s, and arrives at the beginning of T0
+    Train 1 starts from the end of T2 at t=100s, and arrives at the beginning of T0
     """  # noqa
 
     infra_builder = InfraBuilder()
