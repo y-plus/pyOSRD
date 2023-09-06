@@ -1,11 +1,13 @@
-from typing import List, Tuple, Union
+import base64
 import copy
+from typing import List, Tuple, Union
 
+import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+from IPython.display import Image
 from matplotlib.axes._axes import Axes
-import networkx as nx
 
 
 class Schedule(object):
@@ -426,27 +428,20 @@ class Schedule(object):
 
         return G
 
-    def draw_graph(self) -> Axes:
-        """
+    def draw_graph(self) -> None:
+        def mm(graph):
+            graphbytes = graph.encode("ascii")
+            base64_bytes = base64.b64encode(graphbytes)
+            base64_string = base64_bytes.decode("ascii")
+            return Image(url="https://mermaid.ink/img/" + base64_string)
 
-        https://networkx.org/documentation/stable/auto_examples/graph/plot_dag_layout.html
-        """
+        g = "graph LR;"+";".join([
+            f"{edge[0].replace('<','').replace('>','')}"
+            f"-->{edge[1].replace('<','').replace('>','')}"
+            for edge in self.graph.edges
+        ])
 
-        G = self.graph
-
-        for layer, nodes in enumerate(nx.topological_generations(G)):
-            # `multipartite_layout` expects the layer as a node attribute,
-            # so add the numeric layer value as a node attribute
-            for node in nodes:
-                G.nodes[node]["layer"] = layer
-
-        # Compute the multipartite_layout using the "layer" node attribute
-        pos = nx.multipartite_layout(G, subset_key="layer")
-
-        _, ax = plt.subplots()
-        nx.draw_networkx(G, pos, node_shape='s', ax=ax)
-
-        return ax
+        return mm(g)
 
     def propagate_delay(self, delayed_train: int) -> Tuple[pd.DataFrame, int]:
 
