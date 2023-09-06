@@ -466,6 +466,11 @@ class OSRD():
     def _track_section_network(self) -> nx.DiGraph:
 
         ts = nx.DiGraph()
+
+        if len(self.infra['track_sections']) == 1:
+            ts.add_node(self.infra['track_sections'][0]['id'])
+            return ts
+
         for t in self.infra['track_section_links']:
             ts.add_edge(
                 t['src']['track'],
@@ -529,7 +534,7 @@ class OSRD():
 
         tracks_directions = []
 
-        if len(tracks) > 0:
+        if len(tracks) > 1:
             for i, t in enumerate(tracks):
                 if i == 0:
                     entry = nx.get_edge_attributes(ts, 'in_by')[
@@ -543,7 +548,15 @@ class OSRD():
                     'id': t,
                     'direction': DIRECTION_GIVEN_ENTRY[entry],
                 })
-
+        else:
+            direction = 'START_TO_STOP' if (
+                self.train_departure(train).position
+                <= self.train_arrival(train).position
+            ) else 'STOP_TO_START'
+            tracks_directions = [{
+                'id': tracks[0],
+                'direction': direction,
+            }]
         return tracks_directions
 
     def points_encountered_by_train(
@@ -684,7 +697,7 @@ class OSRD():
 
         return data, points
 
-    def space_time_graph(
+    def space_time_chart(
         self,
         train: int,
         eco_or_base: str = 'base',
@@ -693,7 +706,7 @@ class OSRD():
     ) -> Axes:
         """Draw space-time graph for a given train
 
-        >>> ax = sim.space_time_graph(train=0, ...)
+        >>> ax = sim.space_time_chart(train=0, ...)
 
         Parameters
         ----------
@@ -743,7 +756,7 @@ class OSRD():
 
         return ax
 
-    def space_time_graph_plotly(
+    def space_time_chart_plotly(
         self,
         train: int,
         eco_or_base: str = 'base',
@@ -752,7 +765,7 @@ class OSRD():
     ) -> go.Figure:
         """Draw space-time graph for a given train
 
-        >>> ax = sim.space_time_graph(train=0, ...)
+        >>> ax = sim.space_time_chart(train=0, ...)
 
         Parameters
         ----------
@@ -784,7 +797,7 @@ class OSRD():
                 for t in data
             ],
             layout={
-                "title": 'train 0 (base)',
+                "title": f'train 0 ({eco_or_base})',
                 "template": "simple_white",
                 "xaxis_title": 'Time [min]',
                 "hovermode": "x unified"
