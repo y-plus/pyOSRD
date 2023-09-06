@@ -288,9 +288,9 @@ def test_point_switch_points_encountered_by_train1_reverse(
     assert points == expected
 
 
-def test_point_switch_space_time_graph(use_case_point_switch):
+def test_point_switch_space_time_chart(use_case_point_switch):
 
-    ax = use_case_point_switch.space_time_graph(0, points_to_show=['switch'])
+    ax = use_case_point_switch.space_time_chart(0, points_to_show=['switch'])
 
     assert ax.dataLim.xmin == 0.
     assert round(ax.dataLim.ymin) == 0.

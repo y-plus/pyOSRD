@@ -247,9 +247,9 @@ def test_station_capacity2_results_points_encountered_by_train(
     assert expected == points
 
 
-def test_station_capacity2_space_time_graph(use_case_station_capacity2):
+def test_station_capacity2_space_time_chart(use_case_station_capacity2):
 
-    ax = use_case_station_capacity2.space_time_graph(
+    ax = use_case_station_capacity2.space_time_chart(
         0,
         points_to_show=['station']
     )

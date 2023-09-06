@@ -1,6 +1,5 @@
 import copy
 from pandas.testing import assert_frame_equal
-from matplotlib.text import Text
 import matplotlib.pyplot as plt
 
 
@@ -22,13 +21,3 @@ def test_schedules_plot(two_trains):
         == [str(train) for train in two_trains.trains]
     )
     plt.close()
-
-
-def test_schedules_draw_graph(two_trains):
-    ax = two_trains.draw_graph()
-    for node in two_trains.graph.nodes:
-        assert str(node) in [
-            text._text
-            for text in ax.get_children()
-            if isinstance(text, Text)
-        ]

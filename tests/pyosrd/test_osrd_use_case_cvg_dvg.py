@@ -263,9 +263,9 @@ def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
     assert points == expected
 
 
-def test_cvg_dvg_space_time_graph(use_case_cvg_dvg):
+def test_cvg_dvg_space_time_chart(use_case_cvg_dvg):
 
-    ax = use_case_cvg_dvg.space_time_graph(0, points_to_show=['station'])
+    ax = use_case_cvg_dvg.space_time_chart(0, points_to_show=['station'])
 
     assert ax.dataLim.xmin == 0.
     assert round(ax.dataLim.ymin) == 0.
