@@ -7,10 +7,9 @@ from railjson_generator import (
 )
 
 from railjson_generator.schema.infra.direction import Direction
-from railjson_generator.schema.simulation.stop import Stop
 
 
-def straight_line(
+def straight_line_with_blocks(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
@@ -18,7 +17,7 @@ def straight_line(
     """
     station A (1 track)                        station B (1 track)
 
-             ┎SA                                    SB┐
+             ┎SA       ┎S2000                              SB┐
      (T)-|----DA------------------------------------DB-----|---->
 
     10 km long
@@ -34,6 +33,21 @@ def straight_line(
 
     DA = T.add_detector(label="DA", position=500, )
     DB = T.add_detector(label="DB", position=T.length-500, )
+
+    for i in range(4):
+        T.add_detector(label=f"D{(i+1)*2}", position=(i+1)*2_000, )
+        T.add_signal(
+            (i+1)*2_000 - 20,
+            label=f"S{(i+1)*2}.0",
+            direction=Direction.START_TO_STOP,
+            is_route_delimiter=True,
+        ).add_logical_signal("BAL", settings={"Nf": "true"})
+        T.add_signal(
+            (i+1)*2_000 + 20,
+            label=f"S{(i+1)*2}.1",
+            direction=Direction.STOP_TO_START,
+            is_route_delimiter=True,
+        ).add_logical_signal("BAL", settings={"Nf": "true"})
 
     SA = T.add_signal(
         DA.position - 20,
@@ -75,10 +89,10 @@ def straight_line(
     train1.add_standard_single_value_allowance("percentage", 5, )
 
     train2 = sim_builder.add_train_schedule(
-        B,
         A,
+        B,
         label='Second train',
-        departure_time=7*60.,
+        departure_time=3*60.,
     )
 
     train2.add_standard_single_value_allowance("percentage", 5, )
