@@ -13,7 +13,7 @@ setup(
     python_requires=">=3.9",
     setup_requires=["wheel"],
     install_requires=[
-        # 'gymnasium',
+        'gymnasium',
         # 'pyg-lib==0.1.0+pt113cu117',
         # 'torch-scatter==2.1.0+pt113cu117',
         # 'torch-sparse==0.6.16+pt113cu117',

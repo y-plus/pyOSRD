@@ -358,16 +358,17 @@ class Schedule(object):
             .astype(float)
         )
 
+    def train_delay(self, train, initial_schedule: 'Schedule') -> pd.DataFrame:
+
+        return self.delays(initial_schedule).max().loc[train]
+
     def total_delay_at_stations(
         self,
         initial_schedule,
         stations: List[Union[int, str]]
     ) -> float:
 
-        try:
-            return self.delays(initial_schedule).iloc[stations].sum().sum()
-        except:
-            return self.delays(initial_schedule).loc[stations].sum().sum()
+        return self.delays(initial_schedule).loc[stations].sum().sum()
 
     def first_in(
         self,

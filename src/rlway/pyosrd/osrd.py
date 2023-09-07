@@ -833,3 +833,49 @@ class OSRD():
             for group in self.simulation['train_schedule_groups']
             for train in group['schedules']
         ]
+
+    @property
+    def _tvds(self) -> list[list[str]]:
+
+        tvds = []
+        for route in self.infra['routes']:
+            limit_tvds = []
+            limit_tvds.append(route['entry_point']['id'])
+            for d in route['release_detectors']:
+                limit_tvds.append(d)
+            limit_tvds.append(route['exit_point']['id'])
+            tvds += [
+                set([limit_tvds[i], limit_tvds[i+1]])
+                for i, _ in enumerate(limit_tvds[:-1])
+            ]
+
+        unique_tvds = []
+        for tvd in tvds:
+            if tvd not in unique_tvds:
+                unique_tvds.append((tvd))
+
+        return unique_tvds
+
+    @property
+    def tvd_blocks(self) -> dict[str, str]:
+
+        tvd_blocks = {
+            "<->".join(sorted(d)): "<->".join(sorted(d))
+            for d in self._tvds
+        }
+
+        for switch in self.infra['switches']:
+            detectors = []
+            for port in switch['ports'].values():
+                idx = 0 if port['endpoint'] == 'BEGIN' else -1
+                detectors_on_track = [
+                    p.id for p in self.points_on_track_sections[port['track']]
+                    if p.type == 'detector'
+                ]
+                detectors.append(detectors_on_track[idx])
+
+            for a in combinations(detectors, 2):
+                if set(a) in self._tvds:
+                    tvd_blocks["<->".join(sorted(a))] = switch['id']
+
+        return tvd_blocks
