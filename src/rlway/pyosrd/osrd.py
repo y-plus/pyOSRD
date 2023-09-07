@@ -797,7 +797,7 @@ class OSRD():
                 for t in data
             ],
             layout={
-                "title": f'train 0 ({eco_or_base})',
+                "title": f'train {train} ({eco_or_base})',
                 "template": "simple_white",
                 "xaxis_title": 'Time [min]',
                 "hovermode": "x unified"
