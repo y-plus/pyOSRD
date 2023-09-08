@@ -15,12 +15,10 @@ def straight_line_with_blocks(
     simulation_json: str = 'simulation.json',
 ) -> None:
     """
-    station A (1 track)                        station B (1 track)
+           ┎SA       ┎S2.0 S2.1┐       ┎S8.0 S8.1┐       SB┐
+     (T)-A--DA------------D2-----...-------D8------------DB--B---->
 
-             ┎SA       ┎S2000                              SB┐
-     (T)-|----DA------------------------------------DB-----|---->
-
-    10 km long
+    10 km long, Detectors D2,D4,D6,D8 detectors every 2km
     Trains start from A and arrive at B
     """  # noqa
 

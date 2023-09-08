@@ -22,7 +22,9 @@ def straight_line(
      (T)-|----DA------------------------------------DB-----|---->
 
     10 km long
-    Trains start from A and arrive at B
+    Train #1 start from A and arrive at B
+    Train #2 start from B and arrive at A
+    The two train collide !
     """  # noqa
 
     infra_builder = InfraBuilder()
@@ -68,7 +70,7 @@ def straight_line(
     train1 = sim_builder.add_train_schedule(
         A,
         B,
-        label='First train',
+        label='train0',
         departure_time=0,
     )
     train1.add_stop(120., position=7_500)
@@ -77,7 +79,7 @@ def straight_line(
     train2 = sim_builder.add_train_schedule(
         B,
         A,
-        label='Second train',
+        label='train1',
         departure_time=7*60.,
     )
 

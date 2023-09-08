@@ -429,20 +429,19 @@ class Schedule(object):
 
         return G
 
-    def draw_graph(self) -> None:
-        def mm(graph):
-            graphbytes = graph.encode("ascii")
-            base64_bytes = base64.b64encode(graphbytes)
-            base64_string = base64_bytes.decode("ascii")
-            return Image(url="https://mermaid.ink/img/" + base64_string)
-
-        g = "graph LR;"+";".join([
-            f"{edge[0].replace('<','').replace('>','')}"
-            f"-->{edge[1].replace('<','').replace('>','')}"
+    @property
+    def _mermaid_graph(self) -> str:
+        return "graph LR;"+";".join([
+            f"{str(edge[0]).replace('<','').replace('>','')}"
+            f"-->{str(edge[1]).replace('<','').replace('>','')}"
             for edge in self.graph.edges
         ])
-
-        return mm(g)
+    
+    def draw_graph(self) -> Image:
+        graphbytes = self._mermaid_graph.encode("ascii")
+        base64_bytes = base64.b64encode(graphbytes)
+        base64_string = base64_bytes.decode("ascii")
+        return Image(url="https://mermaid.ink/img/" + base64_string)
 
     def propagate_delay(self, delayed_train: int) -> Tuple[pd.DataFrame, int]:
 

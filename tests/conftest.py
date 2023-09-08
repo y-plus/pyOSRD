@@ -1,3 +1,5 @@
+import shutil
+
 import pytest
 
 from rlway.pyosrd import OSRD
@@ -26,7 +28,7 @@ def three_trains() -> Schedule:
     return schedule
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def two_trains() -> Schedule:
     schedule = Schedule(6, 2)
 
@@ -43,7 +45,7 @@ def two_trains() -> Schedule:
     return schedule
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def two_trains_two_blocks_before_dvg() -> Schedule:
     schedule = Schedule(7, 2)
 
@@ -64,27 +66,38 @@ def two_trains_two_blocks_before_dvg() -> Schedule:
 
 @pytest.fixture(scope='session')
 def osrd_cvg_dvg_missing_sim():
-    return OSRD(
+    yield OSRD(
         results_json="missing.json",
         simulation_json="missing.json",
     )
+    shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def osrd_cvg_dvg_before_run():
-    return OSRD(results_json="missing.json")
+    yield OSRD(results_json="missing.json")
+    shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_cvg_dvg():
-    return OSRD(dir='tmp', use_case='cvg_dvg')
+    yield OSRD(dir='tmp', use_case='cvg_dvg')
+    shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_station_capacity2():
-    return OSRD(dir='tmp', use_case='station_capacity2')
+    yield OSRD(dir='tmp', use_case='station_capacity2')
+    shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_point_switch():
-    return OSRD(dir='tmp', use_case='point_switch')
+    yield OSRD(dir='tmp', use_case='point_switch')
+    shutil.rmtree('tmp', ignore_errors=True)
+
+
+@pytest.fixture(scope='session')
+def use_case_straight_line():
+    yield OSRD(dir='tmp', use_case='straight_line')
+    shutil.rmtree('tmp', ignore_errors=True)

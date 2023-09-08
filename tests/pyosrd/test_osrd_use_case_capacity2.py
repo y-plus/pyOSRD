@@ -263,3 +263,39 @@ def test_station_capacity2_space_time_chart(use_case_station_capacity2):
     )
     assert ax.get_title() == "train0 (base)"
     plt.close()
+
+
+def test_station_capacity2_blocks(use_case_station_capacity2):
+
+    expected = {
+        'D0<->buffer_stop.0': 'D0<->buffer_stop.0',
+        'D0<->D1': 'DVG',
+        'D1<->D3': 'D1<->D3',
+        'D0<->D2': 'DVG',
+        'D2<->D4': 'D2<->D4',
+        'D3<->D5': 'CVG',
+        'D5<->buffer_stop.5': 'D5<->buffer_stop.5',
+        'D4<->D5': 'CVG',
+    }
+    assert use_case_station_capacity2.tvd_blocks == expected
+
+
+def test_station_capacity2_entry_signals(use_case_station_capacity2):
+
+    expected = [
+        {
+            'D0<->buffer_stop.0': None,
+            'DVG': 'S0',
+            'D1<->D3': 'S0',
+            'CVG': 'S3',
+            'D5<->buffer_stop.5': 'S3',
+        },
+        {
+            'D0<->buffer_stop.0': None,
+            'DVG': 'S0',
+            'D2<->D4': 'S0',
+            'CVG': 'S4',
+            'D5<->buffer_stop.5': 'S4',
+        }
+    ]
+    assert use_case_station_capacity2.entry_signals == expected

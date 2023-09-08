@@ -80,38 +80,6 @@ def station_capacity2(
             label=f"S{i}"
         )
         signal.add_logical_signal("BAL", settings={"Nf": "true"})
-    # detectors = [
-    #     track_sections[i].add_detector(
-    #         label=f"D{i}",
-    #         position=track_sections[i].length-180,
-    #     )
-    #     for i in [0, 3, 4]
-    # ] + [
-    #     track_sections[i].add_detector(
-    #         label=f"D{i}",
-    #         position=180.,
-    #     )
-    #     for i in [1, 2, 5]
-    # ]
-    # signals = [
-    #     track_sections[i].add_signal(
-    #         detectors[i].position-20,
-    #         Direction.START_TO_STOP,
-    #         is_route_delimiter=True,
-    #         label=f"S{i}"
-    #     )
-    #     for i in [0, 3, 4]
-    # ] + [
-    #     track_sections[i].add_signal(
-    #         detectors[i].position+20,
-    #         Direction.STOP_TO_START,
-    #         is_route_delimiter=True,
-    #         label=f"S{i}",
-    #     )
-    #     for i in [1, 2, 5]
-    # ]
-    # for signal in signals:+
-    #     signal.add_logical_signal("BAL", settings={"Nf": "true"})
 
     station = infra_builder.add_operational_point(label='station')
     for i in [3, 4]:
@@ -122,32 +90,26 @@ def station_capacity2(
 
     os.makedirs(dir, exist_ok=True)
 
-    try:
-        built_infra = infra_builder.build()
-        built_infra.save(os.path.join(dir, infra_json))
-    except RuntimeError as e:
-        print('infra: ', e)
+    built_infra = infra_builder.build()
+    built_infra.save(os.path.join(dir, infra_json))
 
-    try:
-        sim_builder = SimulationBuilder()
+    sim_builder = SimulationBuilder()
 
-        sim_builder.add_train_schedule(
-            Location(built_infra.track_sections[0], 10.),
-            Location(built_infra.track_sections[3], 790),
-            Location(built_infra.track_sections[5], 990),
-            label='train0',
-            departure_time=0.,
-        )
+    sim_builder.add_train_schedule(
+        Location(built_infra.track_sections[0], 10.),
+        Location(built_infra.track_sections[3], 790),
+        Location(built_infra.track_sections[5], 990),
+        label='train0',
+        departure_time=0.,
+    )
 
-        sim_builder.add_train_schedule(
-            Location(built_infra.track_sections[0], 10.),
-            Location(built_infra.track_sections[4], 790),
-            Location(built_infra.track_sections[5], 990),
-            label='train1',
-            departure_time=300.,
-        )
+    sim_builder.add_train_schedule(
+        Location(built_infra.track_sections[0], 10.),
+        Location(built_infra.track_sections[4], 790),
+        Location(built_infra.track_sections[5], 990),
+        label='train1',
+        departure_time=300.,
+    )
 
-        built_simulation = sim_builder.build()
-        built_simulation.save(os.path.join(dir, simulation_json))
-    except RuntimeError as e:
-        print('simulation: ', e)
+    built_simulation = sim_builder.build()
+    built_simulation.save(os.path.join(dir, simulation_json))

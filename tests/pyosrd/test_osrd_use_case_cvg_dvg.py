@@ -276,3 +276,40 @@ def test_cvg_dvg_space_time_chart(use_case_cvg_dvg):
     )
     assert ax.get_title() == "train0 (base)"
     plt.close()
+
+
+def test_cvg_dvg_tvd_blocks(use_case_cvg_dvg):
+
+    expected = {
+        'D0<->buffer_stop.0': 'D0<->buffer_stop.0',
+        'D0<->D2': 'CVG',
+        'D2<->D3': 'D2<->D3',
+        'D1<->buffer_stop.1': 'D1<->buffer_stop.1',
+        'D1<->D2': 'CVG',
+        'D3<->D4': 'DVG',
+        'D4<->buffer_stop.2': 'D4<->buffer_stop.2',
+        'D3<->D5': 'DVG',
+        'D5<->buffer_stop.3': 'D5<->buffer_stop.3',
+    }
+    assert use_case_cvg_dvg.tvd_blocks == expected
+
+
+def test_cvg_dvg_entry_signals(use_case_cvg_dvg):
+
+    expected = [
+        {
+            'D0<->buffer_stop.0': None,
+            'CVG': 'S0',
+            'D2<->D3': 'S0',
+            'DVG': 'S3',
+            'D4<->buffer_stop.2': 'S3',
+        },
+        {
+            'D1<->buffer_stop.1': None,
+            'CVG': 'S1',
+            'D2<->D3': 'S1',
+            'DVG': 'S3',
+            'D5<->buffer_stop.3': 'S3',
+        }
+    ]
+    assert use_case_cvg_dvg.entry_signals == expected
