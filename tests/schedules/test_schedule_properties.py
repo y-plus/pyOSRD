@@ -56,7 +56,7 @@ def test_schedules_ends(three_trains):
     assert_frame_equal(three_trains.ends, expected)
 
 
-def test_schedules_lengths(three_trains):
+def test_schedules_durations(three_trains):
     expected = pd.DataFrame(
         {
             0: [1, np.nan, 1, 1, 1, np.nan],
@@ -64,7 +64,7 @@ def test_schedules_lengths(three_trains):
             2: [1, np.nan, 1, 1, 1, np.nan],
         },
     )
-    assert_frame_equal(three_trains.lengths, expected)
+    assert_frame_equal(three_trains.durations, expected)
 
 
 def test_schedules_trajectory(three_trains):

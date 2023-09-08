@@ -72,7 +72,7 @@ class Schedule(object):
             ].set_axis(self._df.columns.levels[0], axis=1).astype(float)
 
     @property
-    def lengths(self) -> pd.DataFrame:
+    def durations(self) -> pd.DataFrame:
         """How much time do the train occupy the block"""
         return self.ends - self.starts
 
@@ -503,7 +503,7 @@ class Schedule(object):
         _, ax = plt.subplots()
         for train in self._df.columns.levels[0]:
             ax.barh(
-                width=self.lengths[train],
+                width=self.durations[train],
                 left=self.starts[train],
                 y=self._df.index,
                 label=train,
