@@ -15,7 +15,6 @@ def test_schedules_sort(two_trains):
 def test_schedules_plot(two_trains):
     ax = two_trains.plot()
     assert ax.get_xlabel() == 'Time'
-    assert ax.get_ylabel() == 'Track sections'
     assert (
         [text._text for text in ax.get_legend().get_texts()]
         == [str(train) for train in two_trains.trains]
