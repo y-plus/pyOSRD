@@ -250,7 +250,7 @@ class Schedule(object):
         start = self._df.loc[block, (train, 's')]
         new_schedule = copy.deepcopy(self)
 
-        # extend length at given block
+        # extend duration at given block
         new_schedule._df.loc[block, (train, 'e')] += delay
 
         # Add delay to all subsequent blocks
@@ -286,7 +286,7 @@ class Schedule(object):
             block_shift = block
 
         # if the conflict occurs just after a switch point,
-        # train shoud wait before the switch
+        # train should wait before the switch
         if self.is_just_after_a_point_switch(train1, train2, block):
             train1_waits_at = \
                 self.previous_block(train1, train1_waits_at)
@@ -436,7 +436,7 @@ class Schedule(object):
             f"-->{str(edge[1]).replace('<','').replace('>','')}"
             for edge in self.graph.edges
         ])
-    
+
     def draw_graph(self) -> Image:
         graphbytes = self._mermaid_graph.encode("ascii")
         base64_bytes = base64.b64encode(graphbytes)
@@ -510,9 +510,8 @@ class Schedule(object):
                 height=1,
                 alpha=alpha
                 )
-        # ax.invert_yaxis()
+
         ax.set_xlabel('Time')
-        ax.set_ylabel('Track sections')
         ax.legend()
 
         return ax
