@@ -39,35 +39,6 @@ def test_station_capacity2_infra_routes(use_case_station_capacity2):
         ])
 
 
-def test_station_capacity2_infra_route_switches(use_case_station_capacity2):
-    assert use_case_station_capacity2.route_switches == \
-        {
-            'rt.D0->D3': 'DVG',
-            'rt.D0->D4': 'DVG',
-            'rt.D1->buffer_stop.0': 'DVG',
-            'rt.D2->buffer_stop.0': 'DVG',
-            'rt.D3->buffer_stop.5': 'CVG',
-            'rt.D4->buffer_stop.5': 'CVG',
-            'rt.D5->D1': 'CVG',
-            'rt.D5->D2': 'CVG',
-        }
-
-
-def test_station_capacity2_infra_route_limits(use_case_station_capacity2):
-    assert use_case_station_capacity2.route_limits == \
-        {
-            'D0': ('T0', 820.0),
-            'D1': ('T1', 180.0),
-            'D2': ('T2', 180.0),
-            'D3': ('T3', 820.0),
-            'D4': ('T4', 820.0),
-            'D5': ('T5', 180.0),
-
-            'buffer_stop.0': ('T0', 0.0),
-            'buffer_stop.5': ('T5', 1000.0),
-        }
-
-
 def test_station_capacity2_infra_block_lengths(use_case_station_capacity2):
     assert use_case_station_capacity2.track_section_lengths == \
         {
@@ -77,22 +48,6 @@ def test_station_capacity2_infra_block_lengths(use_case_station_capacity2):
             'T3': 1000.0,
             'T4': 1000.0,
             'T5': 1000.0,
-        }
-
-
-def test_station_capacity2_infra_route_lengths(use_case_station_capacity2):
-    assert use_case_station_capacity2.route_lengths == \
-        {
-            'rt.buffer_stop.0->D0': 820.0,
-            'rt.D0->D3': 2000.0,
-            'rt.D0->D4': 2000.0,
-            'rt.D1->buffer_stop.0': 1180.0,
-            'rt.D2->buffer_stop.0': 1180.0,
-            'rt.D3->buffer_stop.5': 1180.0,
-            'rt.D4->buffer_stop.5': 1180.0,
-            'rt.buffer_stop.5->D5': 820.0,
-            'rt.D5->D1': 2000.0,
-            'rt.D5->D2': 2000.0,
         }
 
 
@@ -161,22 +116,6 @@ def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
     }
 
     assert use_case_station_capacity2.points_on_track_sections == expected
-
-
-def test_station_capacity2_route_tvds(use_case_station_capacity2):
-    expected = {
-        'rt.buffer_stop.0->D0': 'D0<->buffer_stop.0',
-        'rt.D0->D3': 'DVG',
-        'rt.D0->D4': 'DVG',
-        'rt.D1->buffer_stop.0': 'DVG',
-        'rt.D2->buffer_stop.0': 'DVG',
-        'rt.D3->buffer_stop.5': 'CVG',
-        'rt.D4->buffer_stop.5': 'CVG',
-        'rt.buffer_stop.5->D5': 'D5<->buffer_stop.5',
-        'rt.D5->D1': 'CVG',
-        'rt.D5->D2': 'CVG',
-        }
-    assert use_case_station_capacity2.route_tvds == expected
 
 
 def test_station_capacity2_simulation_type(use_case_station_capacity2):

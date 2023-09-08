@@ -43,37 +43,6 @@ def test_cvg_dvg_infra_routes(use_case_cvg_dvg):
         ])
 
 
-def test_cvg_dvg_infra_route_switches(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.route_switches == \
-        {
-            'rt.D0->D3': 'CVG',
-            'rt.D1->D3': 'CVG',
-            'rt.D2->buffer_stop.0': 'CVG',
-            'rt.D2->buffer_stop.1': 'CVG',
-            'rt.D3->buffer_stop.2': 'DVG',
-            'rt.D3->buffer_stop.3': 'DVG',
-            'rt.D4->D2': 'DVG',
-            'rt.D5->D2': 'DVG',
-
-        }
-
-
-def test_cvg_dvg_infra_route_limits(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.route_limits == \
-        {
-            'D0': ('T0', 450.0),
-            'D1': ('T1', 450.0),
-            'D2': ('T2', 50.0),
-            'D3': ('T3', 450.0),
-            'D4': ('T4', 50.0),
-            'D5': ('T5', 50.0),
-            'buffer_stop.0': ('T0', 0.0),
-            'buffer_stop.1': ('T1', 0.0),
-            'buffer_stop.2': ('T4', 500.0),
-            'buffer_stop.3': ('T5', 500.0)
-        }
-
-
 def test_cvg_dvg_infra_block_lengths(use_case_cvg_dvg):
     assert use_case_cvg_dvg.track_section_lengths == \
         {
@@ -83,24 +52,6 @@ def test_cvg_dvg_infra_block_lengths(use_case_cvg_dvg):
             'T3': 500.,
             'T4': 500.,
             'T5': 500.,
-        }
-
-
-def test_cvg_dvg_infra_route_lengths(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.route_lengths == \
-        {
-            'rt.buffer_stop.0->D0': 450.0,
-            'rt.D0->D3': 1000.0,
-            'rt.buffer_stop.1->D1': 450.0,
-            'rt.D1->D3': 1000.0,
-            'rt.D2->buffer_stop.0': 550.0,
-            'rt.D2->buffer_stop.1': 550.0,
-            'rt.D3->buffer_stop.2': 550.0,
-            'rt.D3->buffer_stop.3': 550.0,
-            'rt.buffer_stop.2->D4': 450.0,
-            'rt.D4->D2': 1000.0,
-            'rt.buffer_stop.3->D5': 450.0,
-            'rt.D5->D2': 1000.0,
         }
 
 
@@ -169,24 +120,6 @@ def test_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
     }
 
     assert use_case_cvg_dvg.points_on_track_sections == expected
-
-
-def test_cvg_dvg_route_tvds(use_case_cvg_dvg):
-    expected = {
-            'rt.buffer_stop.0->D0': 'D0<->buffer_stop.0',
-            'rt.D0->D3': 'CVG',
-            'rt.buffer_stop.1->D1': 'D1<->buffer_stop.1',
-            'rt.D1->D3': 'CVG',
-            'rt.D2->buffer_stop.0': 'CVG',
-            'rt.D2->buffer_stop.1': 'CVG',
-            'rt.D3->buffer_stop.2': 'DVG',
-            'rt.D3->buffer_stop.3': 'DVG',
-            'rt.buffer_stop.2->D4': 'D4<->buffer_stop.2',
-            'rt.D4->D2': 'DVG',
-            'rt.buffer_stop.3->D5': 'D5<->buffer_stop.3',
-            'rt.D5->D2': 'DVG'
-        }
-    assert use_case_cvg_dvg.route_tvds == expected
 
 
 def test_cvg_dvg_simulation_type(use_case_cvg_dvg):

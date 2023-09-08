@@ -38,47 +38,12 @@ def test_point_switch_infra_routes(use_case_point_switch):
         ])
 
 
-def test_point_switch_infra_route_switches(use_case_point_switch):
-    assert use_case_point_switch.route_switches == \
-        {
-            'rt.D0->buffer_stop.2': 'DVG',
-            'rt.D0->buffer_stop.1': 'DVG',
-            'rt.D1->buffer_stop.0': 'DVG',
-            'rt.D2->buffer_stop.0': 'DVG',
-        }
-
-
-def test_point_switch_infra_route_limits(use_case_point_switch):
-    assert use_case_point_switch.route_limits == \
-        {
-            'D0': ('T0', 9820.0),
-            'D1': ('T1', 180.0),
-            'D2': ('T2', 180.0),
-            'buffer_stop.0': ('T0', 0.0),
-            'buffer_stop.1': ('T1', 10_000.0),
-            'buffer_stop.2': ('T2', 10_000.0),
-        }
-
-
 def test_point_switch_infra_track_lengths(use_case_point_switch):
     assert use_case_point_switch.track_section_lengths == \
         {
             'T0': 10_000.0,
             'T1': 10_000.0,
             'T2': 10_000.0,
-        }
-
-
-def test_point_switch_infra_route_lengths(use_case_point_switch):
-    assert use_case_point_switch.route_lengths == \
-        {
-            'rt.D0->buffer_stop.2': 10_180.,
-            'rt.D0->buffer_stop.1': 10_180.,
-            'rt.buffer_stop.0->D0': 9_820.,
-            'rt.D1->buffer_stop.0': 10_180.,
-            'rt.buffer_stop.1->D1': 9_820.,
-            'rt.D2->buffer_stop.0': 10_180.,
-            'rt.buffer_stop.2->D2': 9_820.,
         }
 
 
@@ -122,25 +87,11 @@ def test_point_switch_points_on_tracks(use_case_point_switch):
             Point(track_section='T2', id='DVG', position=0, type='switch'),  # noqa
             Point(track_section='T2', id='D2', position=180.0, type='detector'),  # noqa
             Point(track_section='T2', id='S2', position=200.0, type='signal'),  # noqa
-            Point(id='buffer_stop.2', track_section='T2', position=10000.0, type='buffer_stop'),  #  noqa
+            Point(id='buffer_stop.2', track_section='T2', position=10000.0, type='buffer_stop'),  # noqa
         ],
     }
 
     assert use_case_point_switch.points_on_track_sections == expected
-
-
-def test_point_switch_route_tvds(use_case_point_switch):
-    expected = {
-        'rt.D0->buffer_stop.2': 'DVG',
-        'rt.D0->buffer_stop.1': 'DVG',
-        'rt.buffer_stop.0->D0': 'D0<->buffer_stop.0',
-        'rt.D1->buffer_stop.0': 'DVG',
-        'rt.buffer_stop.1->D1': 'D1<->buffer_stop.1',
-        'rt.D2->buffer_stop.0': 'DVG',
-        'rt.buffer_stop.2->D2': 'D2<->buffer_stop.2'
-    }
-
-    assert use_case_point_switch.route_tvds == expected
 
 
 def test_point_switch_simulation_type(use_case_point_switch):

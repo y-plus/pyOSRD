@@ -33,34 +33,10 @@ def test_straight_line_infra_routes(use_case_straight_line):
         ])
 
 
-def test_straight_line_infra_route_switches(use_case_straight_line):
-    assert use_case_straight_line.route_switches == {}
-
-
-def test_straight_line_infra_route_limits(use_case_straight_line):
-    assert use_case_straight_line.route_limits == \
-        {
-            'DA': ('T', 500),
-            'DB': ('T', 9_500),
-            'buffer_stop.0': ('T', 0),
-            'buffer_stop.1': ('T', 10_000)
-        }
-
-
 def test_straight_line_infra_block_lengths(use_case_straight_line):
     assert use_case_straight_line.track_section_lengths == \
         {
             'T': 10_000.0,
-        }
-
-
-def test_straight_line_infra_route_lengths(use_case_straight_line):
-    assert use_case_straight_line.route_lengths == \
-        {
-            'rt.buffer_stop.0->DA': 500,
-            'rt.DA->buffer_stop.1': 9_500,
-            'rt.DB->buffer_stop.0': 9_500,
-            'rt.buffer_stop.1->DB': 500,
         }
 
 
@@ -108,16 +84,6 @@ def test_straight_line_points_on_tracks(use_case_straight_line):
     }
 
     assert use_case_straight_line.points_on_track_sections == expected
-
-
-def test_straight_line_route_tvds(use_case_straight_line):
-    expected = {
-        'rt.buffer_stop.0->DA': 'DA<->buffer_stop.0',
-        'rt.DA->buffer_stop.1': 'DA<->buffer_stop.1',
-        'rt.DB->buffer_stop.0': 'DB<->buffer_stop.0',
-        'rt.buffer_stop.1->DB': 'DB<->buffer_stop.1',
-    }
-    assert use_case_straight_line.route_tvds == expected
 
 
 def test_straight_line_simulation_type(use_case_straight_line):

@@ -6,7 +6,7 @@ import pkgutil
 from dataclasses import dataclass
 from importlib.resources import files
 from itertools import combinations
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -150,93 +150,9 @@ class OSRD():
         return [route['id'] for route in self.infra['routes']]
 
     @property
-    def route_switches(self) -> Dict[str, str]:
-        """Dict of routes that are switches and corresponding switch name"""
-        return {
-            route['id']: list(route['switches_directions'].keys())[0]
-            for route in self.infra['routes']
-            if len(list(route['switches_directions'].keys())) != 0
-        }
-
-    @property
-    def route_limits(self) -> Dict[str, Tuple[str, float]]:
-        """Dict of routes limiting points (detectors and buffer stops)
-
-        >>> {'point_id' : ('track_id', position: float), ...}
-
-        Returns
-        -------
-        Dict[str, Tuple[str, float]]
-            Keys are points ids,
-            values are tuples (associated track, position)
-        """
-
-        points_dict = {
-            d['id']: (d['track'], d['position'])
-            for d in self.infra['detectors']
-        }
-        points_dict.update({
-            bs['id']: (bs['track'], bs['position'])
-            for bs in self.infra['buffer_stops']
-        })
-        return points_dict
-
-    @property
     def track_section_lengths(self) -> Dict[str, float]:
         """Dict of track sections and their lengths"""
         return {t['id']: t['length'] for t in self.infra['track_sections']}
-
-    @property
-    def route_lengths(self) -> Dict[str, float]:
-        """Dict of routes and their lengths"""
-
-        ts = self._track_section_network
-
-        route_lengths = dict()
-
-        for route in self.routes:
-            P1, P2 = route.replace('rt.', '').split('->')
-            point1 = [point for point in self._points if point.id == P1][0]
-            point2 = [point for point in self._points if point.id == P2][0]
-            tracks_between = nx.shortest_path(
-                ts,
-                point1.track_section,
-                point2.track_section
-            )
-
-            distance = 0
-            if len(tracks_between) == 1:
-                distance = abs(point1.position - point2.position)
-            else:
-                distance = (
-                    point1.position
-                    if nx.get_edge_attributes(ts, 'out_by')[
-                        tracks_between[0],
-                        tracks_between[1]
-                    ] == 'BEGIN'
-                    else (
-                        self.track_section_lengths[point1.track_section]
-                        - point1.position
-                    )
-                )
-                distance += sum(
-                    self.track_section_lengths[track]
-                    for track in tracks_between[1:-1]
-                )
-                distance += (
-                    point2.position
-                    if nx.get_edge_attributes(ts, 'in_by')[
-                        tracks_between[-2],
-                        tracks_between[-1]
-                    ] == 'BEGIN'
-                    else (
-                        self.track_section_lengths[point2.track_section]
-                        - point2.position
-                    )
-                )
-            route_lengths[route] = distance
-
-        return route_lengths
 
     @property
     def num_switches(self) -> int:
@@ -410,17 +326,6 @@ class OSRD():
             for route in self.routes
         ])
         mm(g)
-
-    @property
-    def route_tvds(self) -> Dict[str, str]:
-        """Routes and their associated TVDs (Track Vacancy Detections)"""
-        return {
-            route['id']:
-            '<->'.join(sorted(route['id'].replace('rt.', '').split('->')))
-            if not route['switches_directions']
-            else list(route['switches_directions'].keys())[0]
-            for route in self.infra['routes']
-        }
 
     @property
     def num_trains(self) -> int:
