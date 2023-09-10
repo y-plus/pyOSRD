@@ -23,7 +23,7 @@ def schedule_df_from_OSRD(
         for track in case.train_track_sections(train):
             elements = [
                 p.id
-                for p in case.points_on_track_sections[track['id']]
+                for p in case.points_on_track_sections()[track['id']]
                 if p.type in ['buffer_stop', 'detector']
             ]
             tvds_limits += (

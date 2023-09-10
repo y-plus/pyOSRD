@@ -115,7 +115,7 @@ def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
         ],
     }
 
-    assert use_case_station_capacity2.points_on_track_sections == expected
+    assert use_case_station_capacity2.points_on_track_sections() == expected
 
 
 def test_station_capacity2_simulation_type(use_case_station_capacity2):

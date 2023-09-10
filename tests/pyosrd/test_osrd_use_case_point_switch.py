@@ -91,7 +91,7 @@ def test_point_switch_points_on_tracks(use_case_point_switch):
         ],
     }
 
-    assert use_case_point_switch.points_on_track_sections == expected
+    assert use_case_point_switch.points_on_track_sections() == expected
 
 
 def test_point_switch_simulation_type(use_case_point_switch):

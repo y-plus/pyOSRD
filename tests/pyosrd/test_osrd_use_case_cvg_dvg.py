@@ -119,7 +119,7 @@ def test_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
         ],
     }
 
-    assert use_case_cvg_dvg.points_on_track_sections == expected
+    assert use_case_cvg_dvg.points_on_track_sections() == expected
 
 
 def test_cvg_dvg_simulation_type(use_case_cvg_dvg):

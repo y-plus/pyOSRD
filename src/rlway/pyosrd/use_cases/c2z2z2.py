@@ -8,7 +8,7 @@ from railjson_generator import (
 from railjson_generator.schema.infra.direction import Direction
 
 
-def c2y2y2(
+def c2z2z2(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',

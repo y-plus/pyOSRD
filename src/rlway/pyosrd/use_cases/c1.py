@@ -9,7 +9,7 @@ from railjson_generator import (
 from railjson_generator.schema.infra.direction import Direction
 
 
-def straight_line_with_blocks(
+def c1(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',

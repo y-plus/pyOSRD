@@ -251,7 +251,6 @@ class OSRD():
         sim = f'{eco_or_base}_simulations'
         return self.results[group][sim][idx]['head_positions']
 
-    @property
     def points_on_track_sections(self) -> Dict:
         """Dict with for each track, points of interests and their positions"""
 
@@ -287,27 +286,26 @@ class OSRD():
                 return None
             return offset
 
-        if idx_pt_tr > 0:
+        # if idx_pt_tr > 0:
 
-            if tracks[0]['direction'] == 'START_TO_STOP':
-                offset = (
-                    self.track_section_lengths[track_ids[0]]
-                    - self.train_departure(train).position
-                )
-            else:
-                offset = self.train_departure(train).position
+        if tracks[0]['direction'] == 'START_TO_STOP':
+            offset = (
+                self.track_section_lengths[track_ids[0]]
+                - self.train_departure(train).position
+            )
+        else:
+            offset = self.train_departure(train).position
 
-            for id in track_ids[1:idx_pt_tr]:
-                offset += self.track_section_lengths[id]
+        for id in track_ids[1:idx_pt_tr]:
+            offset += self.track_section_lengths[id]
 
-            if tracks[0:idx_pt_tr][-1]['direction'] == 'START_TO_STOP':
-                offset += point.position
-            else:
-                offset += (
-                    self.track_section_lengths[tracks[0:idx_pt_tr][-1]['id']]
-                    - point.position
-                )
-
+        if tracks[0:idx_pt_tr][-1]['direction'] == 'START_TO_STOP':
+            offset += point.position
+        else:
+            offset += (
+                self.track_section_lengths[tracks[0:idx_pt_tr+1][-1]['id']]
+                - point.position
+            )
         return offset
 
     def draw_infra(
@@ -768,7 +766,7 @@ class OSRD():
             for port in switch['ports'].values():
                 idx = 0 if port['endpoint'] == 'BEGIN' else -1
                 detectors_on_track = [
-                    p.id for p in self.points_on_track_sections[port['track']]
+                    p.id for p in self.points_on_track_sections()[port['track']]
                     if p.type == 'detector'
                 ]
                 detectors.append(detectors_on_track[idx])
@@ -792,7 +790,7 @@ class OSRD():
             for track in self.train_track_sections(train):
                 elements = [
                     p.id
-                    for p in self.points_on_track_sections[track['id']]
+                    for p in self.points_on_track_sections()[track['id']]
                     if p.type in ['buffer_stop', 'detector']
                 ]
                 tvds_limits += (

@@ -83,7 +83,7 @@ def test_straight_line_points_on_tracks(use_case_straight_line):
         ],
     }
 
-    assert use_case_straight_line.points_on_track_sections == expected
+    assert use_case_straight_line.points_on_track_sections() == expected
 
 
 def test_straight_line_simulation_type(use_case_straight_line):
