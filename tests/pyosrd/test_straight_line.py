@@ -49,7 +49,7 @@ def test_straight_line_infra_draw_infra_not_fail(
 ):
     """Test if it does not raise an exception"""
     try:
-        use_case_straight_line.draw_infra()
+        use_case_straight_line.draw_infra_points()
     except:  # noqa
         assert False
 

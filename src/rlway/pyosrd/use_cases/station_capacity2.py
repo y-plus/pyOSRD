@@ -45,8 +45,16 @@ def station_capacity2(
         label='DVG',
     )
 
-    infra_builder.add_link(track_sections[1].end(), track_sections[3].begin())
-    infra_builder.add_link(track_sections[2].end(), track_sections[4].begin())
+    infra_builder.add_link(
+        track_sections[1].end(),
+        track_sections[3].begin(),
+        label='L1-3',
+    )
+    infra_builder.add_link(
+        track_sections[2].end(),
+        track_sections[4].begin(),
+        label='L2-4',
+    )
 
     infra_builder.add_point_switch(
         track_sections[5].begin(),
@@ -54,7 +62,6 @@ def station_capacity2(
         track_sections[4].end(),
         label='CVG',
     )
-
 
     for i in [0, 3, 4]:
         detector = track_sections[i].add_detector(

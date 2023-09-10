@@ -62,7 +62,7 @@ def test_cvg_dvg_infra_num_switches(use_case_cvg_dvg):
 def test_cvg_dvg_infra_draw_infra_not_fail(use_case_cvg_dvg):
     """Test if it does not raise an exception"""
     try:
-        use_case_cvg_dvg.draw_infra()
+        use_case_cvg_dvg.draw_infra_points()
     except:  # noqa
         assert False
 
@@ -97,8 +97,10 @@ def test_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
             Point(track_section='T2', id="CVG", position=0, type='switch'),  # noqa
             Point(track_section='T2', id="D2", position=50, type='detector'),  # noqa
             Point(track_section='T2', id="S2", position=70, type='signal'),  # noqa
+            Point(id='L', track_section='T2', position=500, type="link"),  # noqa
         ],
         "T3": [
+            Point(id='L', track_section='T3', position=0, type="link"),  # noqa
             Point(track_section='T3', id="S3", position=430, type='signal'),  # noqa
             Point(track_section='T3', id="D3", position=450, type='detector'),  # noqa
             Point(track_section='T3', id="DVG", position=500, type='switch'),  # noqa

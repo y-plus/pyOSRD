@@ -60,7 +60,7 @@ def test_station_capacity2_infra_draw_infra_not_fail(
 ):
     """Test if it does not raise an exception"""
     try:
-        use_case_station_capacity2.draw_infra()
+        use_case_station_capacity2.draw_infra_points()
     except:  # noqa
         assert False
 
@@ -89,19 +89,23 @@ def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
             Point(id='DVG', track_section='T1', position=0, type="switch"),  # noqa
             Point(id='D1', track_section='T1', position=180.0, type="detector"),  # noqa
             Point(id='S1', track_section='T1', position=200.0, type="signal"),  # noqa
+            Point(id='L1-3', track_section='T1', position=1000.0, type="link"),  # noqa
         ],
         "T2": [
             Point(id='DVG', track_section='T2', position=0, type="switch"),  # noqa
             Point(id='D2', track_section='T2', position=180.0, type="detector"),  # noqa
             Point(id='S2', track_section='T2', position=200.0, type="signal"),  # noqa
+            Point(id='L2-4', track_section='T2', position=1000.0, type="link"),  # noqa
         ],
         "T3": [
+            Point(id='L1-3', track_section='T3', position=0, type="link"),  # noqa
             Point(id='station', track_section='T3', position=790.0, type="station"),  # noqa
             Point(id='S3', track_section='T3', position=800.0, type="signal"),  # noqa
             Point(id='D3', track_section='T3', position=820.0, type="detector"),  # noqa
             Point(id='CVG', track_section='T3', position=1000.0, type="switch"),  # noqa
         ],
         "T4": [
+            Point(id='L2-4', track_section='T4', position=0, type="link"),  # noqa
             Point(id='station', track_section='T4', position=790.0, type="station"),  # noqa
             Point(id='S4', track_section='T4', position=800.0, type="signal"),  # noqa
             Point(id='D4', track_section='T4', position=820.0, type="detector"),  # noqa

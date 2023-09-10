@@ -3,6 +3,7 @@ import importlib
 import json
 import os
 import pkgutil
+import shutil
 from dataclasses import dataclass
 from importlib.resources import files
 from itertools import combinations
@@ -11,8 +12,9 @@ from typing import Any, Dict, List, Union
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+import PIL
+import requests
 from dotenv import load_dotenv
-from IPython.display import Image, display
 from matplotlib.axes._axes import Axes
 from plotly import graph_objects as go
 
@@ -183,6 +185,7 @@ class OSRD():
                 position=detector['position'],
                 type='detector'
             ))
+
         for signal in self.infra['signals']:
             points.append(Point(
                 id=signal['id'],
@@ -190,6 +193,7 @@ class OSRD():
                 position=signal['position'],
                 type='signal'
             ))
+
         for buffer_stop in self.infra['buffer_stops']:
             points.append(Point(
                 id=buffer_stop['id'],
@@ -197,6 +201,7 @@ class OSRD():
                 position=buffer_stop['position'],
                 type='buffer_stop'
             ))
+
         for op in self.infra['operational_points']:
             for part in op['parts']:
                 points.append(Point(
@@ -208,6 +213,19 @@ class OSRD():
                     position=part['position'],
                     type='station'
                 ))
+
+        for link in self.infra['track_section_links']:
+            for side in ['src', 'dst']:
+                points.append(Point(
+                    id=link['id'],
+                    track_section=link[side]['track'],
+                    position=(
+                        0 if link[side]['endpoint'] == 'BEGIN'
+                        else self.track_section_lengths[link[side]['track']]
+                    ),
+                    type='link',
+                ))
+
         for switch in self.infra['switches']:
             for port in switch['ports'].values():
                 points.append(Point(
@@ -313,22 +331,48 @@ class OSRD():
             )
         return offset
 
-    def draw_infra(
+    def draw_infra_points(
         self,
-    ) -> None:
-        """Use mermaid.js to display the infra with detectors as nodes"""
+        save: str | None = None,
+    ) -> PIL.PngImagePlugin.PngImageFile:
+        """Use mermaid.js to display the infra as a graph of specificpoints
 
-        def mm(graph):
-            graphbytes = graph.encode("ascii")
-            base64_bytes = base64.b64encode(graphbytes)
-            base64_string = base64_bytes.decode("ascii")
-            display(Image(url="https://mermaid.ink/img/" + base64_string))
+        Parameters
+        ----------
+        save : str | None, optional
+            File name to save image, by default None
 
-        g = "graph LR;"+";".join([
-            route.replace('rt.', '').replace('->', '-->')
-            for route in self.routes
-        ])
-        mm(g)
+        Returns
+        -------
+        PIL.Image
+            Inmage of the infra as a graph of points
+        """
+
+        g = 'graph LR;'
+
+        points_all_tracks = self.points_on_track_sections(op_part_tracks=True)
+        for _, points in points_all_tracks.items():
+            for i, _ in enumerate(points[:-1]):
+                g += (f"{points[i].id}<-->{points[i+1].id};")
+
+        graphbytes = g.encode("ascii")
+        base64_bytes = base64.b64encode(graphbytes)
+        base64_string = base64_bytes.decode("ascii")
+        url = "https://mermaid.ink/img/" + base64_string
+
+        response = requests.get(url, stream=True)
+
+        with open('tmp.png', 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+        del response
+        image = PIL.Image.open('tmp.png')
+
+        if save:
+            os.rename('tmp.png', save)
+        else:
+            os.remove('tmp.png')
+
+        return image
 
     @property
     def num_trains(self) -> int:
@@ -478,8 +522,7 @@ class OSRD():
         Parameters
         ----------
         types : List[str], optional
-            Types of points, by default
-            ['signal', 'detector', 'station', 'switch']
+            Types of points, all types by default
 
         Returns
         -------

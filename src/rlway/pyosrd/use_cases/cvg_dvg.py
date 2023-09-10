@@ -46,7 +46,7 @@ def cvg_dvg(
         T[1].end(),
         label='CVG',
     )
-    infra_builder.add_link(T[2].end(), T[3].begin())
+    infra_builder.add_link(T[2].end(), T[3].begin(), label='L')
     infra_builder.add_point_switch(
         T[3].end(),
         T[4].begin(),

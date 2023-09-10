@@ -54,7 +54,7 @@ def test_point_switch_infra_num_switches(use_case_point_switch):
 def test_point_switch_infra_draw_infra_not_fail(use_case_point_switch):
     """Test if it does not raise an exception"""
     try:
-        use_case_point_switch.draw_infra()
+        use_case_point_switch.draw_infra_points()
     except:  # noqa
         assert False
 
