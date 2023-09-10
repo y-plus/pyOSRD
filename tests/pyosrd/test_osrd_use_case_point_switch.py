@@ -193,8 +193,8 @@ def test_point_switch_offset_in_path(use_case_point_switch):
         use_case_point_switch.offset_in_path_of_train(after_arrival_0, train=0),  # noqa
         use_case_point_switch.offset_in_path_of_train(before_departure_1, train=0),  # noqa
         use_case_point_switch.offset_in_path_of_train(after_arrival_1, train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch._points[-3], train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch._points[-1], train=1),  # noqa
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch._points()[-3], train=0),  # noqa
+        use_case_point_switch.offset_in_path_of_train(use_case_point_switch._points()[-1], train=1),  # noqa
 
     ] == [0.0, 0.0, 19900.0, 19900.0, None, None, 19930, None, None, 9950.0, 9950.0]  # noqa
 

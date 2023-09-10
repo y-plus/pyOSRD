@@ -172,8 +172,7 @@ class OSRD():
         """Number of stations (defined as operational points)"""
         return len(self.station_capacities)
 
-    @property
-    def _points(self) -> List[Point]:
+    def _points(self, op_part_tracks: bool = False) -> List[Point]:
 
         points = []
 
@@ -201,7 +200,10 @@ class OSRD():
         for op in self.infra['operational_points']:
             for part in op['parts']:
                 points.append(Point(
-                    id=op['id'],
+                    id=op['id'] + (
+                        f"-{part['track']}" if op_part_tracks
+                        else ''
+                    ),
                     track_section=part['track'],
                     position=part['position'],
                     type='station'
@@ -251,13 +253,16 @@ class OSRD():
         sim = f'{eco_or_base}_simulations'
         return self.results[group][sim][idx]['head_positions']
 
-    def points_on_track_sections(self) -> Dict:
+    def points_on_track_sections(self, op_part_tracks: bool = False) -> Dict:
         """Dict with for each track, points of interests and their positions"""
 
         points_on_track_sections = {}
 
         for t in self.track_section_lengths:
-            points = [p for p in self._points if p.track_section == t]
+            points = [
+                p for p in self._points(op_part_tracks=op_part_tracks)
+                if p.track_section == t
+            ]
             points.sort(key=lambda p: p.position)
             points_on_track_sections[t] = points
 
@@ -488,7 +493,7 @@ class OSRD():
             point.id: point
             for point in (
                 [self.train_departure(train)]
-                + self._points
+                + self._points()
                 + [self.train_arrival(train)]
             )
             if point.track_section in ids and point.type in types
@@ -766,7 +771,8 @@ class OSRD():
             for port in switch['ports'].values():
                 idx = 0 if port['endpoint'] == 'BEGIN' else -1
                 detectors_on_track = [
-                    p.id for p in self.points_on_track_sections()[port['track']]
+                    p.id
+                    for p in self.points_on_track_sections()[port['track']]
                     if p.type == 'detector'
                 ]
                 detectors.append(detectors_on_track[idx])
