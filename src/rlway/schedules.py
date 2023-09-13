@@ -494,7 +494,7 @@ class Schedule(object):
     def sort(self) -> 'Schedule':
         """Sort the schedule index by occupancies times"""
         new_schedule = copy.deepcopy(self)
-        sorted_idx = self.starts.min(axis=1).sort_values().index
+        sorted_idx = self.ends.max(axis=1).sort_values().index
         new_schedule ._df = new_schedule ._df.loc[sorted_idx]
         return new_schedule
 
