@@ -27,7 +27,7 @@ pip install git+ssh://git@github.com/y-plus/RLway.git
 # For developers
 
 ```bash
-git@github.com:y-plus/RLway.git
+git clone git@github.com:y-plus/RLway.git
 cd RLway/
 python3 -m venv venv
 . venv/bin/activate
