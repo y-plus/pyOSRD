@@ -19,6 +19,7 @@ from matplotlib.axes._axes import Axes
 from plotly import graph_objects as go
 
 import rlway.pyosrd.use_cases as use_cases
+from . import modifications
 
 
 def _read_json(json_file: str) -> Union[Dict, List]:
@@ -878,3 +879,60 @@ class OSRD():
             entry_signals.append(signals)
 
         return entry_signals
+
+    def add_delay_in_results(
+        self,
+        train: int,
+        point_id: str,
+        delay: float,
+        eco_or_base: str = 'base',
+    ) -> None:
+        return modifications.add_delay_in_results(
+            self,
+            train,
+            point_id,
+            delay,
+            eco_or_base,
+        )
+
+    def add_stops(
+        self,
+        stops: list[dict[str, int | str]]
+    ) -> None:
+        """Add a list of stops  and re-run the simulation
+
+        Parameters
+        ----------
+        stops : list[dict[str, float  |  str]]
+            List of stops described by a dictionnary with 3 keys:
+            {"train_id": int, "position": float, "duration": float}
+        """
+        modifications.add_stops(self, stops)
+
+    def add_stop(
+        self,
+        train: int,
+        position: float,
+        duration: float,
+    ) -> None:
+        """Add a stop  and re-run the simulation
+
+        Parameters
+        ----------
+        train : int
+        Train index
+        position : float
+            Offset in train's path in m
+        duration : float
+        Stop duration in seconds
+        """
+        modifications.add_stops(
+            self,
+            [
+                {
+                    "train": train,
+                    "position": position,
+                    "duration": duration
+                }
+            ]
+        )

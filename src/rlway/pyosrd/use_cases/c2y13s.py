@@ -53,19 +53,21 @@ def c2y13s(
     T[1].add_buffer_stop(0, label='buffer_stop.1', )
     T[2].add_buffer_stop(T[2].length, label='buffer_stop.2', )
 
-    for i in [0, 1, 2]:
+    for i in [0, 1]:
         d = T[i].add_detector(
             label=f"DA{i}",
-            position=(T[i].length - 200 if i in [0, 1, 3] else 200),
+            position=T[i].length - 200,
         )
-    for i in [0, 1]:
         T[i].add_signal(
-            d.position + (-20 if i in [0, 1, 3] else 20),
+            d.position - 20,
             Direction.START_TO_STOP,
             is_route_delimiter=True,
             label=f"SA{i}"
         ).add_logical_signal("BAL", settings={"Nf": "true"})
-
+    T[2].add_detector(
+        label="DA2",
+        position=200,
+    )
     for i in [1, 2, 3]:
         d = T[2].add_detector(
             label=f"D{i}",
