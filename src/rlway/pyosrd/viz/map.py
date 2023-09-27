@@ -88,10 +88,11 @@ def folium_map(osrd: OSRD) -> folium.folium.Map:
     }
 
     operational_point_geo_positions = {
-        (operational_point['id'], part['track']): coords_from_position_on_track(
-            part['track'],
-            part['position']
-        )
+        (operational_point['id'], part['track']):
+            coords_from_position_on_track(
+                part['track'],
+                part['position']
+            )
         for operational_point in osrd.infra['operational_points']
         for part in operational_point['parts']
     }
@@ -115,7 +116,11 @@ def folium_map(osrd: OSRD) -> folium.folium.Map:
 
     tracks = folium.FeatureGroup(name='Rails')
     for id, line in track_section_coordinates.items():
-        folium.PolyLine(line, tooltip=track_section_names[id], color='black').add_to(tracks)
+        folium.PolyLine(
+            line,
+            tooltip=track_section_names[id],
+            color='black'
+        ).add_to(tracks)
     tracks.add_to(m)
 
     m.fit_bounds(tracks.get_bounds())
