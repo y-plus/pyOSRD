@@ -20,9 +20,6 @@ from matplotlib.axes._axes import Axes
 from plotly import graph_objects as go
 
 import rlway.pyosrd.use_cases as use_cases
-from . import delays
-from . import regulation
-from . import agents
 
 
 def _read_json(json_file: str) -> Union[Dict, List]:
@@ -77,6 +74,10 @@ class OSRD():
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
     delays_json: str = 'delays.json'
+
+    from .delays import delayed, add_delay, add_delays_in_results, reset_delays
+    from .regulation import add_stops, add_stop
+    from .agents import Agent
 
     def __post_init__(self):
 
@@ -318,8 +319,6 @@ class OSRD():
             if offset < 0:
                 return None
             return offset
-
-        # if idx_pt_tr > 0:
 
         if tracks[0]['direction'] == 'START_TO_STOP':
             offset = (
@@ -889,66 +888,7 @@ class OSRD():
 
         return entry_signals
 
-    def add_delay(
-        self,
-        train_id: str,
-        time_threshold: float,
-        delay: float,
-    ) -> None:
-        delays.add_delay(self, train_id, time_threshold, delay)
-
-    def add_delays_in_results(self) -> None:
-        delays.add_delays_in_results(self)
-
-    def delayed(self) -> Self:
-        return delays.delayed(self)
-
-    def reset_delays(self) -> None:
-        delays.reset_delays(self)
-
-    def add_stops(
-        self,
-        stops: list[dict[str, int | str]]
-    ) -> None:
-        """Add a list of stops  and re-run the simulation
-
-        Parameters
-        ----------
-        stops : list[dict[str, float  |  str]]
-            List of stops described by a dictionnary with 3 keys:
-            {"train_id": int, "position": float, "duration": float}
-        """
-        regulation.add_stops(self, stops)
-
-    def add_stop(
-        self,
-        train: int,
-        position: float,
-        duration: float,
-    ) -> None:
-        """Add a stop  and re-run the simulation
-
-        Parameters
-        ----------
-        train : int
-        Train index
-        position : float
-            Offset in train's path in m
-        duration : float
-        Stop duration in seconds
-        """
-        regulation.add_stops(
-            self,
-            [
-                {
-                    "train": train,
-                    "position": position,
-                    "duration": duration
-                }
-            ]
-        )
-
-    def regulate(self, agent: agents.Agent) -> Self:
+    def regulate(self, agent: Agent) -> Self:
         """Create and run a regulated simulation
 
         Parameters

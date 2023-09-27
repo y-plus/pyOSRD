@@ -36,3 +36,32 @@ def add_stops(
     with open(os.path.join(self.dir, self.simulation_json), "w") as outfile:
         json.dump(self.simulation, outfile)
     self.run()
+
+
+def add_stop(
+    self,
+    train: int,
+    position: float,
+    duration: float,
+) -> None:
+    """Add a stop  and re-run the simulation
+
+    Parameters
+    ----------
+    train : int
+    Train index
+    position : float
+        Offset in train's path in m
+    duration : float
+    Stop duration in seconds
+    """
+    add_stops(
+        self,
+        [
+            {
+                "train": train,
+                "position": position,
+                "duration": duration
+            }
+        ]
+    )
