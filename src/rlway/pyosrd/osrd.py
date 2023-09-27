@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from importlib.resources import files
 from itertools import combinations
 from typing import Any, Dict, List, Union
+from typing_extensions import Self
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -19,7 +20,9 @@ from matplotlib.axes._axes import Axes
 from plotly import graph_objects as go
 
 import rlway.pyosrd.use_cases as use_cases
-from . import modifications
+from . import delays
+from . import regulation
+from . import agents
 
 
 def _read_json(json_file: str) -> Union[Dict, List]:
@@ -62,12 +65,18 @@ class OSRD():
         Name of the file containing the simulation results.
         If the file does not exist, attribute results will be empty,
         by default 'results.json'
+    delays_json: str, optional
+        Name of the file containing the delays applied to the perturbed 
+        simulation obtained with .delayed() method.
+        If the file does not exist, attribute delays will be empty,
+        by default 'delays.json'
     """
     dir: str = '.'
     use_case: Union[str, None] = None
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
+    delays_json: str = 'delays.json'
 
     def __post_init__(self):
 
@@ -880,20 +889,22 @@ class OSRD():
 
         return entry_signals
 
-    def add_delay_in_results(
+    def add_delay(
         self,
-        train: int,
-        point_id: str,
+        train_id: str,
+        time_threshold: float,
         delay: float,
-        eco_or_base: str = 'base',
     ) -> None:
-        return modifications.add_delay_in_results(
-            self,
-            train,
-            point_id,
-            delay,
-            eco_or_base,
-        )
+        delays.add_delay(self, train_id, time_threshold, delay)
+
+    def add_delays_in_results(self) -> None:
+        delays.add_delays_in_results(self)
+
+    def delayed(self) -> Self:
+        return delays.delayed(self)
+
+    def reset_delays(self) -> None:
+        delays.reset_delays(self)
 
     def add_stops(
         self,
@@ -907,7 +918,7 @@ class OSRD():
             List of stops described by a dictionnary with 3 keys:
             {"train_id": int, "position": float, "duration": float}
         """
-        modifications.add_stops(self, stops)
+        regulation.add_stops(self, stops)
 
     def add_stop(
         self,
@@ -926,7 +937,7 @@ class OSRD():
         duration : float
         Stop duration in seconds
         """
-        modifications.add_stops(
+        regulation.add_stops(
             self,
             [
                 {
@@ -936,3 +947,18 @@ class OSRD():
                 }
             ]
         )
+
+    def regulate(self, agent: agents.Agent) -> Self:
+        """Create and run a regulated simulation
+
+        Parameters
+        ----------
+        agent : agents.Agent
+            Regulation Agent
+
+        Returns
+        -------
+        OSRD
+            Regulated simulation. Results are in the directory 'delayed/<agent.name>'
+        """
+        return agent.regulated(self)
