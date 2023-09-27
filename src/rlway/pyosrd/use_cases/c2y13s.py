@@ -120,14 +120,14 @@ def c2y13s(
         Location(T[0], 20),
         Location(T[2], 11_990),
         label='train0',
-        departure_time=120.,
+        departure_time=0.,
     )
 
     sim_builder.add_train_schedule(
         Location(T[1], 20),
         Location(T[2], 11_990),
         label='train1',
-        departure_time=0.,
+        departure_time=120.,
         stops=[
             Stop(location=stations['B'], duration=120., ),
             Stop(location=stations['C'], duration=120., ),
