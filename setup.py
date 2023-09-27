@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='rlway',
-    version='0.0.2',
+    version='0.0.3',
     url='https://github.com/y-plus/RLway.git',
     author='Renan HILBERT',
     author_email='renan.hilbert.ext@eurodecision.com',
@@ -10,7 +10,7 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     package_data={"": ["*.jar"]},
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     setup_requires=["wheel"],
     install_requires=[
         'gymnasium',
