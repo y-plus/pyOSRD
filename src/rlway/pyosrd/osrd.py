@@ -4,11 +4,11 @@ import json
 import os
 import pkgutil
 import shutil
+import subprocess
 from dataclasses import dataclass
 from importlib.resources import files
 from itertools import combinations
 from typing import Any, Dict, List, Union
-from typing_extensions import Self
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -18,6 +18,7 @@ import requests
 from dotenv import load_dotenv
 from matplotlib.axes._axes import Axes
 from plotly import graph_objects as go
+from typing_extensions import Self
 
 import rlway.pyosrd.use_cases as use_cases
 
@@ -75,9 +76,9 @@ class OSRD():
     results_json: str = 'results.json'
     delays_json: str = 'delays.json'
 
-    from .delays import delayed, add_delay, add_delays_in_results, reset_delays
-    from .regulation import add_stops, add_stop
     from .agents import Agent
+    from .delays import add_delay, add_delays_in_results, delayed, reset_delays
+    from .regulation import add_stop, add_stops
 
     def __post_init__(self):
 
@@ -131,18 +132,29 @@ class OSRD():
         if self.infra == {} or self.simulation == {}:
             raise ValueError("Missing json file to run OSRD")
 
+        if os.path.exists(os.path.join(self.dir, self.results_json)):
+            os.remove(os.path.join(self.dir, self.results_json))
+
         load_dotenv()
         JAVA = os.getenv('JAVA') or 'java'
 
         jar_file = files('rlway.pyosrd').joinpath('osrd-all.jar')
-        os.system(
+
+        output = subprocess.run(
             f"{JAVA} -jar {jar_file} standalone-simulation "
             f"--infra_path {os.path.join(self.dir, self.infra_json)} "
             f"--sim_path {os.path.join(self.dir, self.simulation_json)} "
-            f"--res_path {os.path.join(self.dir, self.results_json)}"
+            f"--res_path {os.path.join(self.dir, self.results_json)}",
+            shell=True,
+            stderr=subprocess.PIPE,
         )
 
-        self.results = _read_json(os.path.join(self.dir, self.results_json))
+        try:
+            self.results = _read_json(
+                os.path.join(self.dir, self.results_json)
+            )
+        except FileNotFoundError:
+            raise RuntimeError(output.stderr.decode())
 
     @property
     def has_results(self) -> bool:
