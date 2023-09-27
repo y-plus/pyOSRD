@@ -6,10 +6,8 @@ from folium import plugins
 
 from haversine import haversine
 
-from rlway.pyosrd import OSRD
 
-
-def folium_map(osrd: OSRD) -> folium.folium.Map:
+def folium_map(osrd) -> folium.folium.Map:
     """Infra as a folium map"""
 
     track_section_names = {
