@@ -46,7 +46,10 @@ Create a file name `.env` at the root of your projet, containing
 ```bash
 JAVA="<Your custon Java Path>"
 ```
-
+On Windows, it is recommanded to use triple double quotes (especially if the path contains spaces), e.g.:
+```bash
+JAVA="""C:\Program Files\Common Files\Oracle\Java\javapath\java"""
+```
 # For contributors
 
 ```bash
