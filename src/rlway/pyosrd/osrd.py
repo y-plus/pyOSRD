@@ -66,7 +66,7 @@ class OSRD():
         If the file does not exist, attribute results will be empty,
         by default 'results.json'
     delays_json: str, optional
-        Name of the file containing the delays applied to the perturbed 
+        Name of the file containing the delays applied to the perturbed
         simulation obtained with .delayed() method.
         If the file does not exist, attribute delays will be empty,
         by default 'delays.json'
@@ -959,6 +959,7 @@ class OSRD():
         Returns
         -------
         OSRD
-            Regulated simulation. Results are in the directory 'delayed/<agent.name>'
+            Regulated simulation.
+            Results are saved in the directory 'delayed/<agent.name>'
         """
         return agent.regulated(self)
