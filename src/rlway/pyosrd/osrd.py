@@ -132,10 +132,11 @@ class OSRD():
             raise ValueError("Missing json file to run OSRD")
 
         load_dotenv()
+        JAVA = os.getenv('JAVA') or 'java'
 
         jar_file = files('rlway.pyosrd').joinpath('osrd-all.jar')
         os.system(
-            f"java -jar {jar_file} standalone-simulation "
+            f"{JAVA} -jar {jar_file} standalone-simulation "
             f"--infra_path {os.path.join(self.dir, self.infra_json)} "
             f"--sim_path {os.path.join(self.dir, self.simulation_json)} "
             f"--res_path {os.path.join(self.dir, self.results_json)}"
