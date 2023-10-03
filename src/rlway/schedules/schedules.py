@@ -48,7 +48,7 @@ class Schedule(object):
 
     @property
     def df(self) -> pd.DataFrame:
-        """ Schedule as a pandas DataFrale"""
+        """ Schedule as a pandas DataFrame"""
         return self._df
 
     def set(self, train, block, interval):
