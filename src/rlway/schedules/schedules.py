@@ -506,7 +506,7 @@ class Schedule(object):
                 width=self.durations[train],
                 left=self.starts[train],
                 y=self._df.index,
-                label=train,
+                label=str(train),
                 height=1,
                 alpha=alpha
                 )
