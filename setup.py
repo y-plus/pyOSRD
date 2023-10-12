@@ -28,7 +28,7 @@ setup(
         "haversine",
         "typing-inspect>=0.8.0",
         "typing_extensions>=4.5.0",
-        'railjson_generator @ git+ssh://git@github.com/osrd-project/osrd.git#subdirectory=python/railjson_generator',  # noqa
+        'railjson_generator @ git+ssh://git@github.com/osrd-project/osrd.git@v0.1.4#subdirectory=python/railjson_generator',  # noqa
         'ipython',
     ],
 )
