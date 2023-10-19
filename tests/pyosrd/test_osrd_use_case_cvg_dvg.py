@@ -229,22 +229,39 @@ def test_cvg_dvg_tvd_blocks(use_case_cvg_dvg):
     assert use_case_cvg_dvg.tvd_blocks == expected
 
 
-def test_cvg_dvg_entry_signals(use_case_cvg_dvg):
+def test_cvg_dvg_stop_positions(use_case_cvg_dvg):
 
     expected = [
         {
-            'D0<->buffer_stop.0': None,
-            'CVG': 'S0',
-            'D2<->D3': 'S0',
-            'DVG': 'S3',
-            'D4<->buffer_stop.2': 'S3',
+            'D0<->buffer_stop.0': {
+                'type': 'station',
+                'offset': 0.0,
+                'id': 'station0'
+            },
+            'CVG': {'type': 'switch', 'offset': None},
+            'D2<->D3': {'type': 'signal', 'offset': 1130.0, 'id': 'D2'},
+            'DVG': {'type': 'switch', 'offset': None},
+            'D4<->buffer_stop.2': {
+                'type': 'station',
+                'offset': 1680.0,
+                'id': 'station1',
+            }
         },
         {
-            'D1<->buffer_stop.1': None,
-            'CVG': 'S1',
-            'D2<->D3': 'S1',
-            'DVG': 'S3',
-            'D5<->buffer_stop.3': 'S3',
+            'D1<->buffer_stop.1': {
+                'type': 'station',
+                'offset': None,
+                'id': 'station0',
+            },
+            'CVG': {'type': 'switch', 'offset': None},
+            'D2<->D3': {'type': 'signal', 'offset': 1130.0, 'id': 'D2'},
+            'DVG': {'type': 'switch', 'offset': None},
+            'D5<->buffer_stop.3': {
+                'type': 'station',
+                'offset': None,
+                'id': 'station1',
+            }
         }
     ]
-    assert use_case_cvg_dvg.entry_signals == expected
+
+    assert use_case_cvg_dvg.stop_positions == expected

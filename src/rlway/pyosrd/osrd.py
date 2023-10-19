@@ -691,58 +691,58 @@ class OSRD():
 
         return tvd_blocks
 
-    @property
-    def entry_signals(
-        self: "OSRD",
-    ) -> list[dict[str, str | None]]:
+    # @property
+    # def entry_signals(
+    #     self: "OSRD",
+    # ) -> list[dict[str, str | None]]:
 
-        entry_signals = []
+    #     entry_signals = []
 
-        for train, _ in enumerate(self.trains):
+    #     for train, _ in enumerate(self.trains):
 
-            tvds_limits = []
-            for track in self.train_track_sections(train):
-                elements = [
-                    p.id
-                    for p in self.points_on_track_sections()[track['id']]
-                    if p.type in ['buffer_stop', 'detector']
-                ]
-                tvds_limits += (
-                    elements[::-1]
-                    if track['direction'] == 'STOP_TO_START'
-                    else elements
-                )
+    #         tvds_limits = []
+    #         for track in self.train_track_sections(train):
+    #             elements = [
+    #                 p.id
+    #                 for p in self.points_on_track_sections()[track['id']]
+    #                 if p.type in ['buffer_stop', 'detector']
+    #             ]
+    #             tvds_limits += (
+    #                 elements[::-1]
+    #                 if track['direction'] == 'STOP_TO_START'
+    #                 else elements
+    #             )
 
-            detectors = \
-                self.points_encountered_by_train(train, types='detector')
-            first_detector = detectors[0]['id']
-            last_detector = detectors[-1]['id']
-            idx_first = tvds_limits.index(first_detector)
-            idx_last = tvds_limits.index(last_detector)
+    #         detectors = \
+    #             self.points_encountered_by_train(train, types='detector')
+    #         first_detector = detectors[0]['id']
+    #         last_detector = detectors[-1]['id']
+    #         idx_first = tvds_limits.index(first_detector)
+    #         idx_last = tvds_limits.index(last_detector)
 
-            limits = tvds_limits[idx_first-1:idx_last+2]
+    #         limits = tvds_limits[idx_first-1:idx_last+2]
 
-            signals = {}
-            for i, _ in enumerate(limits[:-1]):
+    #         signals = {}
+    #         for i, _ in enumerate(limits[:-1]):
 
-                start = limits[i]
-                end = limits[i+1]
-                s_id = None
-                for p in self.points_encountered_by_train(
-                    train=train,
-                    types=['detector', 'signal']
-                ):
-                    if p['id'] == start or 'buffer' in start:
-                        break
-                    if p['type'] == 'signal':
-                        s_id = p['id']
+    #             start = limits[i]
+    #             end = limits[i+1]
+    #             s_id = None
+    #             for p in self.points_encountered_by_train(
+    #                 train=train,
+    #                 types=['detector', 'signal']
+    #             ):
+    #                 if p['id'] == start or 'buffer' in start:
+    #                     break
+    #                 if p['type'] == 'signal':
+    #                     s_id = p['id']
 
-                signals[self.tvd_blocks["<->".join(sorted([start, end]))]] =\
-                    s_id
+    #             signals[self.tvd_blocks["<->".join(sorted([start, end]))]] =\
+    #                 s_id
 
-            entry_signals.append(signals)
+    #         entry_signals.append(signals)
 
-        return entry_signals
+    #     return entry_signals
 
     def regulate(self, agent: Agent) -> Self:
         """Create and run a regulated simulation
@@ -759,3 +759,138 @@ class OSRD():
             Results are saved in the directory 'delayed/<agent.name>'
         """
         return agent.regulated(self)
+
+    @property
+    def stop_positions(self) -> list[dict[str, Any]]:
+        """Where can the trains stop in each zone ?
+
+        If a zone is a switch, there is no stop point
+
+        If a zone contains a station, the stop point is the station, defined
+        by a part of an operational point
+
+        If the zone has no station, the stop point is the last signal before
+        the detector defining the end of the zone.
+
+        The positions are offset in the path of each train (key 'offset').
+        If the stop is at a signal or station, its corresponding id is also given. 
+
+        To retrieve a position, a typical usage would be,
+        for example for the first train (index 0) and a zone name 'D1<->D2':
+        
+        >>> sim = OSRD(...)
+        >>> sim.stop_positions[0]['D1<->D2']['position']
+
+        Returns
+        -------
+        list[dict[str, Any]]
+            List of dicts, one by train,where keys are the zones
+            during the train's trajectory and the values are dicts with
+            the stop points, their types and positions.
+        """
+        stop_positions = []
+
+        for train_id, _ in enumerate(self.trains):
+            positions = {}
+
+            tvds_limits = []
+            for track in self.train_track_sections(train_id):
+                elements = [
+                    p.id
+                    for p in self.points_on_track_sections()[track['id']]
+                    if p.type in ['buffer_stop', 'detector']
+                ]
+                tvds_limits += (
+                    elements[::-1]
+                    if track['direction'] == 'STOP_TO_START'
+                    else elements
+                )
+
+            detectors = \
+                self.points_encountered_by_train(train_id, types='detector')
+            first_detector = detectors[0]['id']
+            last_detector = detectors[-1]['id']
+            idx_first = tvds_limits.index(first_detector)
+            idx_last = tvds_limits.index(last_detector)
+
+            limits = tvds_limits[idx_first-1:idx_last+2]
+
+            points = self.points_encountered_by_train(
+                train_id,
+                types=['signal', 'detector', 'station', ]
+            )
+
+            for i, _ in enumerate(limits[:-1]):
+                start = limits[i]
+                end = limits[i+1]
+                zone = self.tvd_blocks["<->".join(sorted([start, end]))]
+
+                for i, p in enumerate(points):
+                    if p['id'] == end:
+                        if (points[i-2]['type'] == 'station'):
+                            station_point = [
+                                p
+                                for p in self._points()
+                                if p.id == points[i-2]['id']
+                            ][0]
+                            positions[zone] = {
+                                'type': 'station',
+                                'offset': self.offset_in_path_of_train(
+                                            station_point, train_id
+                                        ),
+                                'id': points[i-2]['id'],
+                            }
+                        elif (points[i-1]['type'] == 'signal'):
+                            signal_point = [
+                                p
+                                for p in self._points()
+                                if p.id == points[i-1]['id']
+                            ][0]
+                            positions[zone] = {
+                                'type': 'signal',
+                                'offset': self.offset_in_path_of_train(
+                                                signal_point, train_id
+                                            ),
+                                'id': points[i-2]['id'],
+                            }
+                        else:
+                            positions[zone] = {
+                                'type': 'switch',
+                                'offset': None,
+                            }
+
+            last_zone = "<->".join(sorted([limits[-2], limits[-1]]))
+            if points[-2]['type'] == 'station':
+                station_point = [
+                    p
+                    for p in self._points()
+                    if p.id == points[-2]['id']
+                ][0]
+                positions[zone] = {
+                    'type': 'signal',
+                    'offset': self.offset_in_path_of_train(
+                                    station_point, train_id
+                                ),
+                    'id': points[-2]['id'],
+                }
+            elif points[-1]['type'] in ['station', 'signal']:
+                stop_point = [
+                    p
+                    for p in self._points()
+                    if p.id == points[-1]['id']
+                ][0]
+                positions[zone] = {
+                    'type': points[-1]['type'],
+                    'offset': self.offset_in_path_of_train(
+                                    stop_point, train_id
+                                ),
+                    'id': points[-1]['id'],
+                }
+            else:
+                positions[self.tvd_blocks[last_zone]] = {
+                    'type': 'last_zone',
+                    'offset': None,
+                }
+            stop_positions.append(positions)
+
+        return stop_positions

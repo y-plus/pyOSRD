@@ -264,20 +264,3 @@ def test_point_switch_tvd_blocks(use_case_point_switch):
         'D2<->buffer_stop.2': 'D2<->buffer_stop.2',
     }
     assert use_case_point_switch.tvd_blocks == expected
-
-
-def test_point_switch_entry_signals(use_case_point_switch):
-
-    expected = [
-        {
-            'D0<->buffer_stop.0': None,
-            'DVG': 'S0',
-            'D1<->buffer_stop.1': 'S0',
-        },
-        {
-            'D2<->buffer_stop.2': None,
-            'DVG': 'S2',
-            'D0<->buffer_stop.0': 'S2'
-        }
-    ]
-    assert use_case_point_switch.entry_signals == expected

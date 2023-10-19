@@ -199,20 +199,3 @@ def test_straight_line_tvd_blocks(use_case_straight_line):
         'DB<->buffer_stop.1': 'DB<->buffer_stop.1'
     }
     assert use_case_straight_line.tvd_blocks == expected
-
-
-def test_straight_line_entry_signals(use_case_straight_line):
-
-    expected = [
-        {
-            'DA<->buffer_stop.0': None,
-            'DA<->DB': 'SA',
-            'DB<->buffer_stop.1': 'SA',
-        },
-        {
-            'DB<->buffer_stop.1': None,
-            'DA<->DB': 'SB',
-            'DA<->buffer_stop.0': 'SB',
-        },
-    ]
-    assert use_case_straight_line.entry_signals == expected
