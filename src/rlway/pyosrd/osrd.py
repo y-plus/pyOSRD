@@ -828,11 +828,11 @@ class OSRD():
                 for i, p in enumerate(points):
                     if p['id'] == end:
                         if (points[i-2]['type'] == 'station'):
-                            station_point = [
+                            station_point = next(
                                 p
                                 for p in self._points()
                                 if p.id == points[i-2]['id']
-                            ][0]
+                            )
                             positions[zone] = {
                                 'type': 'station',
                                 'offset': self.offset_in_path_of_train(
@@ -841,11 +841,11 @@ class OSRD():
                                 'id': points[i-2]['id'],
                             }
                         elif (points[i-1]['type'] == 'signal'):
-                            signal_point = [
+                            signal_point = next(
                                 p
                                 for p in self._points()
                                 if p.id == points[i-1]['id']
-                            ][0]
+                            )
                             positions[zone] = {
                                 'type': 'signal',
                                 'offset': self.offset_in_path_of_train(
@@ -861,11 +861,11 @@ class OSRD():
 
             last_zone = "<->".join(sorted([limits[-2], limits[-1]]))
             if points[-2]['type'] == 'station':
-                station_point = [
+                station_point = next(
                     p
                     for p in self._points()
                     if p.id == points[-2]['id']
-                ][0]
+                )
                 positions[zone] = {
                     'type': 'signal',
                     'offset': self.offset_in_path_of_train(
@@ -874,11 +874,11 @@ class OSRD():
                     'id': points[-2]['id'],
                 }
             elif points[-1]['type'] in ['station', 'signal']:
-                stop_point = [
+                stop_point = next(
                     p
                     for p in self._points()
                     if p.id == points[-1]['id']
-                ][0]
+                )
                 positions[zone] = {
                     'type': points[-1]['type'],
                     'offset': self.offset_in_path_of_train(
