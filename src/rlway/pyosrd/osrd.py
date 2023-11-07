@@ -15,7 +15,6 @@ import numpy as np
 import PIL
 import requests
 from dotenv import load_dotenv
-
 from typing_extensions import Self
 
 import rlway.pyosrd.use_cases as use_cases
@@ -74,14 +73,14 @@ class OSRD():
     results_json: str = 'results.json'
     delays_json: str = 'delays.json'
 
-    from .viz.map import folium_map
-    from .viz.space_time_charts import (
-        space_time_chart_plotly,
-        space_time_chart,
-    )
     from .agents import Agent
     from .delays import add_delay, add_delays_in_results, delayed, reset_delays
     from .regulation import add_stop, add_stops
+    from .viz.map import folium_map
+    from .viz.space_time_charts import (
+        space_time_chart,
+        space_time_chart_plotly,
+    )
 
     def __post_init__(self):
 
@@ -773,11 +772,12 @@ class OSRD():
         the detector defining the end of the zone.
 
         The positions are offset in the path of each train (key 'offset').
-        If the stop is at a signal or station, its corresponding id is also given. 
+        If the stop is at a signal or station, its corresponding id
+        is also given.
 
         To retrieve a position, a typical usage would be,
         for example for the first train (index 0) and a zone name 'D1<->D2':
-        
+=
         >>> sim = OSRD(...)
         >>> sim.stop_positions[0]['D1<->D2']['position']
 
