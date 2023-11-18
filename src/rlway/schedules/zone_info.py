@@ -111,13 +111,3 @@ def step_station_id(osrd: OSRD) -> pd.DataFrame:
             .reindex(schedule_from_osrd(osrd).df.index)
         )
     ).replace('', np.nan)
-
-
-def f(opt: float = 1):
-    """_summary_
-
-    Parameters
-    ----------
-    opt : float, optional
-        _description_, by default 1
-    """
