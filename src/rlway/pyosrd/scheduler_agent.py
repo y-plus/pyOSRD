@@ -89,7 +89,6 @@ class SchedulerAgent(Agent):
             non_zero_durations = durations[durations.notna()].to_dict()
 
             for zone, duration in non_zero_durations.items():
-                print(osrd.stop_positions[train], zone)
                 position = osrd.stop_positions[train][zone]['offset']
                 stops.append(
                     {
