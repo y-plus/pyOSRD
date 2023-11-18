@@ -30,6 +30,7 @@ class Agent(ABC):
         )
 
         self.write_stops_json(osrd)
+
         with open(
             os.path.join(osrd.dir, 'delayed', self.name, 'stops.json'), 'r'
         ) as f:
@@ -56,9 +57,3 @@ class Agent(ABC):
             os.path.join(osrd.dir, 'delayed', self.name, 'stops.json'), 'w'
         ) as f:
             json.dump(self.stops(osrd), f)
-
-
-class DoNothing(Agent):
-
-    def stops(self, osrd) -> List[Dict[str, Any]]:
-        return []

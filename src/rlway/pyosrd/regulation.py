@@ -19,7 +19,7 @@ def add_stops(
     ----------
     stops : list[dict[str, float  |  str]]
         List of stops described by a dictionnary with 3 keys:
-        {"train_id": int, "position": float, "duration": float}
+        {"train": int, "position": float, "duration": float}
     """
 
     for stop in stops:
