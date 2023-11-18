@@ -820,6 +820,10 @@ class OSRD():
                 types=['signal', 'detector', 'station', ]
             )
 
+            train_tracks = [
+                t['id']
+                for t in self.train_track_sections(train_id)
+            ]
             for i, _ in enumerate(limits[:-1]):
                 start = limits[i]
                 end = limits[i+1]
@@ -828,10 +832,12 @@ class OSRD():
                 for i, p in enumerate(points):
                     if p['id'] == end:
                         if (points[i-2]['type'] == 'station'):
+                            print(points[i-2])
                             station_point = next(
-                                p
-                                for p in self._points()
-                                if p.id == points[i-2]['id']
+                                pt
+                                for pt in self._points()
+                                if pt.id == points[i-2]['id']
+                                and pt.track_section in train_tracks
                             )
                             positions[zone] = {
                                 'type': 'station',
@@ -861,6 +867,7 @@ class OSRD():
 
             last_zone = "<->".join(sorted([limits[-2], limits[-1]]))
             if points[-2]['type'] == 'station':
+
                 station_point = next(
                     p
                     for p in self._points()
