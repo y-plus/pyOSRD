@@ -9,7 +9,7 @@ from rlway.pyosrd.scheduler_agent import SchedulerAgent
 
 
 def test_scheduler_agent_autonomous(two_trains):
-    @dataclass
+
     class DummySchedulerAgent(SchedulerAgent):
         @property
         def steps_extra_delays(self) -> pd.DataFrame:
@@ -40,7 +40,6 @@ def test_scheduler_agent_in_regulate():
     sim.add_delay('train0', time_threshold=90, delay=280.)
     delayed = sim.delayed()
 
-    @dataclass
     class DelayTrain0AtDeparture(SchedulerAgent):
         @property
         def steps_extra_delays(self) -> pd.DataFrame:

@@ -832,7 +832,6 @@ class OSRD():
                 for i, p in enumerate(points):
                     if p['id'] == end:
                         if (points[i-2]['type'] == 'station'):
-                            print(points[i-2])
                             station_point = next(
                                 pt
                                 for pt in self._points()
