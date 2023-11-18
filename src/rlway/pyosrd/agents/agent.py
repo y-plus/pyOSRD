@@ -46,7 +46,7 @@ class Agent(ABC):
 
     @abstractmethod
     def stops(self, osrd) -> List[Dict[str, Any]]:
-        pass
+        ...
 
     def write_stops_json(self, osrd) -> None:
         directory = os.path.join(osrd.dir, 'delayed', self.name)
