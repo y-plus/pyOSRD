@@ -49,7 +49,7 @@ def add_stop(
     Parameters
     ----------
     train : int
-    Train index
+        Train index
     position : float
         Offset in train's path in m
     duration : float

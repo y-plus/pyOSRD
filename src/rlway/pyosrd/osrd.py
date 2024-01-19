@@ -81,6 +81,12 @@ class OSRD():
         space_time_chart,
         space_time_chart_plotly,
     )
+    from .set_trains import (
+        add_train,
+        cancel_train,
+        cancel_all_trains,
+        stop_train
+    )
 
     def __post_init__(self):
 
