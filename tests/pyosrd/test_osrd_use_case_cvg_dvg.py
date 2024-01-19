@@ -250,7 +250,7 @@ def test_cvg_dvg_stop_positions(use_case_cvg_dvg):
         {
             'D1<->buffer_stop.1': {
                 'type': 'station',
-                'offset': None,
+                'offset': 0.0,
                 'id': 'station0',
             },
             'CVG': {'type': 'switch', 'offset': None},
