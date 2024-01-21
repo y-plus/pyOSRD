@@ -16,7 +16,7 @@ def intersections(
     Arguments
     ---------
     intervals:  List[Tuple[float, float]]
-        Listt of intervals
+        List of intervals
 
     Returns
     -------
@@ -55,5 +55,35 @@ def intersections(
         for i, _ in enumerate(overlap_times)
         if i % 2 != 0
     ]
+
+    return intersections
+
+
+def overlapping(
+    intervals: List[Tuple[float, float]]
+) -> List[Tuple[float, float]]:
+
+    sorted = intervals.copy()
+    sorted.sort(key=lambda x: x[0])
+
+    no_overlap_order = []
+    for i, interval in enumerate(sorted):
+        no_overlap_order.append((i, interval[0]))
+        no_overlap_order.append((i, interval[1]))
+
+    actual_order = no_overlap_order.copy()
+    actual_order.sort(key=lambda x: x[1])
+
+    overlap_times = [
+        actual
+        for no_overlap, actual in zip(no_overlap_order, actual_order)
+        if no_overlap != actual
+    ]
+
+    intersections = {
+        (overlap_times[i-1][0], overlap_times[i][0]): (overlap_times[i-1][1], overlap_times[i][1])
+        for i, _ in enumerate(overlap_times)
+        if i % 2 != 0
+    }
 
     return intersections
