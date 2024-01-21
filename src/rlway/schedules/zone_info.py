@@ -40,7 +40,7 @@ def step_has_fixed_duration(osrd: OSRD) -> pd.DataFrame:
             ],
             axis=1
         )
-        .set_axis(range(2), axis=1)
+        .set_axis(range(osrd.num_trains), axis=1)
         .reindex(schedule_from_osrd(osrd).df.index)
     )
 
