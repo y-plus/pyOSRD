@@ -24,7 +24,7 @@ class RegulEnv(gym.Env):
             "timetable": spaces.Box(
                 low=0,
                 high=np.inf,
-                shape=(schedule.num_track_sections, 2*schedule.num_trains),
+                shape=(schedule.num_blocks, 2*schedule.num_trains),
                 dtype=np.float32,
             )
         })
