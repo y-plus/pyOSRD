@@ -7,23 +7,19 @@ from railjson_generator import (
 )
 
 from railjson_generator.schema.infra.direction import Direction
-from railjson_generator.schema.simulation.stop import Stop
 
 
-def c1(
+def c1_with_blocks(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
 ) -> None:
     """
-    station A (1 track)                        station B (1 track)
+                ┎SA SA.1┐       ┎S2.0 S2.1┐       ┎S8.0 S8.1┐     ┎SB SB.1┐
+     (T)<---A------DA----------------D2-----...--------D8-------------DB------B---->
 
-             ┎SA                                    SB┐
-     (T)-|----DA------------------------------------DB-----|---->
-
-    10 km long
-    Train #1 starts from A and arrive at B
-    Train #2 starts from B later
+    10 km long, Detectors D2,D4,D6,D8 detectors every 2km
+    Trains start from A and arrive at B
     """  # noqa
 
     infra_builder = InfraBuilder()
@@ -36,10 +32,32 @@ def c1(
     DA = T.add_detector(label="DA", position=500, )
     DB = T.add_detector(label="DB", position=T.length-500, )
 
+    for i in range(4):
+        T.add_detector(label=f"D{(i+1)*2}", position=(i+1)*2_000, )
+        T.add_signal(
+            (i+1)*2_000 - 20,
+            label=f"S{(i+1)*2}.0",
+            direction=Direction.START_TO_STOP,
+            is_route_delimiter=True,
+        ).add_logical_signal("BAL", settings={"Nf": "true"})
+        T.add_signal(
+            (i+1)*2_000 + 20,
+            label=f"S{(i+1)*2}.1",
+            direction=Direction.STOP_TO_START,
+            is_route_delimiter=True,
+        ).add_logical_signal("BAL", settings={"Nf": "true"})
+
     T.add_signal(
         DA.position - 20,
         label='SA',
         direction=Direction.START_TO_STOP,
+        is_route_delimiter=True,
+    ).add_logical_signal("BAL", settings={"Nf": "true"})
+   
+    T.add_signal(
+        DA.position + 20,
+        label='SA1',
+        direction=Direction.STOP_TO_START,
         is_route_delimiter=True,
     ).add_logical_signal("BAL", settings={"Nf": "true"})
 
@@ -47,6 +65,13 @@ def c1(
         DB.position - 20,
         label='SB',
         direction=Direction.START_TO_STOP,
+        is_route_delimiter=True,
+    ).add_logical_signal("BAL", settings={"Nf": "true"})
+
+    T.add_signal(
+        DB.position + 20,
+        label='SB1',
+        direction=Direction.STOP_TO_START,
         is_route_delimiter=True,
     ).add_logical_signal("BAL", settings={"Nf": "true"})
 
@@ -68,7 +93,7 @@ def c1(
     train1 = sim_builder.add_train_schedule(
         A,
         B,
-        label='train0',
+        label='First train',
         departure_time=0,
     )
     # train1.add_stop(120., position=7_500)
@@ -77,8 +102,8 @@ def c1(
     train2 = sim_builder.add_train_schedule(
         A,
         B,
-        label='train1',
-        departure_time=5*60.,
+        label='Second train',
+        departure_time=3*60.,
     )
 
     train2.add_standard_single_value_allowance("percentage", 5, )

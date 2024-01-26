@@ -85,7 +85,8 @@ class OSRD():
         add_train,
         cancel_train,
         cancel_all_trains,
-        stop_train
+        stop_train,
+        copy_train
     )
 
     def __post_init__(self):

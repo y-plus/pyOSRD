@@ -100,7 +100,7 @@ def cancel_train(
 
 def cancel_all_trains(self):
     """Cancel all trains
-    
+
     Does not re-run the simulation
     """
     self.simulation['train_schedule_groups'] = []
@@ -138,6 +138,41 @@ def stop_train(
 
     self.simulation['train_schedule_groups'][group_idx]['schedules'][idx]['stops'] += \
         [{'duration': duration, 'position': position}]  # noqa
+
+    with open(os.path.join(self.dir, self.simulation_json), "w") as outfile:
+        json.dump(self.simulation, outfile)
+
+
+def copy_train(
+    self,
+    train: int | str,
+    new_train_label: str,
+    departure_time: float,
+) -> None:
+
+    if isinstance(train, str):
+        train = self.trains.index(train)
+
+    if new_train_label in self.trains:
+        raise ValueError(
+            f"'{new_train_label}' is already used as a train label"
+        )
+
+    group, idx = self._train_schedule_group[
+        self.trains[train]
+    ]
+
+    group_idx = _group_idx(self, group)
+
+    new_train_schedule = \
+        self.simulation['train_schedule_groups'][group_idx]['schedules'][idx].copy()
+
+    new_train_schedule['id'] = new_train_label
+    new_train_schedule['departure_time'] = departure_time
+
+    self.simulation['train_schedule_groups'][group_idx]['schedules'].append(
+        new_train_schedule
+    )
 
     with open(os.path.join(self.dir, self.simulation_json), "w") as outfile:
         json.dump(self.simulation, outfile)
