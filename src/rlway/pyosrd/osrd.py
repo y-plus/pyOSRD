@@ -697,59 +697,6 @@ class OSRD():
 
         return tvd_blocks
 
-    # @property
-    # def entry_signals(
-    #     self: "OSRD",
-    # ) -> list[dict[str, str | None]]:
-
-    #     entry_signals = []
-
-    #     for train, _ in enumerate(self.trains):
-
-    #         tvds_limits = []
-    #         for track in self.train_track_sections(train):
-    #             elements = [
-    #                 p.id
-    #                 for p in self.points_on_track_sections()[track['id']]
-    #                 if p.type in ['buffer_stop', 'detector']
-    #             ]
-    #             tvds_limits += (
-    #                 elements[::-1]
-    #                 if track['direction'] == 'STOP_TO_START'
-    #                 else elements
-    #             )
-
-    #         detectors = \
-    #             self.points_encountered_by_train(train, types='detector')
-    #         first_detector = detectors[0]['id']
-    #         last_detector = detectors[-1]['id']
-    #         idx_first = tvds_limits.index(first_detector)
-    #         idx_last = tvds_limits.index(last_detector)
-
-    #         limits = tvds_limits[idx_first-1:idx_last+2]
-
-    #         signals = {}
-    #         for i, _ in enumerate(limits[:-1]):
-
-    #             start = limits[i]
-    #             end = limits[i+1]
-    #             s_id = None
-    #             for p in self.points_encountered_by_train(
-    #                 train=train,
-    #                 types=['detector', 'signal']
-    #             ):
-    #                 if p['id'] == start or 'buffer' in start:
-    #                     break
-    #                 if p['type'] == 'signal':
-    #                     s_id = p['id']
-
-    #             signals[self.tvd_blocks["<->".join(sorted([start, end]))]] =\
-    #                 s_id
-
-    #         entry_signals.append(signals)
-
-    #     return entry_signals
-
     def regulate(self, agent: Agent) -> Self:
         """Create and run a regulated simulation
 
