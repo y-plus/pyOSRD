@@ -8,7 +8,7 @@ def c1y2_2trains_conflict() -> OSRD:
     In this test case we have two trains going to different
       branch from a divergence.
     The leading train is delayed in the divergence therefore
-      no the trailing train must wait before entering the divergence.
+      the trailing train must wait before entering the divergence.
     """
     use_case = 'c1y2_2trains'
     sim = OSRD(use_case=use_case, dir='tmp')
