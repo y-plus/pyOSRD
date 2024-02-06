@@ -18,7 +18,7 @@ def c2y13s(
 
 
            ┎SA0
-    (T0)----DA0- 
+    (T0)----DA0-
                  \       ┎S1    ┎SB  ┎SB2    ┎S2    ┎SC  ┎SC2    ┎S3    ┎SD  ┎SD2
                SWA>-DA2---D1-----DB-o-DB2-----D2-----DC-o-DC2-----D3-----DD-o-DD2-----(T2)
            ┎SA1  /

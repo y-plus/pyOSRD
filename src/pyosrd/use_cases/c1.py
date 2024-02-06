@@ -7,7 +7,6 @@ from railjson_generator import (
 )
 
 from railjson_generator.schema.infra.direction import Direction
-from railjson_generator.schema.simulation.stop import Stop
 
 
 def c1(
