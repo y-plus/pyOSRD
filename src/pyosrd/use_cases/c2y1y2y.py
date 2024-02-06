@@ -23,15 +23,15 @@ def c2y1y2y(
            ┎S1   /                              \                   ┎S5  /
     (T1)-----D1-                                  --D3.2----(T5)-----D5-
 
-    All tracks are 500m long
-    Train 0 starts from T0 at t=0 and arrives at T4
-    Train 1 starts from T1 at t=100 and arrives at T5
+    All tracks are 1000m long
+    Train 0 starts from T0 at t=0 and arrives at T7
+    Train 1 starts from T1 at t=100 and arrives at T7
     """  # noqa
 
     infra_builder = InfraBuilder()
 
     T = [
-        infra_builder.add_track_section(label='T'+str(id), length=500)
+        infra_builder.add_track_section(label='T'+str(id), length=1000)
         for id in range(8)
     ]
 
@@ -64,7 +64,7 @@ def c2y1y2y(
     for i, track in enumerate(T):
         d = track.add_detector(
             label=f"D{i}",
-            position=(450 if i in [0, 1, 3, 4, 5, 7] else 50),
+            position=(950 if i in [0, 1, 3, 4, 5, 7] else 50),
         )
         if i in [0, 1, 3, 4, 5]:
             s = track.add_signal(
@@ -104,15 +104,15 @@ def c2y1y2y(
 
     sim_builder.add_train_schedule(
         Location(T[0], 300),
-        Location(T[4], 490),
-        Location(T[7], 480),
+        Location(T[4], 990),
+        Location(T[7], 980),
         label='train0',
         departure_time=0.,
     )
     sim_builder.add_train_schedule(
         Location(T[1], 300),
-        Location(T[5], 480),
-        Location(T[7], 480),
+        Location(T[5], 990),
+        Location(T[7], 980),
         label='train1',
         departure_time=100.,
     )
