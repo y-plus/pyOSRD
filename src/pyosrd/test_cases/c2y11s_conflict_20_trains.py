@@ -14,7 +14,6 @@ def c2y11s_conflict_20_trains() -> OSRD:
         sim.copy_train('train0', f'train0.{i}', departure_time=300.*i)
         sim.copy_train('train1', f'train1.{i}', departure_time=100.+300.*i)
 
-    # sim.run()
     sim.reset_delays()
     sim.add_delay('train0', time_threshold=70, delay=100.)
 

@@ -15,4 +15,6 @@ def c1y2_2trains_conflict() -> OSRD:
 
     sim.reset_delays()
     sim.add_delay('train0', time_threshold=70, delay=120.)
+    sim.run()
+
     return sim

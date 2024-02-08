@@ -24,5 +24,6 @@ def c2y1y2y_2_trains_same_order() -> OSRD:
 
     sim.reset_delays()
     sim.add_delay('train0', time_threshold=130, delay=75.)
+    sim.run()
 
     return sim

@@ -11,6 +11,10 @@ def c1_delay() -> OSRD:
     use_case = 'c1'
     sim = OSRD(use_case=use_case, dir='tmp')
 
+    # les trains
+
     sim.reset_delays()
     sim.add_delay('train0', time_threshold=10, delay=120.)
+    sim.run()
+
     return sim

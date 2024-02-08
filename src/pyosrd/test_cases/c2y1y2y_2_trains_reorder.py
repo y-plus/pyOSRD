@@ -23,6 +23,7 @@ def c2y1y2y_2_trains_reorder() -> OSRD:
     sim = OSRD(use_case=use_case, dir='tmp')
 
     sim.reset_delays()
-    sim.add_delay('train0', time_threshold=130, delay=250.)
+    sim.add_delay('train0', time_threshold=130, delay=150.)
+    sim.run()
 
     return sim
