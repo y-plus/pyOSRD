@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-from IPython.display import Image
+import PIL
+
 from pandas.testing import assert_frame_equal
 
 
@@ -65,4 +66,8 @@ def test_schedules_mermaid_graph(two_trains):
 
 
 def test_schedules_draw_graph_returns_image(two_trains):
-    assert isinstance(two_trains.draw_graph(), Image)
+    print(type(two_trains.draw_graph()))
+    assert isinstance(
+        two_trains.draw_graph(),
+        PIL.JpegImagePlugin.JpegImageFile
+    )

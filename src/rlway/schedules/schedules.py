@@ -1,12 +1,17 @@
 import base64
 import copy
+import os
+import requests
+import shutil
+
 from typing import List, Tuple, Union
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
-from IPython.display import Image
+import PIL
+
 from matplotlib.axes._axes import Axes
 
 
@@ -437,11 +442,29 @@ class Schedule(object):
             for edge in self.graph.edges
         ])
 
-    def draw_graph(self) -> Image:
+    def draw_graph(
+        self,
+        save: str | None = None,
+    ) -> PIL.PngImagePlugin.PngImageFile:
         graphbytes = self._mermaid_graph.encode("ascii")
         base64_bytes = base64.b64encode(graphbytes)
         base64_string = base64_bytes.decode("ascii")
-        return Image(url="https://mermaid.ink/img/" + base64_string)
+        url = "https://mermaid.ink/img/" + base64_string
+        
+        
+        response = requests.get(url, stream=True)
+
+        with open('tmp.png', 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+        del response
+        image = PIL.Image.open('tmp.png')
+
+        if save:
+            os.rename('tmp.png', save)
+        else:
+            os.remove('tmp.png')
+
+        return image
 
     def propagate_delay(self, delayed_train: int) -> Tuple[pd.DataFrame, int]:
 

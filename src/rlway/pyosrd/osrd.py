@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Union
 import networkx as nx
 import numpy as np
 import PIL
+from PIL.JpegImagePlugin import JpegImageFile
 import requests
 from dotenv import load_dotenv
 from typing_extensions import Self
@@ -365,7 +366,7 @@ class OSRD():
     def draw_infra_points(
         self,
         save: str | None = None,
-    ) -> PIL.PngImagePlugin.PngImageFile:
+    ) -> JpegImageFile:
         """Use mermaid.js to display the infra as a graph of specificpoints
 
         Parameters
@@ -375,7 +376,7 @@ class OSRD():
 
         Returns
         -------
-        PIL.Image
+        PIL.JpegImagePlugin.JpegImageFile
             Inmage of the infra as a graph of points
         """
 
@@ -557,7 +558,7 @@ class OSRD():
 
         Returns
         -------
-        List[TDict[str, Any]]
+        List[Dict[str, Any]]
             Points encountered (id, type, offset)
         """
 
