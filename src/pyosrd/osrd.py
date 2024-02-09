@@ -31,6 +31,11 @@ def _read_json(json_file: str) -> Union[Dict, List]:
     return dict_
 
 
+class classproperty(property):
+    def __get__(self, cls, owner):
+        return classmethod(self.fget).__get__(None, owner)()
+
+
 @dataclass
 class Point:
     track_section: str
@@ -172,8 +177,7 @@ class OSRD():
         """True if the object has simulation results"""
         return self.results != []
 
-    @classmethod
-    @property
+    @classproperty
     def use_cases(self) -> List[str]:
         """List of available use cases"""
         return [
@@ -181,8 +185,7 @@ class OSRD():
             for _, name, _ in pkgutil.iter_modules(use_cases.__path__)
         ]
 
-    @classmethod
-    @property
+    @classproperty
     def scenarii(self) -> List[str]:
         """List of available scenarii"""
         return [
