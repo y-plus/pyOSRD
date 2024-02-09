@@ -1,4 +1,4 @@
-from rlway.pyosrd import OSRD
+from pyosrd import OSRD
 
 
 def c1y2_2trains_no_conflict() -> OSRD:

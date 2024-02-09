@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 from typing_extensions import Self
 
 import pyosrd.use_cases as use_cases
-import pyosrd.test_cases as test_cases
+import pyosrd.scenarii as scenarii
 
 
 def _read_json(json_file: str) -> Union[Dict, List]:
@@ -183,11 +183,11 @@ class OSRD():
 
     @classmethod
     @property
-    def test_cases(self) -> List[str]:
-        """List of available test cases"""
+    def scenarii(self) -> List[str]:
+        """List of available scenarii"""
         return [
             name
-            for _, name, _ in pkgutil.iter_modules(test_cases.__path__)
+            for _, name, _ in pkgutil.iter_modules(scenarii.__path__)
         ]
 
     @property
