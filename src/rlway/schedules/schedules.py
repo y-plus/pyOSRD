@@ -450,8 +450,7 @@ class Schedule(object):
         base64_bytes = base64.b64encode(graphbytes)
         base64_string = base64_bytes.decode("ascii")
         url = "https://mermaid.ink/img/" + base64_string
-        
-        
+
         response = requests.get(url, stream=True)
 
         with open('tmp.png', 'wb') as out_file:
