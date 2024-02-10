@@ -31,8 +31,11 @@ def add_delay(
 
 def add_delays_in_results(self) -> None:
 
-    with open(os.path.join(self.dir, self.delays_json), 'r') as f:
-        delays = json.load(f)
+    try:
+        with open(os.path.join(self.dir, self.delays_json), 'r') as f:
+            delays = json.load(f)
+    except FileNotFoundError:
+        delays = {}
 
     for d in delays:
         train_id = d['train_id']
