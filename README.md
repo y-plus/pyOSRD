@@ -1,4 +1,4 @@
-![Logo](pyosrd.svg)
+![Logo](pyosrd.png)
 
 # Prerequisites
 
