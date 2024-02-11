@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.axes._axes import Axes
 from plotly import graph_objects as go
 
-from rlway.osrd import Point
+from pyosrd.osrd import Point
 
 
 def _data_and_points_to_plot(

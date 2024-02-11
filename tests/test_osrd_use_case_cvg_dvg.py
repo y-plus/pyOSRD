@@ -18,7 +18,7 @@ Train 1 starts from T1 at t=100 and arrives at T5
 import pytest
 import matplotlib.pyplot as plt
 
-from rlway.osrd import Point
+from pyosrd.osrd import Point
 
 
 def test_cvg_dvg_infra(use_case_cvg_dvg):

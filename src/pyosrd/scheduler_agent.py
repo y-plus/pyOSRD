@@ -5,13 +5,13 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
-from rlway.schedules import (
+from pyosrd.schedules import (
     Schedule,
     schedule_from_osrd,
     step_has_fixed_duration,
     weights as weights_
 )
-from rlway.agents import Agent
+from pyosrd.agents import Agent
 
 
 @dataclass

@@ -1,8 +1,8 @@
 import shutil
 from dataclasses import dataclass
 
-from rlway import OSRD
-from rlway.agents import Agent
+from pyosrd import OSRD
+from pyosrd.agents import Agent
 
 
 def test_base_class_agent():

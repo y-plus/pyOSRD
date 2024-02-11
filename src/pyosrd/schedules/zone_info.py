@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from rlway import OSRD
+from pyosrd import OSRD
 from . import schedule_from_osrd
 
 

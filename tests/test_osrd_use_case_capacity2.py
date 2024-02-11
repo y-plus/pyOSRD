@@ -16,7 +16,7 @@ Train 1 starts from T0 at t=300s, stops at T4, and arrives at T5
 
 import matplotlib.pyplot as plt
 
-from rlway.osrd import Point
+from pyosrd.osrd import Point
 
 
 def test_station_capacity2_infra(use_case_station_capacity2):

@@ -1,7 +1,7 @@
 import pandas as pd
 
-from rlway import OSRD
-from rlway.schedules import Schedule
+from pyosrd import OSRD
+from pyosrd.schedules import Schedule
 
 
 def schedule_df_from_OSRD(

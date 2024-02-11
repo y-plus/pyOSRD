@@ -18,7 +18,7 @@ from dataclasses import asdict
 
 import matplotlib.pyplot as plt
 
-from rlway.osrd import Point
+from pyosrd.osrd import Point
 
 
 def test_point_switch_infra(use_case_point_switch):

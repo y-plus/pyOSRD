@@ -4,7 +4,7 @@ import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
 
-from rlway.schedules import Schedule
+from pyosrd.schedules import Schedule
 
 
 class RegulEnv(gym.Env):

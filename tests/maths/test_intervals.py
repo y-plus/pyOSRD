@@ -1,4 +1,4 @@
-from rlway.maths.intervals import intersections
+from pyosrd.maths.intervals import intersections
 
 
 def test_interval_intersections():

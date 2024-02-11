@@ -1,6 +1,6 @@
 import pytest
 
-from rlway import OSRD
+from pyosrd import OSRD
 
 
 def test_run_shoud_fail_and_raise_exception_with_malformed_jsons():

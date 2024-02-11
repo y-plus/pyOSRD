@@ -16,7 +16,7 @@ The two train collide !
 import matplotlib.pyplot as plt
 from plotly import graph_objects as go
 
-from rlway.osrd import Point
+from pyosrd.osrd import Point
 
 
 def test_straight_line_infra(use_case_straight_line):

@@ -18,7 +18,7 @@ import requests
 from dotenv import load_dotenv
 from typing_extensions import Self
 
-import rlway.use_cases as use_cases
+import pyosrd.use_cases as use_cases
 
 
 def _read_json(json_file: str) -> Union[Dict, List]:
@@ -101,7 +101,7 @@ class OSRD():
 
             module = importlib.import_module(
                 f".{self.use_case}",
-                "rlway.use_cases"
+                "pyosrd.use_cases"
             )
             function = getattr(module, self.use_case)
             function(
@@ -148,7 +148,7 @@ class OSRD():
         load_dotenv()
         JAVA = os.getenv('JAVA') or 'java'
 
-        jar_file = files('rlway').joinpath('osrd-all.jar')
+        jar_file = files('pyosrd').joinpath('osrd-all.jar')
 
         output = subprocess.run(
             f"{JAVA} -jar {jar_file} standalone-simulation "

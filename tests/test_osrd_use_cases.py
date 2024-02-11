@@ -2,7 +2,7 @@ import shutil
 
 import pytest
 
-from rlway import OSRD
+from pyosrd import OSRD
 
 
 @pytest.mark.parametrize('use_case', OSRD.use_cases)

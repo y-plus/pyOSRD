@@ -1,4 +1,4 @@
-![Logo](rlway.svg)
+![Logo](pyosrd.svg)
 
 # Prerequisites
 
@@ -36,7 +36,7 @@ pip install --upgrade git+ssh://git@github.com/y-plus/RLway.git
 ## Getting started
 
 ```python3
->>> from rlway import OSRD
+>>> from pyosrd import OSRD
 >>> sim = OSRD(use_case='point_switch', dir='point_switch')
 ```
 

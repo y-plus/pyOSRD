@@ -1,5 +1,5 @@
 import os
-from rlway.osrd import _read_json
+from pyosrd.osrd import _read_json
 
 
 def test_read_json_bad_format():
