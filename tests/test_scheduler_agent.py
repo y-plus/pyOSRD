@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 
 from pyosrd import OSRD
-from pyosrd.scheduler_agent import SchedulerAgent
+from pyosrd.agents.scheduler_agent import SchedulerAgent
 
 
 def test_scheduler_agent_autonomous(two_trains):
