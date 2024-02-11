@@ -427,7 +427,7 @@ class Schedule(object):
 
         dict = {
             u: v
-            for u, v in zip(self.df.index, self.df.fillna(0).values)
+            for u, v in zip(self.df.index, self.df.infer_objects(copy=False).fillna(0.).values)
         }
 
         nx.set_node_attributes(G, dict, 'times')
