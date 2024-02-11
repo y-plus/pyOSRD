@@ -1,6 +1,6 @@
 import pandas as pd
 
-from rlway.pyosrd import OSRD
+from rlway import OSRD
 
 from .zone_info import _step_is_a_station, step_type
 

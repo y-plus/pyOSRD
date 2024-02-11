@@ -2,7 +2,7 @@ import shutil
 
 import pytest
 
-from rlway.pyosrd import OSRD
+from rlway import OSRD
 from rlway.schedules import Schedule
 
 
