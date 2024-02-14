@@ -6,7 +6,7 @@ import nbformat
 import pytest
 from nbconvert.preprocessors import ExecutePreprocessor
 
-TUTORIALS_PATH = 'tutorials'
+TUTORIALS_PATH = 'doc/tutorials'
 tuto_notebooks = sorted(list(glob.glob(f'{TUTORIALS_PATH}/*.ipynb')))
 
 
