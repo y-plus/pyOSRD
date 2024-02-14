@@ -43,3 +43,7 @@ mypkg = ["*.jar"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.coverage.run]
+omit = ["tests/*"]
+include = ["src/*"]
