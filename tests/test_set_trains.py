@@ -64,3 +64,27 @@ def test_stop_train_by_id(use_case_set_trains):
     new_arr_time = \
         use_case_set_trains.points_encountered_by_train(0)[-1]['t_base']
     assert new_arr_time > arrival_time
+
+
+def test_copy_train_by_id(use_case_set_trains):
+    use_case_set_trains.copy_train(0, 'new_train', 100.)
+    use_case_set_trains.run()
+
+    assert 'new_train' in use_case_set_trains.trains
+
+
+def test_copy_train_by_label(use_case_set_trains):
+    use_case_set_trains.copy_train('train0', 'new_train', 100.)
+    use_case_set_trains.run()
+
+    assert 'new_train' in use_case_set_trains.trains
+
+
+def test_copy_train_already_existing_label(use_case_set_trains):
+    match = "'train1' is already used as a train label"
+    with pytest.raises(ValueError, match=match):
+        use_case_set_trains.copy_train(
+            train='train0',
+            new_train_label='train1',
+            departure_time=60.,
+        )

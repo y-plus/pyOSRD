@@ -3,25 +3,24 @@
 An interval =two floats
 
 """
-from typing import Tuple, List
 
 
 def intersections(
-    intervals: List[Tuple[float, float]]
-) -> List[Tuple[float, float]]:
+    intervals: list[tuple[float, float]]
+) -> list[tuple[float, float]]:
     """intersections between a list of open intervals
 
     An interval is represented by a tuple of floats (start, end)
 
     Arguments
     ---------
-    intervals:  List[Tuple[float, float]]
-        List of intervals
+    intervals:  list[tuple[float, float]]
+        list of intervals
 
     Returns
     -------
-    List[Tuple[float, float]]
-        List of intersections
+    list[tuple[float, float]]
+        list of intersections
 
     Examples
     --------
@@ -60,8 +59,8 @@ def intersections(
 
 
 def overlapping(
-    intervals: List[Tuple[float, float]]
-) -> List[Tuple[float, float]]:
+    intervals: list[tuple[float, float]]
+) -> dict[tuple[int, int]: tuple[float, float]]:
 
     sorted = intervals.copy()
     sorted.sort(key=lambda x: x[0])
@@ -81,7 +80,8 @@ def overlapping(
     ]
 
     intersections = {
-        (overlap_times[i-1][0], overlap_times[i][0]): (overlap_times[i-1][1], overlap_times[i][1])
+        (overlap_times[i-1][0], overlap_times[i][0]):
+            (overlap_times[i-1][1], overlap_times[i][1])
         for i, _ in enumerate(overlap_times)
         if i % 2 != 0
     }
