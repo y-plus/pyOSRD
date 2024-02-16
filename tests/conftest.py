@@ -2,8 +2,8 @@ import shutil
 
 import pytest
 
-from rlway.pyosrd import OSRD
-from rlway.schedules import Schedule
+from pyosrd import OSRD
+from pyosrd.schedules import Schedule
 
 
 @pytest.fixture

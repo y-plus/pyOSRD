@@ -1,8 +1,8 @@
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-import rlway.schedules.weights as weights
-from rlway.schedules import schedule_from_osrd
+import pyosrd.schedules.weights as weights
+from pyosrd.schedules import schedule_from_osrd
 
 
 def test_weights_all_steps(use_case_station_capacity2):

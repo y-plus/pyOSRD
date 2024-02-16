@@ -4,4 +4,6 @@ ipykernel
 pytest
 pytest-cov
 coverage
-flake8
+coverage[toml]
+ruff
+

@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from rlway.schedules import step_has_fixed_duration, step_type, step_station_id
-from rlway.schedules import schedule_from_osrd
+from pyosrd.schedules import step_has_fixed_duration, step_type, step_station_id
+from pyosrd.schedules import schedule_from_osrd
 
 
 def test_step_has_fixed_duration(use_case_station_capacity2):

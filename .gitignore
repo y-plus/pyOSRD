@@ -13,7 +13,8 @@ __pycache__
 # tests
 .pytest_cache
 htmlcov/
-.coverage
+.coverage*
+*.coverage
 tmp*/
 
 # Egg metadata
@@ -27,3 +28,4 @@ tmp*/
 
 
 data/
+notebooks/
