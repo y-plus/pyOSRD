@@ -5,4 +5,5 @@ pytest
 pytest-cov
 coverage
 coverage[toml]
-flake8
+ruff
+
