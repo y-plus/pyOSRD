@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='rlway',
-    version='0.0.5',
+    version='0.0.4',
     url='https://github.com/y-plus/RLway.git',
     author='Renan HILBERT',
     author_email='renan.hilbert.ext@eurodecision.com',
