@@ -32,8 +32,8 @@ dependencies=[
 ]
 
 [project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
-Issues = "https://github.com/pypa/sampleproject/issues"
+Homepage = "https://github.com/y-plus/RLway"
+Issues = "https://github.com/y-plus/RLway/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
