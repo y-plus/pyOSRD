@@ -26,11 +26,11 @@ https://www.oracle.com/java/technologies/downloads/#java17
 ## Installation
 
 ```bash
-pip install git+ssh://git@github.com/y-plus/RLway.git
+pip install git+ssh://git@github.com/y-plus/pyOSRD.git
 ```
 or
 ```bash
-pip install --upgrade git+ssh://git@github.com/y-plus/RLway.git
+pip install --upgrade git+ssh://git@github.com/y-plus/pyOSRD.git
 ```
 
 ## Getting started
