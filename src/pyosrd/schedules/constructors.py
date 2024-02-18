@@ -83,7 +83,24 @@ def schedule_from_osrd(
         case: OSRD,
         eco_or_base: str = 'base',
 ) -> Schedule:
+    """Construct a schedule object  from an OSRD simulation
+
+    Additional informations are created as attributes
+    - _trains: list of train labels
+
+    Parameters
+    ----------
+    case : OSRD
+        OSRD simulation object
+    eco_or_base : str, optional
+        Base results or eco results ?, by default 'base'
+
+    Returns
+    -------
+    Schedule
+    """
 
     s = Schedule(len(case.routes), case.num_trains)
     s._df = schedule_df_from_OSRD(case)
+    s._trains = case.trains
     return s

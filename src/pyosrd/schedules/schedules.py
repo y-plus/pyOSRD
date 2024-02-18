@@ -50,7 +50,11 @@ class Schedule(object):
     @property
     def trains(self) -> List[int]:
         """List of trains"""
-        return list(self._df.columns.levels[0])
+        return getattr(
+            self,
+            '_trains',
+            list(self._df.columns.levels[0])
+        )
 
     @property
     def df(self) -> pd.DataFrame:
@@ -417,7 +421,7 @@ class Schedule(object):
     def graph(self) -> nx.DiGraph:
 
         edges = set()
-        for train in self.trains:
+        for train, _ in enumerate(self.trains):
             traj = self.trajectory(train)
             edges = edges.union({
                 (traj[i], traj[i+1])
@@ -527,15 +531,15 @@ class Schedule(object):
     def plot(self, alpha: float = .5) -> Axes:
 
         _, ax = plt.subplots()
-        for train in self._df.columns.levels[0]:
+        for train, label in enumerate(self.trains):
             ax.barh(
                 width=self.durations[train],
                 left=self.starts[train],
                 y=self._df.index,
-                label=str(train),
+                label=str(label),
                 height=1,
-                alpha=alpha
-                )
+                alpha=alpha,
+            )
 
         ax.set_xlabel('Time')
         ax.legend()
