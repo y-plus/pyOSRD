@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import PIL
 
+from PIL.JpegImagePlugin import JpegImageFile
 from matplotlib.axes._axes import Axes
 
 
@@ -448,7 +449,7 @@ class Schedule(object):
     def draw_graph(
         self,
         save: str | None = None,
-    ) -> PIL.PngImagePlugin.PngImageFile:
+    ) -> JpegImageFile:
         graphbytes = self._mermaid_graph.encode("ascii")
         base64_bytes = base64.b64encode(graphbytes)
         base64_string = base64_bytes.decode("ascii")
