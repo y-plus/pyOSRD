@@ -65,8 +65,10 @@ def schedule_df_from_OSRD(
                     for d in detectors
                     if d['id'] == end][0]
             )
-            df.loc[df.block == case.tvd_blocks["<->".join(sorted([start, end]))], train] =\
-                (t_start, t_end)
+            df.loc[
+                df.block == case.tvd_blocks["<->".join(sorted([start, end]))],
+                train
+            ] = (t_start, t_end)
 
     df.set_index('block', inplace=True, drop=True)
     df.drop_duplicates(inplace=True)
