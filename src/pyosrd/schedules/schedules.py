@@ -530,12 +530,15 @@ class Schedule(object):
 
     def plot(self, alpha: float = .5) -> Axes:
 
+        s = copy.copy(self)
+        s._df = s.df.dropna(axis=0, how='all')
+
         _, ax = plt.subplots()
-        for train, label in enumerate(self.trains):
+        for train, label in enumerate(s.trains):
             ax.barh(
-                width=self.durations[train],
-                left=self.starts[train],
-                y=self._df.index,
+                width=s.durations[train],
+                left=s.starts[train],
+                y=s._df.index,
                 label=str(label),
                 height=1,
                 alpha=alpha,
