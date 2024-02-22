@@ -175,7 +175,7 @@ def regulate_scenario(scenario: str,
     """ # noqa
     module = importlib.import_module(
                     f".{scenario}",
-                    "rlway.pyosrd.scenarii"
+                    "pyosrd.scenarii"
                 )
     function = getattr(module, scenario)
     sim = function()
