@@ -3,10 +3,11 @@ import pandas as pd
 from . import Schedule
 
 
-def compute_metric(
-        ref_schedule: Schedule,
-        delayed_schedule: Schedule,
-        weights: pd.DataFrame) -> float:
+def compute_ponderated_delays(
+    ref_schedule: Schedule,
+    delayed_schedule: Schedule,
+    weights: pd.DataFrame
+) -> float:
     """
     Compute an indicator to evaluate a delayed Schedule.
 
@@ -24,8 +25,9 @@ def compute_metric(
     delayed_schedule: Schedule
         The delayed schedule, regulated use to compute the metric
     weights: pd.DataFrame
-        the weights use to ponderate all delays
+        The weights use to ponderate all delays
     """
+
     trains = ref_schedule.trains
     starts = ref_schedule.starts
     delayed_starts = delayed_schedule.starts
