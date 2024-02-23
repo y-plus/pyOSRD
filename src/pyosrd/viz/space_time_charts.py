@@ -1,5 +1,3 @@
-from typing import List
-
 import matplotlib.pyplot as plt
 from matplotlib.axes._axes import Axes
 from plotly import graph_objects as go

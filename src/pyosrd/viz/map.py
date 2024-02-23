@@ -1,4 +1,3 @@
-from typing import List
 
 import folium
 import numpy as np

@@ -1,5 +1,4 @@
 import importlib
-from typing import List
 
 from abc import abstractproperty
 
