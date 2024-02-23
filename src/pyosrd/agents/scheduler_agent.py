@@ -206,13 +206,22 @@ def regulate_all_scenarii(
 
 
 def regulate_all_scenarii_with_all_agents(
-        test_cases: list[str],
-        agents: list[SchedulerAgent]
+        scenarii: str | list[str],
+        agents: SchedulerAgent | list[SchedulerAgent]
 ) -> pd.DataFrame:
-    """
-    Will regulate the given scenarii using all the given agent.
+    """Regulates the given scenarii using all the given agent.
 
-    Will return a DataFrame containing the metric for the agents and the given scenarii, eg:
+    Args:
+        test_cases (str | list[str]): The list of scenarii to be regulated
+            can also be "all" to start all scenarii or directly the name of one
+            scenario
+        agents (SchedulerAgent | list[SchedulerAgent]):
+            The agents to be used to regulate the scenarii. Can also be
+            a single agent
+
+    Returns:
+        pd.DataFrame: Returns a DataFrame containing the metric for the agents
+        and the given scenarii, eg:
                     agent 1     agent 2     agent 3     agent 4     agent 5
     scenario 1           12         112         212         312       10212
     scenario 2           16         116         216         316       10216
@@ -220,14 +229,18 @@ def regulate_all_scenarii_with_all_agents(
     scenario 4           33         133         233         333       10233
     scenario 5           98         198         298         398       10298
 
-    Parameters
-    ----------
-    scenario: list[str]
-        The list of scenarii to be regulated
-    agents: list[SchedulerAgent]
-        The agents to be used to regulate the scenario
-    """ # noqa
+    """
+    if scenarii == 'all':
+        scenarii = OSRD.scenarii
+    elif scenarii in OSRD.scenarii:
+        scenarii = [scenarii]
+    elif isinstance(scenarii, str):
+        raise ValueError(f"Unknown scenario {scenarii}")
+
+    if agents is not list:
+        agents = [agents]
+
     data = []
     for agent in agents:
-        data.append(regulate_all_scenarii(test_cases, agent))
+        data.append(regulate_all_scenarii(scenarii, agent))
     return pd.concat(data, axis=1)
