@@ -8,7 +8,7 @@ import subprocess
 from dataclasses import dataclass
 from importlib.resources import files
 from itertools import combinations
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import networkx as nx
 import numpy as np
@@ -22,7 +22,7 @@ import pyosrd.use_cases as use_cases
 import pyosrd.scenarii as scenarii
 
 
-def _read_json(json_file: str) -> Union[Dict, List]:
+def _read_json(json_file: str) -> dict | list:
     with open(json_file, 'r') as f:
         try:
             dict_ = json.load(f)
@@ -74,7 +74,7 @@ class OSRD():
         by default 'delays.json'
     """
     dir: str = '.'
-    use_case: Union[str, None] = None
+    use_case: str | None = None
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
@@ -178,7 +178,7 @@ class OSRD():
         return self.results != []
 
     @classproperty
-    def use_cases(self) -> List[str]:
+    def use_cases(self) -> list[str]:
         """List of available use cases"""
         return [
             name
@@ -186,7 +186,7 @@ class OSRD():
         ]
 
     @classproperty
-    def scenarii(self) -> List[str]:
+    def scenarii(self) -> list[str]:
         """List of available scenarii"""
         return [
             name
@@ -194,12 +194,12 @@ class OSRD():
         ]
 
     @property
-    def routes(self) -> List[str]:
+    def routes(self) -> list[str]:
         """List of routes ids"""
         return [route['id'] for route in self.infra['routes']]
 
     @property
-    def track_section_lengths(self) -> Dict[str, float]:
+    def track_section_lengths(self) -> dict[str, float]:
         """Dict of track sections and their lengths"""
         return {t['id']: t['length'] for t in self.infra['track_sections']}
 
@@ -209,7 +209,7 @@ class OSRD():
         return len(self.infra['switches'])
 
     @property
-    def station_capacities(self) -> Dict[str, int]:
+    def station_capacities(self) -> dict[str, int]:
         """Dict of stations ids (operational points) and their capacities"""
         return {
             station['id']: len(station['parts'])
@@ -221,7 +221,7 @@ class OSRD():
         """Number of stations (defined as operational points)"""
         return len(self.station_capacities)
 
-    def _points(self, op_part_tracks: bool = False) -> List[Point]:
+    def _points(self, op_part_tracks: bool = False) -> list[Point]:
 
         points = []
 
@@ -318,7 +318,7 @@ class OSRD():
         sim = f'{eco_or_base}_simulations'
         return self.results[group][sim][idx]['head_positions']
 
-    def points_on_track_sections(self, op_part_tracks: bool = False) -> Dict:
+    def points_on_track_sections(self, op_part_tracks: bool = False) -> dict:
         """Dict with for each track, points of interests and their positions"""
 
         points_on_track_sections = {}
@@ -428,7 +428,7 @@ class OSRD():
         )
 
     @property
-    def trains(self) -> List[str]:
+    def trains(self) -> list[str]:
         """List of train ids in the simulation"""
         return [
             train['id']
@@ -437,7 +437,7 @@ class OSRD():
         ]
 
     @property
-    def departure_times(self) -> List[float]:
+    def departure_times(self) -> list[float]:
         """List of trains departure times"""
         return [
             train['departure_time']
@@ -446,7 +446,7 @@ class OSRD():
         ]
 
     @property
-    def _train_schedule_group(self) -> Dict[str, int]:
+    def _train_schedule_group(self) -> dict[str, int]:
         return {
             train['id']: (group['id'], pos)
             for group in self.simulation['train_schedule_groups']
@@ -492,7 +492,7 @@ class OSRD():
                 )
         return ts
 
-    def train_track_sections(self, train: int) -> List[Dict[str, str]]:
+    def train_track_sections(self, train: int) -> list[dict[str, str]]:
         """List of tracks for a given train trajectory"""
 
         head_positions = self._head_position(train=train)
@@ -553,7 +553,7 @@ class OSRD():
     def points_encountered_by_train(
         self,
         train: int,
-        types: List[str] = [
+        types: list[str] = [
             'departure',
             'signal',
             'detector',
@@ -561,17 +561,17 @@ class OSRD():
             'switch',
             'arrival',
         ],
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Points encountered by a train during its trajectory
 
         Parameters
         ----------
-        types : List[str], optional
+        types : list[str], optional
             Types of points, all types by default
 
         Returns
         -------
-        List[Dict[str, Any]]
+        list[Dict[str, Any]]
             Points encountered (id, type, offset)
         """
 
