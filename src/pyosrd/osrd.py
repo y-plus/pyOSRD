@@ -32,6 +32,18 @@ def _read_json(json_file: str) -> dict | list:
 
 
 class classproperty(property):
+    """Create a property for a class method
+
+    This is from the following stack overlflow issue :
+        https://stackoverflow.com/a/13624858
+
+    Use this decorator when you can a proerty decorator
+    and a classmethod decorator on the same method.
+    Since Python 3.13 it is not possible to have them
+    together hence this workaround.
+
+    Do not ask me how it works but it works...
+    """
     def __get__(self, cls, owner):
         return classmethod(self.fget).__get__(None, owner)()
 
