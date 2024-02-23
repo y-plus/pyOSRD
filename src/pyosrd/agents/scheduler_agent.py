@@ -7,14 +7,15 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
+from pyosrd import OSRD
 from pyosrd.schedules import (
     Schedule,
     schedule_from_osrd,
     step_has_fixed_duration,
     weights as weights_
 )
-from pyosrd.schedules.schedules_metrics import (
-    compute_metric
+from pyosrd.schedules.schedules_indicators import (
+    compute_ponderated_delays
 )
 from pyosrd.agents import Agent
 
@@ -68,7 +69,7 @@ class SchedulerAgent(Agent):
             OSRD simulation object
         weights: str, optional
             Weights initialization, either 'all_steps" or "stations_only',
-            by default 'stations_only'
+                by default 'stations_only'
         """
 
         self.ref_schedule = schedule_from_osrd(osrd)
@@ -118,78 +119,88 @@ class SchedulerAgent(Agent):
 
         return regulated_schedule
 
+    def regulate_scenario(
+        self,
+        scenario: str,
+        plot_all=False
+    ) -> pd.DataFrame:
+        """
+        Regulates the given scenario using the given agent.
 
-def regulate_scenario(scenario: str,
-                      agent: SchedulerAgent,
-                      plot_all=False) -> pd.DataFrame:
-    """
-    Will regulate the given scenario using the given agent. May plot the infra graph and all the schedules.
+        Optionaly plots the infra graph and all the schedules.
 
-    Will return a DataFrame containing the metric for the agent and the given scenario, eg:
-                    agent 1
-    scenario 1           12
+        Args:
+            scenario (str): The scenario to be regulated
+            agent (SchedulerAgent): The agent to be used
+                to regulate thescenario
+            plot_all (bool, optional): If set to True all
+                schedules will be displayed (reference,
+                delayed and regulated). Defaults to False.
 
-    Parameters
-    ----------
-    scenario: str
-        The scenario to be regulated
-    agent: SchedulerAgent
-        The agent to be used to regulate the scenario
-    plot_all: bool, optional (False by default)
-        If set to True all schedules will be displayed (reference, delayed and regulated)
-    """ # noqa
-    module = importlib.import_module(
-                    f".{scenario}",
-                    "pyosrd.scenarii"
-                )
-    function = getattr(module, scenario)
-    sim = function()
-    delayed_schedule = sim.delayed()
+        Returns:
+            pd.DataFrame: Returns a DataFrame
+            containing the metric for
+            the agent and the given scenario, eg:
+                            agent 1
+            scenario 1           12
+        """
+        module = importlib.import_module(
+            f".{scenario}",
+            "pyosrd.scenarii"
+        )
+        function = getattr(module, scenario)
+        sim = function()
+        delayed_schedule = sim.delayed()
 
-    agent.set_schedules_from_osrd(sim, "all_steps")
+        self.set_schedules_from_osrd(sim, "all_steps")
 
-    delayed_schedule = schedule_from_osrd(delayed_schedule)
-    ref_schedule = schedule_from_osrd(sim)
-    regulated_schedule = agent.regulated_schedule
-    if plot_all:
-        ref_schedule.draw_graph()
-        ref_schedule.plot()
-        delayed_schedule.plot()
-        agent.regulated_schedule.plot()
+        delayed_schedule = schedule_from_osrd(delayed_schedule)
+        ref_schedule = schedule_from_osrd(sim)
+        regulated_schedule = self.regulated_schedule
 
-    data = pd.DataFrame({agent.name:
-                         [compute_metric(ref_schedule,
-                                         regulated_schedule,
-                                         weights_.all_steps(sim))]},
-                        index=[scenario])
-    return data
+        if plot_all:
+            ref_schedule.draw_graph()
+            ref_schedule.plot()
+            delayed_schedule.plot()
+            self.regulated_schedule.plot()
+
+        return pd.DataFrame(
+            {
+                self.name: [
+                    compute_ponderated_delays(
+                        ref_schedule,
+                        regulated_schedule,
+                        weights_.all_steps(sim),
+                    )
+                ]
+            },
+            index=[scenario]
+        )
 
 
 def regulate_all_scenarii(
-        test_cases: list[str],
+        scenarii: list[str],
         agent: SchedulerAgent
 ) -> pd.DataFrame:
-    """
-    Will regulate the given scenarii using the given agent.
+    """Regulates the given scenarii using the given agent.
 
-    Will return a DataFrame containing the metric for the agent and the given scenarii, eg:
+    Args:
+        scenarii (list[str]): The list of scenarii to be regulated
+        agent (SchedulerAgent): The agent to be used to regulate the scenarii
+
+    Returns:
+        pd.DataFrame: Returns a DataFrame containing the metric for the agent
+        and the given scenarii, eg:
                     agent 1
     scenario 1           12
     scenario 2           16
     scenario 3           22
     scenario 4           33
     scenario 5           98
-
-    Parameters
-    ----------
-    scenario: list[str]
-        The list of scenarii to be regulated
-    agent: SchedulerAgent
-        The agent to be used to regulate the scenarii
-    """ # noqa
+    """
     data = []
-    for test_case in test_cases:
-        data.append(regulate_scenario(test_case, agent))
+    for test_case in scenarii:
+        data.append(agent.regulate_scenario(test_case))
 
     return pd.concat(data)
 
