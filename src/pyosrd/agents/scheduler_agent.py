@@ -178,7 +178,7 @@ class SchedulerAgent(Agent):
         )
 
 
-def regulate_all_scenarii(
+def regulate_scenarii(
         scenarii: list[str],
         agent: SchedulerAgent
 ) -> pd.DataFrame:
@@ -205,7 +205,7 @@ def regulate_all_scenarii(
     return pd.concat(data)
 
 
-def regulate_all_scenarii_with_all_agents(
+def regulate_scenarii_with_agents(
         scenarii: str | list[str],
         agents: SchedulerAgent | list[SchedulerAgent]
 ) -> pd.DataFrame:
@@ -242,5 +242,5 @@ def regulate_all_scenarii_with_all_agents(
 
     data = []
     for agent in agents:
-        data.append(regulate_all_scenarii(scenarii, agent))
+        data.append(regulate_scenarii(scenarii, agent))
     return pd.concat(data, axis=1)
