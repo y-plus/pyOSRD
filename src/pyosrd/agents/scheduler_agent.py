@@ -13,6 +13,9 @@ from pyosrd.schedules import (
     step_has_fixed_duration,
     weights as weights_
 )
+from pyosrd.schedules.schedules_metrics import (
+    compute_metric
+)
 from pyosrd.agents import Agent
 
 
@@ -114,7 +117,6 @@ class SchedulerAgent(Agent):
                     regulated_schedule.add_delay(train, zone, delay)
 
         return regulated_schedule
-
 
 
 def regulate_scenario(scenario: str,
