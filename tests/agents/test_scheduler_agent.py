@@ -12,16 +12,16 @@ def test_scheduler_agent_autonomous(two_trains):
     class DummySchedulerAgent(SchedulerAgent):
         @property
         def steps_extra_delays(self) -> pd.DataFrame:
-            return self.initial_schedule.durations * 0.
+            return self.ref_schedule.durations * 0.
 
     agent = DummySchedulerAgent(
         'dummy',
-        initial_schedule=two_trains,
+        ref_schedule=two_trains,
         delayed_schedule=two_trains.add_delay(0, 0, 10),
         step_has_fixed_duration=two_trains.durations.replace(1, False),
     )
 
-    assert agent.initial_schedule == two_trains
+    assert agent.ref_schedule == two_trains
     assert_frame_equal(
         agent.delayed_schedule.df,
         two_trains.add_delay(0, 0, 10).df
@@ -42,7 +42,7 @@ def test_scheduler_agent_in_regulate():
     class DelayTrain0AtDeparture(SchedulerAgent):
         @property
         def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.initial_schedule.durations * 0.
+            df = self.ref_schedule.durations * 0.
             df.iloc[0][0] = 100.
             return df
 

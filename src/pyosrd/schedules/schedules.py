@@ -358,9 +358,9 @@ class Schedule(object):
         block, other_train = c.index[np.argmin(c)]
         return block, other_train
 
-    def delays(self, initial_schedule: 'Schedule') -> pd.DataFrame:
+    def delays(self, ref_schedule: 'Schedule') -> pd.DataFrame:
 
-        delta = self._df - initial_schedule._df
+        delta = self._df - ref_schedule._df
 
         return (
             delta.loc[pd.IndexSlice[:], pd.IndexSlice[:, 's']]
@@ -368,17 +368,17 @@ class Schedule(object):
             .astype(float)
         )
 
-    def train_delay(self, train, initial_schedule: 'Schedule') -> pd.DataFrame:
+    def train_delay(self, train, ref_schedule: 'Schedule') -> pd.DataFrame:
 
-        return self.delays(initial_schedule).max().loc[train]
+        return self.delays(ref_schedule).max().loc[train]
 
     def total_delay_at_stations(
         self,
-        initial_schedule,
+        ref_schedule,
         stations: list[Union[int, str]]
     ) -> float:
 
-        return self.delays(initial_schedule).loc[stations].sum().sum()
+        return self.delays(ref_schedule).loc[stations].sum().sum()
 
     def first_in(
         self,

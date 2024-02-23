@@ -35,7 +35,7 @@ class SchedulerAgent(Agent):
     ----------
     name: str
         Inherited from abstract base class Agent
-    initial_schedule: Schedule | None, optional
+    ref_schedule: Schedule | None, optional
         Schedule for initial undelyed simulation, by default None
     delayed_schedule: Schedule | None, optional
         Schedule for delayed simulation, by default None
@@ -50,7 +50,7 @@ class SchedulerAgent(Agent):
 
     """
 
-    initial_schedule: Schedule | None = None
+    ref_schedule: Schedule | None = None
     delayed_schedule: Schedule | None = None
     step_has_fixed_duration: pd.DataFrame | None = None
     weights: pd.DataFrame | None = None
@@ -71,7 +71,7 @@ class SchedulerAgent(Agent):
             by default 'stations_only'
         """
 
-        self.initial_schedule = schedule_from_osrd(osrd)
+        self.ref_schedule = schedule_from_osrd(osrd)
         self.delayed_schedule = schedule_from_osrd(osrd.delayed())
         self.step_has_fixed_duration = \
             step_has_fixed_duration(osrd)
