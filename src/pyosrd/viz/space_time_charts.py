@@ -45,7 +45,7 @@ def space_time_chart(
     self,
     train: int,
     eco_or_base: str = 'base',
-    points_to_show: List[str] =
+    points_to_show: list[str] =
         ['station', 'switch', 'departure', 'arrival'],
 ) -> Axes:
     """Draw space-time graph for a given train
@@ -58,8 +58,8 @@ def space_time_chart(
         Train index
     eco_or_base : str, optional
         Draw eco or base simulation ?, by default 'base'
-    points_to_show : List[str], optional
-        List of points types shown on y-axis.
+    points_to_show : list[str], optional
+        list of points types shown on y-axis.
         Possible choices are 'signal', 'detector', 'station', 'switch',
         'arrival', 'departure'.
         by default ['station', 'switch', 'departure', 'arrival']
@@ -106,7 +106,7 @@ def space_time_chart_plotly(
     self,
     train: int,
     eco_or_base: str = 'base',
-    points_to_show: List[str] =
+    points_to_show: list[str] =
         ['station', 'switch', 'departure', 'arrival'],
 ) -> go.Figure:
     """Draw space-time graph for a given train
@@ -119,8 +119,8 @@ def space_time_chart_plotly(
         Train index
     eco_or_base : str, optional
         Draw eco or base simulation ?, by default 'base'
-    points_to_show : List[str], optional
-        List of points types shown on y-axis.
+    points_to_show : list[str], optional
+        list of points types shown on y-axis.
         Possible choices are 'signal', 'detector', 'station', 'switch',
         'arrival', 'departure'.
         by default ['station', 'switch', 'departure', 'arrival']

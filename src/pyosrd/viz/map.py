@@ -37,7 +37,7 @@ def folium_map(osrd) -> folium.folium.Map:
     def coords_from_position_on_track(
         track_section: str,
         position: float,
-    ) -> List[float]:
+    ) -> list[float]:
         length = osrd.track_section_lengths[track_section]
         pos = position / length
         positions = [

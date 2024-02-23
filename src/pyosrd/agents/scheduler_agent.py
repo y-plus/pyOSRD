@@ -164,7 +164,7 @@ def regulate_scenario(scenario: str,
 
 
 def regulate_all_scenarii(
-        test_cases: List[str],
+        test_cases: list[str],
         agent: SchedulerAgent
 ) -> pd.DataFrame:
     """
@@ -180,7 +180,7 @@ def regulate_all_scenarii(
 
     Parameters
     ----------
-    scenario: List[str]
+    scenario: list[str]
         The list of scenarii to be regulated
     agent: SchedulerAgent
         The agent to be used to regulate the scenarii
@@ -193,8 +193,8 @@ def regulate_all_scenarii(
 
 
 def regulate_all_scenarii_with_all_agents(
-        test_cases: List[str],
-        agents: List[SchedulerAgent]
+        test_cases: list[str],
+        agents: list[SchedulerAgent]
 ) -> pd.DataFrame:
     """
     Will regulate the given scenarii using all the given agent.
@@ -209,9 +209,9 @@ def regulate_all_scenarii_with_all_agents(
 
     Parameters
     ----------
-    scenario: List[str]
+    scenario: list[str]
         The list of scenarii to be regulated
-    agents: List[SchedulerAgent]
+    agents: list[SchedulerAgent]
         The agents to be used to regulate the scenario
     """ # noqa
     data = []
