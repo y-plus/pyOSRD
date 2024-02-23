@@ -116,45 +116,6 @@ class SchedulerAgent(Agent):
         return regulated_schedule
 
 
-def compute_metric(
-        ref_schedule: Schedule,
-        delayed_schedule: Schedule,
-        weights: pd.DataFrame) -> float:
-    """
-    Compute an indicator to evaluate a delayed Schedule.
-
-    Compute an indicator based on the arrival times of the delayed_schedule
-    compared to the ref_schedule ponderated by weights.
-
-    The formula used is as follow (s are all steps of the schedules, a step
-    being a train in a zone):
-        $$sum_s (delayed\_arrival - ref\_arrival)_s \times weight_s$$
-
-    Parameters
-    ----------
-    ref_schedule: Schedule
-        The reference schedule used as the ideal schedule
-    delayed_schedule: Schedule
-        The delayed schedule, regulated use to compute the metric
-    weights: pd.DataFrame
-        the weights use to ponderate all delays
-    """
-    trains = ref_schedule.trains
-    starts = ref_schedule.starts
-    delayed_starts = delayed_schedule.starts
-
-    metric = 0.
-
-    for train_idx, _ in enumerate(trains):
-        for zone in ref_schedule.trajectory(train_idx):
-            ref_time = int(starts.loc[zone][train_idx])
-            delayed_time = int(delayed_starts.loc[zone][train_idx])
-            weight = int(weights.loc[zone][train_idx])
-
-            metric += (delayed_time - ref_time) * weight
-
-    return metric
-
 
 def regulate_scenario(scenario: str,
                       agent: SchedulerAgent,
