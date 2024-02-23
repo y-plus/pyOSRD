@@ -237,7 +237,7 @@ def regulate_scenarii_with_agents(
     elif isinstance(scenarii, str):
         raise ValueError(f"Unknown scenario {scenarii}")
 
-    if agents is not list:
+    if isinstance(agents, SchedulerAgent):
         agents = [agents]
 
     data = []
