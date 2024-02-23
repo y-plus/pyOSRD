@@ -121,11 +121,14 @@ def compute_metric(
         delayed_schedule: Schedule,
         weights: pd.DataFrame) -> float:
     """
-    Compute an indicator based on the arrival times of the delayed_schedule compared to the ref_schedule
-    ponderated by weights.
+    Compute an indicator to evaluate a delayed Schedule.
 
-    The formula used is as follow (s are all steps of the schedules, a step being a train in a zone):
-        sum_s (delayed_arrival - ref_arrival)_s * weight_s
+    Compute an indicator based on the arrival times of the delayed_schedule
+    compared to the ref_schedule ponderated by weights.
+
+    The formula used is as follow (s are all steps of the schedules, a step
+    being a train in a zone):
+        $$sum_s (delayed\_arrival - ref\_arrival)_s \times weight_s$$
 
     Parameters
     ----------
@@ -135,7 +138,7 @@ def compute_metric(
         The delayed schedule, regulated use to compute the metric
     weights: pd.DataFrame
         the weights use to ponderate all delays
-    """ # noqa
+    """
     trains = ref_schedule.trains
     starts = ref_schedule.starts
     delayed_starts = delayed_schedule.starts
