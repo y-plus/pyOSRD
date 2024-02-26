@@ -1,6 +1,7 @@
 import importlib
 
 from abc import abstractproperty
+from collections.abc import Callable
 
 from dataclasses import dataclass
 
@@ -119,6 +120,7 @@ class SchedulerAgent(Agent):
     def regulate_scenario(
         self,
         scenario: str,
+        indicator_function: Callable[[Schedule, Schedule, OSRD], pd.DataFrame],
         plot_all=False
     ) -> pd.DataFrame:
         """Regulates the given scenario using the given agent.
@@ -173,9 +175,10 @@ class SchedulerAgent(Agent):
         return pd.DataFrame(
             {
                 self.name: [
-                    regulated_schedule.compute_weighted_delays(
+                    indicator_function(
+                        regulated_schedule,
                         ref_schedule,
-                        weights_.all_steps(sim),
+                        sim,
                     )
                 ]
             },
@@ -184,10 +187,23 @@ class SchedulerAgent(Agent):
 
     def regulate_scenarii(
         self,
-        scenarii: list[str]
+        scenarii: list[str],
+        indicator_function: Callable[[Schedule, Schedule, OSRD], pd.DataFrame],
     ) -> pd.DataFrame:
         """Regulates a list of scenarii using a given agent.
 
+        A callable is required instead of direct weight ponderation
+        because this function is used to compute delays for
+        different simulations in regulate method of SchedulerAgent.
+        Therefore we need to be able to compute different weights
+        data frame based on the simulations.
+
+        Parameters
+        ----------
+        ref_schedule: Schedule
+            The reference schedule used as the ideal schedule
+        delayed_schedule: Schedule
+            The delayed schedule, regulated use to compute the metric
         Parameters
         ----------
         scenarii : list[str]
@@ -209,7 +225,7 @@ class SchedulerAgent(Agent):
         """
 
         data = [
-            self.regulate_scenario(scenario)
+            self.regulate_scenario(scenario, indicator_function)
             for scenario in scenarii
         ]
         return pd.concat(data)
@@ -217,7 +233,8 @@ class SchedulerAgent(Agent):
 
 def regulate_scenarii_with_agents(
         scenarii: str | list[str],
-        agents: SchedulerAgent | list[SchedulerAgent]
+        agents: SchedulerAgent | list[SchedulerAgent],
+        indicator_function: Callable[[Schedule, Schedule, OSRD], pd.DataFrame],
 ) -> pd.DataFrame:
     """Regulates a list of scenarii using a list of agents"
 
@@ -260,7 +277,7 @@ def regulate_scenarii_with_agents(
         agents = [agents]
 
     data = [
-        agent.regulate_scenarii(scenarii)
+        agent.regulate_scenarii(scenarii, indicator_function)
         for agent in agents
     ]
     return pd.concat(data, axis=1)
