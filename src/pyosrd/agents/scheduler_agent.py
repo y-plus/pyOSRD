@@ -144,6 +144,7 @@ class SchedulerAgent(Agent):
                             agent 1
             scenario 1           12
         """
+
         module = importlib.import_module(
             f".{scenario}",
             "pyosrd.scenarii"
@@ -198,10 +199,11 @@ def regulate_scenarii(
     scenario 4           33
     scenario 5           98
     """
-    data = []
-    for test_case in scenarii:
-        data.append(agent.regulate_scenario(test_case))
 
+    data = [
+        agent.regulate_scenario(scenario)
+        for scenario in scenarii
+    ]
     return pd.concat(data)
 
 
@@ -230,6 +232,7 @@ def regulate_scenarii_with_agents(
     scenario 5           98         198         298         398       10298
 
     """
+
     if scenarii == 'all':
         scenarii = OSRD.scenarii
     elif scenarii in OSRD.scenarii:
@@ -240,7 +243,8 @@ def regulate_scenarii_with_agents(
     if isinstance(agents, SchedulerAgent):
         agents = [agents]
 
-    data = []
-    for agent in agents:
-        data.append(regulate_scenarii(scenarii, agent))
+    data = [
+        regulate_scenarii(scenarii, agent)
+        for agent in agents
+    ]
     return pd.concat(data, axis=1)

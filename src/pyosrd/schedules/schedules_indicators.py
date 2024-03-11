@@ -27,6 +27,7 @@ def compute_ponderated_delays(
     weights: pd.DataFrame
         The weights use to ponderate all delays
     """
+
     starts = ref_schedule.starts
     delayed_starts = delayed_schedule.starts
 
