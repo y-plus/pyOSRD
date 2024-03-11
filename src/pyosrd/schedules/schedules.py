@@ -4,8 +4,6 @@ import os
 import requests
 import shutil
 
-from typing import Tuple, Union
-
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
@@ -96,20 +94,20 @@ class Schedule(object):
     def previous_block(
         self,
         train: int,
-        block: Union[int, str],
-    ) -> Union[int, str, None]:
+        block: int | str,
+    ) -> int | str | None:
         """"Previous block index in train's trajectory (None if 1st)
 
         Parameters
         ----------
         train : int
             Train index
-        block : Union[int, str]
+        block : int | str
             Track section index (integer or string)
 
         Returns
         -------
-        Union[int, str, None]
+        int | str | None
             Previous block index or None
         """
         t = self.trajectory(train)
@@ -122,20 +120,20 @@ class Schedule(object):
     def next_block(
         self,
         train: int,
-        block: Union[int, str],
-    ) -> Union[int, str, None]:
+        block: int | str,
+    ) -> int | str | None:
         """Next block index in train's trajectory (None if last)
 
         Parameters
         ----------
         train : int
             Train index
-        block : Union[int, str]
+        block : int | str
             Block index (integer or string)
 
         Returns
         -------
-        Union[int, str, None]
+        int | str | None
             Previous block index or None
         """
 
@@ -150,7 +148,7 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        block: Union[int, str]
+        block: int | str
     ) -> bool:
         """Given two trains trajectories, is the block a point switch ?
 
@@ -160,7 +158,7 @@ class Schedule(object):
             first train index
         train2 : int
             second train index
-        block : Union[int, str]
+        block : int | str
             Block index
 
         Returns
@@ -197,7 +195,7 @@ class Schedule(object):
             first train index
         train2 : int
             second train index
-        block : Union[int, str]
+        block : int | str
             Track section index
 
         Returns
@@ -253,7 +251,7 @@ class Schedule(object):
     def add_delay(
         self,
         train: int,
-        block: Union[int, str],
+        block: int | str,
         delay: float
     ) -> 'Schedule':
 
@@ -275,7 +273,7 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        block: Union[int, str]
+        block: int | str
     ) -> 'Schedule':
         """Train1 waits until train 2 has freed block"""
 
@@ -352,7 +350,7 @@ class Schedule(object):
 
         return ~self.conflicts(train).isna().all().all()
 
-    def first_conflict(self, train: int) -> Tuple[int, int]:
+    def first_conflict(self, train: int) -> tuple[int, int]:
 
         c = self.conflicts(train).stack()
         block, other_train = c.index[np.argmin(c)]
@@ -375,7 +373,7 @@ class Schedule(object):
     def total_delay_at_stations(
         self,
         ref_schedule,
-        stations: list[Union[int, str]]
+        stations: list[int | str]
     ) -> float:
 
         return self.delays(ref_schedule).loc[stations].sum().sum()
@@ -384,7 +382,7 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        block: Union[int, str]
+        block: int | str
     ) -> int:
         """Among two trains, which train first arrives at a block"""
 
@@ -473,7 +471,7 @@ class Schedule(object):
 
         return image
 
-    def propagate_delay(self, delayed_train: int) -> Tuple[pd.DataFrame, int]:
+    def propagate_delay(self, delayed_train: int) -> tuple[pd.DataFrame, int]:
 
         new_schedule = copy.deepcopy(self)
         decision = False
@@ -502,7 +500,7 @@ class Schedule(object):
                     break
         return new_schedule, delayed_train
 
-    def earliest_conflict(self) -> Tuple[Union[int, str], int]:
+    def earliest_conflict(self) -> tuple[int | str, int]:
         """ Returns block where earliest conflict occurs,
         first train in and last in."""
         conflicts_times = [
