@@ -27,19 +27,9 @@ def compute_ponderated_delays(
     weights: pd.DataFrame
         The weights use to ponderate all delays
     """
-
-    trains = ref_schedule.trains
     starts = ref_schedule.starts
     delayed_starts = delayed_schedule.starts
 
-    metric = 0.
+    result = (delayed_starts - starts) * weights
 
-    for train_idx, _ in enumerate(trains):
-        for zone in ref_schedule.trajectory(train_idx):
-            ref_time = int(starts.loc[zone][train_idx])
-            delayed_time = int(delayed_starts.loc[zone][train_idx])
-            weight = int(weights.loc[zone][train_idx])
-
-            metric += (delayed_time - ref_time) * weight
-
-    return metric
+    return result.sum().sum()
