@@ -1,5 +1,7 @@
 ![Logo](pyosrd.png)
 
+Python API for Open Source Railway Designer https://osrd.fr/en/
+
 # Prerequisites
 
 ## Python >= 3.10
