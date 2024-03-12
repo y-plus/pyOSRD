@@ -680,14 +680,14 @@ class OSRD():
             "<->".join(sorted(d)): "<->".join(sorted(d))
             for d in self._tvds
         }
-
+        points = self.points_on_track_sections()
         for switch in self.infra['switches']:
             detectors = []
             for port in switch['ports'].values():
                 idx = 0 if port['endpoint'] == 'BEGIN' else -1
                 detectors_on_track = [
                     p.id
-                    for p in self.points_on_track_sections()[port['track']]
+                    for p in points[port['track']]
                     if p.type == 'detector'
                 ]
                 detectors.append(detectors_on_track[idx])
