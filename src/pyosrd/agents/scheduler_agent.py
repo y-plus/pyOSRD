@@ -138,7 +138,17 @@ class SchedulerAgent(Agent):
             the agent and the given scenario, eg:
                             agent 1
             scenario 1           12
+
+        Raises
+        ------
+        ValueError
+            When the scenario is unknown
         """
+
+        if scenario not in OSRD.scenarii:
+            raise ValueError(
+                f"{scenario} is not a valid scenario."
+            )
 
         module = importlib.import_module(
             f".{scenario}",
@@ -172,38 +182,37 @@ class SchedulerAgent(Agent):
             index=[scenario]
         )
 
+    def regulate_scenarii(
+        self,
+        scenarii: list[str]
+    ) -> pd.DataFrame:
+        """Regulates a list of scenarii using a given agent.
 
-def regulate_scenarii(
-    scenarii: list[str],
-    agent: SchedulerAgent
-) -> pd.DataFrame:
-    """Regulates a list of scenarii using a given agent.
+        Parameters
+        ----------
+        scenarii : list[str]
+            The list of scenarii to be regulated
+        agent : SchedulerAgent
+            The agent to be used to regulate the scenarii
 
-    Parameters
-    ----------
-    scenarii : list[str]
-        The list of scenarii to be regulated
-    agent : SchedulerAgent
-        The agent to be used to regulate the scenarii
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame containing the metric for the agent
+            and the given scenarii, eg:
+                            agent 1
+            scenario 1           12
+            scenario 2           16
+            scenario 3           22
+            scenario 4           33
+            scenario 5           98
+        """
 
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame containing the metric for the agent
-        and the given scenarii, eg:
-                        agent 1
-        scenario 1           12
-        scenario 2           16
-        scenario 3           22
-        scenario 4           33
-        scenario 5           98
-    """
-
-    data = [
-        agent.regulate_scenario(scenario)
-        for scenario in scenarii
-    ]
-    return pd.concat(data)
+        data = [
+            self.regulate_scenario(scenario)
+            for scenario in scenarii
+        ]
+        return pd.concat(data)
 
 
 def regulate_scenarii_with_agents(
@@ -251,7 +260,7 @@ def regulate_scenarii_with_agents(
         agents = [agents]
 
     data = [
-        regulate_scenarii(scenarii, agent)
+        agent.regulate_scenarii(scenarii)
         for agent in agents
     ]
     return pd.concat(data, axis=1)

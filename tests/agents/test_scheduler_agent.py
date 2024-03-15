@@ -1,4 +1,5 @@
 import shutil
+import pytest
 
 import pandas as pd
 from pandas.testing import assert_frame_equal
@@ -55,3 +56,16 @@ def test_scheduler_agent_in_regulate():
 
     assert arrival_times == sorted(arrival_times)
     shutil.rmtree('tmp2', ignore_errors=True)
+
+
+def test_scheduler_agent_regulate_scenario_error():
+    class DelayTrain0AtDeparture(SchedulerAgent):
+        @property
+        def steps_extra_delays(self) -> pd.DataFrame:
+            df = self.ref_schedule.durations * 0.
+            df.iloc[0, 0] = 100.
+            return df
+
+    match = "foo is not a valid scenario."
+    with pytest.raises(ValueError, match=match):
+        DelayTrain0AtDeparture('test').regulate_scenario("foo")
