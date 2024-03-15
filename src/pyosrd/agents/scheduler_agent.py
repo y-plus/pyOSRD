@@ -14,9 +14,6 @@ from pyosrd.schedules import (
     step_has_fixed_duration,
     weights as weights_
 )
-from pyosrd.schedules.schedules_indicators import (
-    compute_ponderated_delays
-)
 from pyosrd.agents import Agent
 
 
@@ -166,9 +163,8 @@ class SchedulerAgent(Agent):
         return pd.DataFrame(
             {
                 self.name: [
-                    compute_ponderated_delays(
+                    regulated_schedule.compute_weighted_delays(
                         ref_schedule,
-                        regulated_schedule,
                         weights_.all_steps(sim),
                     )
                 ]

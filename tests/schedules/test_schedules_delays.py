@@ -45,6 +45,21 @@ def test_schedules_total_delays_at_stations(two_trains):
     assert delayed_schedule.total_delay_at_stations(two_trains, [4, 5]) == 3.5
 
 
+def test_schedules_compute_weighted_delays(two_trains):
+    delayed_schedule = (
+        two_trains
+        .shift_train_departure(train=0, time=3)
+        .add_delay(train=1, block=1, delay=.5)
+    )
+    weights = (
+        delayed_schedule._df.loc[pd.IndexSlice[:], pd.IndexSlice[:, 's']]
+        .set_axis(delayed_schedule._df.columns.levels[0], axis=1)
+        .astype(float)
+    ) * 0
+    weights[weights.index.isin([4])] = 1
+    assert delayed_schedule.compute_weighted_delays(two_trains, weights) == 3.0
+
+
 def test_schedules_total_delays_at_station_zero(two_trains):
     assert two_trains.total_delay_at_stations(two_trains, [4, 5]) == 0
 
