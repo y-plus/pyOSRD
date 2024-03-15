@@ -124,22 +124,20 @@ class SchedulerAgent(Agent):
         scenario: str,
         plot_all=False
     ) -> pd.DataFrame:
-        """
-        Regulates the given scenario using the given agent.
+        """Regulates the given scenario using the given agent.
 
-        Optionaly plots the infra graph and all the schedules.
+        Parameters
+        ----------
+        scenario : str
+            The scenario to be regulated
+        plot_all : bool, optional
+             If True, all schedules will be displayed (reference,
+            delayed and regulated), by default False
 
-        Args:
-            scenario (str): The scenario to be regulated
-            agent (SchedulerAgent): The agent to be used
-                to regulate thescenario
-            plot_all (bool, optional): If set to True all
-                schedules will be displayed (reference,
-                delayed and regulated). Defaults to False.
-
-        Returns:
-            pd.DataFrame: Returns a DataFrame
-            containing the metric for
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame containing the indictor value for
             the agent and the given scenario, eg:
                             agent 1
             scenario 1           12
@@ -183,21 +181,26 @@ def regulate_scenarii(
         scenarii: list[str],
         agent: SchedulerAgent
 ) -> pd.DataFrame:
-    """Regulates the given scenarii using the given agent.
+    """Regulates a list of scenarii using a given agent.
 
-    Args:
-        scenarii (list[str]): The list of scenarii to be regulated
-        agent (SchedulerAgent): The agent to be used to regulate the scenarii
+    Parameters
+    ----------
+    scenarii : list[str]
+        The list of scenarii to be regulated
+    agent : SchedulerAgent
+        The agent to be used to regulate the scenarii
 
-    Returns:
-        pd.DataFrame: Returns a DataFrame containing the metric for the agent
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing the metric for the agent
         and the given scenarii, eg:
-                    agent 1
-    scenario 1           12
-    scenario 2           16
-    scenario 3           22
-    scenario 4           33
-    scenario 5           98
+                        agent 1
+        scenario 1           12
+        scenario 2           16
+        scenario 3           22
+        scenario 4           33
+        scenario 5           98
     """
 
     data = [
@@ -211,26 +214,34 @@ def regulate_scenarii_with_agents(
         scenarii: str | list[str],
         agents: SchedulerAgent | list[SchedulerAgent]
 ) -> pd.DataFrame:
-    """Regulates the given scenarii using all the given agent.
+    """Regulates a list of scenarii using a list of agents"
 
-    Args:
-        test_cases (str | list[str]): The list of scenarii to be regulated
-            can also be "all" to start all scenarii or directly the name of one
-            scenario
-        agents (SchedulerAgent | list[SchedulerAgent]):
-            The agents to be used to regulate the scenarii. Can also be
-            a single agent
+    Parameters
+    ----------
+    scenarii : str | list[str]
+         The list of scenarii to be regulated. Ccan also be "all"
+         to start all scenarii or directly the name of one scenario
+    agents : SchedulerAgent | list[SchedulerAgent]
+        The agents to be used to regulate the scenarii. Can  be
+        a single agent or a list of agents.
 
-    Returns:
-        pd.DataFrame: Returns a DataFrame containing the metric for the agents
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing the metric for the agents
         and the given scenarii, eg:
-                    agent 1     agent 2     agent 3     agent 4     agent 5
-    scenario 1           12         112         212         312       10212
-    scenario 2           16         116         216         316       10216
-    scenario 3           22         122         222         322       10222
-    scenario 4           33         133         233         333       10233
-    scenario 5           98         198         298         398       10298
+                        agent 1     agent 2     agent 3     agent 4     agent 5
+        scenario 1           12         112         212         312       10212
+        scenario 2           16         116         216         316       10216
+        scenario 3           22         122         222         322       10222
+        scenario 4           33         133         233         333       10233
+        scenario 5           98         198         298         398       10298
 
+
+    Raises
+    ------
+    ValueError
+        When a scenario is unknown
     """
 
     if scenarii == 'all':
