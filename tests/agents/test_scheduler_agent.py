@@ -6,6 +6,7 @@ from pandas.testing import assert_frame_equal
 
 from pyosrd import OSRD
 from pyosrd.agents.scheduler_agent import SchedulerAgent
+from pyosrd.agents.scheduler_agent import regulate_scenarii_with_agents
 
 
 def test_scheduler_agent_autonomous(two_trains):
@@ -69,3 +70,10 @@ def test_scheduler_agent_regulate_scenario_error():
     match = "foo is not a valid scenario."
     with pytest.raises(ValueError, match=match):
         DelayTrain0AtDeparture('test').regulate_scenario("foo")
+
+
+def test_scheduler_agent_unknown_instance():
+
+    match = "Unknown scenario foo."
+    with pytest.raises(ValueError, match=match):
+        regulate_scenarii_with_agents('foo', [], None)
