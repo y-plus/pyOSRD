@@ -1,6 +1,6 @@
 import pandas as pd
 
-from . import Schedule
+from .schedules import Schedule
 
 
 def compute_ponderated_delays(
@@ -8,15 +8,14 @@ def compute_ponderated_delays(
     delayed_schedule: Schedule,
     weights: pd.DataFrame
 ) -> float:
-    """
-    Compute an indicator to evaluate a delayed Schedule.
+    """Compute an indicator to evaluate a delayed Schedule.
 
     Compute an indicator based on the arrival times of the delayed_schedule
     compared to the ref_schedule ponderated by weights.
 
-    The formula used is as follow (s are all steps of the schedules, a step
+    The formula used is as follow ($s$ are all steps of the schedules, a step
     being a train in a zone):
-        $$sum_s (delayed\_arrival - ref\_arrival)_s \times weight_s$$
+        $$\sum_s [(delayed\_arrival - ref\_arrival)_s \times weight_s]$$
 
     Parameters
     ----------
@@ -26,11 +25,16 @@ def compute_ponderated_delays(
         The delayed schedule, regulated use to compute the metric
     weights: pd.DataFrame
         The weights use to ponderate all delays
-    """
+
+    Returns
+    -------
+    float
+        The computed weighted delay
+    """  # noqa
 
     starts = ref_schedule.starts
     delayed_starts = delayed_schedule.starts
 
-    result = (delayed_starts - starts) * weights
+    weighted_delays = (delayed_starts - starts) * weights
 
-    return result.sum().sum()
+    return weighted_delays.sum().sum()
