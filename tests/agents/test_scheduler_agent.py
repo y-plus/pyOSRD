@@ -43,7 +43,7 @@ def test_scheduler_agent_in_regulate():
         @property
         def steps_extra_delays(self) -> pd.DataFrame:
             df = self.ref_schedule.durations * 0.
-            df.iloc[0][0] = 100.
+            df.iloc[0, 0] = 100.
             return df
 
     regulated = sim.regulate(agent=DelayTrain0AtDeparture('test'))
