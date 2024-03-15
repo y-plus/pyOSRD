@@ -178,8 +178,8 @@ class SchedulerAgent(Agent):
 
 
 def regulate_scenarii(
-        scenarii: list[str],
-        agent: SchedulerAgent
+    scenarii: list[str],
+    agent: SchedulerAgent
 ) -> pd.DataFrame:
     """Regulates a list of scenarii using a given agent.
 
