@@ -72,7 +72,7 @@ def test_scheduler_agent_regulate_scenario_error():
     with pytest.raises(ValueError, match=match):
         indicator_function = (
             lambda schedule, ref, sim:
-            schedule.compute_weighted_delays(ref, weights.all_step(sim))
+            schedule.compute_weighted_delay(ref, weights.all_step(sim))
         )
 
         DelayTrain0AtDeparture('test').regulate_scenario(
@@ -91,7 +91,7 @@ def test_scheduler_agent_regulate_scenario_delay():
 
     indicator_function = (
         lambda schedule, ref, sim:
-        schedule.compute_weighted_delays(ref, weights.all_steps(sim))
+        schedule.compute_weighted_delay(ref, weights.all_steps(sim))
     )
 
     df = DelayTrain0AtDeparture('test').regulate_scenario(
@@ -112,7 +112,7 @@ def test_scheduler_agent_regulate_scenarii_delay():
 
     indicator_function = (
         lambda schedule, ref, sim:
-        schedule.compute_weighted_delays(ref, weights.all_steps(sim))
+        schedule.compute_weighted_delay(ref, weights.all_steps(sim))
     )
 
     df = DelayTrain0AtDeparture('test').regulate_scenarii(
@@ -140,7 +140,7 @@ def test_scheduler_scenarii_agents_regulate_delay():
 
     indicator_function = (
         lambda schedule, ref, sim:
-        schedule.compute_weighted_delays(ref, weights.all_steps(sim))
+        schedule.compute_weighted_delay(ref, weights.all_steps(sim))
     )
 
     df = regulate_scenarii_with_agents(
