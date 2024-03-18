@@ -44,7 +44,7 @@ def compute_weighted_delay(
     Parameters
     ----------
     self: Schedule
-        The delayed schedule, regulated use to compute the metric
+        The delayed schedule, regulated use to compute the delay
     ref_schedule: Schedule
         The reference schedule used as the ideal schedule
     weights: pd.DataFrame

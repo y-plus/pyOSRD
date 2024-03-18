@@ -193,7 +193,7 @@ class SchedulerAgent(Agent):
         ref_schedule: Schedule
             The reference schedule used as the ideal schedule
         delayed_schedule: Schedule
-            The delayed schedule, regulated use to compute the metric
+            The delayed schedule, regulated use to compute the indicator
         Parameters
         ----------
         scenarii : list[str]
@@ -204,7 +204,7 @@ class SchedulerAgent(Agent):
         Returns
         -------
         pd.DataFrame
-            DataFrame containing the metric for the agent
+            DataFrame containing the indicator for the agent
             and the given scenarii, eg:
                             agent 1
             scenario 1           12
@@ -240,7 +240,7 @@ def regulate_scenarii_with_agents(
     Returns
     -------
     pd.DataFrame
-        DataFrame containing the metric for the agents
+        DataFrame containing the indicator for the agents
         and the given scenarii, eg:
                         agent 1     agent 2     agent 3     agent 4     agent 5
         scenario 1           12         112         212         312       10212
