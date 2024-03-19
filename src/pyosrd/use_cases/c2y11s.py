@@ -6,10 +6,9 @@ from railjson_generator import (
     Location,
 )
 from railjson_generator.schema.infra.direction import Direction
-from railjson_generator.schema.simulation.stop import Stop
 
 
-def c2y13s(
+def c2y11s(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
@@ -19,20 +18,20 @@ def c2y13s(
 
            ┎SA0
     (T0)----DA0-
-                 \       ┎S1    ┎SB  ┎SB2    ┎S2    ┎SC  ┎SC2    ┎S3    ┎SD  ┎SD2
-               SWA>-DA2---D1-----DB-o-DB2-----D2-----DC-o-DC2-----D3-----DD-o-DD2-----(T2)
+                 \       ┎S1
+               SWA>-DA2---D1---(T2)
            ┎SA1  /
     (T1)----DA1-
 
     All blocks are 1,5 km long
     All station lanes are 500m long
-    Train 0 starts from T0 at t=0 and arrives at T4
-    Train 1 starts from T1 at t=100 and arrives at T5
+    Train 0 starts from T0 at t=0 and arrives at T2
+    Train 1 starts from T1 at t=100 and arrives at T2
     """  # noqa
 
     infra_builder = InfraBuilder()
 
-    track_lengths = [1_000, 1_000, 12_000]
+    track_lengths = [1_000, 1_000, 5_000]
 
     T = [
         infra_builder.add_track_section(
@@ -68,7 +67,7 @@ def c2y13s(
         label="DA2",
         position=200,
     )
-    for i in [1, 2, 3]:
+    for i in [1]:
         d = T[2].add_detector(
             label=f"D{i}",
             position=1_500 + (i-1) * 3_500,
@@ -118,21 +117,16 @@ def c2y13s(
 
     sim_builder.add_train_schedule(
         Location(T[0], 20),
-        Location(T[2], 11_990),
+        Location(T[2], 4_990),
         label='train0',
         departure_time=0.,
     )
 
     sim_builder.add_train_schedule(
         Location(T[1], 20),
-        Location(T[2], 11_990),
+        Location(T[2], 4_990),
         label='train1',
         departure_time=120.,
-        stops=[
-            Stop(location=stations['B'], duration=120., ),
-            Stop(location=stations['C'], duration=120., ),
-            Stop(location=stations['D'], duration=120., ),
-        ],
         # rolling_stock='short_fast_rolling_stock',
     )
 

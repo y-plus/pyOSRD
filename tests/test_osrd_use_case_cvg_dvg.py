@@ -140,7 +140,7 @@ def test_cvg_dvg_simulation_departure_times(use_case_cvg_dvg):
     assert use_case_cvg_dvg.departure_times == [0, 100]
 
 
-def test_cvg_dvg_run_arror(osrd_cvg_dvg_missing_sim):
+def test_cvg_dvg_run_error(osrd_cvg_dvg_missing_sim):
     match = "Missing json file to run OSRD"
     with pytest.raises(ValueError, match=match):
         osrd_cvg_dvg_missing_sim.run()

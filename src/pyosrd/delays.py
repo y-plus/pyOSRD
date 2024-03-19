@@ -51,7 +51,7 @@ def add_delays_in_results(self) -> None:
 
             dict = (
                 self.results[gr][sim][idx]
-                if self.results[gr][sim] != [None]
+                if self.results[gr][sim][idx] is not None
                 else {}
             )
             for key, records in dict.items():

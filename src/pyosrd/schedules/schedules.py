@@ -4,8 +4,6 @@ import os
 import requests
 import shutil
 
-from typing import List, Tuple, Union
-
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
@@ -38,8 +36,8 @@ class Schedule(object):
         return len(self._df)
 
     @property
-    def blocks(self) -> List[int]:
-        """List of blocks"""
+    def blocks(self) -> list[int]:
+        """list of blocks"""
         return self._df.index.to_list()
 
     @property
@@ -48,8 +46,8 @@ class Schedule(object):
         return len(self._df.columns.levels[0])
 
     @property
-    def trains(self) -> List[int]:
-        """List of trains"""
+    def trains(self) -> list[int]:
+        """list of trains"""
         return getattr(
             self,
             '_trains',
@@ -86,7 +84,7 @@ class Schedule(object):
         """How much time do the train occupy the block"""
         return self.ends - self.starts
 
-    def trajectory(self, train: int) -> List[int]:
+    def trajectory(self, train: int) -> list[int]:
         return list(
             self.starts[train][self.starts[train].notna()]
             .sort_values()
@@ -96,20 +94,20 @@ class Schedule(object):
     def previous_block(
         self,
         train: int,
-        block: Union[int, str],
-    ) -> Union[int, str, None]:
+        block: int | str,
+    ) -> int | str | None:
         """"Previous block index in train's trajectory (None if 1st)
 
         Parameters
         ----------
         train : int
             Train index
-        block : Union[int, str]
+        block : int | str
             Track section index (integer or string)
 
         Returns
         -------
-        Union[int, str, None]
+        int | str | None
             Previous block index or None
         """
         t = self.trajectory(train)
@@ -122,20 +120,20 @@ class Schedule(object):
     def next_block(
         self,
         train: int,
-        block: Union[int, str],
-    ) -> Union[int, str, None]:
+        block: int | str,
+    ) -> int | str | None:
         """Next block index in train's trajectory (None if last)
 
         Parameters
         ----------
         train : int
             Train index
-        block : Union[int, str]
+        block : int | str
             Block index (integer or string)
 
         Returns
         -------
-        Union[int, str, None]
+        int | str | None
             Previous block index or None
         """
 
@@ -150,7 +148,7 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        block: Union[int, str]
+        block: int | str
     ) -> bool:
         """Given two trains trajectories, is the block a point switch ?
 
@@ -160,7 +158,7 @@ class Schedule(object):
             first train index
         train2 : int
             second train index
-        block : Union[int, str]
+        block : int | str
             Block index
 
         Returns
@@ -197,7 +195,7 @@ class Schedule(object):
             first train index
         train2 : int
             second train index
-        block : Union[int, str]
+        block : int | str
             Track section index
 
         Returns
@@ -253,7 +251,7 @@ class Schedule(object):
     def add_delay(
         self,
         train: int,
-        block: Union[int, str],
+        block: int | str,
         delay: float
     ) -> 'Schedule':
 
@@ -275,7 +273,7 @@ class Schedule(object):
         self,
         train1: int,
         train2: int,
-        block: Union[int, str]
+        block: int | str
     ) -> 'Schedule':
         """Train1 waits until train 2 has freed block"""
 
@@ -352,15 +350,15 @@ class Schedule(object):
 
         return ~self.conflicts(train).isna().all().all()
 
-    def first_conflict(self, train: int) -> Tuple[int, int]:
+    def first_conflict(self, train: int) -> tuple[int, int]:
 
         c = self.conflicts(train).stack()
         block, other_train = c.index[np.argmin(c)]
         return block, other_train
 
-    def delays(self, initial_schedule: 'Schedule') -> pd.DataFrame:
+    def delays(self, ref_schedule: 'Schedule') -> pd.DataFrame:
 
-        delta = self._df - initial_schedule._df
+        delta = self._df - ref_schedule._df
 
         return (
             delta.loc[pd.IndexSlice[:], pd.IndexSlice[:, 's']]
@@ -368,23 +366,63 @@ class Schedule(object):
             .astype(float)
         )
 
-    def train_delay(self, train, initial_schedule: 'Schedule') -> pd.DataFrame:
+    def train_delay(self, train, ref_schedule: 'Schedule') -> pd.DataFrame:
 
-        return self.delays(initial_schedule).max().loc[train]
+        return self.delays(ref_schedule).max().loc[train]
+
+    def compute_weighted_delays(
+        self,
+        ref_schedule,
+        weights: pd.DataFrame
+    ) -> float:
+        """Compute an indicator to evaluate this Schedule.
+
+        Compute an indicator based on the arrival times of the self
+        compared to the ref_schedule ponderated by weights.
+
+        The formula used is as follow ($s$ are all steps of the schedules,
+        a step being a train in a zone):
+            $$\sum_s [(delayed\_arrival - ref\_arrival)_s \times weight_s]$$
+
+        Parameters
+        ----------
+        self: Schedule
+            The delayed schedule, regulated use to compute the metric
+        ref_schedule: Schedule
+            The reference schedule used as the ideal schedule
+        weights: pd.DataFrame
+            The weights use to ponderate all delays
+
+        Returns
+        -------
+        float
+            The computed weighted delay
+        """
+
+        weighted_delays = self.delays(ref_schedule) * weights
+
+        return weighted_delays.sum().sum()
 
     def total_delay_at_stations(
         self,
-        initial_schedule,
-        stations: List[Union[int, str]]
+        ref_schedule,
+        stations: list[int | str]
     ) -> float:
 
-        return self.delays(initial_schedule).loc[stations].sum().sum()
+        weights = (
+            self._df.loc[pd.IndexSlice[:], pd.IndexSlice[:, 's']]
+            .set_axis(self._df.columns.levels[0], axis=1)
+            .astype(float)
+        ) * 0
+        weights[weights.index.isin(stations)] = 1
+
+        return self.compute_weighted_delays(ref_schedule, weights)
 
     def first_in(
         self,
         train1: int,
         train2: int,
-        block: Union[int, str]
+        block: int | str
     ) -> int:
         """Among two trains, which train first arrives at a block"""
 
@@ -473,7 +511,7 @@ class Schedule(object):
 
         return image
 
-    def propagate_delay(self, delayed_train: int) -> Tuple[pd.DataFrame, int]:
+    def propagate_delay(self, delayed_train: int) -> tuple[pd.DataFrame, int]:
 
         new_schedule = copy.deepcopy(self)
         decision = False
@@ -502,7 +540,7 @@ class Schedule(object):
                     break
         return new_schedule, delayed_train
 
-    def earliest_conflict(self) -> Tuple[Union[int, str], int]:
+    def earliest_conflict(self) -> tuple[int | str, int]:
         """ Returns block where earliest conflict occurs,
         first train in and last in."""
         conflicts_times = [

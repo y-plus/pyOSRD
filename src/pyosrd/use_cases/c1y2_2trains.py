@@ -8,7 +8,7 @@ from railjson_generator import (
 from railjson_generator.schema.infra.direction import Direction
 
 
-def c1y2(
+def c1y2_2trains(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
@@ -21,10 +21,13 @@ def c1y2(
                       \  S2┐
                         -D2----------(T2)-->
 
-    All tracks are 500 m long
-    Train 0 starts from the beginning of T0 at t=0s, and arrives at the end of T1
-    Train 1 starts from the end of T2 at t=100s, and arrives at the beginning of T0
-    """  # noqa
+    All tracks are 500 m long.
+
+    - Train 0 starts from the beginning of T0 at t=0s,
+        and arrives at the end of T1
+    - Train 1 starts from the end of T2 at t=100s,
+        and arrives at the beginning of T0
+    """
 
     infra_builder = InfraBuilder()
 
@@ -87,29 +90,15 @@ def c1y2(
     sim_builder.add_train_schedule(
         Location(T[0], 50.),
         Location(T[1], T[1].length-10),
-        label='train0-1',
+        label='train0',
         departure_time=0,
     )
 
     sim_builder.add_train_schedule(
         Location(T[0], 10.),
         Location(T[2], T[2].length-10),
-        label='train0-2',
+        label='train1',
         departure_time=100,
-    )
-
-    sim_builder.add_train_schedule(
-        Location(T[1], T[1].length-10.),
-        Location(T[0], 10),
-        label='train1-0',
-        departure_time=200.,
-    )
-
-    sim_builder.add_train_schedule(
-        Location(T[2], T[2].length-10.),
-        Location(T[0], 10),
-        label='train2-0',
-        departure_time=300.,
     )
 
     built_simulation = sim_builder.build()

@@ -153,7 +153,7 @@ def c2y1sy2sy1s(
         label="DC2",
         position=800,
     )
-    
+
     T[3].add_detector(
         label='DC0',
         position=120,
@@ -175,13 +175,13 @@ def c2y1sy2sy1s(
         )
     stationC.add_part(T[3], 710)
     stations['C'] = Location(T[3], 710)
-    
-    ### Lane 2
+
+    # Lane 2
     d_station_end = T[5].add_detector(
         label="DC3",
         position=800,
     )
-    
+
     T[5].add_signal(
         label="SC3",
         position=d_station_end.position - 20,
