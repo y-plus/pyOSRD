@@ -11,7 +11,7 @@ def c1y2_2trains_no_conflict() -> OSRD:
       should be seen on the trailing train.
     """
     use_case = 'c1y2_2trains'
-    sim = OSRD(use_case=use_case, dir='tmp')
+    sim = OSRD(simulation=use_case, dir='tmp')
 
     sim.reset_delays()
     sim.add_delay('train0', time_threshold=80, delay=120.)

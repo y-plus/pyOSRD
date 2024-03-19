@@ -11,7 +11,7 @@ def c1y2_2trains_conflict() -> OSRD:
       the trailing train must wait before entering the divergence.
     """
     use_case = 'c1y2_2trains'
-    sim = OSRD(use_case=use_case, dir='tmp')
+    sim = OSRD(simulation=use_case, dir='tmp')
 
     sim.reset_delays()
     sim.add_delay('train0', time_threshold=70, delay=120.)

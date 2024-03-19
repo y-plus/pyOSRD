@@ -36,7 +36,7 @@ def test_scheduler_agent_autonomous(two_trains):
 
 def test_scheduler_agent_in_regulate():
 
-    sim = OSRD(use_case='station_capacity2', dir='tmp2')
+    sim = OSRD(simulation='station_capacity2', dir='tmp2')
     sim.add_delay('train0', time_threshold=90, delay=280.)
     delayed = sim.delayed()
 
@@ -58,7 +58,7 @@ def test_scheduler_agent_in_regulate():
     shutil.rmtree('tmp2', ignore_errors=True)
 
 
-def test_scheduler_agent_regulate_scenario_error():
+def test_scheduler_agent_regulate_delay_error():
     class DelayTrain0AtDeparture(SchedulerAgent):
         @property
         def steps_extra_delays(self) -> pd.DataFrame:
@@ -66,6 +66,6 @@ def test_scheduler_agent_regulate_scenario_error():
             df.iloc[0, 0] = 100.
             return df
 
-    match = "foo is not a valid scenario."
+    match = "foo is not a valid use case delay name."
     with pytest.raises(ValueError, match=match):
-        DelayTrain0AtDeparture('test').regulate_scenario("foo")
+        DelayTrain0AtDeparture('test').regulate_delay("foo")

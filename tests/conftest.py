@@ -81,29 +81,29 @@ def osrd_cvg_dvg_before_run():
 
 @pytest.fixture(scope='session')
 def use_case_cvg_dvg():
-    yield OSRD(dir='tmp', use_case='cvg_dvg')
+    yield OSRD(dir='tmp', simulation='cvg_dvg')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='function')
 def use_case_set_trains():
-    yield OSRD(dir='tmp2', use_case='cvg_dvg')
+    yield OSRD(dir='tmp2', simulation='cvg_dvg')
     shutil.rmtree('tmp2', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_station_capacity2():
-    yield OSRD(dir='tmp', use_case='station_capacity2')
+    yield OSRD(dir='tmp', simulation='station_capacity2')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_point_switch():
-    yield OSRD(dir='tmp', use_case='point_switch')
+    yield OSRD(dir='tmp', simulation='point_switch')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_straight_line():
-    yield OSRD(dir='tmp', use_case='straight_line')
+    yield OSRD(dir='tmp', simulation='straight_line')
     shutil.rmtree('tmp', ignore_errors=True)

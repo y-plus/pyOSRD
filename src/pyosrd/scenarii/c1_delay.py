@@ -9,7 +9,7 @@ def c1_delay() -> OSRD:
     10 seconds after its start
     """
     use_case = 'c1'
-    sim = OSRD(use_case=use_case, dir='tmp')
+    sim = OSRD(simulation=use_case, dir='tmp')
 
     # les trains
 

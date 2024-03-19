@@ -1,5 +1,3 @@
-import importlib
-
 from abc import abstractproperty
 
 from dataclasses import dataclass
@@ -116,17 +114,17 @@ class SchedulerAgent(Agent):
 
         return regulated_schedule
 
-    def regulate_scenario(
+    def regulate_delay(
         self,
-        scenario: str,
+        delay: str,
         plot_all=False
     ) -> pd.DataFrame:
-        """Regulates the given scenario using the given agent.
+        """Regulates the given delay using the given agent.
 
         Parameters
         ----------
-        scenario : str
-            The scenario to be regulated
+        delay : str
+            The delay to be regulated
         plot_all : bool, optional
              If True, all schedules will be displayed (reference,
             delayed and regulated), by default False
@@ -135,27 +133,12 @@ class SchedulerAgent(Agent):
         -------
         pd.DataFrame
             DataFrame containing the indictor value for
-            the agent and the given scenario, eg:
+            the agent and the given delay, eg:
                             agent 1
-            scenario 1           12
-
-        Raises
-        ------
-        ValueError
-            When the scenario is unknown
+            delay 1           12
         """
+        sim = OSRD(delay=delay)
 
-        if scenario not in OSRD.scenarii:
-            raise ValueError(
-                f"{scenario} is not a valid scenario."
-            )
-
-        module = importlib.import_module(
-            f".{scenario}",
-            "pyosrd.scenarii"
-        )
-        function = getattr(module, scenario)
-        sim = function()
         delayed_schedule = sim.delayed()
 
         self.set_schedules_from_osrd(sim, "all_steps")
@@ -179,88 +162,88 @@ class SchedulerAgent(Agent):
                     )
                 ]
             },
-            index=[scenario]
+            index=[delay]
         )
 
-    def regulate_scenarii(
+    def regulate_delays(
         self,
-        scenarii: list[str]
+        delays: list[str]
     ) -> pd.DataFrame:
-        """Regulates a list of scenarii using a given agent.
+        """Regulates a list of delays using a given agent.
 
         Parameters
         ----------
-        scenarii : list[str]
-            The list of scenarii to be regulated
+        delays : list[str]
+            The list of delays to be regulated
         agent : SchedulerAgent
-            The agent to be used to regulate the scenarii
+            The agent to be used to regulate the delays
 
         Returns
         -------
         pd.DataFrame
             DataFrame containing the metric for the agent
-            and the given scenarii, eg:
+            and the given delays, eg:
                             agent 1
-            scenario 1           12
-            scenario 2           16
-            scenario 3           22
-            scenario 4           33
-            scenario 5           98
+            delay 1           12
+            delay 2           16
+            delay 3           22
+            delay 4           33
+            delay 5           98
         """
 
         data = [
-            self.regulate_scenario(scenario)
-            for scenario in scenarii
+            self.regulate_delay(delay)
+            for delay in delays
         ]
         return pd.concat(data)
 
 
-def regulate_scenarii_with_agents(
-        scenarii: str | list[str],
+def regulate_delays_with_agents(
+        delays: str | list[str],
         agents: SchedulerAgent | list[SchedulerAgent]
 ) -> pd.DataFrame:
-    """Regulates a list of scenarii using a list of agents"
+    """Regulates a list of delays using a list of agents"
 
     Parameters
     ----------
-    scenarii : str | list[str]
-         The list of scenarii to be regulated. Ccan also be "all"
-         to start all scenarii or directly the name of one scenario
+    delays : str | list[str]
+         The list of delays to be regulated. Ccan also be "all"
+         to start all delays or directly the name of one delay
     agents : SchedulerAgent | list[SchedulerAgent]
-        The agents to be used to regulate the scenarii. Can  be
+        The agents to be used to regulate the delays. Can  be
         a single agent or a list of agents.
 
     Returns
     -------
     pd.DataFrame
         DataFrame containing the metric for the agents
-        and the given scenarii, eg:
+        and the given delays, eg:
                         agent 1     agent 2     agent 3     agent 4     agent 5
-        scenario 1           12         112         212         312       10212
-        scenario 2           16         116         216         316       10216
-        scenario 3           22         122         222         322       10222
-        scenario 4           33         133         233         333       10233
-        scenario 5           98         198         298         398       10298
+        delay 1           12         112         212         312       10212
+        delay 2           16         116         216         316       10216
+        delay 3           22         122         222         322       10222
+        delay 4           33         133         233         333       10233
+        delay 5           98         198         298         398       10298
 
 
     Raises
     ------
     ValueError
-        When a scenario is unknown
+        When a delay is unknown
     """
 
-    if scenarii == 'all':
-        scenarii = OSRD.scenarii
-    elif scenarii in OSRD.scenarii:
-        scenarii = [scenarii]
-    elif isinstance(scenarii, str):
-        raise ValueError(f"Unknown scenario {scenarii}")
+    if delays == 'all':
+        delays = OSRD.delays
+    elif delays in OSRD.delays:
+        delays = [delays]
+    elif isinstance(delays, str):
+        raise ValueError(f"Unknown delay {delays}")
 
     if isinstance(agents, SchedulerAgent):
         agents = [agents]
 
     data = [
-        agent.regulate_scenarii(scenarii)
+        agent.regulate_delays(delays)
         for agent in agents
     ]
     return pd.concat(data, axis=1)

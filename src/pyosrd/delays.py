@@ -4,15 +4,16 @@ import os
 import shutil
 
 
-def add_delay(
-    self,
+def add_delay_to_json(
+    dir,
+    delays_json,
     train_id: str,
     time_threshold: float,
     delay: float,
 ) -> None:
 
     try:
-        with open(os.path.join(self.dir, self.delays_json), 'r') as f:
+        with open(os.path.join(dir, delays_json), 'r') as f:
             delays = json.load(f)
     except FileNotFoundError:
         delays = []
@@ -25,8 +26,23 @@ def add_delay(
         }
     ]
 
-    with open(os.path.join(self.dir, 'delays.json'), "w") as outfile:
+    with open(os.path.join(dir, 'delays.json'), "w") as outfile:
         json.dump(delays, outfile)
+
+
+def add_delay(
+    self,
+    train_id: str,
+    time_threshold: float,
+    delay: float,
+) -> None:
+    add_delay_to_json(
+        self.dir,
+        self.delays_json,
+        train_id,
+        time_threshold,
+        delay
+    )
 
 
 def add_delays_in_results(self) -> None:
@@ -82,8 +98,15 @@ def delayed(self):
     return delayed
 
 
+def reset_delays_in_json(
+    dir,
+    delays_json
+) -> None:
+    if os.path.exists(os.path.join(dir, 'delayed')):
+        shutil.rmtree(os.path.join(dir, 'delayed'))
+    if os.path.exists(os.path.join(dir, delays_json)):
+        os.remove(os.path.join(dir, delays_json))
+
+
 def reset_delays(self) -> None:
-    if os.path.exists(os.path.join(self.dir, 'delayed')):
-        shutil.rmtree(os.path.join(self.dir, 'delayed'))
-    if os.path.exists(os.path.join(self.dir, self.delays_json)):
-        os.remove(os.path.join(self.dir, self.delays_json))
+    reset_delays_in_json(self.dir, self.delays_json)

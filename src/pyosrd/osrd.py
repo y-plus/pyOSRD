@@ -19,7 +19,6 @@ from dotenv import load_dotenv
 from typing_extensions import Self
 
 import pyosrd.use_cases as use_cases
-import pyosrd.scenarii as scenarii
 
 
 def _read_json(json_file: str) -> dict | list:
@@ -64,9 +63,17 @@ class OSRD():
     ----------
     dir: str, optional
         Directory path, by default current directory
-    use_case: str or None, optional
-        If set, build a use_case
-        among all availables given by `OSRD.use_cases`, by default None
+    infra: str or None, optional
+        If set, build an infra
+        among all availables given by `OSRD.infras`, by default None.
+        Ignored if delay or simulation is set.
+    simulation: str or None, optional
+        If set, build a simulation
+        among all availables given by `OSRD.simulations`, by default None.
+        Ignored if delay is set.
+    delay: str or None, optional
+        If set, build a simulation and add delay to it
+        among all availables given by `OSRD.delays`, by default None.
     infra_json: str, optional
         Name of the file containing the infrastructure in rail_json format.
         If the file does not exist, attribute infra will be empty,
@@ -86,7 +93,9 @@ class OSRD():
         by default 'delays.json'
     """
     dir: str = '.'
-    use_case: str | None = None
+    infra: str | None = None
+    simulation: str | None = None
+    delay: str | None = None
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
@@ -110,22 +119,64 @@ class OSRD():
 
     def __post_init__(self):
 
-        if self.use_case:
+        # Load delay if any is given
+        if self.delay:
 
-            if self.use_case not in self.use_cases:
+            if self.delay not in self.delays:
                 raise ValueError(
-                    f"{self.use_case} is not a valid use case name."
+                    f"{self.delay} is not a valid use case " +
+                    "delay name."
                 )
 
             module = importlib.import_module(
-                f".{self.use_case}",
-                "pyosrd.use_cases"
+                f".{self.delay}",
+                "pyosrd.use_cases.delays"
             )
-            function = getattr(module, self.use_case)
+            function = getattr(module, self.delay)
+            function(
+                self.dir,
+                self.infra_json,
+                self.simulation_json,
+                self.delays_json,
+            )
+
+        # Load simulation if any is given
+        elif self.simulation:
+
+            if self.simulation not in self.simulations:
+                raise ValueError(
+                    f"{self.simulation} is not a valid use case " +
+                    "simulation name."
+                )
+
+            module = importlib.import_module(
+                f".{self.simulation}",
+                "pyosrd.use_cases.simulations"
+            )
+            function = getattr(module, self.simulation)
             function(
                 self.dir,
                 self.infra_json,
                 self.simulation_json
+            )
+
+        # Load infra if any is given
+        elif self.infra:
+
+            if self.infra not in self.infras:
+                raise ValueError(
+                    f"{self.infra} is not a valid use case " +
+                    "infra name."
+                )
+
+            module = importlib.import_module(
+                f".{self.infra}",
+                "pyosrd.use_cases.infras"
+            )
+            function = getattr(module, self.infra)
+            function(
+                self.dir,
+                self.infra_json
             )
 
         self.infra = (
@@ -140,7 +191,7 @@ class OSRD():
             else {}
         )
 
-        if self.use_case:
+        if self.simulation:
             self.run()
 
         self.results = (
@@ -190,19 +241,30 @@ class OSRD():
         return self.results != []
 
     @classproperty
-    def use_cases(self) -> list[str]:
-        """List of available use cases"""
+    def infras(self) -> list[str]:
+        """List of available use cases infras"""
         return [
             name
-            for _, name, _ in pkgutil.iter_modules(use_cases.__path__)
+            for _, name, _ in pkgutil.iter_modules(
+                use_cases.infras.__path__)
         ]
 
     @classproperty
-    def scenarii(self) -> list[str]:
-        """List of available scenarii"""
+    def simulations(self) -> list[str]:
+        """List of available use cases simulations"""
         return [
             name
-            for _, name, _ in pkgutil.iter_modules(scenarii.__path__)
+            for _, name, _ in pkgutil.iter_modules(
+                use_cases.simulations.__path__)
+        ]
+
+    @classproperty
+    def delays(self) -> list[str]:
+        """List of available use case delays"""
+        return [
+            name
+            for _, name, _ in pkgutil.iter_modules(
+                use_cases.delays.__path__)
         ]
 
     @property

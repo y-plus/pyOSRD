@@ -39,7 +39,7 @@ pip install --upgrade git+ssh://git@github.com/y-plus/pyOSRD.git
 
 ```python3
 >>> from pyosrd import OSRD
->>> sim = OSRD(use_case='point_switch', dir='point_switch')
+>>> sim = OSRD(simulation='point_switch', dir='point_switch')
 ```
 
 ## Custom Java binary path

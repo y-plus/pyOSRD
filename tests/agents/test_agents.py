@@ -7,7 +7,7 @@ from pyosrd.agents import Agent
 
 def test_base_class_agent():
 
-    sim = OSRD(use_case='station_capacity2', dir='tmp2')
+    sim = OSRD(simulation='station_capacity2', dir='tmp2')
     sim.add_delay('train0', time_threshold=90, delay=280.)
     delayed = sim.delayed()
 

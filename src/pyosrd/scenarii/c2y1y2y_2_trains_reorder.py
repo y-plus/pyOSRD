@@ -20,7 +20,7 @@ def c2y1y2y_2_trains_reorder() -> OSRD:
 
     """  # noqa
     use_case = 'c2y1y2y'
-    sim = OSRD(use_case=use_case, dir='tmp')
+    sim = OSRD(simulation=use_case, dir='tmp')
 
     sim.reset_delays()
     sim.add_delay('train0', time_threshold=130, delay=150.)
