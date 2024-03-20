@@ -2,22 +2,20 @@ import os
 
 from railjson_generator import (
     InfraBuilder,
-    SimulationBuilder,
-    Location,
 )
+from railjson_generator.schema.infra.infra import Infra
 from railjson_generator.schema.infra.direction import Direction
 
 
-def c2xx2(
+def c2xx2_infra(
     dir: str,
     infra_json: str = 'infra.json',
-    simulation_json: str = 'simulation.json',
-) -> None:
+) -> Infra:
     """
     station0 (2 tracks)                        station1 (2 tracks)
 
                   ┎S0              S2┐
-    (T0)-----------D0--------------D2------(T2)-->              
+    (T0)-----------D0--------------D2------(T2)-->
                       \     /
                          SW
                 ┎S1   /     \      S3┐
@@ -94,38 +92,4 @@ def c2xx2(
     built_infra = infra_builder.build()
     built_infra.save(os.path.join(dir, infra_json))
 
-    sim_builder = SimulationBuilder()
-
-    sim_builder.add_train_schedule(
-        Location(T[0], 50),
-        Location(T[2], 950),
-        label='train0-2',
-        departure_time=0.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[1], 50),
-        Location(T[3], 950),
-        label='train1-3',
-        departure_time=120.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[0], 50),
-        Location(T[3], 950),
-        label='train0-3',
-        departure_time=240.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[1], 50),
-        Location(T[2], 950),
-        label='train1-2',
-        departure_time=360.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[3], 950),
-        Location(T[0], 50),
-        label='train3-0',
-        departure_time=480.,
-    )
-
-    built_simulation = sim_builder.build()
-    built_simulation.save(os.path.join(dir, simulation_json))
+    return built_infra

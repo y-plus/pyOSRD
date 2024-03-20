@@ -8,7 +8,7 @@ import subprocess
 from dataclasses import dataclass
 from importlib.resources import files
 from itertools import combinations
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import networkx as nx
 import numpy as np
@@ -21,13 +21,30 @@ from typing_extensions import Self
 import pyosrd.use_cases as use_cases
 
 
-def _read_json(json_file: str) -> Union[Dict, List]:
+def _read_json(json_file: str) -> dict | list:
     with open(json_file, 'r') as f:
         try:
             dict_ = json.load(f)
         except ValueError:  # JSONDecodeError inherits from ValueError
             dict_ = {}
     return dict_
+
+
+class classproperty(property):
+    """Create a property for a class method
+
+    This is from the following stack overlflow issue :
+        https://stackoverflow.com/a/13624858
+
+    Use this decorator when you can a proerty decorator
+    and a classmethod decorator on the same method.
+    Since Python 3.13 it is not possible to have them
+    together hence this workaround.
+
+    Do not ask me how it works but it works...
+    """
+    def __get__(self, cls, owner):
+        return classmethod(self.fget).__get__(None, owner)()
 
 
 @dataclass
@@ -46,9 +63,17 @@ class OSRD():
     ----------
     dir: str, optional
         Directory path, by default current directory
-    use_case: str or None, optional
-        If set, build a use_case
-        among all availables given by `OSRD.use_cases`, by default None
+    infra: str or None, optional
+        If set, build an infra
+        among all availables given by `OSRD.infras`, by default None.
+        Ignored if delay or simulation is set.
+    simulation: str or None, optional
+        If set, build a simulation
+        among all availables given by `OSRD.simulations`, by default None.
+        Ignored if delay is set.
+    delay: str or None, optional
+        If set, build a simulation and add delay to it
+        among all availables given by `OSRD.delays`, by default None.
     infra_json: str, optional
         Name of the file containing the infrastructure in rail_json format.
         If the file does not exist, attribute infra will be empty,
@@ -68,7 +93,9 @@ class OSRD():
         by default 'delays.json'
     """
     dir: str = '.'
-    use_case: Union[str, None] = None
+    infra: str | None = None
+    simulation: str | None = None
+    delay: str | None = None
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
@@ -92,22 +119,64 @@ class OSRD():
 
     def __post_init__(self):
 
-        if self.use_case:
+        # Load delay if any is given
+        if self.delay:
 
-            if self.use_case not in self.use_cases:
+            if self.delay not in self.delays:
                 raise ValueError(
-                    f"{self.use_case} is not a valid use case name."
+                    f"{self.delay} is not a valid use case " +
+                    "delay name."
                 )
 
             module = importlib.import_module(
-                f".{self.use_case}",
-                "pyosrd.use_cases"
+                f".{self.delay}",
+                "pyosrd.use_cases.delays"
             )
-            function = getattr(module, self.use_case)
+            function = getattr(module, self.delay)
+            function(
+                self.dir,
+                self.infra_json,
+                self.simulation_json,
+                self.delays_json,
+            )
+
+        # Load simulation if any is given
+        elif self.simulation:
+
+            if self.simulation not in self.simulations:
+                raise ValueError(
+                    f"{self.simulation} is not a valid use case " +
+                    "simulation name."
+                )
+
+            module = importlib.import_module(
+                f".{self.simulation}",
+                "pyosrd.use_cases.simulations"
+            )
+            function = getattr(module, self.simulation)
             function(
                 self.dir,
                 self.infra_json,
                 self.simulation_json
+            )
+
+        # Load infra if any is given
+        elif self.infra:
+
+            if self.infra not in self.infras:
+                raise ValueError(
+                    f"{self.infra} is not a valid use case " +
+                    "infra name."
+                )
+
+            module = importlib.import_module(
+                f".{self.infra}",
+                "pyosrd.use_cases.infras"
+            )
+            function = getattr(module, self.infra)
+            function(
+                self.dir,
+                self.infra_json
             )
 
         self.infra = (
@@ -122,7 +191,7 @@ class OSRD():
             else {}
         )
 
-        if self.use_case:
+        if self.simulation:
             self.run()
 
         self.results = (
@@ -171,22 +240,40 @@ class OSRD():
         """True if the object has simulation results"""
         return self.results != []
 
-    @classmethod
-    @property
-    def use_cases(self) -> List[str]:
-        """List of available use cases"""
+    @classproperty
+    def infras(self) -> list[str]:
+        """List of available use cases infras"""
         return [
             name
-            for _, name, _ in pkgutil.iter_modules(use_cases.__path__)
+            for _, name, _ in pkgutil.iter_modules(
+                use_cases.infras.__path__)
+        ]
+
+    @classproperty
+    def simulations(self) -> list[str]:
+        """List of available use cases simulations"""
+        return [
+            name
+            for _, name, _ in pkgutil.iter_modules(
+                use_cases.simulations.__path__)
+        ]
+
+    @classproperty
+    def delays(self) -> list[str]:
+        """List of available use case delays"""
+        return [
+            name
+            for _, name, _ in pkgutil.iter_modules(
+                use_cases.delays.__path__)
         ]
 
     @property
-    def routes(self) -> List[str]:
+    def routes(self) -> list[str]:
         """List of routes ids"""
         return [route['id'] for route in self.infra['routes']]
 
     @property
-    def track_section_lengths(self) -> Dict[str, float]:
+    def track_section_lengths(self) -> dict[str, float]:
         """Dict of track sections and their lengths"""
         return {t['id']: t['length'] for t in self.infra['track_sections']}
 
@@ -196,7 +283,7 @@ class OSRD():
         return len(self.infra['switches'])
 
     @property
-    def station_capacities(self) -> Dict[str, int]:
+    def station_capacities(self) -> dict[str, int]:
         """Dict of stations ids (operational points) and their capacities"""
         return {
             station['id']: len(station['parts'])
@@ -208,7 +295,7 @@ class OSRD():
         """Number of stations (defined as operational points)"""
         return len(self.station_capacities)
 
-    def _points(self, op_part_tracks: bool = False) -> List[Point]:
+    def _points(self, op_part_tracks: bool = False) -> list[Point]:
 
         points = []
 
@@ -305,7 +392,7 @@ class OSRD():
         sim = f'{eco_or_base}_simulations'
         return self.results[group][sim][idx]['head_positions']
 
-    def points_on_track_sections(self, op_part_tracks: bool = False) -> Dict:
+    def points_on_track_sections(self, op_part_tracks: bool = False) -> dict:
         """Dict with for each track, points of interests and their positions"""
 
         points_on_track_sections = {}
@@ -415,7 +502,7 @@ class OSRD():
         )
 
     @property
-    def trains(self) -> List[str]:
+    def trains(self) -> list[str]:
         """List of train ids in the simulation"""
         return [
             train['id']
@@ -424,7 +511,7 @@ class OSRD():
         ]
 
     @property
-    def departure_times(self) -> List[float]:
+    def departure_times(self) -> list[float]:
         """List of trains departure times"""
         return [
             train['departure_time']
@@ -433,7 +520,7 @@ class OSRD():
         ]
 
     @property
-    def _train_schedule_group(self) -> Dict[str, int]:
+    def _train_schedule_group(self) -> dict[str, int]:
         return {
             train['id']: (group['id'], pos)
             for group in self.simulation['train_schedule_groups']
@@ -479,7 +566,7 @@ class OSRD():
                 )
         return ts
 
-    def train_track_sections(self, train: int) -> List[Dict[str, str]]:
+    def train_track_sections(self, train: int) -> list[dict[str, str]]:
         """List of tracks for a given train trajectory"""
 
         head_positions = self._head_position(train=train)
@@ -540,7 +627,7 @@ class OSRD():
     def points_encountered_by_train(
         self,
         train: int,
-        types: List[str] = [
+        types: list[str] = [
             'departure',
             'signal',
             'detector',
@@ -548,17 +635,17 @@ class OSRD():
             'switch',
             'arrival',
         ],
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Points encountered by a train during its trajectory
 
         Parameters
         ----------
-        types : List[str], optional
+        types : list[str], optional
             Types of points, all types by default
 
         Returns
         -------
-        List[Dict[str, Any]]
+        list[Dict[str, Any]]
             Points encountered (id, type, offset)
         """
 
@@ -680,14 +767,14 @@ class OSRD():
             "<->".join(sorted(d)): "<->".join(sorted(d))
             for d in self._tvds
         }
-
+        points = self.points_on_track_sections()
         for switch in self.infra['switches']:
             detectors = []
             for port in switch['ports'].values():
                 idx = 0 if port['endpoint'] == 'BEGIN' else -1
                 detectors_on_track = [
                     p.id
-                    for p in self.points_on_track_sections()[port['track']]
+                    for p in points[port['track']]
                     if p.type == 'detector'
                 ]
                 detectors.append(detectors_on_track[idx])

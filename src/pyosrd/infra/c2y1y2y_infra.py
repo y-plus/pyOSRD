@@ -2,17 +2,15 @@ import os
 
 from railjson_generator import (
     InfraBuilder,
-    SimulationBuilder,
-    Location,
 )
+from railjson_generator.schema.infra.infra import Infra
 from railjson_generator.schema.infra.direction import Direction
 
 
-def c2y1y2y(
+def c2y1y2y_infra(
     dir: str,
     infra_json: str = 'infra.json',
-    simulation_json: str = 'simulation.json',
-) -> None:
+) -> Infra:
     """
     station0 (2 tracks)                        station1 (2 tracks)                      station2 (1 track)
 
@@ -23,15 +21,15 @@ def c2y1y2y(
            ┎S1   /                              \                   ┎S5  /
     (T1)-----D1-                                  --D3.2----(T5)-----D5-
 
-    All tracks are 500m long
-    Train 0 starts from T0 at t=0 and arrives at T4
-    Train 1 starts from T1 at t=100 and arrives at T5
+    All tracks are 1000m long
+    Train 0 starts from T0 at t=0 and arrives at T7
+    Train 1 starts from T1 at t=100 and arrives at T7
     """  # noqa
 
     infra_builder = InfraBuilder()
 
     T = [
-        infra_builder.add_track_section(label='T'+str(id), length=500)
+        infra_builder.add_track_section(label='T'+str(id), length=1000)
         for id in range(8)
     ]
 
@@ -64,7 +62,7 @@ def c2y1y2y(
     for i, track in enumerate(T):
         d = track.add_detector(
             label=f"D{i}",
-            position=(450 if i in [0, 1, 3, 4, 5, 7] else 50),
+            position=(950 if i in [0, 1, 3, 4, 5, 7] else 50),
         )
         if i in [0, 1, 3, 4, 5]:
             s = track.add_signal(
@@ -100,22 +98,4 @@ def c2y1y2y(
     built_infra = infra_builder.build()
     built_infra.save(os.path.join(dir, infra_json))
 
-    sim_builder = SimulationBuilder()
-
-    sim_builder.add_train_schedule(
-        Location(T[0], 300),
-        Location(T[4], 490),
-        Location(T[7], 480),
-        label='train0',
-        departure_time=0.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[1], 300),
-        Location(T[5], 480),
-        Location(T[7], 480),
-        label='train1',
-        departure_time=100.,
-    )
-
-    built_simulation = sim_builder.build()
-    built_simulation.save(os.path.join(dir, simulation_json))
+    return built_infra

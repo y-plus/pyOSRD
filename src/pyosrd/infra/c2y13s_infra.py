@@ -2,23 +2,22 @@ import os
 
 from railjson_generator import (
     InfraBuilder,
-    SimulationBuilder,
     Location,
 )
+from railjson_generator.schema.infra.infra import Infra
 from railjson_generator.schema.infra.direction import Direction
-from railjson_generator.schema.simulation.stop import Stop
 
 
-def c2y13s(
+def c2y13s_infra(
     dir: str,
     infra_json: str = 'infra.json',
-    simulation_json: str = 'simulation.json',
-) -> None:
+    stations={}
+) -> Infra:
     """
 
 
            ┎SA0
-    (T0)----DA0- 
+    (T0)----DA0-
                  \       ┎S1    ┎SB  ┎SB2    ┎S2    ┎SC  ┎SC2    ┎S3    ┎SD  ┎SD2
                SWA>-DA2---D1-----DB-o-DB2-----D2-----DC-o-DC2-----D3-----DD-o-DD2-----(T2)
            ┎SA1  /
@@ -102,8 +101,6 @@ def c2y13s(
             is_route_delimiter=True,
         ).add_logical_signal("BAL", settings={"Nf": "true"})
 
-    stations = {}
-
     for i in [1, 2, 3]:
         infra_builder.add_operational_point(
             label='station'+chr(65+i)
@@ -114,27 +111,4 @@ def c2y13s(
     built_infra = infra_builder.build()
     built_infra.save(os.path.join(dir, infra_json))
 
-    sim_builder = SimulationBuilder()
-
-    sim_builder.add_train_schedule(
-        Location(T[0], 20),
-        Location(T[2], 11_990),
-        label='train0',
-        departure_time=0.,
-    )
-
-    sim_builder.add_train_schedule(
-        Location(T[1], 20),
-        Location(T[2], 11_990),
-        label='train1',
-        departure_time=120.,
-        stops=[
-            Stop(location=stations['B'], duration=120., ),
-            Stop(location=stations['C'], duration=120., ),
-            Stop(location=stations['D'], duration=120., ),
-        ],
-        # rolling_stock='short_fast_rolling_stock',
-    )
-
-    built_simulation = sim_builder.build()
-    built_simulation.save(os.path.join(dir, simulation_json))
+    return built_infra

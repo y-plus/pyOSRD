@@ -2,23 +2,22 @@ import os
 
 from railjson_generator import (
     InfraBuilder,
-    SimulationBuilder,
-    Location,
 )
+from railjson_generator.schema.infra.infra import Infra
 from railjson_generator.schema.infra.direction import Direction
 
 
-def point_switch(
+def point_switch_infra(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
-) -> None:
+) -> Infra:
     """
                          S1┐
                         -D1---------(T1)-->
-                ┎S0   / 
-    --(T0)--------D0-<(DVG)            
-                      \  S2┐ 
+                ┎S0   /
+    --(T0)--------D0-<(DVG)
+                      \  S2┐
                         -D2----------(T2)-->
 
     All tracks are 10 km long
@@ -74,24 +73,7 @@ def point_switch(
 
     built_infra = infra_builder.build()
 
-    sim_builder = SimulationBuilder()
-
-    sim_builder.add_train_schedule(
-        Location(T[0], 50.),
-        Location(T[1], T[1].length-50),
-        label='train0',
-        departure_time=0,
-    )
-
-    sim_builder.add_train_schedule(
-        Location(T[2], T[1].length-50.),
-        Location(T[0], 50),
-        label='train1',
-        departure_time=100.,
-    )
-
-    built_simulation = sim_builder.build()
-
     os.makedirs(dir, exist_ok=True)
     built_infra.save(os.path.join(dir, infra_json))
-    built_simulation.save(os.path.join(dir, simulation_json))
+
+    return built_infra

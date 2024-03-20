@@ -2,18 +2,17 @@ import os
 
 from railjson_generator import (
     InfraBuilder,
-    SimulationBuilder,
     Location,
 )
+from railjson_generator.schema.infra.infra import Infra
 from railjson_generator.schema.infra.direction import Direction
-from railjson_generator.schema.simulation.stop import Stop
 
 
-def c2y1sy2sy1s(
+def c2y1sy2sy1s_infra(
     dir: str,
     infra_json: str = 'infra.json',
-    simulation_json: str = 'simulation.json',
-) -> None:
+    stations={}
+) -> Infra:
     """
 
 
@@ -106,8 +105,6 @@ def c2y1sy2sy1s(
         is_route_delimiter=True,
     ).add_logical_signal("BAL", settings={"Nf": "true"})
 
-    stations = {}
-
 # station B
     d_station_start = T[2].add_detector(
         label="DB",
@@ -153,7 +150,7 @@ def c2y1sy2sy1s(
         label="DC2",
         position=800,
     )
-    
+
     T[3].add_detector(
         label='DC0',
         position=120,
@@ -175,13 +172,13 @@ def c2y1sy2sy1s(
         )
     stationC.add_part(T[3], 710)
     stations['C'] = Location(T[3], 710)
-    
-    ### Lane 2
+
+    # Lane 2
     d_station_end = T[5].add_detector(
         label="DC3",
         position=800,
     )
-    
+
     T[5].add_signal(
         label="SC3",
         position=d_station_end.position - 20,
@@ -225,32 +222,4 @@ def c2y1sy2sy1s(
     built_infra = infra_builder.build()
     built_infra.save(os.path.join(dir, infra_json))
 
-    sim_builder = SimulationBuilder()
-
-    sim_builder.add_train_schedule(
-        Location(T[0], 20),
-        stations['C_2'],
-        Location(T[4], 4700),
-        label='train0',
-        departure_time=0.,
-        stops=[
-            Stop(location=stations['C_2'], duration=60., ),
-        ],
-    )
-
-    sim_builder.add_train_schedule(
-        Location(T[1], 20),
-        # stations['C_2'],
-        Location(T[4], 4700),
-        label='train1',
-        departure_time=120.,
-        stops=[
-            Stop(location=stations['B'], duration=120., ),
-            Stop(location=stations['C'], duration=120., ),
-            Stop(location=stations['D'], duration=120., ),
-        ],
-        # rolling_stock='short_fast_rolling_stock',
-    )
-
-    built_simulation = sim_builder.build()
-    built_simulation.save(os.path.join(dir, simulation_json))
+    return built_infra

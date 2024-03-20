@@ -5,16 +5,16 @@ import pytest
 from pyosrd import OSRD
 
 
-@pytest.mark.parametrize('use_case', OSRD.use_cases)
-def test_use_cases_no_fail(use_case):
+@pytest.mark.parametrize('simulation', OSRD.simulations)
+def test_use_cases_no_fail(simulation):
     try:
-        OSRD(use_case=use_case, dir='tmp')
+        OSRD(simulation=simulation, dir='tmp')
     except ValueError:
         assert False
     shutil.rmtree('tmp')
 
 
 def test_use_cases_unknown_case():
-    match = "unknown is not a valid use case name."
+    match = "unknown is not a valid use case simulation name."
     with pytest.raises(ValueError, match=match):
-        OSRD(use_case='unknown')
+        OSRD(simulation='unknown')

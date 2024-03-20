@@ -1,4 +1,5 @@
 import shutil
+import pytest
 
 import pandas as pd
 from pandas.testing import assert_frame_equal
@@ -12,16 +13,16 @@ def test_scheduler_agent_autonomous(two_trains):
     class DummySchedulerAgent(SchedulerAgent):
         @property
         def steps_extra_delays(self) -> pd.DataFrame:
-            return self.initial_schedule.durations * 0.
+            return self.ref_schedule.durations * 0.
 
     agent = DummySchedulerAgent(
         'dummy',
-        initial_schedule=two_trains,
+        ref_schedule=two_trains,
         delayed_schedule=two_trains.add_delay(0, 0, 10),
         step_has_fixed_duration=two_trains.durations.replace(1, False),
     )
 
-    assert agent.initial_schedule == two_trains
+    assert agent.ref_schedule == two_trains
     assert_frame_equal(
         agent.delayed_schedule.df,
         two_trains.add_delay(0, 0, 10).df
@@ -35,15 +36,15 @@ def test_scheduler_agent_autonomous(two_trains):
 
 def test_scheduler_agent_in_regulate():
 
-    sim = OSRD(use_case='station_capacity2', dir='tmp2')
+    sim = OSRD(simulation='station_capacity2', dir='tmp2')
     sim.add_delay('train0', time_threshold=90, delay=280.)
     delayed = sim.delayed()
 
     class DelayTrain0AtDeparture(SchedulerAgent):
         @property
         def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.initial_schedule.durations * 0.
-            df.iloc[0][0] = 100.
+            df = self.ref_schedule.durations * 0.
+            df.iloc[0, 0] = 100.
             return df
 
     regulated = sim.regulate(agent=DelayTrain0AtDeparture('test'))
@@ -55,3 +56,16 @@ def test_scheduler_agent_in_regulate():
 
     assert arrival_times == sorted(arrival_times)
     shutil.rmtree('tmp2', ignore_errors=True)
+
+
+def test_scheduler_agent_regulate_delay_error():
+    class DelayTrain0AtDeparture(SchedulerAgent):
+        @property
+        def steps_extra_delays(self) -> pd.DataFrame:
+            df = self.ref_schedule.durations * 0.
+            df.iloc[0, 0] = 100.
+            return df
+
+    match = "foo is not a valid use case delay name."
+    with pytest.raises(ValueError, match=match):
+        DelayTrain0AtDeparture('test').regulate_delay("foo")

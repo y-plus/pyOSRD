@@ -2,22 +2,21 @@ import os
 
 from railjson_generator import (
     InfraBuilder,
-    SimulationBuilder,
-    Location,
 )
+from railjson_generator.schema.infra.infra import Infra
 from railjson_generator.schema.infra.direction import Direction
 
 
-def c2z2z2(
+def c2z2z2_infra(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
-) -> None:
+) -> Infra:
     """
     station0 (2 tracks)                        station1 (2 tracks)
 
             ┎S0      S2┐               ┎S2b        S4┐
-    (T0)-----D0--SW0-D2-----(T2)--------D2b--SW4---D4---------(T4)-->              
+    (T0)-----D0--SW0-D2-----(T2)--------D2b--SW4---D4---------(T4)-->
             ┎S1 D6/ S3┐                   ┎S3b \D7   S5┐
     (T1)-----D1-SW1-D3---------(T3)--------D3b--SW5--D5------(T5)-->
 
@@ -156,40 +155,4 @@ def c2z2z2(
     built_infra = infra_builder.build()
     built_infra.save(os.path.join(dir, infra_json))
 
-    sim_builder = SimulationBuilder()
-
-    sim_builder.add_train_schedule(
-        Location(T[0], 300),
-        Location(T[4], 490),
-        label='train0-4',
-        departure_time=0.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[1], 300),
-        Location(T[3], 300),
-        Location(T[5], 480),
-        label='train1-3-5',
-        departure_time=120.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[0], 300),
-        Location(T[5], 490),
-        label='train0-5',
-        departure_time=240.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[1], 300),
-        Location(T[4], 480),
-        label='train1-4',
-        departure_time=360.,
-    )
-    sim_builder.add_train_schedule(
-        Location(T[1], 300),
-        Location(T[2], 300),
-        Location(T[5], 480),
-        label='train1-2-5',
-        departure_time=480.,
-    )
-
-    built_simulation = sim_builder.build()
-    built_simulation.save(os.path.join(dir, simulation_json))
+    return built_infra
