@@ -1,7 +1,7 @@
 import importlib
 
 from abc import abstractproperty
-from collections.abc import Callable
+from typing import Callable
 
 from dataclasses import dataclass
 
@@ -128,9 +128,9 @@ class SchedulerAgent(Agent):
         ----------
         scenario : str
             The scenario to be regulated
-        plot_all : bool, optional
-             If True, all schedules will be displayed (reference,
-            delayed and regulated), by default False
+        indicator_function : Callable[[Schedule, Schedule, OSRD], pd.DataFrame]
+            Define the indicator function to be used to evaluate the
+            regulated schedule.
 
         Returns
         -------
@@ -198,6 +198,9 @@ class SchedulerAgent(Agent):
             The list of scenarii to be regulated
         agent : SchedulerAgent
             The agent to be used to regulate the scenarii
+        indicator_function : Callable[[Schedule, Schedule, OSRD], pd.DataFrame]
+            Define the indicator function to be used to evaluate the
+            regulated schedule.
 
         Returns
         -------
@@ -234,6 +237,9 @@ def regulate_scenarii_with_agents(
     agents : SchedulerAgent | list[SchedulerAgent]
         The agents to be used to regulate the scenarii. Can  be
         a single agent or a list of agents.
+    indicator_function : Callable[[Schedule, Schedule, OSRD], pd.DataFrame]
+        Define the indicator function to be used to evaluate the
+        regulated schedule.
 
     Returns
     -------
