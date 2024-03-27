@@ -74,4 +74,4 @@ def total_delay_at_stations(
     ) * 0
     weights[weights.index.isin(stations)] = 1
 
-    return self.compute_weighted_delays(ref_schedule, weights)
+    return self.total_weighted_delay(ref_schedule, weights)

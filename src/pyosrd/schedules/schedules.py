@@ -37,7 +37,7 @@ class Schedule(object):
     from .delays import (
         delays,
         total_delay_at_stations,
-        compute_weighted_delays,
+        total_weighted_delay,
         train_delay,
     )
 
