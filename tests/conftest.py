@@ -86,7 +86,7 @@ def use_case_cvg_dvg():
 
 
 @pytest.fixture(scope='function')
-def use_case_set_trains():
+def modify_sim():
     yield OSRD(dir='tmp2', use_case='cvg_dvg')
     shutil.rmtree('tmp2', ignore_errors=True)
 

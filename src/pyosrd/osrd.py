@@ -100,7 +100,7 @@ class OSRD():
         space_time_chart,
         space_time_chart_plotly,
     )
-    from .set_trains import (
+    from .modify_simulation import (
         add_train,
         cancel_train,
         cancel_all_trains,
