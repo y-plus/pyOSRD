@@ -39,7 +39,7 @@ def test_station_capacity2_infra_routes(use_case_station_capacity2):
         ])
 
 
-def test_station_capacity2_infra_block_lengths(use_case_station_capacity2):
+def test_station_capacity2_infra_track_lengths(use_case_station_capacity2):
     assert use_case_station_capacity2.track_section_lengths == \
         {
             'T0': 1000.0,
@@ -208,7 +208,7 @@ def test_station_capacity2_space_time_chart(use_case_station_capacity2):
     plt.close()
 
 
-def test_station_capacity2_blocks(use_case_station_capacity2):
+def test_station_capacity2_zones(use_case_station_capacity2):
 
     expected = {
         'D0<->buffer_stop.0': 'D0<->buffer_stop.0',

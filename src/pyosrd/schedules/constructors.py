@@ -16,7 +16,7 @@ def schedule_df_from_OSRD(
         ),
         index=["<->".join(sorted(tvd)) for tvd in case._tvds]
     )
-    df.insert(0, 'block', tvd_zones.values())
+    df.insert(0, 'zone', tvd_zones.values())
     for train, _ in enumerate(case.trains):
 
         tvds_limits = []
@@ -68,11 +68,11 @@ def schedule_df_from_OSRD(
             joined = "<->".join(sorted([start, end]))
             name = tvd_zones[joined]
             df.loc[
-                df.block == name,
+                df.zone == name,
                 train
             ] = (t_start, t_end)
 
-    df.set_index('block', inplace=True, drop=True)
+    df.set_index('zone', inplace=True, drop=True)
     df.drop_duplicates(inplace=True)
     df.index.name = None
     df.columns = pd.MultiIndex.from_product(

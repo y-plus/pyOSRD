@@ -33,7 +33,7 @@ def test_straight_line_infra_routes(use_case_straight_line):
         ])
 
 
-def test_straight_line_infra_block_lengths(use_case_straight_line):
+def test_straight_line_infra_track_lengths(use_case_straight_line):
     assert use_case_straight_line.track_section_lengths == \
         {
             'T': 10_000.0,

@@ -82,21 +82,21 @@ def test_schedule_shift_train_after_at_departure(three_trains):
 
 
 def test_schedules_propagate_delay_action_needed(
-    two_trains_two_blocks_before_dvg
+    two_trains_two_zones_before_dvg
 ):
     """conflict occurs at point switch => action/decision needed
         => notihng is propagated
     """
-    propagated, delayed_train = (
-        two_trains_two_blocks_before_dvg
-        .add_delay(train=0, block=2, delay=.5)
+    propagated, _ = (
+        two_trains_two_zones_before_dvg
+        .add_delay(train=0, zone=2, delay=.5)
         .propagate_delay(delayed_train=0)
     )
 
     assert_frame_equal(
-        two_trains_two_blocks_before_dvg.add_delay(
+        two_trains_two_zones_before_dvg.add_delay(
             train=0,
-            block=2,
+            zone=2,
             delay=.5
         ).df,
         propagated.df
@@ -104,11 +104,11 @@ def test_schedules_propagate_delay_action_needed(
 
 
 def test_schedules_propagate_delay(
-    two_trains_two_blocks_before_dvg
+    two_trains_two_zones_before_dvg
 ):
     propagated, _ = (
-        two_trains_two_blocks_before_dvg
-        .add_delay(train=0, block=4, delay=.5)
+        two_trains_two_zones_before_dvg
+        .add_delay(train=0, zone=4, delay=.5)
         .propagate_delay(delayed_train=0)
     )
 

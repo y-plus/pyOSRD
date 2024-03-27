@@ -43,7 +43,7 @@ def test_cvg_dvg_infra_routes(use_case_cvg_dvg):
         ])
 
 
-def test_cvg_dvg_infra_block_lengths(use_case_cvg_dvg):
+def test_cvg_dvg_infra_track_lengths(use_case_cvg_dvg):
     assert use_case_cvg_dvg.track_section_lengths == \
         {
             'T0': 500.,

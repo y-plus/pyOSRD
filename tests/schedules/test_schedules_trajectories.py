@@ -8,22 +8,22 @@ def test_schedules_trajectory(three_trains):
     assert three_trains.trajectory(2) == [0, 2, 3, 4]
 
 
-def test_previous_block(three_trains):
-    assert three_trains.previous_block(0, 0) is None
-    assert three_trains.previous_block(0, 2) == 0
-    assert three_trains.previous_block(0, 4) == 3
+def test_previous_zone(three_trains):
+    assert three_trains.previous_zone(0, 0) is None
+    assert three_trains.previous_zone(0, 2) == 0
+    assert three_trains.previous_zone(0, 4) == 3
 
 
-def test_next_block(three_trains):
-    assert three_trains.next_block(0, 0) == 2
-    assert three_trains.next_block(0, 2) == 3
-    assert three_trains.next_block(0, 4) is None
+def test_next_zone(three_trains):
+    assert three_trains.next_zone(0, 0) == 2
+    assert three_trains.next_zone(0, 2) == 3
+    assert three_trains.next_zone(0, 4) is None
 
 
 def test_is_a_point_switch(two_trains):
     result = [
         two_trains.is_a_point_switch(0, 1, tr)
-        for tr in two_trains.blocks
+        for tr in two_trains.zones
     ]
     expected = [False, False, True, False, False, False]
     assert result == expected
@@ -32,7 +32,7 @@ def test_is_a_point_switch(two_trains):
 def test_is_just_after_a_point_switch(two_trains):
     result = [
         two_trains.is_just_after_a_point_switch(0, 1, tr)
-        for tr in two_trains.blocks
+        for tr in two_trains.zones
     ]
     expected = [False, False, False, True, False, False]
     assert result == expected
