@@ -119,6 +119,31 @@ class SchedulerAgent(Agent):
 
         return regulated_schedule
 
+    def load_scenario(
+        self,
+        scenario: str,
+    ) -> None:
+        """Load the given scenario.
+
+        Parameters
+        ----------
+        scenario : str
+            The scenario to be regulated
+        """
+        if scenario not in OSRD.scenarii:
+            raise ValueError(
+                f"{scenario} is not a valid scenario."
+            )
+
+        module = importlib.import_module(
+            f".{scenario}",
+            "pyosrd.scenarii"
+        )
+        function = getattr(module, scenario)
+        sim = function()
+
+        self.set_schedules_from_osrd(sim, "all_steps")
+
     def regulate_scenario(
         self,
         scenario: str,
