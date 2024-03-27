@@ -699,9 +699,9 @@ class OSRD():
         return unique_tvds
 
     @property
-    def tvd_blocks(self) -> dict[str, str]:
+    def tvd_zones(self) -> dict[str, str]:
 
-        tvd_blocks = {
+        dict_tvd_zones = {
             "<->".join(sorted(d)): "<->".join(sorted(d))
             for d in self._tvds
         }
@@ -719,9 +719,9 @@ class OSRD():
 
             for a in combinations(detectors, 2):
                 if set(a) in self._tvds:
-                    tvd_blocks["<->".join(sorted(a))] = switch['id']
+                    dict_tvd_zones["<->".join(sorted(a))] = switch['id']
 
-        return tvd_blocks
+        return dict_tvd_zones
 
     def regulate(self, agent: Agent) -> Self:
         """Create and run a regulated simulation
@@ -807,7 +807,7 @@ class OSRD():
             for i, _ in enumerate(limits[:-1]):
                 start = limits[i]
                 end = limits[i+1]
-                zone = self.tvd_blocks["<->".join(sorted([start, end]))]
+                zone = self.tvd_zones["<->".join(sorted([start, end]))]
 
                 for i, p in enumerate(points):
                     if p['id'] == end:
@@ -873,7 +873,7 @@ class OSRD():
                     'id': points[-1]['id'],
                 }
             else:
-                positions[self.tvd_blocks[last_zone]] = {
+                positions[self.tvd_zones[last_zone]] = {
                     'type': 'last_zone',
                     'offset': None,
                 }

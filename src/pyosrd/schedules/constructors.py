@@ -9,14 +9,14 @@ def schedule_df_from_OSRD(
     eco_or_base: str = 'base',
 ) -> pd.DataFrame:
 
-    tvd_blocks = case.tvd_blocks
+    tvd_zones = case.tvd_zones
     df = pd.DataFrame(
         columns=pd.MultiIndex.from_product(
             [range(case.num_trains), ['s', 'e']]
         ),
         index=["<->".join(sorted(tvd)) for tvd in case._tvds]
     )
-    df.insert(0, 'block', tvd_blocks.values())
+    df.insert(0, 'block', tvd_zones.values())
     for train, _ in enumerate(case.trains):
 
         tvds_limits = []
@@ -66,7 +66,7 @@ def schedule_df_from_OSRD(
                     if d['id'] == end][0]
             )
             joined = "<->".join(sorted([start, end]))
-            name = tvd_blocks[joined]
+            name = tvd_zones[joined]
             df.loc[
                 df.block == name,
                 train

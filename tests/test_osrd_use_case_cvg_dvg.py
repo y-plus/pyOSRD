@@ -213,7 +213,7 @@ def test_cvg_dvg_space_time_chart(use_case_cvg_dvg):
     plt.close()
 
 
-def test_cvg_dvg_tvd_blocks(use_case_cvg_dvg):
+def test_cvg_dvg_tvd_zones(use_case_cvg_dvg):
 
     expected = {
         'D0<->buffer_stop.0': 'D0<->buffer_stop.0',
@@ -226,7 +226,7 @@ def test_cvg_dvg_tvd_blocks(use_case_cvg_dvg):
         'D3<->D5': 'DVG',
         'D5<->buffer_stop.3': 'D5<->buffer_stop.3',
     }
-    assert use_case_cvg_dvg.tvd_blocks == expected
+    assert use_case_cvg_dvg.tvd_zones == expected
 
 
 def test_cvg_dvg_stop_positions(use_case_cvg_dvg):

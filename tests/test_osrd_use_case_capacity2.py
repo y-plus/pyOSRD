@@ -220,4 +220,4 @@ def test_station_capacity2_blocks(use_case_station_capacity2):
         'D5<->buffer_stop.5': 'D5<->buffer_stop.5',
         'D4<->D5': 'CVG',
     }
-    assert use_case_station_capacity2.tvd_blocks == expected
+    assert use_case_station_capacity2.tvd_zones == expected
