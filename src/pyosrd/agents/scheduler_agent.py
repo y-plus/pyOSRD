@@ -269,6 +269,12 @@ def regulate_scenarii_with_agents(
     elif isinstance(scenarii, str):
         raise ValueError(f"Unknown scenario {scenarii}.")
 
+    for scenario in scenarii:
+        if scenario not in OSRD.scenarii:
+            raise ValueError(
+                f"{scenario} is not a valid scenario."
+            )
+
     if isinstance(agents, SchedulerAgent):
         agents = [agents]
 
