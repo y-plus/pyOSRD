@@ -165,7 +165,7 @@ def copy_train(
     group_idx = _group_idx(self, group)
 
     new_train_schedule = \
-        self.simulation['train_schedule_groups'][group_idx]['schedules'][idx].copy()
+        self.simulation['train_schedule_groups'][group_idx]['schedules'][idx].copy()  # noqa
 
     new_train_schedule['id'] = new_train_label
     new_train_schedule['departure_time'] = departure_time

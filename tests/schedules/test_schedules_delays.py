@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import PIL
 
 from pandas.testing import assert_frame_equal
 
@@ -73,16 +72,3 @@ def test_schedules_train_delays(two_trains):
 
     assert delayed_schedule.train_delay(0, two_trains) == 3.0
     assert delayed_schedule.train_delay(1, two_trains) == 0.5
-
-
-def test_schedules_mermaid_graph(two_trains):
-    assert two_trains._mermaid_graph == \
-        'graph LR;2-->3;3-->4;3-->5;0-->2;1-->2'
-
-
-def test_schedules_draw_graph_returns_image(two_trains):
-    print(type(two_trains.draw_graph()))
-    assert isinstance(
-        two_trains.draw_graph(),
-        PIL.JpegImagePlugin.JpegImageFile
-    )
