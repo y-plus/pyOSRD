@@ -27,7 +27,7 @@ def train_delay(self, train: int | str, ref_schedule: OSRD) -> pd.DataFrame:
     return self.delays(ref_schedule).max().loc[train]
 
 
-def compute_weighted_delay(
+def total_weighted_delay(
     self,
     ref_schedule,
     weights: pd.DataFrame
