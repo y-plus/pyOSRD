@@ -46,7 +46,7 @@ def two_trains() -> Schedule:
 
 
 @pytest.fixture
-def two_trains_two_blocks_before_dvg() -> Schedule:
+def two_trains_two_zones_before_dvg() -> Schedule:
     schedule = Schedule(7, 2)
 
     schedule.df.at[0, 0] = [0, 1]

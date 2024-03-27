@@ -6,55 +6,55 @@ def trajectory(self, train: int) -> list[int]:
     )
 
 
-def previous_block(
+def previous_zone(
     self,
     train: int,
-    block: int | str,
+    zone: int | str,
 ) -> int | str | None:
-    """"Previous block index in train's trajectory (None if 1st)
+    """"Previous zone index in train's trajectory (None if 1st)
 
     Parameters
     ----------
     train : int
         Train index
-    block : int | str
+    zone : int | str
         Track section index (integer or string)
 
     Returns
     -------
     int | str | None
-        Previous block index or None
+        Previous zone index or None
     """
     t = self.trajectory(train)
-    idx = list(t).index(block)
+    idx = list(t).index(zone)
 
     if idx != 0:
         return t[idx-1]
     return None
 
 
-def next_block(
+def next_zone(
     self,
     train: int,
-    block: int | str,
+    zone: int | str,
 ) -> int | str | None:
-    """Next block index in train's trajectory (None if last)
+    """Next zone index in train's trajectory (None if last)
 
     Parameters
     ----------
     train : int
         Train index
-    block : int | str
-        Block index (integer or string)
+    zone : int | str
+        zone index (integer or string)
 
     Returns
     -------
     int | str | None
-        Previous block index or None
+        Previous zone index or None
     """
 
     t = self.trajectory(train)
-    idx = list(t).index(block)
+    idx = list(t).index(zone)
 
     if idx != len(t) - 1:
         return t[idx+1]
@@ -65,9 +65,9 @@ def is_a_point_switch(
     self,
     train1: int,
     train2: int,
-    block: int | str
+    zone: int | str
 ) -> bool:
-    """Given two trains trajectories, is the block a point switch ?
+    """Given two trains trajectories, is the zone a point switch ?
 
     Parameters
     ----------
@@ -75,27 +75,27 @@ def is_a_point_switch(
         first train index
     train2 : int
         second train index
-    block : int | str
-        Block index
+    zone : int | str
+        zone index
 
     Returns
     -------
     bool
-        True if it is point switch, False otherwise
-        False if the block is not in the trajectory of
+        True if it is point switch, False otherwise.
+        False if the zone is not in the trajectory of
         one of the trains
     """
     if (
-        block not in self.trajectory(train1)
+        zone not in self.trajectory(train1)
         or
-        block not in self.trajectory(train2)
+        zone not in self.trajectory(train2)
     ):
         return False
 
     return (
-        self.previous_block(train1, block)
+        self.previous_zone(train1, zone)
         !=
-        self.previous_block(train2, block)
+        self.previous_zone(train2, zone)
         )
 
 
@@ -103,9 +103,9 @@ def is_just_after_a_point_switch(
     self,
     train1: int,
     train2: int,
-    block
+    zone
 ) -> bool:
-    """Given two trains, is the block just after a point switch ?
+    """Given two trains, is the zone just after a point switch ?
 
     Parameters
     ----------
@@ -113,30 +113,30 @@ def is_just_after_a_point_switch(
         first train index
     train2 : int
         second train index
-    block : int | str
-        Track section index
+    zone : int | str
+        Zone index
 
     Returns
     -------
     bool
         True if it is just after a point switch, False otherwise
-        False if the block is not in the trajectory
+        False if the zone is not in the trajectory
         of one of the trains
     """
     if (
-        block not in self.trajectory(train1)
+        zone not in self.trajectory(train1)
         or
-        block not in self.trajectory(train2)
+        zone not in self.trajectory(train2)
     ):
         return False
 
     return (
-        ~self.is_a_point_switch(train1, train2, block)
+        ~self.is_a_point_switch(train1, train2, zone)
         and
         self.is_a_point_switch(
             train1,
             train2,
-            self.previous_block(train1, block)
+            self.previous_zone(train1, zone)
         )
     )
 
@@ -145,12 +145,12 @@ def first_in(
     self,
     train1: int,
     train2: int,
-    block: int | str
+    zone: int | str
 ) -> int:
-    """Among two trains, which one first enters the block"""
+    """Among two trains, which one first enters the zone"""
 
     trains_enter_at = (
-        self.starts.loc[block, [train1, train2]].astype(float)
+        self.starts.loc[zone, [train1, train2]].astype(float)
     )
 
     trains = (

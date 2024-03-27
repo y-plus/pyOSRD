@@ -6,12 +6,12 @@ from pandas.testing import assert_frame_equal
 from pyosrd.schedules import Schedule
 
 
-def test_schedules_num_blocks(three_trains):
-    assert three_trains.num_blocks == 6
+def test_schedules_num_zones(three_trains):
+    assert three_trains.num_zones == 6
 
 
-def test_schedules_blocks(three_trains):
-    assert three_trains.blocks == [0, 1, 2, 3, 4, 5]
+def test_schedules_zones(three_trains):
+    assert three_trains.zones == [0, 1, 2, 3, 4, 5]
 
 
 def test_schedules_num_trains(three_trains):

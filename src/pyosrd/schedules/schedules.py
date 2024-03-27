@@ -5,8 +5,8 @@ class Schedule(object):
 
     from .trajectories import (
         trajectory,
-        previous_block,
-        next_block,
+        previous_zone,
+        next_zone,
         is_a_point_switch,
         is_just_after_a_point_switch,
         first_in,
@@ -33,28 +33,28 @@ class Schedule(object):
         train_delay,
     )
 
-    def __init__(self, num_blocks: int, num_trains: int):
+    def __init__(self, num_zones: int, num_trains: int):
 
-        self._num_blocks = num_blocks
+        self._num_zones = num_zones
         self._num_trains = num_trains
         self._df = pd.DataFrame(
             columns=pd.MultiIndex.from_product(
                 [range(self._num_trains), ['s', 'e']]
             ),
-            index=range(num_blocks)
+            index=range(num_zones)
         )
 
     def __repr__(self) -> str:
         return str(self._df)
 
     @property
-    def num_blocks(self) -> int:
-        """Number of blocks"""
+    def num_zones(self) -> int:
+        """Number of zones"""
         return len(self._df)
 
     @property
-    def blocks(self) -> list[int]:
-        """list of blocks"""
+    def zones(self) -> list[int]:
+        """list of zones"""
         return self._df.index.to_list()
 
     @property
@@ -76,13 +76,13 @@ class Schedule(object):
         """ Schedule as a pandas DataFrame"""
         return self._df
 
-    def set(self, train, block, interval):
-        """Set times for a train at a given block"""
-        self._df.at[block, train] = interval
+    def set(self, train, zone, interval):
+        """Set times for a train at a given zone"""
+        self._df.at[zone, train] = interval
 
     @property
     def starts(self) -> pd.DataFrame:
-        """Times when the trains enter the blocks"""
+        """Times when the trains enter the zones"""
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 's']
@@ -90,7 +90,7 @@ class Schedule(object):
 
     @property
     def ends(self) -> pd.DataFrame:
-        """Times when the trains leave the blocks"""
+        """Times when the trains leave the zones"""
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 'e']
@@ -98,5 +98,5 @@ class Schedule(object):
 
     @property
     def durations(self) -> pd.DataFrame:
-        """How much time do the trains occupy the blocks"""
+        """How much time do the trains occupy the zones"""
         return self.ends - self.starts

@@ -33,7 +33,7 @@ def test_straight_line_infra_routes(use_case_straight_line):
         ])
 
 
-def test_straight_line_infra_block_lengths(use_case_straight_line):
+def test_straight_line_infra_track_lengths(use_case_straight_line):
     assert use_case_straight_line.track_section_lengths == \
         {
             'T': 10_000.0,
@@ -191,11 +191,11 @@ def test_straight_line_space_time_chart_plotly(use_case_straight_line):
         assert isinstance(fig, go.Figure)
 
 
-def test_straight_line_tvd_blocks(use_case_straight_line):
+def test_straight_line_tvd_zones(use_case_straight_line):
 
     expected = {
         'DA<->buffer_stop.0': 'DA<->buffer_stop.0',
         'DA<->DB': 'DA<->DB',
         'DB<->buffer_stop.1': 'DB<->buffer_stop.1'
     }
-    assert use_case_straight_line.tvd_blocks == expected
+    assert use_case_straight_line.tvd_zones == expected

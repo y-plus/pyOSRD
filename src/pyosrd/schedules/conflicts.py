@@ -39,12 +39,12 @@ def has_conflicts(self, train: int) -> bool:
 def first_conflict(self, train: int) -> tuple[int, int]:
 
     c = self.conflicts(train).stack()
-    block, other_train = c.index[np.argmin(c)]
-    return block, other_train
+    zone, other_train = c.index[np.argmin(c)]
+    return zone, other_train
 
 
 def earliest_conflict(self) -> tuple[int | str, str, int | str]:
-    """ Returns block where earliest conflict occurs,
+    """ Returns the zone where earliest conflict occurs,
     first train in and last in."""
     conflicts_times = [
         np.min(self.conflicts(train).stack())

@@ -254,7 +254,7 @@ def test_point_switch_space_time_chart(use_case_point_switch):
     plt.close()
 
 
-def test_point_switch_tvd_blocks(use_case_point_switch):
+def test_point_switch_tvd_zones(use_case_point_switch):
 
     expected = {
         'D0<->buffer_stop.0': 'D0<->buffer_stop.0',
@@ -263,4 +263,4 @@ def test_point_switch_tvd_blocks(use_case_point_switch):
         'D0<->D2': 'DVG',
         'D2<->buffer_stop.2': 'D2<->buffer_stop.2',
     }
-    assert use_case_point_switch.tvd_blocks == expected
+    assert use_case_point_switch.tvd_zones == expected
