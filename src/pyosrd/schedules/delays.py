@@ -24,9 +24,9 @@ def train_delay(self, train, ref_schedule: OSRD) -> pd.DataFrame:
     return self.delays(ref_schedule).max().loc[train]
 
 
-def compute_weighted_delays(
+def total_weighted_delay(
     self,
-    ref_schedule: OSRD,
+    ref_schedule,
     weights: pd.DataFrame
 ) -> float:
     """Compute an indicator to evaluate this Schedule.
@@ -41,7 +41,7 @@ def compute_weighted_delays(
     Parameters
     ----------
     self: Schedule
-        The delayed schedule, regulated use to compute the metric
+        The delayed schedule, regulated use to compute the delay
     ref_schedule: Schedule
         The reference schedule used as the ideal schedule
     weights: pd.DataFrame
@@ -51,7 +51,7 @@ def compute_weighted_delays(
     -------
     float
         The computed weighted delay
-    """  # noqa
+    """
 
     weighted_delays = self.delays(ref_schedule) * weights
 
@@ -71,4 +71,4 @@ def total_delay_at_stations(
     ) * 0
     weights[weights.index.isin(stations)] = 1
 
-    return self.compute_weighted_delays(ref_schedule, weights)
+    return self.total_weighted_delay(ref_schedule, weights)

@@ -1,6 +1,7 @@
 import importlib
 
 from abc import abstractproperty
+from typing import Callable
 
 from dataclasses import dataclass
 
@@ -116,10 +117,35 @@ class SchedulerAgent(Agent):
 
         return regulated_schedule
 
+    def load_scenario(
+        self,
+        scenario: str,
+    ) -> None:
+        """Load the given scenario.
+
+        Parameters
+        ----------
+        scenario : str
+            The scenario to be regulated
+        """
+        if scenario not in OSRD.scenarii:
+            raise ValueError(
+                f"{scenario} is not a valid scenario."
+            )
+
+        module = importlib.import_module(
+            f".{scenario}",
+            "pyosrd.scenarii"
+        )
+        function = getattr(module, scenario)
+        sim = function()
+
+        self.set_schedules_from_osrd(sim, "all_steps")
+
     def regulate_scenario(
         self,
         scenario: str,
-        plot_all=False
+        indicator_function: Callable[[Schedule, Schedule, OSRD], pd.DataFrame]
     ) -> pd.DataFrame:
         """Regulates the given scenario using the given agent.
 
@@ -127,9 +153,9 @@ class SchedulerAgent(Agent):
         ----------
         scenario : str
             The scenario to be regulated
-        plot_all : bool, optional
-             If True, all schedules will be displayed (reference,
-            delayed and regulated), by default False
+        indicator_function : Callable[[Schedule, Schedule, OSRD], pd.DataFrame]
+            Define the indicator function to be used to evaluate the
+            regulated schedule.
 
         Returns
         -------
@@ -156,26 +182,16 @@ class SchedulerAgent(Agent):
         )
         function = getattr(module, scenario)
         sim = function()
-        delayed_schedule = sim.delayed()
 
         self.set_schedules_from_osrd(sim, "all_steps")
-
-        delayed_schedule = schedule_from_osrd(delayed_schedule)
-        ref_schedule = schedule_from_osrd(sim)
-        regulated_schedule = self.regulated_schedule
-
-        if plot_all:
-            ref_schedule.draw_graph()
-            ref_schedule.plot()
-            delayed_schedule.plot()
-            self.regulated_schedule.plot()
 
         return pd.DataFrame(
             {
                 self.name: [
-                    regulated_schedule.compute_weighted_delays(
-                        ref_schedule,
-                        weights_.all_steps(sim),
+                    indicator_function(
+                        self.regulated_schedule,
+                        self.ref_schedule,
+                        sim,
                     )
                 ]
             },
@@ -184,21 +200,37 @@ class SchedulerAgent(Agent):
 
     def regulate_scenarii(
         self,
-        scenarii: list[str]
+        scenarii: list[str],
+        indicator_function: Callable[[Schedule, Schedule, OSRD], pd.DataFrame],
     ) -> pd.DataFrame:
         """Regulates a list of scenarii using a given agent.
 
+        A callable is required instead of direct weight ponderation
+        because this function is used to compute delays for
+        different simulations in regulate method of SchedulerAgent.
+        Therefore we need to be able to compute different weights
+        data frame based on the simulations.
+
+        Parameters
+        ----------
+        ref_schedule: Schedule
+            The reference schedule used as the ideal schedule
+        delayed_schedule: Schedule
+            The delayed schedule, regulated use to compute the indicator
         Parameters
         ----------
         scenarii : list[str]
             The list of scenarii to be regulated
         agent : SchedulerAgent
             The agent to be used to regulate the scenarii
+        indicator_function : Callable[[Schedule, Schedule, OSRD], pd.DataFrame]
+            Define the indicator function to be used to evaluate the
+            regulated schedule.
 
         Returns
         -------
         pd.DataFrame
-            DataFrame containing the metric for the agent
+            DataFrame containing the indicator for the agent
             and the given scenarii, eg:
                             agent 1
             scenario 1           12
@@ -209,7 +241,7 @@ class SchedulerAgent(Agent):
         """
 
         data = [
-            self.regulate_scenario(scenario)
+            self.regulate_scenario(scenario, indicator_function)
             for scenario in scenarii
         ]
         return pd.concat(data)
@@ -217,7 +249,8 @@ class SchedulerAgent(Agent):
 
 def regulate_scenarii_with_agents(
         scenarii: str | list[str],
-        agents: SchedulerAgent | list[SchedulerAgent]
+        agents: SchedulerAgent | list[SchedulerAgent],
+        indicator_function: Callable[[Schedule, Schedule, OSRD], pd.DataFrame],
 ) -> pd.DataFrame:
     """Regulates a list of scenarii using a list of agents"
 
@@ -229,11 +262,14 @@ def regulate_scenarii_with_agents(
     agents : SchedulerAgent | list[SchedulerAgent]
         The agents to be used to regulate the scenarii. Can  be
         a single agent or a list of agents.
+    indicator_function : Callable[[Schedule, Schedule, OSRD], pd.DataFrame]
+        Define the indicator function to be used to evaluate the
+        regulated schedule.
 
     Returns
     -------
     pd.DataFrame
-        DataFrame containing the metric for the agents
+        DataFrame containing the indicator for the agents
         and the given scenarii, eg:
                         agent 1     agent 2     agent 3     agent 4     agent 5
         scenario 1           12         112         212         312       10212
@@ -254,13 +290,19 @@ def regulate_scenarii_with_agents(
     elif scenarii in OSRD.scenarii:
         scenarii = [scenarii]
     elif isinstance(scenarii, str):
-        raise ValueError(f"Unknown scenario {scenarii}")
+        raise ValueError(f"Unknown scenario {scenarii}.")
+
+    for scenario in scenarii:
+        if scenario not in OSRD.scenarii:
+            raise ValueError(
+                f"{scenario} is not a valid scenario."
+            )
 
     if isinstance(agents, SchedulerAgent):
         agents = [agents]
 
     data = [
-        agent.regulate_scenarii(scenarii)
+        agent.regulate_scenarii(scenarii, indicator_function)
         for agent in agents
     ]
     return pd.concat(data, axis=1)
