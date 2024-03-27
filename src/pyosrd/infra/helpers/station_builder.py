@@ -123,10 +123,9 @@ def build_dvg_station_cvg(
             position=20,
         )
 
-    s1 = infra_builder.add_operational_point(label=name+'.s1')
-    s2 = infra_builder.add_operational_point(label=name+'.s2')
-    s1.add_part(t1, 500)
-    s2.add_part(t2, 500)
+    station = infra_builder.add_operational_point(label=name+'.s')
+    station.add_part(t1, 500)
+    station.add_part(t2, 500)
 
     return track_out
 
