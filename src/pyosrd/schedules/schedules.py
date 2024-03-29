@@ -71,6 +71,11 @@ class Schedule(object):
             list(self._df.columns.levels[0])
         )
 
+    def set_train_labels(self, labels: list[str]) -> None:
+        self._df.columns = pd.MultiIndex.from_product(
+            [labels, ['s', 'e']]
+        )
+
     @property
     def df(self) -> pd.DataFrame:
         """ Schedule as a pandas DataFrame"""

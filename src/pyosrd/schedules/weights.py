@@ -7,9 +7,13 @@ from .zone_info import _step_is_a_station, step_type
 
 def _zone_from_train_and_station(
     osrd: OSRD,
-    train: int,
+    train: int | str,
     station: str,
 ) -> str | None:
+
+    if isinstance(train, str):
+        train = osrd.trains.index(train)
+
     return next((
         key
         for key, value in osrd.stop_positions[train].items()
@@ -56,7 +60,11 @@ class Weights:
     def __init__(osrd, pandas_obj):
         osrd._obj = pandas_obj
 
-    def train(osrd, train: int, value: int):
+    def train(osrd, train: int | str, value: int):
+
+        if isinstance(train, str):
+            train = osrd.trains.index(train)
+
         osrd._obj[train] = (
             osrd._obj[train]
             .apply(
@@ -64,16 +72,24 @@ class Weights:
             )
         )
 
-    def train_zone(osrd, train: int, zone: str, value: int):
+    def train_zone(osrd, train: int | str, zone: str, value: int):
+
+        if isinstance(train, str):
+            train = osrd.trains.index(train)
+
         osrd._obj[train].loc[zone] = value
 
     def train_station_sim(
         osrd,
-        train: int,
+        train: int | str,
         station: str,
         value: int,
         sim: OSRD,
     ):
+
+        if isinstance(train, str):
+            train = osrd.trains.index(train)
+
         zone = _zone_from_train_and_station(sim, train, station)
         if zone is not None:
             osrd.train_zone(train, zone, value)

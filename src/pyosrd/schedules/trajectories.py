@@ -1,4 +1,18 @@
-def trajectory(self, train: int) -> list[int]:
+def trajectory(self, train: int | str) -> list[int | str]:
+    """List of zones crossed by a given train
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    Returns
+    -------
+    list[int | str]
+        List of zones
+    """
+    if isinstance(train, int):
+        train = self.trains[train]
+
     return list(
         self.starts[train][self.starts[train].notna()]
         .sort_values()
@@ -8,15 +22,15 @@ def trajectory(self, train: int) -> list[int]:
 
 def previous_zone(
     self,
-    train: int,
+    train: int | str,
     zone: int | str,
 ) -> int | str | None:
     """"Previous zone index in train's trajectory (None if 1st)
 
     Parameters
     ----------
-    train : int
-        Train index
+    train : int | str
+        Train index or label
     zone : int | str
         Track section index (integer or string)
 
@@ -25,6 +39,7 @@ def previous_zone(
     int | str | None
         Previous zone index or None
     """
+
     t = self.trajectory(train)
     idx = list(t).index(zone)
 
@@ -35,7 +50,7 @@ def previous_zone(
 
 def next_zone(
     self,
-    train: int,
+    train: int | str,
     zone: int | str,
 ) -> int | str | None:
     """Next zone index in train's trajectory (None if last)
@@ -43,7 +58,7 @@ def next_zone(
     Parameters
     ----------
     train : int
-        Train index
+        Train index or label
     zone : int | str
         zone index (integer or string)
 
@@ -63,18 +78,18 @@ def next_zone(
 
 def is_a_point_switch(
     self,
-    train1: int,
-    train2: int,
+    train1: int | str,
+    train2: int | str,
     zone: int | str
 ) -> bool:
     """Given two trains trajectories, is the zone a point switch ?
 
     Parameters
     ----------
-    train1 : int
-        first train index
-    train2 : int
-        second train index
+    train1 : int | str
+        first train index or label
+    train2 : int | str
+        second train index or label
     zone : int | str
         zone index
 
@@ -101,18 +116,18 @@ def is_a_point_switch(
 
 def is_just_after_a_point_switch(
     self,
-    train1: int,
-    train2: int,
+    train1: int | str,
+    train2: int | str,
     zone
 ) -> bool:
     """Given two trains, is the zone just after a point switch ?
 
     Parameters
     ----------
-    train1 : int
-        first train index
-    train2 : int
-        second train index
+    train1 : int | str
+        first train index or label
+    train2 : int | str
+        second train index or label
     zone : int | str
         Zone index
 
@@ -143,11 +158,17 @@ def is_just_after_a_point_switch(
 
 def first_in(
     self,
-    train1: int,
-    train2: int,
+    train1: int | str,
+    train2: int | str,
     zone: int | str
 ) -> int:
     """Among two trains, which one first enters the zone"""
+
+    if isinstance(train1, int):
+        train1 = self.trains[train1]
+
+    if isinstance(train2, int):
+        train2 = self.trains[train2]
 
     trains_enter_at = (
         self.starts.loc[zone, [train1, train2]].astype(float)
