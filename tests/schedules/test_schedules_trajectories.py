@@ -2,7 +2,7 @@
 from pyosrd.schedules import Schedule
 
 
-def test_schedules_trajectory(three_trains):
+def test_schedules_trajectory_by_index(three_trains):
     assert three_trains.trajectory(0) == [0, 2, 3, 4]
     assert three_trains.trajectory(1) == [1, 2, 3, 5]
     assert three_trains.trajectory(2) == [0, 2, 3, 4]

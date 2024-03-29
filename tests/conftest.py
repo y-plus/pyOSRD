@@ -25,6 +25,7 @@ def three_trains() -> Schedule:
     schedule.df.at[3, 2] = [4, 5]
     schedule.df.at[4, 2] = [5, 6]
 
+    schedule.set_train_labels(['train1', 'train2', 'train3'])
     return schedule
 
 
