@@ -11,7 +11,7 @@ class OSRD(Protocol):
 
 def shift_train_departure(
     self: OSRD,
-    train: int,
+    train: int | str,
     time: float
 ) -> OSRD:
     """Shift the departure by a given time
@@ -20,8 +20,8 @@ def shift_train_departure(
 
     Parameters
     ----------
-    train : int
-        Train index
+    train : int | str
+        Train index or label
     time : float
         Departure's delay
 
@@ -30,6 +30,9 @@ def shift_train_departure(
     Schedule
         The new schedule
     """
+
+    if isinstance(train, int):
+        train = self.trains[train]
 
     new_schedule = copy.deepcopy(self)
 
@@ -40,10 +43,13 @@ def shift_train_departure(
 
 def add_delay(
     self: OSRD,
-    train: int,
+    train: int | str,
     zone: int | str,
     delay: float
 ) -> OSRD:
+
+    if isinstance(train, int):
+        train = self.trains[train]
 
     start = self._df.loc[zone, (train, 's')]
     new_schedule = copy.deepcopy(self)
@@ -62,11 +68,17 @@ def add_delay(
 
 def shift_train_after(
     self: OSRD,
-    train1: int,
-    train2: int,
+    train1: int | str,
+    train2: int | str,
     zone: int | str
 ) -> OSRD:
     """Train1 waits until train 2 has freed the zone"""
+
+    if isinstance(train1, int):
+        train1 = self.trains[train1]
+
+    if isinstance(train2, int):
+        train2 = self.trains[train2]
 
     train1_waits_at = self.previous_zone(train1, zone)
 
@@ -108,7 +120,10 @@ def shift_train_after(
     return new_schedule
 
 
-def propagate_delay(self, delayed_train: int) -> tuple[OSRD, int]:
+def propagate_delay(self, delayed_train: int | str) -> tuple[OSRD, int]:
+
+    if isinstance(delayed_train, int):
+        delayed_train = self.trains[delayed_train]
 
     new_schedule = copy.deepcopy(self)
     decision = False

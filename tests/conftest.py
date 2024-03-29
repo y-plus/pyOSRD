@@ -43,6 +43,7 @@ def two_trains() -> Schedule:
     schedule.df.at[3, 1] = [3, 4]
     schedule.df.at[5, 1] = [4, 5]
 
+    schedule.set_train_labels(['train1', 'train2'])
     return schedule
 
 
@@ -61,6 +62,8 @@ def two_trains_two_zones_before_dvg() -> Schedule:
     schedule.df.at[3, 1] = [3, 4]
     schedule.df.at[4, 1] = [4, 5]
     schedule.df.at[6, 1] = [5, 6]
+
+    schedule.set_train_labels(['train1', 'train2'])
 
     return schedule
 

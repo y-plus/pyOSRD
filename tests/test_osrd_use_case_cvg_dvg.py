@@ -140,6 +140,42 @@ def test_cvg_dvg_simulation_departure_times(use_case_cvg_dvg):
     assert use_case_cvg_dvg.departure_times == [0, 100]
 
 
+def test_train_departure_by_index(use_case_cvg_dvg):
+    assert use_case_cvg_dvg.train_departure(0) == Point(
+        track_section='T0',
+        position=300.0,
+        id='departure_train0',
+        type='departure'
+    )
+
+
+def test_train_departure_by_label(use_case_cvg_dvg):
+    assert use_case_cvg_dvg.train_departure('train0') == Point(
+        track_section='T0',
+        position=300.0,
+        id='departure_train0',
+        type='departure'
+    )
+
+
+def test_train_arrival_by_index(use_case_cvg_dvg):
+    assert use_case_cvg_dvg.train_arrival(0) == Point(
+        track_section='T4',
+        position=490.0,
+        id='arrival_train0',
+        type='arrival'
+    )
+
+
+def test_train_arrival_by_label(use_case_cvg_dvg):
+    assert use_case_cvg_dvg.train_arrival('train0') == Point(
+        track_section='T4',
+        position=490.0,
+        id='arrival_train0',
+        type='arrival'
+    )
+
+
 def test_cvg_dvg_run_error(osrd_cvg_dvg_missing_sim):
     match = "Missing json file to run OSRD"
     with pytest.raises(ValueError, match=match):

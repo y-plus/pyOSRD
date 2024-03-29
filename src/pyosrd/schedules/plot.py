@@ -31,12 +31,12 @@ def plot(self, alpha: float = .5) -> Axes:
     s._df = s.df.dropna(axis=0, how='all')
 
     _, ax = plt.subplots()
-    for train, label in enumerate(s.trains):
+    for train in s.trains:
         ax.barh(
             width=s.durations[train],
             left=s.starts[train],
             y=s._df.index,
-            label=str(label),
+            label=str(train),
             height=1,
             alpha=alpha,
         )

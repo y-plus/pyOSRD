@@ -19,7 +19,10 @@ def delays(self, ref_schedule: OSRD) -> pd.DataFrame:
     )
 
 
-def train_delay(self, train, ref_schedule: OSRD) -> pd.DataFrame:
+def train_delay(self, train: int | str, ref_schedule: OSRD) -> pd.DataFrame:
+
+    if isinstance(train, int):
+        train = self.trains[train]
 
     return self.delays(ref_schedule).max().loc[train]
 

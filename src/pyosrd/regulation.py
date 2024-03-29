@@ -11,21 +11,25 @@ def _group_idx(self, group: str) -> int:
 
 def add_stops(
     self,
-    stops: list[dict[str, int | str]]
+    stops: list[dict[str, int | float | str]]
 ) -> None:
     """Add a list of stops  and re-run the simulation
 
     Parameters
     ----------
-    stops : list[dict[str, float  |  str]]
+    stops : list[dict[str, int | float | str]]
         List of stops described by a dictionnary with 3 keys:
         {"train": int, "position": float, "duration": float}
     """
 
     for stop in stops:
 
+        train = (stop['train'])
+        if isinstance(train, str):
+            train = self.trains.index(train)
+
         group, idx = self._train_schedule_group[
-            self.trains[stop['train']]
+            self.trains[train]
         ]
 
         group_idx = _group_idx(self, group)

@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 
 
-def test_schedule_shift_train_departure(two_trains):
+def test_schedules_shift_train_departure(two_trains):
     result = two_trains.shift_train_departure(0, 2)
     expected = pd.DataFrame(
         [
@@ -18,10 +18,27 @@ def test_schedule_shift_train_departure(two_trains):
         columns=['s', 'e'],
         dtype=object
     )
-    assert_frame_equal(result.df[0], expected)
+    assert_frame_equal(result.df['train1'], expected)
 
 
-def test_schedule_shift_train_after_at_switch(two_trains):
+def test_schedules_shift_train_departure_by_label(two_trains):
+    result = two_trains.shift_train_departure(train='train1', time=2)
+    expected = pd.DataFrame(
+        [
+            [2, 3],
+            [np.nan, np.nan],
+            [3, 4],
+            [4, 5],
+            [5, 6],
+            [np.nan, np.nan],
+        ],
+        columns=['s', 'e'],
+        dtype=object
+    )
+    assert_frame_equal(result.df['train1'], expected)
+
+
+def test_schedules_shift_train_after_at_switch(two_trains):
 
     shifted = two_trains.shift_train_after(0, 1, 2)
     expected_train0 = pd.DataFrame(
@@ -37,11 +54,11 @@ def test_schedule_shift_train_after_at_switch(two_trains):
         dtype=object
     )
 
-    assert_frame_equal(shifted.df[0], expected_train0)
-    assert_frame_equal(shifted.df[1], two_trains.df[1])
+    assert_frame_equal(shifted.df['train1'], expected_train0)
+    assert_frame_equal(shifted.df['train2'], two_trains.df['train2'])
 
 
-def test_schedule_shift_train_after_after_a_switch(two_trains):
+def test_schedules_shift_train_after_after_a_switch(two_trains):
 
     shifted = two_trains.shift_train_after(0, 1, 3)
     expected_train0 = pd.DataFrame(
@@ -57,11 +74,11 @@ def test_schedule_shift_train_after_after_a_switch(two_trains):
         dtype=object
     )
 
-    assert_frame_equal(shifted.df[0], expected_train0)
-    assert_frame_equal(shifted.df[1], two_trains.df[1])
+    assert_frame_equal(shifted.df['train1'], expected_train0)
+    assert_frame_equal(shifted.df['train2'], two_trains.df['train2'])
 
 
-def test_schedule_shift_train_after_at_departure(three_trains):
+def test_schedules_shift_train_after_at_departure(three_trains):
 
     shifted = three_trains.shift_train_after(0, 2, 0)
     expected_train0 = pd.DataFrame(
@@ -77,8 +94,8 @@ def test_schedule_shift_train_after_at_departure(three_trains):
         dtype=object
     )
 
-    assert_frame_equal(shifted.df[0], expected_train0)
-    assert_frame_equal(shifted.df[2], three_trains.df[2])
+    assert_frame_equal(shifted.df['train1'], expected_train0)
+    assert_frame_equal(shifted.df['train2'], three_trains.df['train2'])
 
 
 def test_schedules_propagate_delay_action_needed(
@@ -114,8 +131,8 @@ def test_schedules_propagate_delay(
 
     expected = pd.DataFrame(
         {
-            0: [1, np.nan, 2, 3, 4.5, 5.5, np.nan],
-            1: [np.nan, 2, 3, 4.5, 5.5, np.nan, 6.5],
+            'train1': [1, np.nan, 2, 3, 4.5, 5.5, np.nan],
+            'train2': [np.nan, 2, 3, 4.5, 5.5, np.nan, 6.5],
         }
     )
 

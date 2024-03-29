@@ -12,8 +12,8 @@ def test_schedules_delays(two_trains):
     )
     expected_delays = pd.DataFrame(
         {
-            0: [3, np.nan, 3, 3, 3, np.nan],
-            1: [np.nan, 0, .5, .5, np.nan, .5],
+            'train1': [3, np.nan, 3, 3, 3, np.nan],
+            'train2': [np.nan, 0, .5, .5, np.nan, .5],
         }
     )
     assert_frame_equal(
@@ -25,8 +25,8 @@ def test_schedules_delays(two_trains):
 def test_schedules_delays_zero(two_trains):
     expected_delays = pd.DataFrame(
         {
-            0: [0, np.nan, 0, 0, 0, np.nan],
-            1: [np.nan, 0, 0, 0, np.nan, 0],
+            'train1': [0, np.nan, 0, 0, 0, np.nan],
+            'train2': [np.nan, 0, 0, 0, np.nan, 0],
         }
     )
     assert_frame_equal(

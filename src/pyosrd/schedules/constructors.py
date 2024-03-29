@@ -12,12 +12,12 @@ def schedule_df_from_OSRD(
     tvd_zones = case.tvd_zones
     df = pd.DataFrame(
         columns=pd.MultiIndex.from_product(
-            [range(case.num_trains), ['s', 'e']]
+            [case.trains, ['s', 'e']]
         ),
         index=["<->".join(sorted(tvd)) for tvd in case._tvds]
     )
     df.insert(0, 'zone', tvd_zones.values())
-    for train, _ in enumerate(case.trains):
+    for train in case.trains:
 
         tvds_limits = []
         for track in case.train_track_sections(train):
@@ -50,7 +50,7 @@ def schedule_df_from_OSRD(
             end = limits[i+1]
 
             t_start = (
-                case.departure_times[train]
+                case.departure_times[case.trains.index(train)]
                 if i == 0
                 else [
                     d[f't_{eco_or_base}']
@@ -76,7 +76,7 @@ def schedule_df_from_OSRD(
     df.drop_duplicates(inplace=True)
     df.index.name = None
     df.columns = pd.MultiIndex.from_product(
-            [range(case.num_trains), ['s', 'e']]
+            [case.trains, ['s', 'e']]
         )
     return df
 

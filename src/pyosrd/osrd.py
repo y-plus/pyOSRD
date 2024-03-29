@@ -299,8 +299,11 @@ class OSRD():
                 ))
         return points
 
-    def train_departure(self, train: int) -> Point:
+    def train_departure(self, train: int | str) -> Point:
         """Train departure point"""
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         departure = self._head_position(train)[0]
         return Point(
@@ -310,8 +313,10 @@ class OSRD():
             type='departure'
         )
 
-    def train_arrival(self, train: int) -> Point:
-        """Train arrival point"""
+    def train_arrival(self, train: int | str) -> Point:
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         arrival = self._head_position(train)[-1]
         return Point(
@@ -321,7 +326,10 @@ class OSRD():
             type='arrival'
         )
 
-    def _head_position(self, train, eco_or_base: str = 'base'):
+    def _head_position(self, train: int | str, eco_or_base: str = 'base'):
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         group, idx = self._train_schedule_group[
             self.trains[train]
@@ -348,8 +356,11 @@ class OSRD():
     def offset_in_path_of_train(
         self,
         point: Point,
-        train: int
+        train: int | str
     ) -> float | None:
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         tracks = self.train_track_sections(train)
         track_ids = [t['id'] for t in tracks]
@@ -504,8 +515,11 @@ class OSRD():
                 )
         return ts
 
-    def train_track_sections(self, train: int) -> list[dict[str, str]]:
+    def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
         """List of tracks for a given train trajectory"""
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         head_positions = self._head_position(train=train)
 
@@ -564,7 +578,7 @@ class OSRD():
 
     def points_encountered_by_train(
         self,
-        train: int,
+        train: int | str,
         types: list[str] = [
             'departure',
             'signal',
@@ -586,6 +600,9 @@ class OSRD():
         list[Dict[str, Any]]
             Points encountered (id, type, offset)
         """
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         ids = [track['id'] for track in self.train_track_sections(train)]
 
@@ -611,7 +628,11 @@ class OSRD():
                     if detector['id'] == point.id:
                         return detector['applicable_directions']
 
-        def train_direction(point: Point, train: int) -> str:
+        def train_direction(point: Point, train: int | str) -> str:
+
+            if isinstance(train, str):
+                train = self.trains.index(train)
+
             for track in self.train_track_sections(train):
                 if track['id'] == point.track_section:
                     return track['direction']
