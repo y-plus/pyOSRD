@@ -1,4 +1,4 @@
-from pyosrd.maths.intervals import intersections, overlapping
+from pyosrd.utils.intervals import intersections, overlapping
 
 
 def test_interval_intersections():
