@@ -57,7 +57,7 @@ class Schedule(object):
         return len(self._df)
 
     @property
-    def zones(self) -> list[int]:
+    def zones(self) -> list[int | str]:
         """list of zones"""
         return self._df.index.to_list()
 
