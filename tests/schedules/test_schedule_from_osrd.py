@@ -16,8 +16,8 @@ def test_schedule_from_osrd(use_case_cvg_dvg):
     assert s.trains == use_case_cvg_dvg.trains
 
 
-def test_schedule_from_osrd_merge(use_case_double_switch):
+def test_schedule_from_osrd_merge_switch_zones(use_case_double_switch):
     s = schedule_from_osrd(use_case_double_switch)
-    print(s)
+
     assert len(s.zones) == 5
     assert 'SW0+SW1' in s.zones
