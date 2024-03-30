@@ -94,7 +94,7 @@ def _schedule_df_from_OSRD(
 
 
 def _merge_switch_zones(case: OSRD, s: Schedule) -> Schedule:
-    print('*************\n')
+
     new_schedule = copy.copy(s)
     G = new_schedule.graph
 
