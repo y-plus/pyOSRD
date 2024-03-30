@@ -133,3 +133,9 @@ def use_case_point_switch():
 def use_case_straight_line():
     yield OSRD(dir='tmp', use_case='straight_line')
     shutil.rmtree('tmp', ignore_errors=True)
+
+
+@pytest.fixture(scope='session')
+def use_case_double_switch():
+    yield OSRD(dir='tmp', use_case='double_switch')
+    shutil.rmtree('tmp', ignore_errors=True)
