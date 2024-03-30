@@ -65,3 +65,9 @@ def test_schedules_repr():
         "   s  e\n"
         "0  1  2"
     )
+
+
+def test_schedules_trains_order_in_zone(three_trains):
+    assert three_trains.trains_order_in_zone('train3', 'train1', 2) == \
+        ['train1', 'train3']
+    assert three_trains.trains_order_in_zone(1, 0, 1) == ['train2']

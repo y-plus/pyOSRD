@@ -182,3 +182,33 @@ def first_in(
     if len(trains) == 1:
         return trains[0]
     return trains
+
+
+def trains_order_in_zone(
+    self,
+    train1: int | str,
+    train2: int | str,
+    zone: int | str
+) -> list[int | str]:
+    """Train ordering for a given zone
+
+    Parameters
+    ----------
+    train1 : int | str
+        First train index or label
+    train2 : int | str
+        Second train index or label
+    zone : int | str
+       Zone label
+
+    Returns
+    -------
+    list[int | str]
+        List of the trains in the order they cross the zone
+    """
+    if isinstance(train1, int):
+        train1 = self.trains[train1]
+    if isinstance(train2, int):
+        train2 = self.trains[train2]
+    order = self.starts.loc[zone].loc[[train1, train2]].sort_values()
+    return order.dropna().index.tolist()

@@ -14,6 +14,7 @@ class Schedule(object):
         is_a_point_switch,
         is_just_after_a_point_switch,
         first_in,
+        trains_order_in_zone,
     )
     from .plot import sort, plot
     from .conflicts import (
