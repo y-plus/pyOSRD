@@ -1,4 +1,8 @@
+import copy
+
 import pandas as pd
+
+from pyosrd.utils import hour_to_seconds
 
 
 class Schedule(object):
@@ -105,3 +109,48 @@ class Schedule(object):
     def durations(self) -> pd.DataFrame:
         """How much time do the trains occupy the zones"""
         return self.ends - self.starts
+
+    def start_from(
+        self,
+        time: float | str,
+    ) -> "Schedule":
+        """Make a schedule start at a given time"
+
+        Parameters
+        ----------
+        time : float | str
+           Start time, given either in seconds or
+           in string format 'hh:mm:ss'
+
+        Returns
+        -------
+        Schedule
+            New schedule startinf from the given time
+        """
+
+        if isinstance(time, str):
+            time = hour_to_seconds(time)
+
+        new_schedule = copy.copy(self)
+        new_schedule._df = new_schedule._df.where(
+            new_schedule._df > time,
+            time
+        )
+        check = pd.DataFrame(
+            columns=self.df.columns,
+            index=self.df.index
+        )
+        for i, col in enumerate(check.columns):
+            if i % 2 == 0:
+                check[col] = (
+                    new_schedule._df[col]
+                    != new_schedule._df[new_schedule._df.columns[i+1]]
+                )
+            else:
+                check[col] = (
+                    new_schedule._df[col]
+                    != new_schedule._df[new_schedule._df.columns[i-1]]
+                )
+
+        new_schedule._df = new_schedule._df[check].dropna(how='all')
+        return new_schedule
