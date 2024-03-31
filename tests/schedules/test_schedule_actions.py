@@ -156,6 +156,7 @@ def test_schedules_set_priority_train(two_trains):
 
     assert_frame_equal(result.df['train1'], expected_train1)
 
+
 def test_schedules_set_priority_train_2(two_trains):
     result = two_trains.set_priority_train('train2', 'train1', 0, 3)
     expected_train1 = pd.DataFrame(
