@@ -49,7 +49,7 @@ def plot(self, alpha: float = .5) -> Axes:
             for label in ax.get_xticklabels()
         ],
         [
-            seconds_to_hour(int(label.get_text()))
+            seconds_to_hour(int(float(label.get_text())))
             for label in ax.get_xticklabels()
         ]
     )
