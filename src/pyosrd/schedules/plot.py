@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 from matplotlib.axes._axes import Axes
 
+from pyosrd.utils import seconds_to_hour
+
 
 def sort(self):
     """Sort the schedule index by occupancies times"""
@@ -41,6 +43,16 @@ def plot(self, alpha: float = .5) -> Axes:
             alpha=alpha,
         )
 
+    ax.set_xticks(
+        [
+            label._x
+            for label in ax.get_xticklabels()
+        ],
+        [
+            seconds_to_hour(int(label.get_text()))
+            for label in ax.get_xticklabels()
+        ]
+    )
     ax.set_xlabel('Time')
     ax.legend()
 
