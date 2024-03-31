@@ -3,6 +3,7 @@ from matplotlib.axes._axes import Axes
 from plotly import graph_objects as go
 
 from pyosrd.osrd import Point
+from pyosrd.utils import seconds_to_hour
 
 
 def _data_and_points_to_plot(
@@ -15,7 +16,7 @@ def _data_and_points_to_plot(
     data = []
     for i, train_id in enumerate(self.trains):
         t = [
-            record['time'] / 60.
+            record['time']
             for record in self._head_position(i, eco_or_base)
         ]
         offset = [
@@ -43,7 +44,7 @@ def _data_and_points_to_plot(
 
 def space_time_chart(
     self,
-    train: int,
+    train: int | str,
     eco_or_base: str = 'base',
     points_to_show: list[str] =
         ['station', 'switch', 'departure', 'arrival'],
@@ -54,8 +55,8 @@ def space_time_chart(
 
     Parameters
     ----------
-    train : int
-        Train index
+    train : int | str
+        Train index or label
     eco_or_base : str, optional
         Draw eco or base simulation ?, by default 'base'
     points_to_show : list[str], optional
@@ -69,6 +70,8 @@ def space_time_chart(
     Axes
         Matplotlib axe object
     """
+    if isinstance(train, str):
+        train = self.trains.index(train)
 
     data, points = _data_and_points_to_plot(
         self,
@@ -88,12 +91,23 @@ def space_time_chart(
     )
 
     for t in data:
-        ax.plot(t['x'], t['y'], label=t["label"], linewidth=3)
+        ax.plot(t['x'], t['y'], label=t["label"], linewidth=2)
 
     ax.legend()
 
     ax.set_xlim(left=0)
-    ax.set_xlabel('Time [min]')
+    ax.set_xticks(
+        [
+            label._x
+            for label in ax.get_xticklabels()
+        ],
+        [
+            seconds_to_hour(int(float(label.get_text())))
+            for label in ax.get_xticklabels()
+        ]
+    )
+    plt.locator_params(axis='x', nbins=6)
+    # ax.set_xlabel('Time')
     ax.set_title(
         self.trains[train]
         + f" ({eco_or_base})"
@@ -104,7 +118,7 @@ def space_time_chart(
 
 def space_time_chart_plotly(
     self,
-    train: int,
+    train: int | str,
     eco_or_base: str = 'base',
     points_to_show: list[str] =
         ['station', 'switch', 'departure', 'arrival'],
@@ -115,8 +129,8 @@ def space_time_chart_plotly(
 
     Parameters
     ----------
-    train : int
-        Train index
+    train : int | str
+        Train index or label
     eco_or_base : str, optional
         Draw eco or base simulation ?, by default 'base'
     points_to_show : list[str], optional
@@ -146,7 +160,7 @@ def space_time_chart_plotly(
         layout={
             "title": f'train {train} ({eco_or_base})',
             "template": "simple_white",
-            "xaxis_title": 'Time [min]',
+            # "xaxis_title": 'Time',
             "hovermode": "x unified"
         },
     )
@@ -158,13 +172,20 @@ def space_time_chart_plotly(
             # line_dash="dash",
             line_color="black"
         )
+    xmax = round(max([d['x'][-1] for d in data]))
+    xticks = list(range(0, xmax + xmax // 5, xmax // 5))
 
     fig.update_layout(
         yaxis=dict(
             tickmode='array',
             tickvals=[offset for offset in points.values()],
             ticktext=[p for p in points]
+        ),
+        xaxis=dict(
+            tickmode='array',
+            tickvals=xticks,
+            ticktext=[seconds_to_hour(xtick) for xtick in xticks]
         )
     )
-
+    
     return fig
