@@ -25,10 +25,9 @@ class Schedule(object):
     )
     from .actions import (
         add_delay,
-        shift_train_after,
         shift_train_departure,
-        propagate_delay,
         is_action_needed,
+        set_priority_train,
     )
     from .graph import graph, draw_graph
     from .delays import (

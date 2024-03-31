@@ -1,6 +1,6 @@
 """Helper fuctions to deal with intervals and overlaps
 
-An interval =two floats
+An interval = a tuple of two floats
 
 """
 
