@@ -8,7 +8,7 @@ from pyosrd import OSRD
 from pyosrd.schedules import Schedule
 
 
-def step_has_fixed_duration(osrd: OSRD) -> pd.DataFrame:
+def step_has_fixed_duration(sim: OSRD) -> pd.DataFrame:
     """Have the steps a fixed duration ?
 
     Generates a DataFrame with the same shape as a schedule
@@ -27,7 +27,7 @@ def step_has_fixed_duration(osrd: OSRD) -> pd.DataFrame:
 
     Parameters
     ----------
-    osrd : OSRD
+    sim : OSRD
         OSRD simulation object
 
     Returns
@@ -38,17 +38,17 @@ def step_has_fixed_duration(osrd: OSRD) -> pd.DataFrame:
     return (
         pd.concat(
             [
-                pd.DataFrame(osrd.stop_positions[col]).T.id.isna()
-                for col, _ in enumerate(osrd.trains)
+                pd.DataFrame(sim.stop_positions[col]).T.id.isna()
+                for col, _ in enumerate(sim.trains)
             ],
             axis=1
         )
-        .set_axis(range(osrd.num_trains), axis=1)
-        .reindex(schedule_from_osrd(osrd).df.index)
+        .set_axis(range(sim.num_trains), axis=1)
+        .reindex(_schedule_df_from_OSRD(sim).index)
     )
 
 
-def step_type(osrd: OSRD) -> pd.DataFrame:
+def step_type(sim: OSRD) -> pd.DataFrame:
     """Is the zone a switch, a station lane or a block with a signal ?
 
     Generates a DataFrame with the same shape as a schedule
@@ -63,7 +63,7 @@ def step_type(osrd: OSRD) -> pd.DataFrame:
 
     Parameters
     ----------
-    osrd : OSRD
+    sim : OSRD
         OSRD simulation object
 
     Returns
@@ -74,26 +74,26 @@ def step_type(osrd: OSRD) -> pd.DataFrame:
     return (
         pd.concat(
             [
-                pd.DataFrame(osrd.stop_positions[col]).T.type
-                for col, _ in enumerate(osrd.trains)
+                pd.DataFrame(sim.stop_positions[col]).T.type
+                for col, _ in enumerate(sim.trains)
             ],
             axis=1
         )
-        .set_axis(range(osrd.num_trains), axis=1)
-        .reindex(schedule_from_osrd(osrd).df.index)
+        .set_axis(range(sim.num_trains), axis=1)
+        .reindex(_schedule_df_from_OSRD(sim).index)
     )
 
 
-def _step_is_a_station(osrd: OSRD) -> pd.DataFrame:
-    return step_type(osrd) == 'station'
+def _step_is_a_station(sim: OSRD) -> pd.DataFrame:
+    return step_type(sim) == 'station'
 
 
-def step_station_id(osrd: OSRD) -> pd.DataFrame:
+def step_station_id(sim: OSRD) -> pd.DataFrame:
     """Label of the station when the zone is a station lane
 
     Parameters
     ----------
-    osrd : OSRD
+    sim : OSRD
         OSRD simulation object
 
     Returns
@@ -102,22 +102,22 @@ def step_station_id(osrd: OSRD) -> pd.DataFrame:
         DataFrame with the same shape as a schedule.
     """
     return (
-        _step_is_a_station(osrd) * (
+        _step_is_a_station(sim) * (
             pd.concat(
                 [
-                    pd.DataFrame(osrd.stop_positions[col]).T.id
-                    for col, _ in enumerate(osrd.trains)
+                    pd.DataFrame(sim.stop_positions[col]).T.id
+                    for col, _ in enumerate(sim.trains)
                 ],
                 axis=1
             )
-            .set_axis(range(osrd.num_trains), axis=1)
-            .reindex(schedule_from_osrd(osrd).df.index)
+            .set_axis(range(sim.num_trains), axis=1)
+            .reindex(_schedule_df_from_OSRD(sim).index)
         )
     ).replace('', np.nan)
 
 
 def _schedule_df_from_OSRD(
-    case: OSRD,
+    sim: OSRD,
     eco_or_base: str = 'base',
 ) -> pd.DataFrame:
 
@@ -125,23 +125,23 @@ def _schedule_df_from_OSRD(
     # index USING ZONES FROM INFRASTRUCTURE
     # columns USING TRAINS FROM SIMULATION
 
-    tvd_zones = case.tvd_zones
+    tvd_zones = sim.tvd_zones
     df = pd.DataFrame(
         columns=pd.MultiIndex.from_product(
-            [case.trains, ['s', 'e']]
+            [sim.trains, ['s', 'e']]
         ),
-        index=["<->".join(sorted(tvd)) for tvd in case._tvds]
+        index=["<->".join(sorted(tvd)) for tvd in sim._tvds]
     )
     df.insert(0, 'zone', tvd_zones.values())
 
     # STEP2: LOOP ON TRAINS IN RESULTS TO FILL IN START 1 END TIMES
-    for train in case.trains:
+    for train in sim.trains:
 
         tvds_limits = []
-        for track in case.train_track_sections(train):
+        for track in sim.train_track_sections(train):
             elements = [
                 p.id
-                for p in case.points_on_track_sections()[track['id']]
+                for p in sim.points_on_track_sections()[track['id']]
                 if p.type in ['buffer_stop', 'detector']
             ]
             tvds_limits += (
@@ -150,11 +150,11 @@ def _schedule_df_from_OSRD(
                 else elements
             )
 
-        arrival_time = case.points_encountered_by_train(
+        arrival_time = sim.points_encountered_by_train(
             train=train,
             types='arrival',
         )[0][f't_{eco_or_base}']
-        detectors = case.points_encountered_by_train(train, types='detector')
+        detectors = sim.points_encountered_by_train(train, types='detector')
         first_detector = detectors[0]['id']
         last_detector = detectors[-1]['id']
         idx_first = tvds_limits.index(first_detector)
@@ -168,7 +168,7 @@ def _schedule_df_from_OSRD(
             end = limits[i+1]
 
             t_start = (
-                case.departure_times[case.trains.index(train)]
+                sim.departure_times[sim.trains.index(train)]
                 if i == 0
                 else [
                     d[f't_{eco_or_base}']
@@ -195,7 +195,7 @@ def _schedule_df_from_OSRD(
     df.drop_duplicates(inplace=True)
     df.index.name = None
     df.columns = pd.MultiIndex.from_product(
-            [case.trains, ['s', 'e']]
+            [sim.trains, ['s', 'e']]
         )
 
     return df
@@ -260,14 +260,14 @@ def _merge_switch_zones(case: OSRD, s: Schedule) -> Schedule:
 
 
 def schedule_from_osrd(
-        case: OSRD,
+        sim: OSRD,
         eco_or_base: str = 'base',
 ) -> Schedule:
     """Construct a schedule object  from an OSRD simulation
 
     Additional informations are created as attributes
     - _trains: list of train labels
-
+    - _step_type
     Parameters
     ----------
     case : OSRD
@@ -280,8 +280,9 @@ def schedule_from_osrd(
     Schedule
     """
 
-    s = Schedule(len(case.routes), case.num_trains)
-    s._df = _schedule_df_from_OSRD(case)
-    s._trains = case.trains
-    s = _merge_switch_zones(case, s)
+    s = Schedule(len(sim.routes), sim.num_trains)
+    s._df = _schedule_df_from_OSRD(sim)
+    s._trains = sim.trains
+    s._step_type = step_type(sim)
+    s = _merge_switch_zones(sim, s)
     return s

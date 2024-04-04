@@ -154,3 +154,7 @@ class Schedule(object):
 
         new_schedule._df = new_schedule._df[check].dropna(how='all')
         return new_schedule
+
+    @property
+    def step_type(self) -> pd.DataFrame:
+        return getattr(self, '_step_type')
