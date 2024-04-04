@@ -469,6 +469,14 @@ class OSRD():
         ]
 
     @property
+    def last_arrival_times(self) -> list[float]:
+        """List of train last arrival times"""
+        return [
+            self._head_position(train)[-1]['time']
+            for train in self.trains
+        ]
+
+    @property
     def _train_schedule_group(self) -> dict[str, int]:
         return {
             train['id']: (group['id'], pos)
