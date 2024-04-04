@@ -212,3 +212,102 @@ def trains_order_in_zone(
         train2 = self.trains[train2]
     order = self.starts.loc[zone].loc[[train1, train2]].sort_values()
     return order.dropna().index.tolist()
+
+
+def previous_station(
+    self,
+    train: int | str,
+    zone: int | str,
+) -> str | None:
+
+    if isinstance(train, str):
+        train = self.trains.index(train)
+
+    if zone not in self.trajectory(train=train):
+        return
+
+    idx = self.trajectory(train=train).index(zone)
+
+    zones = [
+        z
+        for z in self.trajectory(train=train)[:idx][::-1]
+        if self.step_type.loc[z, train] == 'station'
+    ]
+
+    if zones:
+        return zones[0]
+    return
+
+
+def previous_switch(
+    self,
+    train: int | str,
+    zone: int | str,
+) -> str | None:
+
+    if isinstance(train, str):
+        train = self.trains.index(train)
+
+    if zone not in self.trajectory(train=train):
+        return
+
+    idx = self.trajectory(train=train).index(zone)
+
+    zones = [
+        z
+        for z in self.trajectory(train=train)[:idx][::-1]
+        if self.step_type.loc[z, train] == 'switch'
+    ]
+
+    if zones:
+        return zones[0]
+    return
+
+
+def previous_switch_protecting_signal(
+    self,
+    train: int | str,
+    zone: int | str,
+) -> str | None:
+
+    if isinstance(train, str):
+        train = self.trains.index(train)
+
+    if zone not in self.trajectory(train=train):
+        return
+
+    idx = self.trajectory(train=train).index(zone)
+    zones = [
+        z
+        for z in self.trajectory(train=train)[:idx][::-1]
+        if self.step_type.loc[z, train] == 'switch'
+    ]
+
+    if not zones:
+        return
+    return previous_signal(self, train, zones[0])
+
+
+def previous_signal(
+    self,
+    train: int | str,
+    zone: int | str,
+) -> str | None:
+
+    if isinstance(train, str):
+        train = self.trains.index(train)
+
+    if zone not in self.trajectory(train=train):
+        return
+
+    idx = self.trajectory(train=train).index(zone)
+
+    zones = [
+        z
+        for z in self.trajectory(train=train)[:idx][::-1]
+        if self.step_type.loc[z, train] == 'signal'
+    ]
+
+    if zones:
+        return zones[0]
+    return
