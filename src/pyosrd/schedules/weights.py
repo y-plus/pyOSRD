@@ -2,7 +2,7 @@ import pandas as pd
 
 from pyosrd import OSRD
 
-from .zone_info import _step_is_a_station, step_type
+from .from_osrd import _step_is_a_station, step_type
 
 
 def _zone_from_train_and_station(
