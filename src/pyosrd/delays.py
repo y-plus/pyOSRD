@@ -3,13 +3,27 @@ import json
 import os
 import shutil
 
+from pyosrd.utils import hour_to_seconds
+
 
 def add_delay(
     self,
-    train_id: str,
-    time_threshold: float,
+    train: int | str,
+    time_threshold: float | str,
     delay: float,
 ) -> None:
+    """_summary_
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    time_threshold : float | str
+        Time before which the train is not delayed, given
+        either in seconds or in time format "hh:mm:ss"
+    delay : float
+       Delay in seconds applied after time threshold
+    """
 
     try:
         with open(os.path.join(self.dir, self.delays_json), 'r') as f:
@@ -17,9 +31,15 @@ def add_delay(
     except FileNotFoundError:
         delays = []
 
+    if isinstance(time_threshold, str):
+        time_threshold = hour_to_seconds(time_threshold)
+
+    if isinstance(train, int):
+        train = self.trains[train]
+
     delays += [
         {
-            "train_id": train_id,
+            "train_id": train,
             "time_threshold": time_threshold,
             "delay": delay,
         }
