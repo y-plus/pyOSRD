@@ -1,21 +1,22 @@
-"""This script generates an infrastructure of reasonable size containing all objects defined by the RailJSON schema.
+#!/usr/bin/env python3
 
-For more information, and a diagram of this infrastructure, see: https://osrd.fr/en/docs/explanation/data-model/
 """
-from typing import Mapping, Tuple
+This script generates an infrastructure of reasonable size containing all objects defined by the RailJSON schema.
+For more information, and a diagram of this infrastructure, see:
+https://osrd.fr/en/docs/explanation/models/data-models-full-example/
+"""
+from typing import Mapping, Optional, Tuple
 
+from osrd_schemas.infra import LoadingGaugeType
 from railjson_generator import (
     ApplicableDirection,
     ExternalGeneratedInputs,
     InfraBuilder,
-    Location,
-    SimulationBuilder,
     get_output_dir,
 )
-from railjson_generator.schema.infra.catenary import Catenary
 from railjson_generator.schema.infra.direction import Direction
+from railjson_generator.schema.infra.electrification import Electrification
 from railjson_generator.schema.infra.track_section import TrackSection
-from railjson_generator.schema.simulation.stop import Stop
 
 OUTPUT_DIR = get_output_dir()
 
@@ -23,9 +24,9 @@ OUTPUT_DIR = get_output_dir()
 def place_regular_signals_detectors(
     track_section: TrackSection,
     label_suffix: str,
-    prefered_direction: Direction = None,
+    prefered_direction: Optional[Direction] = None,
     min_offset: float = 0,
-    max_offset: float = None,
+    max_offset: Optional[float] = None,
     period: float = 1500,
 ):
     """Place signals and detectors regularly on the track section.
@@ -135,7 +136,7 @@ pa0 = builder.add_point_switch(
     left=ta3.begin(),
     right=ta4.begin(),
 )
-add_signal_on_ports(pa0, {"base": ("DA0", "SA0")})
+add_signal_on_ports(pa0, {"A": ("DA0", "SA0")})
 pa0.set_coords(-0.37, LAT_1)
 pa1 = builder.add_point_switch(
     label="PA1",
@@ -143,7 +144,7 @@ pa1 = builder.add_point_switch(
     left=tb0.end(),
     right=ta2.end(),
 )
-add_signal_on_ports(pa1, {"left": ("DB0", "SB0"), "right": ("DA1", "SA1")})
+add_signal_on_ports(pa1, {"B1": ("DB0", "SB0"), "B2": ("DA1", "SA1")})
 pa1.set_coords(-0.37, LAT_1 - LAT_LINE_SPACE)
 pa2 = builder.add_point_switch(
     label="PA2",
@@ -151,7 +152,7 @@ pa2 = builder.add_point_switch(
     left=ta3.end(),
     right=ta0.end(),
 )
-add_signal_on_ports(pa2, {"base": ("DA3", "SA3"), "right": ("DA2", "SA2")})
+add_signal_on_ports(pa2, {"A": ("DA3", "SA3"), "B2": ("DA2", "SA2")})
 pa2.set_coords(-0.365, LAT_0)
 pa3 = builder.add_point_switch(
     label="PA3",
@@ -159,12 +160,12 @@ pa3 = builder.add_point_switch(
     left=ta5.end(),
     right=ta4.end(),
 )
-add_signal_on_ports(pa3, {"base": ("DA4", "SA4")})
+add_signal_on_ports(pa3, {"A": ("DA4", "SA4")})
 pa3.set_coords(-0.365, LAT_1)
 
-ta0.set_remaining_coords([[-0.4, LAT_0]])
-ta1.set_remaining_coords([[-0.4, LAT_1]])
-ta2.set_remaining_coords([[-0.4, LAT_2]])
+ta0.set_remaining_coords([(-0.4, LAT_0)])
+ta1.set_remaining_coords([(-0.4, LAT_1)])
+ta2.set_remaining_coords([(-0.4, LAT_2)])
 
 # Extra detectors, which are not associated to signals
 
@@ -177,7 +178,7 @@ place_regular_signals_detectors(ta6, "A6", Direction.START_TO_STOP, 200, -200)
 place_regular_signals_detectors(ta7, "A7", Direction.STOP_TO_START, 200, -200)
 
 # Station
-west = builder.add_operational_point(label="South_West_station")
+west = builder.add_operational_point(label="West_station", trigram="WS", uic=2)
 west.add_part(ta0, 700)
 west.add_part(ta1, 500)
 west.add_part(ta2, 500)
@@ -198,13 +199,18 @@ ta7.add_slope(begin=7000, end=7300, slope=3)
 ta7.add_slope(begin=7300, end=7700, slope=6)
 ta7.add_slope(begin=7700, end=8000, slope=3)
 
+# Loading Gauge Limits
+ta0.add_loading_gauge_limit(begin=0, end=200, category=LoadingGaugeType.GB1)
+ta0.add_loading_gauge_limit(begin=200, end=1900, category=LoadingGaugeType.G1)
+ta0.add_loading_gauge_limit(begin=100, end=1500, category=LoadingGaugeType.FR3_3)
+
 # ================================
 #  Around station B: South-West
 # ================================
 
-tb0.set_remaining_coords([[-0.4, 49.49], [-0.373, 49.49], [-0.37, 49.492]])
+tb0.set_remaining_coords([(-0.4, 49.49), (-0.373, 49.49), (-0.37, 49.492)])
 
-south_west = builder.add_operational_point(label="West_station")
+south_west = builder.add_operational_point(label="South_West_station", trigram="SWS", uic=1)
 south_west.add_part(tb0, 500)
 
 # ================================
@@ -230,9 +236,9 @@ pc0 = builder.add_point_switch(
 add_signal_on_ports(
     pc0,
     {
-        "base": ("DA5", "SA5"),
-        "left": ("DC0", "SC0"),
-        "right": ("DC1", "SC1"),
+        "A": ("DA5", "SA5"),
+        "B1": ("DC0", "SC0"),
+        "B2": ("DC1", "SC1"),
     },
 )
 
@@ -246,9 +252,9 @@ pc1 = builder.add_point_switch(
 add_signal_on_ports(
     pc1,
     {
-        "base": ("DA6", "SA6"),
-        "left": ("DC2", "SC2"),
-        "right": ("DC3", "SC3"),
+        "A": ("DA6", "SA6"),
+        "B1": ("DC2", "SC2"),
+        "B2": ("DC3", "SC3"),
     },
 )
 
@@ -262,9 +268,9 @@ pc2 = builder.add_point_switch(
 add_signal_on_ports(
     pc2,
     {
-        "base": ("DD0", "SD0"),
-        "left": ("DC5", "SC5"),
-        "right": ("DC4", "SC4"),
+        "A": ("DD0", "SD0"),
+        "B1": ("DC5", "SC5"),
+        "B2": ("DC4", "SC4"),
     },
 )
 pc2.set_coords(-0.296, LAT_0)
@@ -277,19 +283,19 @@ pc3 = builder.add_point_switch(
 add_signal_on_ports(
     pc3,
     {
-        "base": ("DD1", "SD1"),
-        "left": ("DC7", "SC7"),
-        "right": ("DC6", "SC6"),
+        "A": ("DD1", "SD1"),
+        "B1": ("DC7", "SC7"),
+        "B2": ("DC6", "SC6"),
     },
 )
 pc3.set_coords(-0.296, LAT_1)
 
 
-tc0.set_remaining_coords([[-0.309, LAT_0 + LAT_LINE_SPACE], [-0.297, LAT_0 + LAT_LINE_SPACE]])
-tc3.set_remaining_coords([[-0.309, LAT_1 - LAT_LINE_SPACE], [-0.297, LAT_1 - LAT_LINE_SPACE]])
+tc0.set_remaining_coords([(-0.309, LAT_0 + LAT_LINE_SPACE), (-0.297, LAT_0 + LAT_LINE_SPACE)])
+tc3.set_remaining_coords([(-0.309, LAT_1 - LAT_LINE_SPACE), (-0.297, LAT_1 - LAT_LINE_SPACE)])
 
 # Station
-mid_west = builder.add_operational_point(label="Mid_West_station")
+mid_west = builder.add_operational_point(label="Mid_West_station", trigram="MWS", uic=3)
 mid_west.add_part(tc0, 550)
 mid_west.add_part(tc1, 550)
 mid_west.add_part(tc2, 450)
@@ -307,7 +313,7 @@ tf0 = builder.add_track_section(length=3, label="TF0", **V1, **north_to_south_lo
 tf1 = builder.add_track_section(length=6500, label="TF1", **V1, **north_to_south_loop)
 
 # switches
-pd0 = builder.add_cross_switch(
+pd0 = builder.add_crossing(
     label="PD0",
     north=te0.end(),
     south=tf0.begin(),
@@ -317,13 +323,13 @@ pd0 = builder.add_cross_switch(
 add_signal_on_ports(
     pd0,
     {
-        "north": ("DE0", "SE0"),
-        "east": ("DD4", "SD4"),
-        "west": ("DD2", "SD2"),
+        "A1": ("DE0", "SE0"),
+        "B2": ("DD4", "SD4"),
+        "A2": ("DD2", "SD2"),
     },
 )
 pd0.set_coords(-0.172, LAT_0)
-pd1 = builder.add_cross_switch(
+pd1 = builder.add_crossing(
     label="PD1",
     north=tf0.end(),
     south=tf1.begin(),
@@ -333,9 +339,9 @@ pd1 = builder.add_cross_switch(
 add_signal_on_ports(
     pd1,
     {
-        "south": ("DF0", "SF0"),
-        "east": ("DD5", "SD5"),
-        "west": ("DD3", "SD3"),
+        "B2": ("DF0", "SF0"),
+        "B1": ("DD5", "SD5"),
+        "A2": ("DD3", "SD3"),
     },
 )
 pd1.set_coords(-0.172, LAT_1)
@@ -344,7 +350,7 @@ place_regular_signals_detectors(td0, "D0", Direction.START_TO_STOP, 200, -200)
 place_regular_signals_detectors(td1, "D1", Direction.STOP_TO_START, 200, -200)
 
 # Station
-mid_east = builder.add_operational_point(label="Mid_East_station")
+mid_east = builder.add_operational_point(label="Mid_East_station", trigram="MES", uic=4)
 mid_east.add_part(td0, 14000)
 mid_east.add_part(td1, 14000)
 
@@ -383,9 +389,9 @@ pe0 = builder.add_point_switch(
 add_signal_on_ports(
     pe0,
     {
-        "base": ("DE1", "SE1"),
-        "left": ("DE2", "SE2"),
-        "right": ("DE3", "SE3"),
+        "A": ("DE1", "SE1"),
+        "B1": ("DE2", "SE2"),
+        "B2": ("DE3", "SE3"),
     },
 )
 pe0.set_coords(-0.165, LAT_3)
@@ -398,9 +404,9 @@ pe1 = builder.add_point_switch(
 add_signal_on_ports(
     pe1,
     {
-        "base": ("DE6", "SE6"),
-        "left": ("DE5", "SE5"),
-        "right": ("DE4", "SE4"),
+        "A": ("DE6", "SE6"),
+        "B1": ("DE5", "SE5"),
+        "B2": ("DE4", "SE4"),
     },
 )
 pe1.set_coords(-0.15, LAT_3)
@@ -413,24 +419,24 @@ pe2 = builder.add_point_switch(
 add_signal_on_ports(
     pe2,
     {
-        "base": ("DD6", "SD6"),
-        "left": ("DE7", "SE7"),
-        "right": ("DD7", "SD7"),
+        "A": ("DD6", "SD6"),
+        "B1": ("DE7", "SE7"),
+        "B2": ("DD7", "SD7"),
     },
 )
 pe2.set_coords(-0.15, LAT_0)
 
-te0.set_remaining_coords([[-0.172, LAT_3 - 0.002]])
+te0.set_remaining_coords([(-0.172, LAT_3 - 0.002)])
 te1.set_remaining_coords(
     [
-        [-0.151, LAT_3 + LAT_LINE_SPACE],
-        [-0.164, LAT_3 + LAT_LINE_SPACE],
+        (-0.151, LAT_3 + LAT_LINE_SPACE),
+        (-0.164, LAT_3 + LAT_LINE_SPACE),
     ]
 )
-te3.set_remaining_coords([[-0.145, LAT_0 + 0.002], [-0.145, LAT_3 - 0.002]])
+te3.set_remaining_coords([(-0.145, LAT_0 + 0.002), (-0.145, LAT_3 - 0.002)])
 
 # Station
-north = builder.add_operational_point(label="North_station")
+north = builder.add_operational_point(label="North_station", trigram="NS", uic=5)
 north.add_part(te1, 1000)
 north.add_part(te2, 1025)
 
@@ -450,9 +456,9 @@ te0.add_curve(begin=500, end=1000, curve=8000)
 #  Around station F: South
 # ================================
 
-tf1.set_remaining_coords([[-0.172, 49.47], [-0.167, 49.466], [-0.135, 49.466]])
+tf1.set_remaining_coords([(-0.172, 49.47), (-0.167, 49.466), (-0.135, 49.466)])
 
-south = builder.add_operational_point(label="South_station")
+south = builder.add_operational_point(label="South_station", trigram="SS", uic=6)
 south.add_part(tf1, 4300)
 
 place_regular_signals_detectors(tf1, "F1", min_offset=200, max_offset=4300)
@@ -476,7 +482,7 @@ pg0 = builder.add_point_switch(
     left=tg4.begin(),
     right=tg3.begin(),
 )
-add_signal_on_ports(pg0, {"base": ("DG3", "SG3"), "left": ("DG5", "SG5")})
+add_signal_on_ports(pg0, {"A": ("DG3", "SG3"), "B1": ("DG5", "SG5")})
 pg0.set_coords(-0.1082, LAT_4)
 pg1 = builder.add_point_switch(
     label="PG1",
@@ -484,15 +490,15 @@ pg1 = builder.add_point_switch(
     left=tg2.end(),
     right=tg3.end(),
 )
-add_signal_on_ports(pg1, {"base": ("DG6", "SG6"), "left": ("DG4", "SG4")})
+add_signal_on_ports(pg1, {"A": ("DG6", "SG6"), "B1": ("DG4", "SG4")})
 pg1.set_coords(-0.108, LAT_4 - LAT_LINE_SPACE)
 
-tg4.set_remaining_coords([[-0.09, LAT_4]])
-tg5.set_remaining_coords([[-0.09, LAT_4 - LAT_LINE_SPACE]])
+tg4.set_remaining_coords([(-0.09, LAT_4)])
+tg5.set_remaining_coords([(-0.09, LAT_4 - LAT_LINE_SPACE)])
 
 dg6 = tg3.add_detector(label="DG7", position=tg3.length / 2)
 
-north_east = builder.add_operational_point(label="North_East_station")
+north_east = builder.add_operational_point(label="North_East_station", trigram="NES", uic=7)
 north_east.add_part(tg4, 1550)
 north_east.add_part(tg5, 1500)
 
@@ -508,7 +514,7 @@ th1 = builder.add_track_section(length=5000, label="TH1", **V1, **south_east_par
 place_regular_signals_detectors(th1, "H1", min_offset=200)
 
 # switches
-ph0 = builder.add_double_cross_switch(
+ph0 = builder.add_double_slip_switch(
     label="PH0",
     north_1=tg1.begin(),
     north_2=th0.begin(),
@@ -518,10 +524,10 @@ ph0 = builder.add_double_cross_switch(
 add_signal_on_ports(
     ph0,
     {
-        "north_1": ("DG1", "SG1"),
-        "north_2": ("DH1", "SH1"),
-        "south_1": ("DG0", "SG0"),
-        "south_2": ("DH0", "SH0"),
+        "A1": ("DG1", "SG1"),
+        "A2": ("DH1", "SH1"),
+        "B1": ("DG0", "SG0"),
+        "B2": ("DH0", "SH0"),
     },
 )
 ph0.set_coords(-0.135, LAT_0 - LAT_LINE_SPACE / 2)
@@ -534,37 +540,37 @@ ph1 = builder.add_point_switch(
 add_signal_on_ports(
     ph1,
     {
-        "base": ("DH2", "SH2"),
-        "left": ("DG2", "SG2"),
-        "right": ("DH3", "SH3"),
+        "A": ("DH2", "SH2"),
+        "B1": ("DG2", "SG2"),
+        "B2": ("DH3", "SH3"),
     },
 )
 ph1.set_coords(-0.12, LAT_1)
 
-td3.set_remaining_coords([[-0.1354, LAT_1]])
-tg0.set_remaining_coords([[-0.1354, LAT_0]])
+td3.set_remaining_coords([(-0.1354, LAT_1)])
+tg0.set_remaining_coords([(-0.1354, LAT_0)])
 tg1.set_remaining_coords(
     [
-        [-0.1346, LAT_0],
-        [-0.12, LAT_0],
-        [-0.115, 49.503],
-        [-0.115, 49.51],
-        [-0.11, LAT_4],
+        (-0.1346, LAT_0),
+        (-0.12, LAT_0),
+        (-0.115, 49.503),
+        (-0.115, 49.51),
+        (-0.11, LAT_4),
     ]
 )
 tg2.set_remaining_coords(
     [
-        [-0.1199, LAT_1],
-        [-0.1149, 49.50296],
-        [-0.1149, 49.50997],
-        [-0.1099, LAT_4 - LAT_LINE_SPACE],
+        (-0.1199, LAT_1),
+        (-0.1149, 49.50296),
+        (-0.1149, 49.50997),
+        (-0.1099, LAT_4 - LAT_LINE_SPACE),
     ]
 )
-th0.set_remaining_coords([[-0.1346, LAT_1]])
-th1.set_remaining_coords([[-0.115, 49.497], [-0.115, 49.487], [-0.11, 49.484], [-0.09, 49.484]])
+th0.set_remaining_coords([(-0.1346, LAT_1)])
+th1.set_remaining_coords([(-0.115, 49.497), (-0.115, 49.487), (-0.11, 49.484), (-0.09, 49.484)])
 
 # Station
-south_east = builder.add_operational_point(label="South_East_station")
+south_east = builder.add_operational_point(label="South_East_station", trigram="SES", uic=8)
 south_east.add_part(th1, 4400)
 
 # ================================
@@ -583,24 +589,30 @@ speed_2 = builder.add_speed_section(112 / 3.6, speed_limit_by_tag={"Marchandise 
 speed_2.add_track_range(th1, 3500, 4400, ApplicableDirection.BOTH)
 
 # ================================
-#  Catenaries
+#  Electrifications
 # ================================
-electrified_tracks_25000 = set(builder.infra.track_sections) - {td1, ta0}
-builder.infra.catenaries.append(Catenary("catenary_25k", "25000", electrified_tracks_25000))
-builder.infra.catenaries.append(Catenary("catenary_1.5k", "1500", {ta0}))
+electrified_tracks_25000 = [t for t in builder.infra.track_sections if t not in {td1, ta0}]
+builder.infra.electrifications.append(Electrification("electrification_25k", "25000V", electrified_tracks_25000))
+builder.infra.electrifications.append(Electrification("electrification_1.5k", "1500V", [ta0]))
 
 # ================================
 #  Neutral sections
 # ================================
 lower_pantograph_section_1 = builder.add_neutral_section(lower_pantograph=True)
-lower_pantograph_section_1.add_track_range(tg1, 3000, tg1.length, Direction.START_TO_STOP)
+lower_pantograph_section_1.add_announcement_track_range(tg1, 3500, tg1.length, Direction.START_TO_STOP)
 lower_pantograph_section_1.add_track_range(tg4, 0, 500, Direction.START_TO_STOP)
+lower_pantograph_section_1.add_track_range(ta6, 0, 10, Direction.START_TO_STOP)
 
 lower_pantograph_section_2 = builder.add_neutral_section(lower_pantograph=True)
-lower_pantograph_section_2.add_track_range(ta0, 1900, 1950, Direction.START_TO_STOP)
+lower_pantograph_section_2.add_announcement_track_range(ta0, 1850, 1960, Direction.START_TO_STOP)
+lower_pantograph_section_2.add_track_range(ta0, 1960, 2000, Direction.START_TO_STOP)
 
-lower_pantograph_section_3 = builder.add_neutral_section(lower_pantograph=False)
-lower_pantograph_section_3.add_track_range(ta6, 8500, 8600, Direction.START_TO_STOP)
+keep_pantograph_section_3 = builder.add_neutral_section(lower_pantograph=False)
+keep_pantograph_section_3.add_track_range(ta6, 8500, 8600, Direction.START_TO_STOP)
+
+keep_pantograph_section_4 = builder.add_neutral_section(lower_pantograph=False)
+keep_pantograph_section_4.add_announcement_track_range(ta0, 1990, 2000, Direction.STOP_TO_START)
+keep_pantograph_section_4.add_track_range(ta0, 1850, 1990, Direction.STOP_TO_START)
 
 
 # ================================
@@ -608,59 +620,10 @@ lower_pantograph_section_3.add_track_range(ta6, 8500, 8600, Direction.START_TO_S
 # ================================
 
 # Build infra
-infra = builder.build()
+infra = builder.build(progressive_release=False)
 
 # Save railjson
 infra.save(OUTPUT_DIR / "infra.json")
-
-
-# ================================
-# Produce the simulation file
-# ================================
-
-builder = SimulationBuilder()
-stop_locations = [Location(ta1, 500), Location(tc0, 500), Location(te1, 500), Location(tf1, 4300)]
-train_0 = builder.add_train_schedule(
-    *stop_locations,
-    label="train.0",
-    departure_time=10 * 3600,
-    stops=[Stop(location=loc, duration=60) for loc in stop_locations],
-)
-
-train_0.add_standard_single_value_allowance("percentage", 5)
-
-stop_locations = [Location(ta2, 500), Location(tc2, 500), Location(td1, 14000), Location(tg5, 1500)]
-train_1 = builder.add_train_schedule(
-    *stop_locations,
-    label="train.1",
-    departure_time=10 * 3600 + 20 * 60,
-    stops=[Stop(location=loc, duration=60) for loc in stop_locations],
-)
-train_1.add_standard_single_value_allowance("percentage", 5, "MARECO")
-
-stop_locations = [Location(ta0, 500), Location(tc1, 500), Location(td0, 14000), Location(th1, 1500)]
-train_2 = builder.add_train_schedule(
-    *stop_locations,
-    label="train.2",
-    departure_time=10 * 3600 + 40 * 60,
-    stops=[Stop(location=loc, duration=60) for loc in stop_locations],
-)
-train_2.add_standard_single_value_allowance("time_per_distance", 10)
-
-stop_locations = [Location(ta0, 500), Location(tc0, 500), Location(td0, 14000), Location(th1, 1500)]
-train_3 = builder.add_train_schedule(
-    *stop_locations,
-    label="train.3",
-    departure_time=11 * 3600,
-    stops=[Stop(location=loc, duration=60) for loc in stop_locations],
-)
-train_3.add_standard_single_value_allowance("time", 300)
-
-# Build simulation
-sim = builder.build()
-
-# Save railjson
-sim.save(OUTPUT_DIR / "simulation.json")
 
 
 # ================================
@@ -676,7 +639,7 @@ ep_boundaries = {
     "4": [(0, 2), (2, 4), (4, 6), (6, 8), (8, 10)],
     "5": [(0, 1), (1, 3), (3, 7), (7, 9), (9, 10)],
 }
-EP_VALUES = ["25000", "22500", "20000"]
+EP_VALUES = ["25000V", "22500V", "20000V"]
 
 for power_class, boundaries in ep_boundaries.items():
     for i, (start, end) in enumerate(boundaries):
@@ -689,18 +652,12 @@ ep_o = external_inputs.add_electrical_profile(value="O", power_class="5")
 ep_o.add_track_range(ta0, 0, ta0.length)
 # We voluntarily leave ta0 empty for other power classes
 
-other_eps = [external_inputs.add_electrical_profile(value="25000", power_class=str(i)) for i in range(1, 6)]
-for track_section in electrified_tracks_25000 - {ta6}:
+other_eps = [external_inputs.add_electrical_profile(value="25000V", power_class=str(i)) for i in range(1, 6)]
+for track_section in electrified_tracks_25000:
+    if track_section is ta6:
+        continue
     for ep in other_eps:
         ep.add_track_range(track_section, 0, track_section.length)
 
 
 external_inputs.save(OUTPUT_DIR / "external_generated_inputs.json")
-
-print(
-    """
-NOTE: This infra is used by editoast's unit test suite. If any relevant
-modification was made to this infra, its railjson description should
-be copied into `editoast/tests/small_infra.json`. Make sure to run `cargo test`
-afterwards."""
-)
