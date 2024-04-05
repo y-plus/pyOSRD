@@ -1,18 +1,9 @@
 import shutil
 
-from importlib.resources import files
-
 import pytest
-
-from railjson_generator.schema.simulation.simulation import (
-    register_rolling_stocks
-)
 
 from pyosrd import OSRD
 from pyosrd.schedules import Schedule, schedule_from_osrd
-
-register_rolling_stocks(files('pyosrd').joinpath('rolling_stocks'))
-
 
 @pytest.fixture
 def three_trains() -> Schedule:
