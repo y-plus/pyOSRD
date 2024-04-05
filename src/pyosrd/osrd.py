@@ -219,7 +219,10 @@ class OSRD():
     @property
     def num_switches(self) -> int:
         """Number of switches"""
-        return len(self.infra['switches'])
+        return len([
+            switch for switch in self.infra['switches']
+            if switch['switch_type'] != 'link'
+        ])
 
     @property
     def station_capacities(self) -> dict[str, int]:
@@ -274,17 +277,17 @@ class OSRD():
                     type='station'
                 ))
 
-        for link in self.infra['track_section_links']:
-            for side in ['src', 'dst']:
-                points.append(Point(
-                    id=link['id'],
-                    track_section=link[side]['track'],
-                    position=(
-                        0 if link[side]['endpoint'] == 'BEGIN'
-                        else self.track_section_lengths[link[side]['track']]
-                    ),
-                    type='link',
-                ))
+        # for link in self.infra['track_section_links']:
+        #     for side in ['src', 'dst']:
+        #         points.append(Point(
+        #             id=link['id'],
+        #             track_section=link[side]['track'],
+        #             position=(
+        #                 0 if link[side]['endpoint'] == 'BEGIN'
+        #                 else self.track_section_lengths[link[side]['track']]
+        #             ),
+        #             type='link',
+        #         ))
 
         for switch in self.infra['switches']:
             for port in switch['ports'].values():
@@ -494,19 +497,19 @@ class OSRD():
             ts.add_node(self.infra['track_sections'][0]['id'])
             return ts
 
-        for t in self.infra['track_section_links']:
-            ts.add_edge(
-                t['src']['track'],
-                t['dst']['track'],
-                in_by=t['dst']['endpoint'],
-                out_by=t['src']['endpoint'],
-            )
-            ts.add_edge(
-                t['dst']['track'],
-                t['src']['track'],
-                in_by=t['src']['endpoint'],
-                out_by=t['dst']['endpoint'],
-                )
+        # for t in self.infra['track_section_links']:
+        #     ts.add_edge(
+        #         t['src']['track'],
+        #         t['dst']['track'],
+        #         in_by=t['dst']['endpoint'],
+        #         out_by=t['src']['endpoint'],
+        #     )
+        #     ts.add_edge(
+        #         t['dst']['track'],
+        #         t['src']['track'],
+        #         in_by=t['src']['endpoint'],
+        #         out_by=t['dst']['endpoint'],
+        #         )
         for switch in self.infra['switches']:
             tracks = [track for _, track in switch['ports'].items()]
             for track1, track2 in combinations(tracks, 2):
