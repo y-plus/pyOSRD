@@ -293,6 +293,20 @@ def previous_signal(
     train: int | str,
     zone: int | str,
 ) -> str | None:
+    """_summary_
+
+    Parameters
+    ----------
+    train : int | str
+        _description_
+    zone : int | str
+        _description_
+
+    Returns
+    -------
+    str | None
+        _description_
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
