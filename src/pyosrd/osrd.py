@@ -235,7 +235,10 @@ class OSRD():
     @property
     def num_switches(self) -> int:
         """Number of switches"""
-        return len(self.switches)
+        return len([
+            switch for switch in self.infra['switches']
+            if switch['switch_type'] != 'link'
+        ])
 
     @property
     def station_capacities(self) -> dict[str, int]:
