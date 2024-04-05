@@ -54,7 +54,7 @@
           }
         ]
       ],
-      "id": "group.0"
+      "id": "group.2"
     },
     {
       "schedules": [
@@ -110,7 +110,7 @@
           }
         ]
       ],
-      "id": "group.1"
+      "id": "group.3"
     }
   ],
   "rolling_stocks": [
@@ -122,13 +122,6 @@
       "startup_acceleration": 0.05,
       "comfort_acceleration": 0.25,
       "inertia_coefficient": 1.05,
-      "features": [
-        "TVM300",
-        "TVM430",
-        "ETCS1",
-        "ETCS2",
-        "KVB"
-      ],
       "name": "fast_rolling_stock",
       "mass": 900000,
       "loading_gauge": "G1",
@@ -204,7 +197,13 @@
         "unit": ""
       },
       "power_restrictions": {},
-      "energy_sources": []
+      "energy_sources": [],
+      "supported_signaling_systems": [
+        "BAL",
+        "BAPR",
+        "TVM300",
+        "TVM430"
+      ]
     }
   ],
   "time_step": 2.0
