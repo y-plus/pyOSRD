@@ -40,7 +40,7 @@ def c2x2(
     for i in [2, 3]:
         T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i}')
 
-    infra_builder.add_cross_switch(
+    infra_builder.add_crossing(
         north=T[0].end(),
         west=T[1].end(),
         east=T[2].begin(),
