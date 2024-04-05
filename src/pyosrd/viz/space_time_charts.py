@@ -187,5 +187,5 @@ def space_time_chart_plotly(
             ticktext=[seconds_to_hour(xtick) for xtick in xticks]
         )
     )
-    
+
     return fig
