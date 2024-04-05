@@ -40,7 +40,7 @@ def c2xx2(
     for i in [2, 3]:
         T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i}')
 
-    infra_builder.add_double_cross_switch(
+    infra_builder.add_double_slip_switch(
         south_1=T[0].end(),
         south_2=T[1].end(),
         north_1=T[2].begin(),
