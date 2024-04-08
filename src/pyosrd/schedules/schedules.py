@@ -162,3 +162,7 @@ class Schedule(object):
     @property
     def step_type(self) -> pd.DataFrame:
         return getattr(self, '_step_type')
+
+    @property
+    def min_times(self) -> pd.DataFrame:
+        return getattr(self, '_min_times')
