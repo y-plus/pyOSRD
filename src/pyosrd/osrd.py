@@ -225,14 +225,6 @@ class OSRD():
         ]
 
     @property
-    def switches(self) -> list[dict[str, Any]]:
-        """ List of switches (track section links excluded)"""
-        return [
-            switch for switch in self.infra['switches']
-            if switch['switch_type'] != 'link'
-        ]
-
-    @property
     def num_switches(self) -> int:
         """Number of switches"""
         return len(self.switches)
