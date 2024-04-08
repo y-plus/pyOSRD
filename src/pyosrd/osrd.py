@@ -341,12 +341,12 @@ class OSRD():
     def points_on_track_sections(self, op_part_tracks: bool = False) -> dict:
         """Dict with for each track, points of interests and their positions"""
 
-        points = self._points(op_part_tracks=op_part_tracks)
+        _points = self._points(op_part_tracks=op_part_tracks)
         points_on_track_sections = {}
 
         for t in self.track_section_lengths:
             points = [
-                p for p in points
+                p for p in _points
                 if p.track_section == t
             ]
             points.sort(key=lambda p: p.position)
@@ -696,7 +696,7 @@ class OSRD():
         ]
 
     @property
-    def _tvds(self) -> list[set[str]]:
+    def _tvds(self) -> list[frozenset[str]]:
 
         tvds = []
         for route in self.infra['routes']:
@@ -705,10 +705,11 @@ class OSRD():
             for d in route['release_detectors']:
                 limit_tvds.append(d)
             limit_tvds.append(route['exit_point']['id'])
-            tvds += [
-                set([limit_tvds[i], limit_tvds[i+1]])
+            for tvd in [
+                frozenset([limit_tvds[i], limit_tvds[i+1]])
                 for i, _ in enumerate(limit_tvds[:-1])
-            ]
+            ]:
+                tvds.append(tvd)
 
         unique_tvds = []
         for tvd in tvds:
@@ -720,9 +721,11 @@ class OSRD():
     @property
     def tvd_zones(self) -> dict[str, str]:
 
+        _tvds = self._tvds
+
         dict_tvd_zones = {
             "<->".join(sorted(d)): "<->".join(sorted(d))
-            for d in self._tvds
+            for d in _tvds
         }
         points = self.points_on_track_sections()
         for switch in self.switches:
@@ -737,7 +740,7 @@ class OSRD():
                 detectors.append(detectors_on_track[idx])
 
             for a in combinations(detectors, 2):
-                if set(a) in self._tvds:
+                if set(a) in _tvds:
                     dict_tvd_zones["<->".join(sorted(a))] = switch['id']
 
         return dict_tvd_zones
