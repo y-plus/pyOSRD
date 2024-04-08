@@ -246,7 +246,6 @@ class OSRD():
 
         points = []
         lengths = self.track_section_lengths
-        
         for detector in self.infra['detectors']:
             points.append(Point(
                 id=detector['id'],
@@ -342,11 +341,12 @@ class OSRD():
     def points_on_track_sections(self, op_part_tracks: bool = False) -> dict:
         """Dict with for each track, points of interests and their positions"""
 
+        points = self._points(op_part_tracks=op_part_tracks)
         points_on_track_sections = {}
 
         for t in self.track_section_lengths:
             points = [
-                p for p in self._points(op_part_tracks=op_part_tracks)
+                p for p in points
                 if p.track_section == t
             ]
             points.sort(key=lambda p: p.position)
@@ -570,6 +570,7 @@ class OSRD():
                 'id': tracks[0],
                 'direction': direction,
             }]
+
         return tracks_directions
 
     def points_encountered_by_train(
@@ -600,7 +601,8 @@ class OSRD():
         if isinstance(train, str):
             train = self.trains.index(train)
 
-        ids = [track['id'] for track in self.train_track_sections(train)]
+        train_track_sections = self.train_track_sections(train)
+        ids = [track['id'] for track in train_track_sections]
 
         points = {
             point.id: point
@@ -629,7 +631,7 @@ class OSRD():
             if isinstance(train, str):
                 train = self.trains.index(train)
 
-            for track in self.train_track_sections(train):
+            for track in train_track_sections:
                 if track['id'] == point.track_section:
                     return track['direction']
 
