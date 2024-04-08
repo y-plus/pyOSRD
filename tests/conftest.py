@@ -3,8 +3,7 @@ import shutil
 import pytest
 
 from pyosrd import OSRD
-from pyosrd.schedules import Schedule
-
+from pyosrd.schedules import Schedule, schedule_from_osrd
 
 @pytest.fixture
 def three_trains() -> Schedule:
@@ -139,3 +138,8 @@ def use_case_straight_line():
 def use_case_double_switch():
     yield OSRD(dir='tmp', use_case='double_switch')
     shutil.rmtree('tmp', ignore_errors=True)
+
+
+@pytest.fixture(scope='session')
+def schedule_station_capacity2(use_case_station_capacity2) -> Schedule:
+    return schedule_from_osrd(use_case_station_capacity2)

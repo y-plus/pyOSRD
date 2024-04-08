@@ -277,6 +277,10 @@ def previous_switch_protecting_signal(
         return
 
     idx = self.trajectory(train=train).index(zone)
+
+    if self.step_type.loc[zone, train] == 'switch':
+        return previous_signal(self, train, zone)
+
     zones = [
         z
         for z in self.trajectory(train=train)[:idx][::-1]
@@ -319,7 +323,7 @@ def previous_signal(
     zones = [
         z
         for z in self.trajectory(train=train)[:idx][::-1]
-        if self.step_type.loc[z, train] == 'signal'
+        if self.step_type.loc[z, train] in ['signal', 'station']
     ]
 
     if zones:
