@@ -268,6 +268,7 @@ def schedule_from_osrd(
     - _trains: list of train labels
     - _step_type
     - _min_times corresponding to base_simulations
+
     Parameters
     ----------
     case : OSRD
