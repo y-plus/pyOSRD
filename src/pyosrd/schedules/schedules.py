@@ -15,6 +15,10 @@ class Schedule(object):
         is_just_after_a_point_switch,
         first_in,
         trains_order_in_zone,
+        previous_signal,
+        previous_station,
+        previous_switch,
+        previous_switch_protecting_signal
     )
     from .plot import sort, plot
     from .conflicts import (

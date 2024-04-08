@@ -219,6 +219,20 @@ def previous_station(
     train: int | str,
     zone: int | str,
 ) -> str | None:
+    """Previous station for given train and zone
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+
+    Returns
+    -------
+    str | None
+       Zone label for previous station
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
@@ -244,6 +258,20 @@ def previous_switch(
     train: int | str,
     zone: int | str,
 ) -> str | None:
+    """Previous switch for given train and zone
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+
+    Returns
+    -------
+    str | None
+       Zone label for previous switch
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
@@ -269,6 +297,20 @@ def previous_switch_protecting_signal(
     train: int | str,
     zone: int | str,
 ) -> str | None:
+    """Previous zone with a signal protecting a switch for given train and zone
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+
+    Returns
+    -------
+    str | None
+       Zone label with a signal protecting a switch 
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
@@ -277,6 +319,10 @@ def previous_switch_protecting_signal(
         return
 
     idx = self.trajectory(train=train).index(zone)
+
+    if self.step_type.loc[zone, train] == 'switch':
+        return previous_signal(self, train, zone)
+
     zones = [
         z
         for z in self.trajectory(train=train)[:idx][::-1]
@@ -293,6 +339,20 @@ def previous_signal(
     train: int | str,
     zone: int | str,
 ) -> str | None:
+    """Previous zone with a signal at its end for given train and zone
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+
+    Returns
+    -------
+    str | None
+       Zone label with a signal at its end
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
@@ -305,7 +365,7 @@ def previous_signal(
     zones = [
         z
         for z in self.trajectory(train=train)[:idx][::-1]
-        if self.step_type.loc[z, train] == 'signal'
+        if self.step_type.loc[z, train] in ['signal', 'station']
     ]
 
     if zones:
