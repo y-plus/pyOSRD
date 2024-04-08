@@ -245,7 +245,8 @@ class OSRD():
     def _points(self, op_part_tracks: bool = False) -> list[Point]:
 
         points = []
-
+        lengths = self.track_section_lengths
+        
         for detector in self.infra['detectors']:
             points.append(Point(
                 id=detector['id'],
@@ -289,7 +290,7 @@ class OSRD():
                     track_section=port['track'],
                     position=(
                         0 if port['endpoint'] == "BEGIN"
-                        else self.track_section_lengths[port['track']]
+                        else lengths[port['track']]
                     ),
                     type=(
                         'switch'
