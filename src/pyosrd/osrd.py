@@ -349,7 +349,6 @@ class OSRD():
     def points_on_track_sections(self, op_part_tracks: bool = False) -> dict:
         """Dict with for each track, points of interests and their positions"""
 
-        points = self._points(op_part_tracks=op_part_tracks)
         _points = self._points(op_part_tracks=op_part_tracks)
         points_on_track_sections = {}
 
