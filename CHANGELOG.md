@@ -2,6 +2,8 @@
 - In schedules, indices are now refered to as ‘zones’ instead of ‘blocks’
 - In all OSRD/schedule methods, train can be passed by index or label
 ## OSRD class
+- **Compatible with OSRD v0.2.9**
+- Use_cases upgraded to 0.2.9
 - Space-time charts x labels are now in ‘hh:mm:ss’ format
 ## Schedules class
 - New method `start_from(time: int|str)`
