@@ -1,6 +1,6 @@
 import os
 
-
+from importlib.resources import files
 
 from railjson_generator import (
     InfraBuilder,
