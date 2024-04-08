@@ -6,6 +6,7 @@
 ## Schedules class
 - New method `start_from(time: int|str)`
 - New method `.trains_order_in_zone(zone)`
+- New methods `.previous_{station, signal, switch}(train, zone)`
 - Schedule_from_osrd
   - Merge consecutive switch zones without signal between them (see use_case `double_switch`)
   - Step_type automatically calculated and set as an attribute
