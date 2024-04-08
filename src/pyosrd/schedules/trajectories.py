@@ -219,6 +219,20 @@ def previous_station(
     train: int | str,
     zone: int | str,
 ) -> str | None:
+    """Previous station for given train and zone
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+
+    Returns
+    -------
+    str | None
+       Zone label for previous station
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
@@ -244,6 +258,20 @@ def previous_switch(
     train: int | str,
     zone: int | str,
 ) -> str | None:
+    """Previous switch for given train and zone
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+
+    Returns
+    -------
+    str | None
+       Zone label for previous switch
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
@@ -269,6 +297,20 @@ def previous_switch_protecting_signal(
     train: int | str,
     zone: int | str,
 ) -> str | None:
+    """Previous zone with a signal protecting a switch for given train and zone
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+
+    Returns
+    -------
+    str | None
+       Zone label with a signal protecting a switch 
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
@@ -297,19 +339,19 @@ def previous_signal(
     train: int | str,
     zone: int | str,
 ) -> str | None:
-    """_summary_
+    """Previous zone with a signal at its end for given train and zone
 
     Parameters
     ----------
     train : int | str
-        _description_
+        Train index or label
     zone : int | str
-        _description_
+        Zone label
 
     Returns
     -------
     str | None
-        _description_
+       Zone label with a signal at its end
     """
 
     if isinstance(train, str):
