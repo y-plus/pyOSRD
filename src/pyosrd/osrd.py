@@ -254,6 +254,7 @@ class OSRD():
 
         points = []
         lengths = self.track_section_lengths
+        
         for detector in self.infra['detectors']:
             points.append(Point(
                 id=detector['id'],
