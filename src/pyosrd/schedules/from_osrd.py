@@ -261,13 +261,13 @@ def _merge_switch_zones(case: OSRD, s: Schedule) -> Schedule:
 
 def schedule_from_osrd(
         sim: OSRD,
-        eco_or_base: str = 'base',
 ) -> Schedule:
     """Construct a schedule object  from an OSRD simulation
 
     Additional informations are created as attributes
     - _trains: list of train labels
     - _step_type
+    - _min_times corresponding to base_simulations
     Parameters
     ----------
     case : OSRD
@@ -281,8 +281,16 @@ def schedule_from_osrd(
     """
 
     s = Schedule(len(sim.routes), sim.num_trains)
-    s._df = _schedule_df_from_OSRD(sim)
     s._trains = sim.trains
+
+    group, idx = sim._train_schedule_group[sim.trains[0]]
+    if sim.results[group]['eco_simulations'][idx]:
+        s._df = _schedule_df_from_OSRD(sim, eco_or_base='eco')
+    else:
+        s._df = _schedule_df_from_OSRD(sim, eco_or_base='base')
+
+    s._min_times = _schedule_df_from_OSRD(sim, eco_or_base='base')
+
     s._step_type = step_type(sim)
     s = _merge_switch_zones(sim, s)
     return s

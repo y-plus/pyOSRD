@@ -4,6 +4,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 
 from pyosrd.schedules import schedule_from_osrd
+from pyosrd.schedules.from_osrd import _schedule_df_from_OSRD
 
 
 def test_schedule_from_osrd(use_case_cvg_dvg):
@@ -51,3 +52,18 @@ def test_schedule_from_osrd_step_type(use_case_station_capacity2):
     )
     assert_frame_equal(s._step_type, expected)
     assert_frame_equal(s.step_type, expected)
+
+
+def test_schedule_from_osrd_min_times_base_only(use_case_station_capacity2):
+    """No allowance, in this case times = min_times"""
+    s = schedule_from_osrd(use_case_station_capacity2)
+    assert_frame_equal(s.min_times, s.df)
+
+
+def test_schedule_from_osrd_min_times(use_case_straight_line):
+    """No allowance, in this case times = min_times"""
+    s = schedule_from_osrd(use_case_straight_line)
+    assert_frame_equal(
+        s.min_times,
+        _schedule_df_from_OSRD(use_case_straight_line, eco_or_base='base')
+    )

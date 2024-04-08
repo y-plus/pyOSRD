@@ -309,7 +309,7 @@ def previous_switch_protecting_signal(
     Returns
     -------
     str | None
-       Zone label with a signal protecting a switch 
+       Zone label with a signal protecting a switch
     """
 
     if isinstance(train, str):
