@@ -18,3 +18,5 @@
 - Schedule methods are now split into different modules
 - Utility conversions ‘hh:mm:ss’ <-> number of seconds
 - `zone_info` methods moved to `from_osrd` + optimizations
+## Code quality
+- Now more than 200 unit tests !
