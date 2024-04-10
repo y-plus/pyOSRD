@@ -1,3 +1,4 @@
+# v0.2.9a (Apr. 4th, 2024)
 ## Railway vocabulary
 - In schedules, indices are now refered to as ‘zones’ instead of ‘blocks’
 - In all OSRD/schedule methods, train can be passed by index or label
@@ -11,7 +12,7 @@
 - New methods `.previous_{station, signal, switch}(train, zone)`
 - Schedule_from_osrd
   - Merge consecutive switch zones without signal between them (see use_case `double_switch`)
-  - Step_type automatically calculated and set as an attribute
+  - Step_type and min_times automatically set as attributes
 - Schedule plots x labels are now in ‘hh:mm:ss’ format
 ## Refactoring
 - OSRD module `set_trains` is renamed `modify_simulations`
