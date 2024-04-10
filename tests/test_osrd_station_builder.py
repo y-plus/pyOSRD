@@ -188,7 +188,7 @@ def test_station_builder_space_time_chart(use_case_station_builder):
     plt.close()
 
 
-def test_station_builder_tvd_blocks(use_case_station_builder):
+def test_station_builder_tvd_zones(use_case_station_builder):
 
     expected = {
         'buffer_stop.0<->station_builder_1station.0.D0': 'buffer_stop.0<->station_builder_1station.0.D0',  # noqa
@@ -200,7 +200,7 @@ def test_station_builder_tvd_blocks(use_case_station_builder):
         'station_builder_1station.0.D3<->station_builder_1station.0.D4': 'station_builder_1station.0.D3<->station_builder_1station.0.D4',  # noqa
         'station_builder_1station.0.D4<->station_builder_1station.0.D5': 'station_builder_1station.0.CVG'  # noqa
     }
-    assert use_case_station_builder.tvd_blocks == expected
+    assert use_case_station_builder.tvd_zones == expected
 
 
 def test_station_builder_stop_positions(use_case_station_builder):
