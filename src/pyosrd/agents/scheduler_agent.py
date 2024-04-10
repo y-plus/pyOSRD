@@ -1,6 +1,6 @@
 import importlib
 
-from abc import abstractproperty
+from abc import abstractmethod
 
 from dataclasses import dataclass
 
@@ -75,7 +75,8 @@ class SchedulerAgent(Agent):
             step_has_fixed_duration(osrd)
         self.weights = getattr(weights_, weights)(osrd)
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def steps_extra_delays(self) -> pd.DataFrame:
         pass
 
