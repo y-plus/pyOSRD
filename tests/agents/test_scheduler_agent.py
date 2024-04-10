@@ -151,9 +151,52 @@ def test_scheduler_scenarii_agents_regulate_delay():
 
     assert 980.0 == df.sum().sum()
 
+    df = regulate_scenarii_with_agents(
+        "c1_delay",
+        DelayTrain0AtDeparture('test0'),
+        indicator_function
+    )
+
+    assert 440.0 == df.sum().sum()
+
 
 def test_scheduler_agent_unknown_instance():
 
     match = "Unknown scenario foo."
     with pytest.raises(ValueError, match=match):
         regulate_scenarii_with_agents('foo', [], None)
+
+
+def test_scheduler_agent_unknown_instances():
+
+    match = "foo is not a valid scenario."
+    with pytest.raises(ValueError, match=match):
+        regulate_scenarii_with_agents(['foo', 'bar'], [], None)
+
+
+def test_scheduler_agent_load_instance():
+    class DelayTrain0AtDeparture(SchedulerAgent):
+        @property
+        def steps_extra_delays(self) -> pd.DataFrame:
+            df = self.ref_schedule.durations * 0.
+            df.iloc[0, 0] = 100.
+            return df
+
+    agent = DelayTrain0AtDeparture('foo')
+
+    agent.load_scenario('c1_delay')
+
+
+def test_scheduler_agent_load_unknown_instance():
+    class DelayTrain0AtDeparture(SchedulerAgent):
+        @property
+        def steps_extra_delays(self) -> pd.DataFrame:
+            df = self.ref_schedule.durations * 0.
+            df.iloc[0, 0] = 100.
+            return df
+
+    agent = DelayTrain0AtDeparture('foo')
+
+    match = "foo is not a valid scenario."
+    with pytest.raises(ValueError, match=match):
+        agent.load_scenario('foo')
