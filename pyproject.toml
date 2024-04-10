@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyosrd"
-version = "0.0.6b"
+version = "0.2.9a"
 authors = [
   { name="Renan HILBERT", email="renan.hilbert.ext@eurodecision.com" },
 ]
