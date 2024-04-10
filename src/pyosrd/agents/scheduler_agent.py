@@ -175,7 +175,7 @@ class SchedulerAgent(Agent):
         return pd.DataFrame(
             {
                 self.name: [
-                    regulated_schedule.compute_weighted_delays(
+                    regulated_schedule.total_weighted_delay(
                         ref_schedule,
                         weights_.all_steps(sim),
                     )
@@ -192,6 +192,12 @@ class SchedulerAgent(Agent):
 
         Parameters
         ----------
+        ref_schedule: Schedule
+            The reference schedule used as the ideal schedule
+        delayed_schedule: Schedule
+            The delayed schedule, regulated use to compute the indicator
+        Parameters
+        ----------
         scenarii : list[str]
             The list of scenarii to be regulated
         agent : SchedulerAgent
@@ -200,7 +206,7 @@ class SchedulerAgent(Agent):
         Returns
         -------
         pd.DataFrame
-            DataFrame containing the metric for the agent
+            DataFrame containing the indicator for the agent
             and the given scenarii, eg:
                             agent 1
             scenario 1           12
@@ -235,7 +241,7 @@ def regulate_scenarii_with_agents(
     Returns
     -------
     pd.DataFrame
-        DataFrame containing the metric for the agents
+        DataFrame containing the indicator for the agents
         and the given scenarii, eg:
                         agent 1     agent 2     agent 3     agent 4     agent 5
         scenario 1           12         112         212         312       10212
@@ -256,7 +262,13 @@ def regulate_scenarii_with_agents(
     elif scenarii in OSRD.scenarii:
         scenarii = [scenarii]
     elif isinstance(scenarii, str):
-        raise ValueError(f"Unknown scenario {scenarii}")
+        raise ValueError(f"Unknown scenario {scenarii}.")
+
+    for scenario in scenarii:
+        if scenario not in OSRD.scenarii:
+            raise ValueError(
+                f"{scenario} is not a valid scenario."
+            )
 
     if isinstance(agents, SchedulerAgent):
         agents = [agents]
