@@ -166,7 +166,6 @@ class OSRD():
         load_dotenv()
         JAVA = os.getenv('JAVA') or 'java'
 
-        # jar_file = files('pyosrd').joinpath('osrd-all.jar')
         jar_file = files('pyosrd').joinpath('osrd-029.jar')
 
         output = subprocess.run(
