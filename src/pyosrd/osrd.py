@@ -166,7 +166,8 @@ class OSRD():
         load_dotenv()
         JAVA = os.getenv('JAVA') or 'java'
 
-        jar_file = files('pyosrd').joinpath('osrd-all.jar')
+        # jar_file = files('pyosrd').joinpath('osrd-all.jar')
+        jar_file = files('pyosrd').joinpath('osrd-029.jar')
 
         output = subprocess.run(
             f"{JAVA} -jar {jar_file} standalone-simulation "
@@ -216,9 +217,17 @@ class OSRD():
         return {t['id']: t['length'] for t in self.infra['track_sections']}
 
     @property
+    def switches(self) -> list[dict[str, Any]]:
+        """ List of switches (track section links excluded)"""
+        return [
+            switch for switch in self.infra['switches']
+            if switch['switch_type'] != 'link'
+        ]
+
+    @property
     def num_switches(self) -> int:
         """Number of switches"""
-        return len(self.infra['switches'])
+        return len(self.switches)
 
     @property
     def station_capacities(self) -> dict[str, int]:
@@ -236,7 +245,7 @@ class OSRD():
     def _points(self, op_part_tracks: bool = False) -> list[Point]:
 
         points = []
-
+        lengths = self.track_section_lengths
         for detector in self.infra['detectors']:
             points.append(Point(
                 id=detector['id'],
@@ -273,18 +282,6 @@ class OSRD():
                     type='station'
                 ))
 
-        for link in self.infra['track_section_links']:
-            for side in ['src', 'dst']:
-                points.append(Point(
-                    id=link['id'],
-                    track_section=link[side]['track'],
-                    position=(
-                        0 if link[side]['endpoint'] == 'BEGIN'
-                        else self.track_section_lengths[link[side]['track']]
-                    ),
-                    type='link',
-                ))
-
         for switch in self.infra['switches']:
             for port in switch['ports'].values():
                 points.append(Point(
@@ -292,10 +289,13 @@ class OSRD():
                     track_section=port['track'],
                     position=(
                         0 if port['endpoint'] == "BEGIN"
-                        else self.track_section_lengths[port['track']]
+                        else lengths[port['track']]
                     ),
-                    type='switch'
-
+                    type=(
+                        'switch'
+                        if switch['switch_type'] != 'link'
+                        else 'link'
+                    )
                 ))
         return points
 
@@ -341,11 +341,12 @@ class OSRD():
     def points_on_track_sections(self, op_part_tracks: bool = False) -> dict:
         """Dict with for each track, points of interests and their positions"""
 
+        _points = self._points(op_part_tracks=op_part_tracks)
         points_on_track_sections = {}
 
         for t in self.track_section_lengths:
             points = [
-                p for p in self._points(op_part_tracks=op_part_tracks)
+                p for p in _points
                 if p.track_section == t
             ]
             points.sort(key=lambda p: p.position)
@@ -493,19 +494,6 @@ class OSRD():
             ts.add_node(self.infra['track_sections'][0]['id'])
             return ts
 
-        for t in self.infra['track_section_links']:
-            ts.add_edge(
-                t['src']['track'],
-                t['dst']['track'],
-                in_by=t['dst']['endpoint'],
-                out_by=t['src']['endpoint'],
-            )
-            ts.add_edge(
-                t['dst']['track'],
-                t['src']['track'],
-                in_by=t['src']['endpoint'],
-                out_by=t['dst']['endpoint'],
-                )
         for switch in self.infra['switches']:
             tracks = [track for _, track in switch['ports'].items()]
             for track1, track2 in combinations(tracks, 2):
@@ -582,6 +570,7 @@ class OSRD():
                 'id': tracks[0],
                 'direction': direction,
             }]
+
         return tracks_directions
 
     def points_encountered_by_train(
@@ -612,7 +601,8 @@ class OSRD():
         if isinstance(train, str):
             train = self.trains.index(train)
 
-        ids = [track['id'] for track in self.train_track_sections(train)]
+        train_track_sections = self.train_track_sections(train)
+        ids = [track['id'] for track in train_track_sections]
 
         points = {
             point.id: point
@@ -634,14 +624,14 @@ class OSRD():
             if point.type == 'detector':
                 for detector in self.infra['detectors']:
                     if detector['id'] == point.id:
-                        return detector['applicable_directions']
+                        return 'BOTH'  # detector['applicable_directions']
 
         def train_direction(point: Point, train: int | str) -> str:
 
             if isinstance(train, str):
                 train = self.trains.index(train)
 
-            for track in self.train_track_sections(train):
+            for track in train_track_sections:
                 if track['id'] == point.track_section:
                     return track['direction']
 
@@ -706,7 +696,7 @@ class OSRD():
         ]
 
     @property
-    def _tvds(self) -> list[set[str]]:
+    def _tvds(self) -> list[frozenset[str]]:
 
         tvds = []
         for route in self.infra['routes']:
@@ -715,10 +705,11 @@ class OSRD():
             for d in route['release_detectors']:
                 limit_tvds.append(d)
             limit_tvds.append(route['exit_point']['id'])
-            tvds += [
-                set([limit_tvds[i], limit_tvds[i+1]])
+            for tvd in [
+                frozenset([limit_tvds[i], limit_tvds[i+1]])
                 for i, _ in enumerate(limit_tvds[:-1])
-            ]
+            ]:
+                tvds.append(tvd)
 
         unique_tvds = []
         for tvd in tvds:
@@ -730,12 +721,14 @@ class OSRD():
     @property
     def tvd_zones(self) -> dict[str, str]:
 
+        _tvds = self._tvds
+
         dict_tvd_zones = {
             "<->".join(sorted(d)): "<->".join(sorted(d))
-            for d in self._tvds
+            for d in _tvds
         }
         points = self.points_on_track_sections()
-        for switch in self.infra['switches']:
+        for switch in self.switches:
             detectors = []
             for port in switch['ports'].values():
                 idx = 0 if port['endpoint'] == 'BEGIN' else -1
@@ -747,7 +740,7 @@ class OSRD():
                 detectors.append(detectors_on_track[idx])
 
             for a in combinations(detectors, 2):
-                if set(a) in self._tvds:
+                if set(a) in _tvds:
                     dict_tvd_zones["<->".join(sorted(a))] = switch['id']
 
         return dict_tvd_zones
