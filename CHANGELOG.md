@@ -6,6 +6,8 @@
 - **Compatible with OSRD v0.2.9**
 - Use_cases upgraded to 0.2.9
 - Space-time charts x labels are now in ‘hh:mm:ss’ format
+## Use cases
+- Added a `station_builder` helper method to build N consecutive two platforms stations
 ## Schedules class
 - New method `start_from(time: int|str)`
 - New method `.trains_order_in_zone(zone)`
