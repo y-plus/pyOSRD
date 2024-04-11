@@ -11,7 +11,6 @@ from railjson_generator.schema.infra.direction import Direction
 from railjson_generator.schema.simulation.simulation import (
     register_rolling_stocks
 )
-from railjson_generator.schema.simulation.stop import Stop
 
 register_rolling_stocks(files('pyosrd').joinpath('rolling_stocks'))
 

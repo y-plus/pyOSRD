@@ -55,7 +55,7 @@ def step_type(sim: OSRD) -> pd.DataFrame:
 
     For a given cell:
     - row (=index) is the zone
-    - column is the rain index
+    - column is the train index
     - value
       - 'station', "signal' or 'switch'
       - NaN = the step does not exist, ie
