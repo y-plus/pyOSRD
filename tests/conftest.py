@@ -5,6 +5,7 @@ import pytest
 from pyosrd import OSRD
 from pyosrd.schedules import Schedule, schedule_from_osrd
 
+
 @pytest.fixture
 def three_trains() -> Schedule:
     schedule = Schedule(6, 3)
