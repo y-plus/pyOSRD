@@ -8,6 +8,8 @@ from railjson_generator import (
 
 from railjson_generator.schema.infra.track_section import TrackSection
 
+from pyosrd.utils import hour_to_seconds
+
 
 def _group_idx(self, group: str) -> int:
     return [
@@ -20,19 +22,19 @@ def add_train(
     self,
     label: str,
     locations: list[tuple[str, float]],
-    departure_time: float
+    departure_time: float | str,
 ):
-    """add a train
+    """Add a new train schedule
 
     Parameters
     ----------
     label : str
-        Name/label
+        New train ame/label
     locations : list[tuple[str, float]]
         List of (track_section_name, offser)
-    departure_time : float
-       Departure time in seconds
-
+    departure_time : float | str
+        New train departure time, in seconds or
+        in 'hh:mm:ss' format
     Raises
     ------
     ValueError
@@ -41,6 +43,9 @@ def add_train(
 
     if label in self.trains:
         raise ValueError(f"'{label}' is already used as a train label")
+
+    if isinstance(departure_time, str):
+        departure_time = hour_to_seconds(departure_time)
 
     # reconstruct tracks
     track_sections = {
@@ -75,9 +80,7 @@ def cancel_train(
     self,
     train: int | str
 ):
-    """Cancel a train
-
-    Does not re-run the simulation
+    """Cancel a train (Does not re-run the simulation)
 
     Parameters
     ----------
@@ -99,10 +102,7 @@ def cancel_train(
 
 
 def cancel_all_trains(self):
-    """Cancel all trains
-
-    Does not re-run the simulation
-    """
+    """Cancel all trains (Does not re-run the simulation)"""
     self.simulation['train_schedule_groups'] = []
 
     with open(os.path.join(self.dir, self.simulation_json), "w") as outfile:
@@ -147,11 +147,31 @@ def copy_train(
     self,
     train: int | str,
     new_train_label: str,
-    departure_time: float,
+    departure_time: float | str,
 ) -> None:
+    """Copy a train schedule (does not re-run the simulation)
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    new_train_label : str
+        New train label
+    departure_time : float | str
+        New train departure time, in seconds or
+        in 'hh:mm:ss' format
+
+    Raises
+    ------
+    ValueError
+        If the new label is already used
+    """
 
     if isinstance(train, str):
         train = self.trains.index(train)
+
+    if isinstance(departure_time, str):
+        departure_time = hour_to_seconds(departure_time)
 
     if new_train_label in self.trains:
         raise ValueError(
