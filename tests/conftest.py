@@ -110,6 +110,12 @@ def use_case_cvg_dvg():
     shutil.rmtree('tmp', ignore_errors=True)
 
 
+@pytest.fixture(scope='session')
+def use_case_station_builder():
+    yield OSRD(dir='tmp', use_case='station_builder_1station_2trains')
+    shutil.rmtree('tmp', ignore_errors=True)
+
+
 @pytest.fixture(scope='function')
 def modify_sim():
     yield OSRD(dir='tmp2', use_case='cvg_dvg')
