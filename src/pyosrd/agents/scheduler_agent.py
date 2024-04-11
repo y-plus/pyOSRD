@@ -158,11 +158,11 @@ class SchedulerAgent(Agent):
         )
         function = getattr(module, scenario)
         sim = function()
-        delayed_schedule = sim.delayed()
+        delayed_sim = sim.delayed()
 
         self.set_schedules_from_osrd(sim, "all_steps")
 
-        delayed_schedule = schedule_from_osrd(delayed_schedule)
+        delayed_schedule = schedule_from_osrd(delayed_sim)
         ref_schedule = schedule_from_osrd(sim)
         regulated_schedule = self.regulated_schedule
 
