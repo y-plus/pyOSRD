@@ -1,12 +1,37 @@
 import shutil
-import pytest
 
 import pandas as pd
 from pandas.testing import assert_frame_equal
+import pytest
+
 
 from pyosrd import OSRD
 from pyosrd.agents.scheduler_agent import SchedulerAgent
 from pyosrd.agents.scheduler_agent import regulate_scenarii_with_agents
+
+
+@pytest.fixture(scope='session')
+def test_agent() -> SchedulerAgent:
+    class DelayTrain0AtDeparture(SchedulerAgent):
+        @property
+        def steps_extra_delays(self) -> pd.DataFrame:
+            df = self.ref_schedule.durations * 0.
+            df.iloc[0, 0] = 100.
+            return df
+
+    return DelayTrain0AtDeparture('test')
+
+
+@pytest.fixture(scope='session')
+def test_agent2() -> SchedulerAgent:
+    class DelayTrain1AtDeparture(SchedulerAgent):
+        @property
+        def steps_extra_delays(self) -> pd.DataFrame:
+            df = self.ref_schedule.durations * 0.
+            df.iloc[1, 0] = 50.
+            return df
+
+    return DelayTrain1AtDeparture('test2')
 
 
 def test_scheduler_agent_autonomous(two_trains):
@@ -35,20 +60,13 @@ def test_scheduler_agent_autonomous(two_trains):
     )
 
 
-def test_scheduler_agent_in_regulate():
+def test_scheduler_agent_in_regulate(test_agent):
 
     sim = OSRD(use_case='station_capacity2', dir='tmp2')
     sim.add_delay('train0', time_threshold=90, delay=280.)
     delayed = sim.delayed()
 
-    class DelayTrain0AtDeparture(SchedulerAgent):
-        @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[0, 0] = 100.
-            return df
-
-    regulated = sim.regulate(agent=DelayTrain0AtDeparture('test'))
+    regulated = sim.regulate(agent=test_agent)
 
     arrival_times = [
         s.points_encountered_by_train(0)[-1]['t_base']
@@ -59,76 +77,46 @@ def test_scheduler_agent_in_regulate():
     shutil.rmtree('tmp2', ignore_errors=True)
 
 
-def test_scheduler_agent_regulate_scenario_error():
-    class DelayTrain0AtDeparture(SchedulerAgent):
-        @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[0, 0] = 100.
-            return df
+def test_scheduler_agent_regulate_scenario_error(test_agent):
 
     match = "foo is not a valid scenario."
     with pytest.raises(ValueError, match=match):
-        DelayTrain0AtDeparture('test').regulate_scenario(
+        test_agent.regulate_scenario(
             "foo"
         )
 
 
-def test_scheduler_agent_regulate_scenario_delay():
-    class DelayTrain0AtDeparture(SchedulerAgent):
-        @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[0, 0] = 100.
-            return df
+def test_scheduler_agent_regulate_scenario_delay(test_agent):
 
-    df = DelayTrain0AtDeparture('test').regulate_scenario(
-        "c1_delay"
-    )
+    df = test_agent.regulate_scenario("c1_delay")
 
     assert 440. == df.sum().sum()
 
 
-def test_scheduler_agent_regulate_scenarii_delay():
-    class DelayTrain0AtDeparture(SchedulerAgent):
-        @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[0, 0] = 100.
-            return df
+def test_scheduler_agent_regulate_scenarii_delay(test_agent):
 
-    df = DelayTrain0AtDeparture('test').regulate_scenarii(
+    df = test_agent.regulate_scenarii(
         ["c1_delay", "c1y2_2trains_conflict"]
     )
 
     assert 640.0 == df.sum().sum()
 
 
-def test_scheduler_scenarii_agents_regulate_delay():
-    class DelayTrain0AtDeparture(SchedulerAgent):
-        @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[0, 0] = 100.
-            return df
-
-    class DelayTrain1AtDeparture(SchedulerAgent):
-        @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[1, 0] = 50.
-            return df
+def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
 
     df = regulate_scenarii_with_agents(
         ["c1_delay", "c1y2_2trains_conflict"],
-        [DelayTrain0AtDeparture('test0'), DelayTrain1AtDeparture('test1')]
+        [test_agent, test_agent2]
     )
 
     assert 980.0 == df.sum().sum()
 
+
+def test_scheduler_scenarii_one_agent_regulate_delay(test_agent):
+
     df = regulate_scenarii_with_agents(
         "c1_delay",
-        DelayTrain0AtDeparture('test0')
+        test_agent
     )
 
     assert 440.0 == df.sum().sum()
@@ -148,29 +136,15 @@ def test_scheduler_agent_unknown_instances():
         regulate_scenarii_with_agents(['foo', 'bar'], [])
 
 
-def test_scheduler_agent_load_instance():
-    class DelayTrain0AtDeparture(SchedulerAgent):
-        @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[0, 0] = 100.
-            return df
-
-    agent = DelayTrain0AtDeparture('foo')
-
-    agent.load_scenario('c1_delay')
+def test_scheduler_agent_load_instance(test_agent):
+    try:
+        test_agent.load_scenario('c1_delay')
+    except ValueError:
+        assert False
 
 
-def test_scheduler_agent_load_unknown_instance():
-    class DelayTrain0AtDeparture(SchedulerAgent):
-        @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[0, 0] = 100.
-            return df
-
-    agent = DelayTrain0AtDeparture('foo')
+def test_scheduler_agent_load_unknown_instance(test_agent):
 
     match = "foo is not a valid scenario."
     with pytest.raises(ValueError, match=match):
-        agent.load_scenario('foo')
+        test_agent.load_scenario('foo')
