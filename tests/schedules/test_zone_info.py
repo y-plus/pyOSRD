@@ -15,8 +15,8 @@ def test_step_has_fixed_duration(use_case_station_capacity2):
 
     expected = pd.DataFrame(
         {
-            0: [False, True, False, np.nan, True, True],
-            1: [False, True, np.nan, False, True, True],
+            'train0': [False, True, False, np.nan, True, True],
+            'train1': [False, True, np.nan, False, True, True],
         },
         index=schedule_from_osrd(use_case_station_capacity2).df.index
     )
@@ -29,8 +29,8 @@ def test_step_type(use_case_station_capacity2):
 
     expected = pd.DataFrame(
         {
-            0: ['signal', 'switch', 'station', np.nan, 'switch', 'last_zone'],
-            1: ['signal', 'switch', np.nan, 'station', 'switch', 'last_zone'],
+            'train0': ['signal', 'switch', 'station', np.nan, 'switch', 'last_zone'],
+            'train1': ['signal', 'switch', np.nan, 'station', 'switch', 'last_zone'],
         },
         index=schedule_from_osrd(use_case_station_capacity2).df.index
     )
@@ -43,8 +43,8 @@ def test_step_station_id(use_case_station_capacity2):
 
     expected = pd.DataFrame(
         {
-            0: [np.nan, np.nan, 'station', np.nan, np.nan, np.nan],
-            1: [np.nan, np.nan, np.nan, 'station', np.nan, np.nan],
+            'train0': [np.nan, np.nan, 'station', np.nan, np.nan, np.nan],
+            'train1': [np.nan, np.nan, np.nan, 'station', np.nan, np.nan],
         },
         index=schedule_from_osrd(use_case_station_capacity2).df.index
     )

@@ -245,7 +245,7 @@ def previous_station(
     zones = [
         z
         for z in self.trajectory(train=train)[:idx][::-1]
-        if self.step_type.loc[z, train] == 'station'
+        if self.step_type.loc[z, self.trains[train]] == 'station'
     ]
 
     if zones:
@@ -284,7 +284,7 @@ def previous_switch(
     zones = [
         z
         for z in self.trajectory(train=train)[:idx][::-1]
-        if self.step_type.loc[z, train] == 'switch'
+        if self.step_type.loc[z, self.trains[train]] == 'switch'
     ]
 
     if zones:
@@ -320,13 +320,13 @@ def previous_switch_protecting_signal(
 
     idx = self.trajectory(train=train).index(zone)
 
-    if self.step_type.loc[zone, train] == 'switch':
+    if self.step_type.loc[zone, self.trains[train]] == 'switch':
         return previous_signal(self, train, zone)
 
     zones = [
         z
         for z in self.trajectory(train=train)[:idx][::-1]
-        if self.step_type.loc[z, train] == 'switch'
+        if self.step_type.loc[z, self.trains[train]] == 'switch'
     ]
 
     if not zones:
@@ -365,7 +365,7 @@ def previous_signal(
     zones = [
         z
         for z in self.trajectory(train=train)[:idx][::-1]
-        if self.step_type.loc[z, train] in ['signal', 'station']
+        if self.step_type.loc[z, self.trains[train]] in ['signal', 'station']
     ]
 
     if zones:

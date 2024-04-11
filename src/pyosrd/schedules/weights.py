@@ -62,8 +62,8 @@ class Weights:
 
     def train(osrd, train: int | str, value: int):
 
-        if isinstance(train, str):
-            train = osrd.trains.index(train)
+        if isinstance(train, int):
+            train = osrd._obj.columns[train]
 
         osrd._obj[train] = (
             osrd._obj[train]
@@ -74,8 +74,8 @@ class Weights:
 
     def train_zone(osrd, train: int | str, zone: str, value: int):
 
-        if isinstance(train, str):
-            train = osrd.trains.index(train)
+        if isinstance(train, int):
+            train = osrd._obj.columns[train]
 
         osrd._obj[train].loc[zone] = value
 
@@ -87,8 +87,8 @@ class Weights:
         sim: OSRD,
     ):
 
-        if isinstance(train, str):
-            train = osrd.trains.index(train)
+        if isinstance(train, int):
+            train = osrd._obj.columns[train]
 
         zone = _zone_from_train_and_station(sim, train, station)
         if zone is not None:

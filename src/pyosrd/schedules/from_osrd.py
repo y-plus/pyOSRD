@@ -43,7 +43,7 @@ def step_has_fixed_duration(sim: OSRD) -> pd.DataFrame:
             ],
             axis=1
         )
-        .set_axis(range(sim.num_trains), axis=1)
+        .set_axis(sim.trains, axis=1)
         .reindex(_schedule_df_from_OSRD(sim).index)
     )
 
@@ -79,7 +79,7 @@ def step_type(sim: OSRD) -> pd.DataFrame:
             ],
             axis=1
         )
-        .set_axis(range(sim.num_trains), axis=1)
+        .set_axis(sim.trains, axis=1)
         .reindex(_schedule_df_from_OSRD(sim).index)
     )
 
@@ -110,7 +110,7 @@ def step_station_id(sim: OSRD) -> pd.DataFrame:
                 ],
                 axis=1
             )
-            .set_axis(range(sim.num_trains), axis=1)
+            .set_axis(sim.trains, axis=1)
             .reindex(_schedule_df_from_OSRD(sim).index)
         )
     ).replace('', np.nan)

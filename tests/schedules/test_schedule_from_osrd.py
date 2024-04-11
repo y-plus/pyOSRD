@@ -38,8 +38,8 @@ def test_schedule_from_osrd_step_type(use_case_station_capacity2):
     s = schedule_from_osrd(use_case_station_capacity2)
     expected = pd.DataFrame(
         {
-            0: ['signal', 'switch', 'station', np.nan, 'switch', 'last_zone'],
-            1: ['signal', 'switch', np.nan, 'station', 'switch', 'last_zone'],
+            'train0': ['signal', 'switch', 'station', np.nan, 'switch', 'last_zone'],
+            'train1': ['signal', 'switch', np.nan, 'station', 'switch', 'last_zone'],
         },
         index=[
             'D0<->buffer_stop.0',
