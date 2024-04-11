@@ -11,6 +11,17 @@ def test_add_train(modify_sim):
     assert modify_sim.trains == ['train0', 'train1', 'new_train']
 
 
+def test_add_train_departure_time_as_string(modify_sim):
+    modify_sim.add_train(
+        label='new_train',
+        locations=[('T0', 300), ('T4', 490)],
+        departure_time='00:06:40'
+    )
+    modify_sim.run()
+    assert modify_sim.trains == ['train0', 'train1', 'new_train']
+    assert modify_sim.departure_times[-1] == 400
+
+
 def test_add_train_existing_label(modify_sim):
     with pytest.raises(ValueError):
         modify_sim.add_train(
@@ -78,6 +89,14 @@ def test_copy_train_by_label(modify_sim):
     modify_sim.run()
 
     assert 'new_train' in modify_sim.trains
+
+
+def test_copy_train_departure_time_as_string(modify_sim):
+    modify_sim.copy_train('train0', 'new_train', '00:01:40')
+    modify_sim.run()
+
+    assert 'new_train' in modify_sim.trains
+    assert modify_sim.departure_times[-1] == 100.
 
 
 def test_copy_train_already_existing_label(modify_sim):
