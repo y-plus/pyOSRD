@@ -95,7 +95,7 @@ def space_time_chart(
 
     ax.legend()
 
-    ax.set_xlim(left=0)
+    ax.set_xlim(left=min(self.departure_times))
     ax.set_xticks(
         [
             label._x
