@@ -31,24 +31,6 @@ def _read_json(json_file: str) -> dict | list:
             dict_ = {}
     return dict_
 
-
-class classproperty(property):
-    """Create a property for a class method
-
-    This is from the following stack overlflow issue :
-        https://stackoverflow.com/a/13624858
-
-    Use this decorator when you can a proerty decorator
-    and a classmethod decorator on the same method.
-    Since Python 3.13 it is not possible to have them
-    together hence this workaround.
-
-    Do not ask me how it works but it works...
-    """
-    def __get__(self, cls, owner):
-        return classmethod(self.fget).__get__(None, owner)()
-
-
 @dataclass
 class Point:
     track_section: str
@@ -123,7 +105,7 @@ class OSRD():
         # Load with_delay if any is given
         if self.with_delay:
 
-            if self.with_delay not in self.with_delays:
+            if self.with_delay not in OSRD.with_delays():
                 raise ValueError(
                     f"{self.with_delay} is not a valid use case " +
                     "with_delay name."
@@ -144,7 +126,7 @@ class OSRD():
         # Load simulation if any is given
         elif self.simulation:
 
-            if self.simulation not in self.simulations:
+            if self.simulation not in OSRD.simulations():
                 raise ValueError(
                     f"{self.simulation} is not a valid use case " +
                     "simulation name."
@@ -163,7 +145,7 @@ class OSRD():
 
         elif self.infra:
 
-            if self.infra not in self.infras:
+            if self.infra not in OSRD.infras():
                 raise ValueError(
                     f"{self.infra} is not a valid use case name."
                 )
@@ -242,28 +224,27 @@ class OSRD():
         """True if the object has simulation results"""
         return self.results != []
 
-    @classproperty
-    def infras(self) -> list[str]:
+    def infras() -> list[str]:
         """List of available infras"""
         return [
             name
             for _, name, _ in pkgutil.iter_modules(infras.__path__)
         ]
 
-    @classproperty
-    def simulations(self) -> list[str]:
+    def simulations(infra: str | None = None) -> list[str]:
         """List of available simulations"""
         return [
             name
             for _, name, _ in pkgutil.iter_modules(simulations.__path__)
+            if infra is None or infra+"_" in name
         ]
 
-    @classproperty
-    def with_delays(self) -> list[str]:
-        """List of available with_delays"""
+    def with_delays(sim: str | None = None) -> list[str]:
+        """List of available simulations"""
         return [
             name
             for _, name, _ in pkgutil.iter_modules(with_delays.__path__)
+            if sim is None or sim+"_" in name
         ]
 
     @property
