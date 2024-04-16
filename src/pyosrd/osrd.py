@@ -18,8 +18,9 @@ import requests
 from dotenv import load_dotenv
 from typing_extensions import Self
 
-import pyosrd.use_cases as use_cases
-import pyosrd.scenarii as scenarii
+import pyosrd.use_cases.infras as infras
+import pyosrd.use_cases.simulations as simulations
+import pyosrd.use_cases.with_delays as with_delays
 
 
 def _read_json(json_file: str) -> dict | list:
@@ -87,6 +88,9 @@ class OSRD():
     """
     dir: str = '.'
     use_case: str | None = None
+    infra: str | None = None
+    simulation: str | None = None
+    with_delay: str | None = None
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
@@ -110,22 +114,62 @@ class OSRD():
 
     def __post_init__(self):
 
-        if self.use_case:
+        # Load with_delay if any is given
+        if self.with_delay:
 
-            if self.use_case not in self.use_cases:
+            if self.with_delay not in self.with_delays:
                 raise ValueError(
-                    f"{self.use_case} is not a valid use case name."
+                    f"{self.with_delay} is not a valid use case " +
+                    "with_delay name."
                 )
 
             module = importlib.import_module(
-                f".{self.use_case}",
-                "pyosrd.use_cases"
+                f".{self.with_delay}",
+                "pyosrd.use_cases.with_delays"
             )
-            function = getattr(module, self.use_case)
+            function = getattr(module, self.with_delay)
+            function(
+                self.dir,
+                self.infra_json,
+                self.simulation_json,
+                self.delays_json,
+            )
+
+        # Load simulation if any is given
+        elif self.simulation:
+
+            if self.simulation not in self.simulations:
+                raise ValueError(
+                    f"{self.simulation} is not a valid use case " +
+                    "simulation name."
+                )
+
+            module = importlib.import_module(
+                f".{self.simulation}",
+                "pyosrd.use_cases.simulations"
+            )
+            function = getattr(module, self.simulation)
             function(
                 self.dir,
                 self.infra_json,
                 self.simulation_json
+            )
+
+        elif self.infra:
+
+            if self.infra not in self.infras:
+                raise ValueError(
+                    f"{self.infra} is not a valid use case name."
+                )
+
+            module = importlib.import_module(
+                f".{self.infra}",
+                "pyosrd.use_cases.infras"
+            )
+            function = getattr(module, self.infra)
+            function(
+                self.dir,
+                self.infra_json
             )
 
         self.infra = (
@@ -140,7 +184,7 @@ class OSRD():
             else {}
         )
 
-        if self.use_case:
+        if self.simulation:
             self.run()
 
         self.results = (
@@ -190,19 +234,27 @@ class OSRD():
         return self.results != []
 
     @classproperty
-    def use_cases(self) -> list[str]:
-        """List of available use cases"""
+    def infras(self) -> list[str]:
+        """List of available infras"""
         return [
             name
-            for _, name, _ in pkgutil.iter_modules(use_cases.__path__)
+            for _, name, _ in pkgutil.iter_modules(infras.__path__)
         ]
 
     @classproperty
-    def scenarii(self) -> list[str]:
-        """List of available scenarii"""
+    def simulations(self) -> list[str]:
+        """List of available simulations"""
         return [
             name
-            for _, name, _ in pkgutil.iter_modules(scenarii.__path__)
+            for _, name, _ in pkgutil.iter_modules(simulations.__path__)
+        ]
+
+    @classproperty
+    def with_delays(self) -> list[str]:
+        """List of available with_delays"""
+        return [
+            name
+            for _, name, _ in pkgutil.iter_modules(with_delays.__path__)
         ]
 
     @property

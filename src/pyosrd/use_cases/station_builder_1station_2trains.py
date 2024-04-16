@@ -11,7 +11,7 @@ from pyosrd.infra.helpers.station_builder import build_N_dvg_station_cvg
 def station_builder_1station_2trains(
     dir: str,
     infra_json: str = 'infra.json',
-    simulation_json: str = 'simulation.json',
+    simulation_json: str = 'simulation.json'
 ) -> None:
     """Generate a divergence/stations/convergence sequence.
 

@@ -172,17 +172,7 @@ class SchedulerAgent(Agent):
             When the scenario is unknown
         """
 
-        if scenario not in OSRD.scenarii:
-            raise ValueError(
-                f"{scenario} is not a valid scenario."
-            )
-
-        module = importlib.import_module(
-            f".{scenario}",
-            "pyosrd.scenarii"
-        )
-        function = getattr(module, scenario)
-        sim = function()
+        sim = OSRD(with_delay=scenario)
         delayed_sim = sim.delayed()
 
         self.set_schedules_from_osrd(sim, "all_steps")
@@ -283,14 +273,14 @@ def regulate_scenarii_with_agents(
     """
 
     if scenarii == 'all':
-        scenarii = OSRD.scenarii
-    elif scenarii in OSRD.scenarii:
+        scenarii = OSRD.with_delays
+    elif scenarii in OSRD.with_delays:
         scenarii = [scenarii]
     elif isinstance(scenarii, str):
         raise ValueError(f"Unknown scenario {scenarii}.")
 
     for scenario in scenarii:
-        if scenario not in OSRD.scenarii:
+        if scenario not in OSRD.with_delays:
             raise ValueError(
                 f"{scenario} is not a valid scenario."
             )
