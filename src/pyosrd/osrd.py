@@ -65,9 +65,16 @@ class OSRD():
     ----------
     dir: str, optional
         Directory path, by default current directory
-    use_case: str or None, optional
-        If set, build a use_case
-        among all availables given by `OSRD.use_cases`, by default None
+    infra: str or None, optional
+        If set, build a infra
+        among all availables given by `OSRD.infras`, by default None
+    simulation: str or None, optional
+        If set, build a simulation (composed of an infra and trains)
+        among all availables given by `OSRD.simulations`, by default None
+    with_delay: str or None, optional
+        If set, build a simulation with delays (composed of an infra,
+        trains and delays) among all availables given by
+        `OSRD.with_delays`, by default None
     infra_json: str, optional
         Name of the file containing the infrastructure in rail_json format.
         If the file does not exist, attribute infra will be empty,
@@ -87,7 +94,6 @@ class OSRD():
         by default 'delays.json'
     """
     dir: str = '.'
-    use_case: str | None = None
     infra: str | None = None
     simulation: str | None = None
     with_delay: str | None = None
