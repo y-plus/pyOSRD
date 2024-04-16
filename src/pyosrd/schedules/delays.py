@@ -19,7 +19,11 @@ def delays(self, ref_schedule: Schedule) -> pd.DataFrame:
     )
 
 
-def train_delay(self, train: int | str, ref_schedule: Schedule) -> pd.DataFrame:
+def train_delay(
+    self,
+    train: int | str,
+    ref_schedule: Schedule
+) -> pd.DataFrame:
 
     if isinstance(train, int):
         train = self.trains[train]
