@@ -27,14 +27,14 @@ def test_station_builder_infra(use_case_station_builder):
 def test_station_builder_infra_routes(use_case_station_builder):
     assert set(use_case_station_builder.routes) == \
         set([
-            'rt.station_builder_1station.0.D4->buffer_stop.0',
-            'rt.buffer_stop.0->station_builder_1station.0.D1',
-            'rt.station_builder_1station.0.D2->buffer_stop.0',
-            'rt.buffer_stop.1->station_builder_1station.0.D2',
-            'rt.buffer_stop.1->station_builder_1station.0.D4',
-            'rt.buffer_stop.0->station_builder_1station.0.D3',
-            'rt.station_builder_1station.0.D3->buffer_stop.1',
-            'rt.station_builder_1station.0.D1->buffer_stop.1'
+            'rt.station_builder_1station.0.D4->buffer_stop.2',
+            'rt.buffer_stop.2->station_builder_1station.0.D1',
+            'rt.station_builder_1station.0.D2->buffer_stop.2',
+            'rt.buffer_stop.3->station_builder_1station.0.D2',
+            'rt.buffer_stop.3->station_builder_1station.0.D4',
+            'rt.buffer_stop.2->station_builder_1station.0.D3',
+            'rt.station_builder_1station.0.D3->buffer_stop.3',
+            'rt.station_builder_1station.0.D1->buffer_stop.3'
         ])
 
 
@@ -74,7 +74,7 @@ def test_station_builder_infra_num_stations(use_case_station_builder):
 def test_station_builder_points_on_tracks(use_case_station_builder):
     expected = {
         "T0": [
-            Point(track_section="T0", position=0.0, id="buffer_stop.0", type="buffer_stop"),  # noqa
+            Point(track_section="T0", position=0.0, id="buffer_stop.2", type="buffer_stop"),  # noqa
             Point(track_section="T0", position=980.0, id="station_builder_1station.0.D0", type="detector"),  # noqa
             Point(track_section="T0", position=1000.0, id="station_builder_1station.0.DVG", type="switch"),  # noqa
         ],
@@ -99,7 +99,7 @@ def test_station_builder_points_on_tracks(use_case_station_builder):
         "station_builder_1station.0.Tout": [
             Point(track_section="station_builder_1station.0.Tout", position=0, id="station_builder_1station.0.CVG", type="switch"),  # noqa
             Point(track_section="station_builder_1station.0.Tout", position=20.0, id="station_builder_1station.0.D5", type="detector"),  # noqa
-            Point(track_section="station_builder_1station.0.Tout", position=1000.0, id="buffer_stop.1", type="buffer_stop"),  # noqa
+            Point(track_section="station_builder_1station.0.Tout", position=1000.0, id="buffer_stop.3", type="buffer_stop"),  # noqa
         ],
     }
 
@@ -191,12 +191,12 @@ def test_station_builder_space_time_chart(use_case_station_builder):
 def test_station_builder_tvd_zones(use_case_station_builder):
 
     expected = {
-        'buffer_stop.0<->station_builder_1station.0.D0': 'buffer_stop.0<->station_builder_1station.0.D0',  # noqa
+        'buffer_stop.2<->station_builder_1station.0.D0': 'buffer_stop.2<->station_builder_1station.0.D0',  # noqa
         'station_builder_1station.0.D0<->station_builder_1station.0.D3': 'station_builder_1station.0.DVG',  # noqa
         'station_builder_1station.0.D0<->station_builder_1station.0.D1': 'station_builder_1station.0.DVG',  # noqa
         'station_builder_1station.0.D1<->station_builder_1station.0.D2': 'station_builder_1station.0.D1<->station_builder_1station.0.D2',  # noqa
         'station_builder_1station.0.D2<->station_builder_1station.0.D5': 'station_builder_1station.0.CVG',  # noqa
-        'buffer_stop.1<->station_builder_1station.0.D5': 'buffer_stop.1<->station_builder_1station.0.D5',  # noqa
+        'buffer_stop.3<->station_builder_1station.0.D5': 'buffer_stop.3<->station_builder_1station.0.D5',  # noqa
         'station_builder_1station.0.D3<->station_builder_1station.0.D4': 'station_builder_1station.0.D3<->station_builder_1station.0.D4',  # noqa
         'station_builder_1station.0.D4<->station_builder_1station.0.D5': 'station_builder_1station.0.CVG'  # noqa
     }
@@ -207,7 +207,7 @@ def test_station_builder_stop_positions(use_case_station_builder):
 
     expected = [
         {
-            "buffer_stop.0<->station_builder_1station.0.D0": {
+            "buffer_stop.2<->station_builder_1station.0.D0": {
                 "type": "station",
                 "offset": 1000.0,
                 "id": "station_builder_1station.0.s"
@@ -224,7 +224,7 @@ def test_station_builder_stop_positions(use_case_station_builder):
             }
         },
         {
-            "buffer_stop.0<->station_builder_1station.0.D0": {
+            "buffer_stop.2<->station_builder_1station.0.D0": {
                 "type": "station",
                 "offset": 1000.0,
                 "id": "station_builder_1station.0.s"

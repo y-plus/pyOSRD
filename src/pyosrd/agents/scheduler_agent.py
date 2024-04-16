@@ -1,5 +1,3 @@
-import importlib
-
 from abc import abstractmethod
 
 from dataclasses import dataclass
@@ -129,17 +127,8 @@ class SchedulerAgent(Agent):
         scenario : str
             The scenario to be regulated
         """
-        if scenario not in OSRD.scenarii:
-            raise ValueError(
-                f"{scenario} is not a valid scenario."
-            )
 
-        module = importlib.import_module(
-            f".{scenario}",
-            "pyosrd.scenarii"
-        )
-        function = getattr(module, scenario)
-        sim = function()
+        sim = OSRD(with_delay=scenario)
 
         self.set_schedules_from_osrd(sim, "all_steps")
 

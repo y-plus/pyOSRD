@@ -110,6 +110,7 @@ def two_trains_two_zones_before_dvg() -> Schedule:
 @pytest.fixture(scope='session')
 def osrd_cvg_dvg_missing_sim():
     yield OSRD(
+        dir="tmp",
         results_json="missing.json",
         simulation_json="missing.json",
     )
@@ -118,49 +119,49 @@ def osrd_cvg_dvg_missing_sim():
 
 @pytest.fixture(scope='session')
 def osrd_cvg_dvg_before_run():
-    yield OSRD(results_json="missing.json")
-    shutil.rmtree('tmp', ignore_errors=True)
+    yield OSRD(dir="tmp5", results_json="missing.json")
+    shutil.rmtree('tmp5', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_cvg_dvg():
-    yield OSRD(dir='tmp', use_case='cvg_dvg')
+    yield OSRD(dir='tmp', simulation='cvg_dvg')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_station_builder():
-    yield OSRD(dir='tmp', use_case='station_builder_1station_2trains')
+    yield OSRD(dir='tmp', simulation='station_builder_1station_2trains')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='function')
 def modify_sim():
-    yield OSRD(dir='tmp2', use_case='cvg_dvg')
-    shutil.rmtree('tmp2', ignore_errors=True)
+    yield OSRD(dir='tmp', simulation='cvg_dvg')
+    shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_station_capacity2():
-    yield OSRD(dir='tmp', use_case='station_capacity2')
+    yield OSRD(dir='tmp', simulation='station_capacity2')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_point_switch():
-    yield OSRD(dir='tmp', use_case='point_switch')
+    yield OSRD(dir='tmp', simulation='point_switch')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_straight_line():
-    yield OSRD(dir='tmp', use_case='straight_line')
+    yield OSRD(dir='tmp', simulation='straight_line')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
 def use_case_double_switch():
-    yield OSRD(dir='tmp', use_case='double_switch')
+    yield OSRD(dir='tmp', simulation='double_switch')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
