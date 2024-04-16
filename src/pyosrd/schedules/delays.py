@@ -4,11 +4,11 @@ from typing import Protocol
 import pandas as pd
 
 
-class OSRD(Protocol):
+class Schedule(Protocol):
     _df: pd.DataFrame
 
 
-def delays(self, ref_schedule: OSRD) -> pd.DataFrame:
+def delays(self, ref_schedule: Schedule) -> pd.DataFrame:
 
     delta = self._df - ref_schedule._df
 
@@ -19,7 +19,11 @@ def delays(self, ref_schedule: OSRD) -> pd.DataFrame:
     )
 
 
-def train_delay(self, train: int | str, ref_schedule: OSRD) -> pd.DataFrame:
+def train_delay(
+    self,
+    train: int | str,
+    ref_schedule: Schedule
+) -> pd.DataFrame:
 
     if isinstance(train, int):
         train = self.trains[train]
@@ -29,7 +33,7 @@ def train_delay(self, train: int | str, ref_schedule: OSRD) -> pd.DataFrame:
 
 def total_weighted_delay(
     self,
-    ref_schedule: OSRD,
+    ref_schedule: Schedule,
     weights: pd.DataFrame
 ) -> float:
     """Compute an indicator to evaluate this Schedule.
@@ -63,7 +67,7 @@ def total_weighted_delay(
 
 def total_delay_at_stations(
     self,
-    ref_schedule: OSRD,
+    ref_schedule: Schedule,
     stations: list[int | str]
 ) -> float:
 

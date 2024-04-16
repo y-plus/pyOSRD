@@ -37,7 +37,6 @@ def test_schedules_start_from_seconds_zones_skipped(two_trains_hours):
     5      NaN      NaN  14400.0  18000.0
     """
     result = two_trains_hours.start_from('01:30')
-    print(result)
 
     # first zone does not appear anymore
     assert result.num_zones == 5

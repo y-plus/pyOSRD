@@ -49,6 +49,23 @@ def two_trains() -> Schedule:
 
 
 @pytest.fixture
+def two_trains_in_line() -> Schedule:
+    schedule = Schedule(3, 2)
+
+    schedule.df.at[0, 0] = [0, 1]
+    schedule.df.at[1, 0] = [1, 2]
+    schedule.df.at[2, 0] = [2, 3]
+
+    schedule.df.at[0, 1] = [1, 2]
+    schedule.df.at[1, 1] = [2, 3]
+    schedule.df.at[2, 1] = [3, 4]
+
+    schedule.set_train_labels(['train1', 'train2'])
+
+    return schedule
+
+
+@pytest.fixture
 def two_trains_hours() -> Schedule:
     schedule = Schedule(6, 2)
 
