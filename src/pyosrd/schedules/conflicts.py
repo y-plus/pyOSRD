@@ -1,3 +1,4 @@
+import warnings
 import numpy as np
 import pandas as pd
 
@@ -55,20 +56,24 @@ def first_conflict(self, train: int | str) -> tuple[int, int]:
 def earliest_conflict(self) -> tuple[int | str, str, int | str]:
     """ Returns the zone where earliest conflict occurs,
     first train in and last in."""
-    conflicts_times = [
-        np.min(self.conflicts(train).stack())
-        if not self.conflicts(train).stack().empty
-        else np.inf
-        for train in self.trains
-    ]
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
 
-    if np.isfinite(np.min(conflicts_times)):
-        other_train = np.argmin(conflicts_times)
-        other_train = self.trains[other_train]
+        conflicts_times = [
+            np.min(self.conflicts(train).stack())
+            if not self.conflicts(train).stack().empty
+            else np.inf
+            for train in self.trains
+        ]
 
-        return (
-            self.first_conflict(other_train)[0],
-            self.first_conflict(other_train)[1],
-            other_train
-            )
-    return None, None, None
+        if np.isfinite(np.min(conflicts_times)):
+
+            other_train = np.argmin(conflicts_times)
+            other_train = self.trains[other_train]
+
+            return (
+                self.first_conflict(other_train)[0],
+                self.first_conflict(other_train)[1],
+                other_train
+                )
+        return None, None, None
