@@ -40,7 +40,7 @@ def c1y2_2trains(
 
     sim_builder.add_train_schedule(
         Location(T[0], 50.),
-        Location(T[1], T[1].length-10),
+        Location(T[2], T[2].length-10),
         label='train1',
         departure_time=100,
     )

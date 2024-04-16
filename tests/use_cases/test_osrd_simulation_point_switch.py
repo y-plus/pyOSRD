@@ -4,9 +4,9 @@ point_switch
 
                      S1┐
                     -D1---------(T1)-->
-            ┎S0   / 
---(T0)--------D0-<(DVG)            
-                  \  S2┐ 
+            ┎S0   /
+--(T0)--------D0-<(DVG)
+                  \  S2┐
                     -D2----------(T2)-->
 
 All tracks are 10 km long

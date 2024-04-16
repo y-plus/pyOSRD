@@ -36,7 +36,6 @@ def station_builder_1station_2trains(
         1
     )
 
-    dir = "tmp"
     os.makedirs(dir, exist_ok=True)
 
     built_infra = infra_builder.build()

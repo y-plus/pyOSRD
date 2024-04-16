@@ -207,7 +207,10 @@ class OSRD():
         ValueError
             If missing infra or simulation json file.
         """
-        if self.infra == {} or self.simulation == {}:
+        if (
+            self.infra == {} or self.simulation == {} or
+            self.infra is None or self.simulation is None
+        ):
             raise ValueError("Missing json file to run OSRD")
 
         if os.path.exists(os.path.join(self.dir, self.results_json)):

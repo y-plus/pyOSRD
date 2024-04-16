@@ -10,7 +10,7 @@ from railjson_generator.schema.simulation.stop import Stop
 from pyosrd.use_cases.infras.c2y1sy2sy1s import c2y1sy2sy1s
 
 
-def c2y1sy2sy1s_1train(
+def c2y1sy2sy1s_2trains(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
