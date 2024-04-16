@@ -31,6 +31,7 @@ def _read_json(json_file: str) -> dict | list:
             dict_ = {}
     return dict_
 
+
 @dataclass
 class Point:
     track_section: str
