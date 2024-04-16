@@ -5,7 +5,7 @@ import pytest
 from pyosrd import OSRD
 
 
-@pytest.mark.parametrize('simulation', OSRD.simulations)
+@pytest.mark.parametrize('simulation', OSRD.simulations())
 def test_simulations_no_fail(simulation):
     try:
         OSRD(simulation=simulation, dir='tmp')

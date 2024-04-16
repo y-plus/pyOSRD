@@ -262,14 +262,14 @@ def regulate_scenarii_with_agents(
     """
 
     if scenarii == 'all':
-        scenarii = OSRD.with_delays
-    elif scenarii in OSRD.with_delays:
+        scenarii = OSRD.with_delays()
+    elif scenarii in OSRD.with_delays():
         scenarii = [scenarii]
     elif isinstance(scenarii, str):
         raise ValueError(f"Unknown scenario {scenarii}.")
 
     for scenario in scenarii:
-        if scenario not in OSRD.with_delays:
+        if scenario not in OSRD.with_delays():
             raise ValueError(
                 f"{scenario} is not a valid scenario."
             )
