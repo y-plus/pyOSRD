@@ -21,6 +21,7 @@ class Schedule(object):
         previous_switch_protecting_signal
     )
     from .plot import sort, plot
+    from .interlocking import with_interlocking_constraints
     from .conflicts import (
         conflicts,
         has_conflicts,
