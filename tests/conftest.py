@@ -50,7 +50,7 @@ def two_trains() -> Schedule:
 
 @pytest.fixture
 def two_trains_in_line() -> Schedule:
-    schedule = Schedule(6, 2)
+    schedule = Schedule(3, 2)
 
     schedule.df.at[0, 0] = [0, 1]
     schedule.df.at[1, 0] = [1, 2]

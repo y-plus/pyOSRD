@@ -27,7 +27,7 @@ def test_schedules_interlocking_switch_change_delay(two_trains):
 
 def test_schedules_interlocking_1_block_btw_trains(two_trains_in_line):
 
-    schedule = Schedule(6, 2)
+    schedule = Schedule(3, 2)
 
     schedule.df.at[0, 0] = [0, 2]
     schedule.df.at[1, 0] = [1, 3]
