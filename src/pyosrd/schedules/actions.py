@@ -4,6 +4,8 @@ from typing import Protocol
 import numpy as np
 import pandas as pd
 
+from pyosrd.utils import hour_to_seconds
+
 
 class Schedule(Protocol):
     _df: pd.DataFrame
@@ -47,11 +49,14 @@ def add_delay(
     self: Schedule,
     train: int | str,
     zone: int | str,
-    delay: float
+    delay: float | str,
 ) -> Schedule:
 
     if isinstance(train, int):
         train = self.trains[train]
+
+    if isinstance(delay, str):
+        delay = hour_to_seconds(delay)
 
     start = self._df.loc[zone, (train, 's')]
     new_schedule = copy.deepcopy(self)
