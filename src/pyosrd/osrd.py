@@ -6,6 +6,7 @@ import pkgutil
 import shutil
 import subprocess
 from dataclasses import dataclass
+from dataclasses import field
 from importlib.resources import files
 from itertools import combinations
 from typing import Any
@@ -84,6 +85,7 @@ class OSRD():
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
     delays_json: str = 'delays.json'
+    params_use_case: dict = field(default_factory=dict)
 
     from .agents import Agent
     from .delays import add_delay, add_delays_in_results, delayed, reset_delays
@@ -122,6 +124,7 @@ class OSRD():
                 self.infra_json,
                 self.simulation_json,
                 self.delays_json,
+                **self.params_use_case
             )
 
         # Load simulation if any is given
@@ -141,7 +144,8 @@ class OSRD():
             function(
                 self.dir,
                 self.infra_json,
-                self.simulation_json
+                self.simulation_json,
+                **self.params_use_case
             )
 
         elif self.infra:
@@ -158,7 +162,8 @@ class OSRD():
             function = getattr(module, self.infra)
             function(
                 self.dir,
-                self.infra_json
+                self.infra_json,
+                **self.params_use_case
             )
 
         self.infra = (
