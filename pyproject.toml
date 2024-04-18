@@ -39,7 +39,7 @@ Issues = "https://github.com/y-plus/pyOSRD/issues"
 where = ["src"]
 
 [tool.setuptools.package-data]
-pyosrd = ["*.jar"]
+pyosrd = ["*.jar", "*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
