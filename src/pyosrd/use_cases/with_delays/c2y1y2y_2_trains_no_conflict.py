@@ -8,7 +8,7 @@ def c2y1y2y_2_trains_no_conflict(
     delays_json: str = 'delays.json'
   ) -> None:
     """
-    See c2y1y2y.py in use_cases to check the infra. (reminder here :)
+    See c2y1y2y.py in simulations to check the infra. (reminder here :)
        station0 (2 tracks)                        station1 (2 tracks)                      station2 (1 track)
 
            ┎S0                                                      ┎S4
@@ -24,13 +24,13 @@ def c2y1y2y_2_trains_no_conflict(
     In this test case train0 is slightly delayed which should not delay train1
 
     """  # noqa
-    use_case = 'c2y1y2y_2trains'
+    simulation = 'c2y1y2y_2trains'
     sim = OSRD(
         dir=dir,
         infra_json=infra_json,
         simulation_json=simulation_json,
         delays_json=delays_json,
-        simulation=use_case
+        simulation=simulation
     )
 
     sim.reset_delays()

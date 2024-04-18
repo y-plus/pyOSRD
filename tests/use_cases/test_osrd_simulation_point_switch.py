@@ -21,12 +21,12 @@ import matplotlib.pyplot as plt
 from pyosrd.osrd import Point
 
 
-def test_point_switch_infra(use_case_point_switch):
-    assert isinstance(use_case_point_switch.infra, dict)
+def test_point_switch_infra(simulation_point_switch):
+    assert isinstance(simulation_point_switch.infra, dict)
 
 
-def test_point_switch_infra_routes(use_case_point_switch):
-    assert set(use_case_point_switch.routes) == \
+def test_point_switch_infra_routes(simulation_point_switch):
+    assert set(simulation_point_switch.routes) == \
         set([
             'rt.buffer_stop.0->D0',
             'rt.D0->buffer_stop.2',
@@ -38,8 +38,8 @@ def test_point_switch_infra_routes(use_case_point_switch):
         ])
 
 
-def test_point_switch_infra_track_lengths(use_case_point_switch):
-    assert use_case_point_switch.track_section_lengths == \
+def test_point_switch_infra_track_lengths(simulation_point_switch):
+    assert simulation_point_switch.track_section_lengths == \
         {
             'T0': 10_000.0,
             'T1': 10_000.0,
@@ -47,29 +47,29 @@ def test_point_switch_infra_track_lengths(use_case_point_switch):
         }
 
 
-def test_point_switch_infra_num_switches(use_case_point_switch):
-    assert use_case_point_switch.num_switches == 1
+def test_point_switch_infra_num_switches(simulation_point_switch):
+    assert simulation_point_switch.num_switches == 1
 
 
-def test_point_switch_infra_draw_infra_not_fail(use_case_point_switch):
+def test_point_switch_infra_draw_infra_not_fail(simulation_point_switch):
     """Test if it does not raise an exception"""
     try:
-        use_case_point_switch.draw_infra_points()
+        simulation_point_switch.draw_infra_points()
     except:  # noqa
         assert False
 
 
-def test_point_switch_infra_station_capacities(use_case_point_switch):
+def test_point_switch_infra_station_capacities(simulation_point_switch):
     assert (
-        use_case_point_switch.station_capacities == {}
+        simulation_point_switch.station_capacities == {}
     )
 
 
-def test_point_switch_infra_num_stations(use_case_point_switch):
-    assert use_case_point_switch.num_stations == 0
+def test_point_switch_infra_num_stations(simulation_point_switch):
+    assert simulation_point_switch.num_stations == 0
 
 
-def test_point_switch_points_on_tracks(use_case_point_switch):
+def test_point_switch_points_on_tracks(simulation_point_switch):
     expected = {
         'T0': [
             Point(id='buffer_stop.0', track_section='T0', position=0.0, type='buffer_stop'),  # noqa
@@ -91,49 +91,49 @@ def test_point_switch_points_on_tracks(use_case_point_switch):
         ],
     }
 
-    assert use_case_point_switch.points_on_track_sections() == expected
+    assert simulation_point_switch.points_on_track_sections() == expected
 
 
-def test_point_switch_simulation_type(use_case_point_switch):
-    assert isinstance(use_case_point_switch.simulation, dict)
+def test_point_switch_simulation_type(simulation_point_switch):
+    assert isinstance(simulation_point_switch.simulation, dict)
 
 
-def test_point_switch_simulation_num_trains(use_case_point_switch):
-    assert use_case_point_switch.num_trains == 2
+def test_point_switch_simulation_num_trains(simulation_point_switch):
+    assert simulation_point_switch.num_trains == 2
 
 
-def test_point_switch_simulation_trains(use_case_point_switch):
-    assert use_case_point_switch.trains == ['train0', 'train1']
+def test_point_switch_simulation_trains(simulation_point_switch):
+    assert simulation_point_switch.trains == ['train0', 'train1']
 
 
-def test_point_switch_simulation_departure_times(use_case_point_switch):
-    assert use_case_point_switch.departure_times == [0, 100]
+def test_point_switch_simulation_departure_times(simulation_point_switch):
+    assert simulation_point_switch.departure_times == [0, 100]
 
 
-def test_point_switch_results_length(use_case_point_switch):
-    assert len(use_case_point_switch.results) == \
-        use_case_point_switch.num_trains
+def test_point_switch_results_length(simulation_point_switch):
+    assert len(simulation_point_switch.results) == \
+        simulation_point_switch.num_trains
 
 
-def test_point_switch_results_train_track_sections(use_case_point_switch):
-    assert use_case_point_switch.train_track_sections(0) == [
+def test_point_switch_results_train_track_sections(simulation_point_switch):
+    assert simulation_point_switch.train_track_sections(0) == [
         {'id': 'T0', 'direction': 'START_TO_STOP'},
         {'id': 'T1', 'direction': 'START_TO_STOP'},
     ]
-    assert use_case_point_switch.train_track_sections(1) == [
+    assert simulation_point_switch.train_track_sections(1) == [
         {'id': 'T2', 'direction': 'STOP_TO_START'},
         {'id': 'T0', 'direction': 'STOP_TO_START'},
     ]
 
 
-def test_point_switch_departure_arrival_0(use_case_point_switch):
-    assert asdict(use_case_point_switch.train_departure(0)) == {
+def test_point_switch_departure_arrival_0(simulation_point_switch):
+    assert asdict(simulation_point_switch.train_departure(0)) == {
         'id': 'departure_train0',
         'track_section': 'T0',
         'position': 50.0,
         'type': 'departure',
     }
-    assert asdict(use_case_point_switch.train_arrival(0)) == {
+    assert asdict(simulation_point_switch.train_arrival(0)) == {
         'id': 'arrival_train0',
         'track_section': 'T1',
         'position': 9950.0,
@@ -141,14 +141,14 @@ def test_point_switch_departure_arrival_0(use_case_point_switch):
     }
 
 
-def test_point_switch_departure_arrival_1(use_case_point_switch):
-    assert asdict(use_case_point_switch.train_departure(1)) == {
+def test_point_switch_departure_arrival_1(simulation_point_switch):
+    assert asdict(simulation_point_switch.train_departure(1)) == {
         'id': 'departure_train1',
         'track_section': 'T2',
         'position': 9950.0,
         'type': 'departure',
     }
-    assert asdict(use_case_point_switch.train_arrival(1)) == {
+    assert asdict(simulation_point_switch.train_arrival(1)) == {
         'id': 'arrival_train1',
         'track_section': 'T0',
         'position': 50.0,
@@ -156,7 +156,7 @@ def test_point_switch_departure_arrival_1(use_case_point_switch):
     }
 
 
-def test_point_switch_offset_in_path(use_case_point_switch):
+def test_point_switch_offset_in_path(simulation_point_switch):
     before_departure_0 = Point(
         id='before_departure_0',
         track_section='T0',
@@ -184,28 +184,28 @@ def test_point_switch_offset_in_path(use_case_point_switch):
     )
 
     assert [
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_departure(0), train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_departure(1), train=1),  # noqa
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_arrival(0), train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_arrival(1), train=1),  # noqa
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch.train_arrival(0), train=1),  # noqa
-        use_case_point_switch.offset_in_path_of_train(before_departure_0, train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(after_arrival_0, train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(before_departure_1, train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(after_arrival_1, train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch._points()[-3], train=0),  # noqa
-        use_case_point_switch.offset_in_path_of_train(use_case_point_switch._points()[-1], train=1),  # noqa
+        simulation_point_switch.offset_in_path_of_train(simulation_point_switch.train_departure(0), train=0),  # noqa
+        simulation_point_switch.offset_in_path_of_train(simulation_point_switch.train_departure(1), train=1),  # noqa
+        simulation_point_switch.offset_in_path_of_train(simulation_point_switch.train_arrival(0), train=0),  # noqa
+        simulation_point_switch.offset_in_path_of_train(simulation_point_switch.train_arrival(1), train=1),  # noqa
+        simulation_point_switch.offset_in_path_of_train(simulation_point_switch.train_arrival(0), train=1),  # noqa
+        simulation_point_switch.offset_in_path_of_train(before_departure_0, train=0),  # noqa
+        simulation_point_switch.offset_in_path_of_train(after_arrival_0, train=0),  # noqa
+        simulation_point_switch.offset_in_path_of_train(before_departure_1, train=0),  # noqa
+        simulation_point_switch.offset_in_path_of_train(after_arrival_1, train=0),  # noqa
+        simulation_point_switch.offset_in_path_of_train(simulation_point_switch._points()[-3], train=0),  # noqa
+        simulation_point_switch.offset_in_path_of_train(simulation_point_switch._points()[-1], train=1),  # noqa
 
     ] == [0.0, 0.0, 19900.0, 19900.0, None, None, 19930, None, None, 9950.0, 9950.0]  # noqa
 
 
-def test_point_switch_points_encountered_by_train0(use_case_point_switch):
+def test_point_switch_points_encountered_by_train0(simulation_point_switch):
     points = [
         {
             k: v for k, v in d.items()
             if not k.startswith('t_')
         }
-        for d in use_case_point_switch.points_encountered_by_train(0)
+        for d in simulation_point_switch.points_encountered_by_train(0)
     ]
     expected = [
         {'id': 'departure_train0', 'type': 'departure', 'offset': 0, },
@@ -219,14 +219,14 @@ def test_point_switch_points_encountered_by_train0(use_case_point_switch):
 
 
 def test_point_switch_points_encountered_by_train1_reverse(
-    use_case_point_switch
+    simulation_point_switch
 ):
     points = [
         {
             k: v for k, v in d.items()
             if not k.startswith('t_')
         }
-        for d in use_case_point_switch.points_encountered_by_train(1)
+        for d in simulation_point_switch.points_encountered_by_train(1)
     ]
     expected = [
         {'id': 'departure_train1', 'type': 'departure', 'offset': 0, },
@@ -239,9 +239,9 @@ def test_point_switch_points_encountered_by_train1_reverse(
     assert points == expected
 
 
-def test_point_switch_space_time_chart(use_case_point_switch):
+def test_point_switch_space_time_chart(simulation_point_switch):
 
-    ax = use_case_point_switch.space_time_chart(0, points_to_show=['switch'])
+    ax = simulation_point_switch.space_time_chart(0, points_to_show=['switch'])
 
     assert ax.dataLim.xmin == 0.
     assert round(ax.dataLim.ymin) == 0.
@@ -254,7 +254,7 @@ def test_point_switch_space_time_chart(use_case_point_switch):
     plt.close()
 
 
-def test_point_switch_tvd_zones(use_case_point_switch):
+def test_point_switch_tvd_zones(simulation_point_switch):
 
     expected = {
         'D0<->buffer_stop.0': 'D0<->buffer_stop.0',
@@ -263,4 +263,4 @@ def test_point_switch_tvd_zones(use_case_point_switch):
         'D0<->D2': 'DVG',
         'D2<->buffer_stop.2': 'D2<->buffer_stop.2',
     }
-    assert use_case_point_switch.tvd_zones == expected
+    assert simulation_point_switch.tvd_zones == expected

@@ -8,18 +8,18 @@ def c1_2trains_delay_train1(
     delays_json: str = 'delays.json'
 ) -> None:
     """
-    See c1.py in use_cases simulations to check the trains and infra.
+    See c1.py in simulations simulations to check the trains and infra.
 
     In this test case the train0 is delay for 120 seconds,
     10 seconds after its start
     """
-    use_case = "c1_2trains"
+    simulation = "c1_2trains"
     sim = OSRD(
         dir=dir,
         infra_json=infra_json,
         simulation_json=simulation_json,
         delays_json=delays_json,
-        simulation=use_case
+        simulation=simulation
     )
 
     sim.reset_delays()

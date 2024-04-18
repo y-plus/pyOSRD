@@ -8,20 +8,20 @@ def c1y2_2trains_conflict(
     delays_json: str = 'delays.json'
   ) -> None:
     """
-    See c1y2_2trains.py in use_cases to check the infra.
+    See c1y2_2trains.py in simulations to check the infra.
 
     In this test case we have two trains going to different
       branch from a divergence.
     The leading train is delayed in the divergence therefore
       the trailing train must wait before entering the divergence.
     """
-    use_case = 'c1y2_2trains'
+    simulation = 'c1y2_2trains'
     sim = OSRD(
         dir=dir,
         infra_json=infra_json,
         simulation_json=simulation_json,
         delays_json=delays_json,
-        simulation=use_case
+        simulation=simulation
     )
 
     sim.reset_delays()

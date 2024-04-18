@@ -124,13 +124,13 @@ def osrd_cvg_dvg_before_run():
 
 
 @pytest.fixture(scope='session')
-def use_case_cvg_dvg():
+def simulation_cvg_dvg():
     yield OSRD(dir='tmp', simulation='cvg_dvg')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
-def use_case_station_builder():
+def simulation_station_builder():
     yield OSRD(dir='tmp', simulation='station_builder_1station_2trains')
     shutil.rmtree('tmp', ignore_errors=True)
 
@@ -142,29 +142,29 @@ def modify_sim():
 
 
 @pytest.fixture(scope='session')
-def use_case_station_capacity2():
+def simulation_station_capacity2():
     yield OSRD(dir='tmp', simulation='station_capacity2')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
-def use_case_point_switch():
+def simulation_point_switch():
     yield OSRD(dir='tmp', simulation='point_switch')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
-def use_case_straight_line():
+def simulation_straight_line():
     yield OSRD(dir='tmp', simulation='straight_line')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
-def use_case_double_switch():
+def simulation_double_switch():
     yield OSRD(dir='tmp', simulation='double_switch')
     shutil.rmtree('tmp', ignore_errors=True)
 
 
 @pytest.fixture(scope='session')
-def schedule_station_capacity2(use_case_station_capacity2) -> Schedule:
-    return schedule_from_osrd(use_case_station_capacity2)
+def schedule_station_capacity2(simulation_station_capacity2) -> Schedule:
+    return schedule_from_osrd(simulation_station_capacity2)
