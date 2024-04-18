@@ -20,7 +20,7 @@ dependencies=[
     'gymnasium',
     'networkx >= 3.0',
     'matplotlib>= 3.6.3',
-    'pandas',
+    'pandas>=2.2.1',
     "python-dotenv",
     "folium",
     "plotly",
@@ -39,7 +39,7 @@ Issues = "https://github.com/y-plus/pyOSRD/issues"
 where = ["src"]
 
 [tool.setuptools.package-data]
-pyosrd = ["*.jar", "*.json"]
+pyosrd = ["*.jar", "*/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
