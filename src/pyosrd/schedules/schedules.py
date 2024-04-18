@@ -167,3 +167,20 @@ class Schedule(object):
     @property
     def min_times(self) -> pd.DataFrame:
         return getattr(self, '_min_times')
+
+    @property
+    def min_durations(self) -> pd.DataFrame:
+        if not hasattr(self, '_min_times'):
+            return self.durations
+        return (
+            self._min_times.loc[
+                pd.IndexSlice[:],
+                pd.IndexSlice[:, 'e']
+            ].set_axis(self._min_times.columns.levels[0], axis=1)
+            .astype(float)
+            - self._min_times.loc[
+                pd.IndexSlice[:],
+                pd.IndexSlice[:, 's']
+            ].set_axis(self._min_times.columns.levels[0], axis=1)
+            .astype(float)
+        )

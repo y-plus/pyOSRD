@@ -18,6 +18,7 @@
 - Schedule_from_osrd
   - Merge consecutive switch zones without signal between them (see use_case `double_switch`)
   - Step_type and min_times automatically set as attributes
+  - New property `min_durations`
 - Schedule plots x labels are now in ``'hh:mm:ss'`` format
 ## Scheduler Agents
   - Methods designed to test agents on predefined scenarii (`.regulate_scenari*`)
