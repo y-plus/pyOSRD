@@ -1,5 +1,5 @@
 """
-use_case_station_capacity2
+simulation_station_capacity2
 
                                  o = station(2 lanes)
                      S1┐          ┎S3
@@ -19,12 +19,12 @@ import matplotlib.pyplot as plt
 from pyosrd.osrd import Point
 
 
-def test_station_capacity2_infra(use_case_station_capacity2):
-    assert isinstance(use_case_station_capacity2.infra, dict)
+def test_station_capacity2_infra(simulation_station_capacity2):
+    assert isinstance(simulation_station_capacity2.infra, dict)
 
 
-def test_station_capacity2_infra_routes(use_case_station_capacity2):
-    assert set(use_case_station_capacity2.routes) == \
+def test_station_capacity2_infra_routes(simulation_station_capacity2):
+    assert set(simulation_station_capacity2.routes) == \
         set([
             'rt.buffer_stop.0->D0',
             'rt.D0->D3',
@@ -39,8 +39,8 @@ def test_station_capacity2_infra_routes(use_case_station_capacity2):
         ])
 
 
-def test_station_capacity2_infra_track_lengths(use_case_station_capacity2):
-    assert use_case_station_capacity2.track_section_lengths == \
+def test_station_capacity2_infra_track_lengths(simulation_station_capacity2):
+    assert simulation_station_capacity2.track_section_lengths == \
         {
             'T0': 1000.0,
             'T1': 1000.0,
@@ -51,33 +51,33 @@ def test_station_capacity2_infra_track_lengths(use_case_station_capacity2):
         }
 
 
-def test_station_capacity2_infra_num_switches(use_case_station_capacity2):
-    assert use_case_station_capacity2.num_switches == 2
+def test_station_capacity2_infra_num_switches(simulation_station_capacity2):
+    assert simulation_station_capacity2.num_switches == 2
 
 
 def test_station_capacity2_infra_draw_infra_not_fail(
-    use_case_station_capacity2
+    simulation_station_capacity2
 ):
     """Test if it does not raise an exception"""
     try:
-        use_case_station_capacity2.draw_infra_points()
+        simulation_station_capacity2.draw_infra_points()
     except:  # noqa
         assert False
 
 
 def test_station_capacity2_infra_station_capacities(
-    use_case_station_capacity2
+    simulation_station_capacity2
 ):
     assert (
-        use_case_station_capacity2.station_capacities == {'station': 2}
+        simulation_station_capacity2.station_capacities == {'station': 2}
     )
 
 
-def test_station_capacity2_infra_num_stations(use_case_station_capacity2):
-    assert use_case_station_capacity2.num_stations == 1
+def test_station_capacity2_infra_num_stations(simulation_station_capacity2):
+    assert simulation_station_capacity2.num_stations == 1
 
 
-def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
+def test_station_capacity2_points_on_tracks(simulation_station_capacity2):
     expected = {
         "T0": [
             Point(id='buffer_stop.0', track_section='T0', position=0.0, type='buffer_stop'),  # noqa
@@ -119,34 +119,34 @@ def test_station_capacity2_points_on_tracks(use_case_station_capacity2):
         ],
     }
 
-    assert use_case_station_capacity2.points_on_track_sections() == expected
+    assert simulation_station_capacity2.points_on_track_sections() == expected
 
 
-def test_station_capacity2_simulation_type(use_case_station_capacity2):
-    assert isinstance(use_case_station_capacity2.simulation, dict)
+def test_station_capacity2_simulation_type(simulation_station_capacity2):
+    assert isinstance(simulation_station_capacity2.simulation, dict)
 
 
-def test_station_capacity2_simulation_num_trains(use_case_station_capacity2):
-    assert use_case_station_capacity2.num_trains == 2
+def test_station_capacity2_simulation_num_trains(simulation_station_capacity2):
+    assert simulation_station_capacity2.num_trains == 2
 
 
-def test_station_capacity2_simulation_trains(use_case_station_capacity2):
-    assert use_case_station_capacity2.trains == ['train0', 'train1']
+def test_station_capacity2_simulation_trains(simulation_station_capacity2):
+    assert simulation_station_capacity2.trains == ['train0', 'train1']
 
 
 def test_station_capacity2_simulation_departure_times(
-    use_case_station_capacity2
+    simulation_station_capacity2
 ):
-    assert use_case_station_capacity2.departure_times == [0, 300.]
+    assert simulation_station_capacity2.departure_times == [0, 300.]
 
 
-def test_station_capacity2_results_length(use_case_station_capacity2):
-    num_trains = use_case_station_capacity2.num_trains
-    assert len(use_case_station_capacity2.results) == num_trains
+def test_station_capacity2_results_length(simulation_station_capacity2):
+    num_trains = simulation_station_capacity2.num_trains
+    assert len(simulation_station_capacity2.results) == num_trains
 
 
 def test_station_capacity2_results_train_track_sections(
-    use_case_station_capacity2
+    simulation_station_capacity2
 ):
     tracks_0 = [
         {'id': 'T0', 'direction': 'START_TO_STOP'},
@@ -154,25 +154,25 @@ def test_station_capacity2_results_train_track_sections(
         {'id': 'T3', 'direction': 'START_TO_STOP'},
         {'id': 'T5', 'direction': 'START_TO_STOP'},
     ]
-    assert use_case_station_capacity2.train_track_sections(0) == tracks_0
+    assert simulation_station_capacity2.train_track_sections(0) == tracks_0
     tracks_1 = [
         {'id': 'T0', 'direction': 'START_TO_STOP'},
         {'id': 'T2', 'direction': 'START_TO_STOP'},
         {'id': 'T4', 'direction': 'START_TO_STOP'},
         {'id': 'T5', 'direction': 'START_TO_STOP'},
     ]
-    assert use_case_station_capacity2.train_track_sections(1) == tracks_1
+    assert simulation_station_capacity2.train_track_sections(1) == tracks_1
 
 
 def test_station_capacity2_results_points_encountered_by_train(
-    use_case_station_capacity2
+    simulation_station_capacity2
 ):
     points = [
         {
             k: v for k, v in d.items()
             if not k.startswith('t_')
         }
-        for d in use_case_station_capacity2.points_encountered_by_train(0)
+        for d in simulation_station_capacity2.points_encountered_by_train(0)
     ]
     expected = [
         {'id': 'departure_train0', 'offset': 0.0, 'type': 'departure'},
@@ -190,9 +190,9 @@ def test_station_capacity2_results_points_encountered_by_train(
     assert expected == points
 
 
-def test_station_capacity2_space_time_chart(use_case_station_capacity2):
+def test_station_capacity2_space_time_chart(simulation_station_capacity2):
 
-    ax = use_case_station_capacity2.space_time_chart(
+    ax = simulation_station_capacity2.space_time_chart(
         0,
         points_to_show=['station']
     )
@@ -208,7 +208,7 @@ def test_station_capacity2_space_time_chart(use_case_station_capacity2):
     plt.close()
 
 
-def test_station_capacity2_zones(use_case_station_capacity2):
+def test_station_capacity2_zones(simulation_station_capacity2):
 
     expected = {
         'D0<->buffer_stop.0': 'D0<->buffer_stop.0',
@@ -220,4 +220,4 @@ def test_station_capacity2_zones(use_case_station_capacity2):
         'D5<->buffer_stop.5': 'D5<->buffer_stop.5',
         'D4<->D5': 'CVG',
     }
-    assert use_case_station_capacity2.tvd_zones == expected
+    assert simulation_station_capacity2.tvd_zones == expected

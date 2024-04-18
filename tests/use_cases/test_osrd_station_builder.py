@@ -20,12 +20,12 @@ import matplotlib.pyplot as plt
 from pyosrd.osrd import Point
 
 
-def test_station_builder_infra(use_case_station_builder):
-    assert isinstance(use_case_station_builder.infra, dict)
+def test_station_builder_infra(simulation_station_builder):
+    assert isinstance(simulation_station_builder.infra, dict)
 
 
-def test_station_builder_infra_routes(use_case_station_builder):
-    assert set(use_case_station_builder.routes) == \
+def test_station_builder_infra_routes(simulation_station_builder):
+    assert set(simulation_station_builder.routes) == \
         set([
             'rt.station_builder_1station.0.D4->buffer_stop.2',
             'rt.buffer_stop.2->station_builder_1station.0.D1',
@@ -38,8 +38,8 @@ def test_station_builder_infra_routes(use_case_station_builder):
         ])
 
 
-def test_station_builder_infra_block_lengths(use_case_station_builder):
-    assert use_case_station_builder.track_section_lengths == \
+def test_station_builder_infra_block_lengths(simulation_station_builder):
+    assert simulation_station_builder.track_section_lengths == \
         {
             'T0': 1000.0,
             'station_builder_1station.0.T1': 1000.0,
@@ -48,30 +48,30 @@ def test_station_builder_infra_block_lengths(use_case_station_builder):
         }
 
 
-def test_station_builder_infra_num_switches(use_case_station_builder):
-    assert use_case_station_builder.num_switches == 2
+def test_station_builder_infra_num_switches(simulation_station_builder):
+    assert simulation_station_builder.num_switches == 2
 
 
-def test_station_builder_infra_draw_infra_not_fail(use_case_station_builder):
+def test_station_builder_infra_draw_infra_not_fail(simulation_station_builder):
     """Test if it does not raise an exception"""
     try:
-        use_case_station_builder.draw_infra_points()
+        simulation_station_builder.draw_infra_points()
     except:  # noqa
         assert False
 
 
-def test_station_builder_infra_station_capacities(use_case_station_builder):
+def test_station_builder_infra_station_capacities(simulation_station_builder):
     assert (
-        use_case_station_builder.station_capacities
+        simulation_station_builder.station_capacities
         == {'station_builder_1station.0.s': 2}
     )
 
 
-def test_station_builder_infra_num_stations(use_case_station_builder):
-    assert use_case_station_builder.num_stations == 1
+def test_station_builder_infra_num_stations(simulation_station_builder):
+    assert simulation_station_builder.num_stations == 1
 
 
-def test_station_builder_points_on_tracks(use_case_station_builder):
+def test_station_builder_points_on_tracks(simulation_station_builder):
     expected = {
         "T0": [
             Point(track_section="T0", position=0.0, id="buffer_stop.2", type="buffer_stop"),  # noqa
@@ -103,58 +103,58 @@ def test_station_builder_points_on_tracks(use_case_station_builder):
         ],
     }
 
-    assert use_case_station_builder.points_on_track_sections() == expected
+    assert simulation_station_builder.points_on_track_sections() == expected
 
 
-def test_station_builder_simulation_type(use_case_station_builder):
-    assert isinstance(use_case_station_builder.simulation, dict)
+def test_station_builder_simulation_type(simulation_station_builder):
+    assert isinstance(simulation_station_builder.simulation, dict)
 
 
-def test_station_builder_simulation_num_trains(use_case_station_builder):
-    assert use_case_station_builder.num_trains == 2
+def test_station_builder_simulation_num_trains(simulation_station_builder):
+    assert simulation_station_builder.num_trains == 2
 
 
-def test_station_builder_simulation_trains(use_case_station_builder):
-    assert use_case_station_builder.trains == ['train0', 'train1']
+def test_station_builder_simulation_trains(simulation_station_builder):
+    assert simulation_station_builder.trains == ['train0', 'train1']
 
 
-def test_station_builder_simulation_departure_times(use_case_station_builder):
-    assert use_case_station_builder.departure_times == [0, 200]
+def test_station_builder_simulation_departure_times(simulation_station_builder):
+    assert simulation_station_builder.departure_times == [0, 200]
 
 
-def test_station_builder_has_results(use_case_station_builder):
-    assert use_case_station_builder.has_results
+def test_station_builder_has_results(simulation_station_builder):
+    assert simulation_station_builder.has_results
 
 
-def test_station_builder_results_length(use_case_station_builder):
+def test_station_builder_results_length(simulation_station_builder):
     assert (
-        len(use_case_station_builder.results)
-        == use_case_station_builder.num_trains
+        len(simulation_station_builder.results)
+        == simulation_station_builder.num_trains
     )
 
 
 def test_station_builder_results_train_track_sections(
-    use_case_station_builder
+    simulation_station_builder
 ):
-    assert use_case_station_builder.train_track_sections(0) == [
+    assert simulation_station_builder.train_track_sections(0) == [
         {'id': 'T0', 'direction': 'START_TO_STOP'},
         {'id': 'station_builder_1station.0.T1', 'direction': 'START_TO_STOP'},
     ]
-    assert use_case_station_builder.train_track_sections(1) == [
+    assert simulation_station_builder.train_track_sections(1) == [
         {'id': 'T0', 'direction': 'START_TO_STOP'},
         {'id': 'station_builder_1station.0.T1', 'direction': 'START_TO_STOP'},
     ]
 
 
 def test_station_builder_results_pts_encountered_by_train(
-    use_case_station_builder
+    simulation_station_builder
 ):
     points = [
         {
             k: v for k, v in d.items()
             if not k.startswith('t_')
         }
-        for d in use_case_station_builder.points_encountered_by_train(0)
+        for d in simulation_station_builder.points_encountered_by_train(0)
     ]
     expected = [
         { "id": "departure_train0", "offset": 0.0, "type": "departure" },  # noqa
@@ -170,9 +170,9 @@ def test_station_builder_results_pts_encountered_by_train(
     assert points == expected
 
 
-def test_station_builder_space_time_chart(use_case_station_builder):
+def test_station_builder_space_time_chart(simulation_station_builder):
 
-    ax = use_case_station_builder.space_time_chart(
+    ax = simulation_station_builder.space_time_chart(
         0,
         points_to_show=['station']
     )
@@ -188,7 +188,7 @@ def test_station_builder_space_time_chart(use_case_station_builder):
     plt.close()
 
 
-def test_station_builder_tvd_zones(use_case_station_builder):
+def test_station_builder_tvd_zones(simulation_station_builder):
 
     expected = {
         'buffer_stop.2<->station_builder_1station.0.D0': 'buffer_stop.2<->station_builder_1station.0.D0',  # noqa
@@ -200,10 +200,10 @@ def test_station_builder_tvd_zones(use_case_station_builder):
         'station_builder_1station.0.D3<->station_builder_1station.0.D4': 'station_builder_1station.0.D3<->station_builder_1station.0.D4',  # noqa
         'station_builder_1station.0.D4<->station_builder_1station.0.D5': 'station_builder_1station.0.CVG'  # noqa
     }
-    assert use_case_station_builder.tvd_zones == expected
+    assert simulation_station_builder.tvd_zones == expected
 
 
-def test_station_builder_stop_positions(use_case_station_builder):
+def test_station_builder_stop_positions(simulation_station_builder):
 
     expected = [
         {
@@ -242,4 +242,4 @@ def test_station_builder_stop_positions(use_case_station_builder):
         }
     ]
 
-    assert use_case_station_builder.stop_positions == expected
+    assert simulation_station_builder.stop_positions == expected

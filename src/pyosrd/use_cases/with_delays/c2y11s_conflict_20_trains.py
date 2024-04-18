@@ -8,17 +8,17 @@ def c2y11s_conflict_20_trains(
     delays_json: str = 'delays.json'
   ) -> None:
     """
-    See c2y11s.py in use_cases to check the infra.
+    See c2y11s.py in simulations to check the infra.
 
       TODO
     """
-    use_case = 'c2y11s_2trains'
+    simulation = 'c2y11s_2trains'
     sim = OSRD(
         dir=dir,
         infra_json=infra_json,
         simulation_json=simulation_json,
         delays_json=delays_json,
-        simulation=use_case
+        simulation=simulation
     )
 
     for i in [1, 2, 3]:

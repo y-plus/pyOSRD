@@ -21,12 +21,12 @@ import matplotlib.pyplot as plt
 from pyosrd.osrd import Point
 
 
-def test_cvg_dvg_infra(use_case_cvg_dvg):
-    assert isinstance(use_case_cvg_dvg.infra, dict)
+def test_cvg_dvg_infra(simulation_cvg_dvg):
+    assert isinstance(simulation_cvg_dvg.infra, dict)
 
 
-def test_cvg_dvg_infra_routes(use_case_cvg_dvg):
-    assert set(use_case_cvg_dvg.routes) == \
+def test_cvg_dvg_infra_routes(simulation_cvg_dvg):
+    assert set(simulation_cvg_dvg.routes) == \
         set([
             'rt.buffer_stop.0->D0',
             'rt.D0->D3',
@@ -43,8 +43,8 @@ def test_cvg_dvg_infra_routes(use_case_cvg_dvg):
         ])
 
 
-def test_cvg_dvg_infra_track_lengths(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.track_section_lengths == \
+def test_cvg_dvg_infra_track_lengths(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.track_section_lengths == \
         {
             'T0': 500.,
             'T1': 500.,
@@ -55,29 +55,29 @@ def test_cvg_dvg_infra_track_lengths(use_case_cvg_dvg):
         }
 
 
-def test_cvg_dvg_infra_num_switches(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.num_switches == 2
+def test_cvg_dvg_infra_num_switches(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.num_switches == 2
 
 
-def test_cvg_dvg_infra_draw_infra_not_fail(use_case_cvg_dvg):
+def test_cvg_dvg_infra_draw_infra_not_fail(simulation_cvg_dvg):
     """Test if it does not raise an exception"""
     try:
-        use_case_cvg_dvg.draw_infra_points()
+        simulation_cvg_dvg.draw_infra_points()
     except:  # noqa
         assert False
 
 
-def test_cvg_dvg_infra_station_capacities(use_case_cvg_dvg):
+def test_cvg_dvg_infra_station_capacities(simulation_cvg_dvg):
     assert (
-        use_case_cvg_dvg.station_capacities == {'station0': 2, 'station1': 2}
+        simulation_cvg_dvg.station_capacities == {'station0': 2, 'station1': 2}
     )
 
 
-def test_cvg_dvg_infra_num_stations(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.num_stations == 2
+def test_cvg_dvg_infra_num_stations(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.num_stations == 2
 
 
-def test_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
+def test_cvg_dvg_points_on_tracks(simulation_cvg_dvg):
     expected = {
         "T0": [
             Point(id='buffer_stop.0', track_section='T0', position=0.0, type='buffer_stop'),  # noqa
@@ -121,27 +121,27 @@ def test_cvg_dvg_points_on_tracks(use_case_cvg_dvg):
         ],
     }
 
-    assert use_case_cvg_dvg.points_on_track_sections() == expected
+    assert simulation_cvg_dvg.points_on_track_sections() == expected
 
 
-def test_cvg_dvg_simulation_type(use_case_cvg_dvg):
-    assert isinstance(use_case_cvg_dvg.simulation, dict)
+def test_cvg_dvg_simulation_type(simulation_cvg_dvg):
+    assert isinstance(simulation_cvg_dvg.simulation, dict)
 
 
-def test_cvg_dvg_simulation_num_trains(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.num_trains == 2
+def test_cvg_dvg_simulation_num_trains(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.num_trains == 2
 
 
-def test_cvg_dvg_simulation_trains(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.trains == ['train0', 'train1']
+def test_cvg_dvg_simulation_trains(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.trains == ['train0', 'train1']
 
 
-def test_cvg_dvg_simulation_departure_times(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.departure_times == [0, 100]
+def test_cvg_dvg_simulation_departure_times(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.departure_times == [0, 100]
 
 
-def test_train_departure_by_index(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.train_departure(0) == Point(
+def test_train_departure_by_index(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.train_departure(0) == Point(
         track_section='T0',
         position=300.0,
         id='departure_train0',
@@ -149,8 +149,8 @@ def test_train_departure_by_index(use_case_cvg_dvg):
     )
 
 
-def test_train_departure_by_label(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.train_departure('train0') == Point(
+def test_train_departure_by_label(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.train_departure('train0') == Point(
         track_section='T0',
         position=300.0,
         id='departure_train0',
@@ -158,8 +158,8 @@ def test_train_departure_by_label(use_case_cvg_dvg):
     )
 
 
-def test_train_arrival_by_index(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.train_arrival(0) == Point(
+def test_train_arrival_by_index(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.train_arrival(0) == Point(
         track_section='T4',
         position=490.0,
         id='arrival_train0',
@@ -167,8 +167,8 @@ def test_train_arrival_by_index(use_case_cvg_dvg):
     )
 
 
-def test_train_arrival_by_label(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.train_arrival('train0') == Point(
+def test_train_arrival_by_label(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.train_arrival('train0') == Point(
         track_section='T4',
         position=490.0,
         id='arrival_train0',
@@ -182,26 +182,26 @@ def test_cvg_dvg_run_error(osrd_cvg_dvg_missing_sim):
         osrd_cvg_dvg_missing_sim.run()
 
 
-def test_cvg_dvg_has_results(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.has_results
+def test_cvg_dvg_has_results(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.has_results
 
 
 def test_cvg_dvg_has_no_results(osrd_cvg_dvg_before_run):
     assert not osrd_cvg_dvg_before_run.has_results
 
 
-def test_cvg_dvg_results_length(use_case_cvg_dvg):
-    assert len(use_case_cvg_dvg.results) == use_case_cvg_dvg.num_trains
+def test_cvg_dvg_results_length(simulation_cvg_dvg):
+    assert len(simulation_cvg_dvg.results) == simulation_cvg_dvg.num_trains
 
 
-def test_cvg_dvg_results_train_track_sections(use_case_cvg_dvg):
-    assert use_case_cvg_dvg.train_track_sections(0) == [
+def test_cvg_dvg_results_train_track_sections(simulation_cvg_dvg):
+    assert simulation_cvg_dvg.train_track_sections(0) == [
         {'id': 'T0', 'direction': 'START_TO_STOP'},
         {'id': 'T2', 'direction': 'START_TO_STOP'},
         {'id': 'T3', 'direction': 'START_TO_STOP'},
         {'id': 'T4', 'direction': 'START_TO_STOP'},
     ]
-    assert use_case_cvg_dvg.train_track_sections(1) == [
+    assert simulation_cvg_dvg.train_track_sections(1) == [
         {'id': 'T1', 'direction': 'START_TO_STOP'},
         {'id': 'T2', 'direction': 'START_TO_STOP'},
         {'id': 'T3', 'direction': 'START_TO_STOP'},
@@ -209,13 +209,13 @@ def test_cvg_dvg_results_train_track_sections(use_case_cvg_dvg):
     ]
 
 
-def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
+def test_cvg_dvg_results_pts_encountered_by_train(simulation_cvg_dvg):
     points = [
         {
             k: v for k, v in d.items()
             if not k.startswith('t_')
         }
-        for d in use_case_cvg_dvg.points_encountered_by_train(0)
+        for d in simulation_cvg_dvg.points_encountered_by_train(0)
     ]
     expected = [
         {'id': 'departure_train0', 'offset': 0.0, 'type': 'departure'},
@@ -234,9 +234,9 @@ def test_cvg_dvg_results_pts_encountered_by_train(use_case_cvg_dvg):
     assert points == expected
 
 
-def test_cvg_dvg_space_time_chart(use_case_cvg_dvg):
+def test_cvg_dvg_space_time_chart(simulation_cvg_dvg):
 
-    ax = use_case_cvg_dvg.space_time_chart(0, points_to_show=['station'])
+    ax = simulation_cvg_dvg.space_time_chart(0, points_to_show=['station'])
 
     assert ax.dataLim.xmin == 0.
     assert round(ax.dataLim.ymin) == 0.
@@ -249,7 +249,7 @@ def test_cvg_dvg_space_time_chart(use_case_cvg_dvg):
     plt.close()
 
 
-def test_cvg_dvg_tvd_zones(use_case_cvg_dvg):
+def test_cvg_dvg_tvd_zones(simulation_cvg_dvg):
 
     expected = {
         'D0<->buffer_stop.0': 'D0<->buffer_stop.0',
@@ -262,10 +262,10 @@ def test_cvg_dvg_tvd_zones(use_case_cvg_dvg):
         'D3<->D5': 'DVG',
         'D5<->buffer_stop.3': 'D5<->buffer_stop.3',
     }
-    assert use_case_cvg_dvg.tvd_zones == expected
+    assert simulation_cvg_dvg.tvd_zones == expected
 
 
-def test_cvg_dvg_stop_positions(use_case_cvg_dvg):
+def test_cvg_dvg_stop_positions(simulation_cvg_dvg):
 
     expected = [
         {
@@ -300,4 +300,4 @@ def test_cvg_dvg_stop_positions(use_case_cvg_dvg):
         }
     ]
 
-    assert use_case_cvg_dvg.stop_positions == expected
+    assert simulation_cvg_dvg.stop_positions == expected
