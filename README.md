@@ -28,11 +28,11 @@ https://www.oracle.com/java/technologies/downloads/#java17
 ## Installation
 
 ```bash
-pip install git+ssh://git@github.com/y-plus/pyOSRD.git
+pip install git+ssh://git@github.com/y-plus/pyOSRD.git@main
 ```
 or
 ```bash
-pip install --upgrade git+ssh://git@github.com/y-plus/pyOSRD.git
+pip install --upgrade git+ssh://git@github.com/y-plus/pyOSRD.git@main
 ```
 
 ## Getting started
@@ -44,7 +44,7 @@ pip install --upgrade git+ssh://git@github.com/y-plus/pyOSRD.git
 
 ## Custom Java binary path
 
-Create a file name `.env` at the root of your projet, containing 
+Create a file name `.env` at the root of your projet, containing
 ```bash
 JAVA="<Your custon Java Path>"
 ```
