@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyosrd"
-version = "0.0.6b"
+version = "0.2.9a"
 authors = [
   { name="Renan HILBERT", email="renan.hilbert.ext@eurodecision.com" },
 ]
@@ -27,7 +27,7 @@ dependencies=[
     "haversine",
     "typing-inspect>=0.8.0",
     "typing_extensions>=4.5.0",
-    'railjson_generator @ git+ssh://git@github.com/osrd-project/osrd.git@v0.1.4#subdirectory=python/railjson_generator',  # noqa
+    'railjson_generator @ git+ssh://git@github.com/osrd-project/osrd.git@v0.2.9#subdirectory=python/railjson_generator',  # noqa
     'ipython',
 ]
 

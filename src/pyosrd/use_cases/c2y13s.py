@@ -1,12 +1,20 @@
 import os
 
+from importlib.resources import files
+
 from railjson_generator import (
     InfraBuilder,
     SimulationBuilder,
     Location,
 )
+
 from railjson_generator.schema.infra.direction import Direction
+from railjson_generator.schema.simulation.simulation import (
+    register_rolling_stocks
+)
 from railjson_generator.schema.simulation.stop import Stop
+
+register_rolling_stocks(files('pyosrd').joinpath('rolling_stocks'))
 
 
 def c2y13s(
@@ -18,7 +26,7 @@ def c2y13s(
 
 
            ┎SA0
-    (T0)----DA0- 
+    (T0)----DA0-
                  \       ┎S1    ┎SB  ┎SB2    ┎S2    ┎SC  ┎SC2    ┎S3    ┎SD  ┎SD2
                SWA>-DA2---D1-----DB-o-DB2-----D2-----DC-o-DC2-----D3-----DD-o-DD2-----(T2)
            ┎SA1  /

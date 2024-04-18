@@ -1,13 +1,18 @@
 import os
 
+from importlib.resources import files
+
 from railjson_generator import (
     InfraBuilder,
     SimulationBuilder,
     Location,
 )
-
 from railjson_generator.schema.infra.direction import Direction
-from railjson_generator.schema.simulation.stop import Stop
+from railjson_generator.schema.simulation.simulation import (
+    register_rolling_stocks
+)
+
+register_rolling_stocks(files('pyosrd').joinpath('rolling_stocks'))
 
 
 def c1(

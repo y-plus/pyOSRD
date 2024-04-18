@@ -1,5 +1,5 @@
 {
-    "version": "3.4.2",
+    "version": "3.4.11",
     "operational_points": [
         {
             "id": "station",
@@ -16,8 +16,8 @@
             "extensions": {
                 "sncf": {
                     "ci": 0,
-                    "ch": "aa",
-                    "ch_short_label": "aa",
+                    "ch": "BV",
+                    "ch_short_label": "BV",
                     "ch_long_label": "0",
                     "trigram": "STA"
                 },
@@ -58,7 +58,8 @@
                 "D1"
             ],
             "switches_directions": {
-                "DVG": "LEFT"
+                "DVG": "A_B1",
+                "L1-3": "STATIC"
             }
         },
         {
@@ -76,7 +77,8 @@
                 "D2"
             ],
             "switches_directions": {
-                "DVG": "RIGHT"
+                "DVG": "A_B2",
+                "L2-4": "STATIC"
             }
         },
         {
@@ -94,7 +96,7 @@
                 "D0"
             ],
             "switches_directions": {
-                "DVG": "LEFT"
+                "DVG": "A_B1"
             }
         },
         {
@@ -112,7 +114,7 @@
                 "D0"
             ],
             "switches_directions": {
-                "DVG": "RIGHT"
+                "DVG": "A_B2"
             }
         },
         {
@@ -130,7 +132,7 @@
                 "D5"
             ],
             "switches_directions": {
-                "CVG": "LEFT"
+                "CVG": "A_B1"
             }
         },
         {
@@ -148,7 +150,7 @@
                 "D5"
             ],
             "switches_directions": {
-                "CVG": "RIGHT"
+                "CVG": "A_B2"
             }
         },
         {
@@ -180,7 +182,8 @@
                 "D3"
             ],
             "switches_directions": {
-                "CVG": "LEFT"
+                "CVG": "A_B1",
+                "L1-3": "STATIC"
             }
         },
         {
@@ -198,105 +201,27 @@
                 "D4"
             ],
             "switches_directions": {
-                "CVG": "RIGHT"
+                "CVG": "A_B2",
+                "L2-4": "STATIC"
             }
         }
     ],
-    "switch_types": [
-        {
-            "id": "point",
-            "ports": [
-                "base",
-                "left",
-                "right"
-            ],
-            "groups": {
-                "LEFT": [
-                    {
-                        "src": "base",
-                        "dst": "left"
-                    }
-                ],
-                "RIGHT": [
-                    {
-                        "src": "base",
-                        "dst": "right"
-                    }
-                ]
-            }
-        },
-        {
-            "id": "cross",
-            "ports": [
-                "north",
-                "south",
-                "east",
-                "west"
-            ],
-            "groups": {
-                "static": [
-                    {
-                        "src": "east",
-                        "dst": "west"
-                    },
-                    {
-                        "src": "north",
-                        "dst": "south"
-                    }
-                ]
-            }
-        },
-        {
-            "id": "double_cross",
-            "ports": [
-                "north_1",
-                "north_2",
-                "south_1",
-                "south_2"
-            ],
-            "groups": {
-                "N1_S1": [
-                    {
-                        "src": "north_1",
-                        "dst": "south_1"
-                    }
-                ],
-                "N1_S2": [
-                    {
-                        "src": "north_1",
-                        "dst": "south_2"
-                    }
-                ],
-                "N2_S1": [
-                    {
-                        "src": "north_2",
-                        "dst": "south_1"
-                    }
-                ],
-                "N2_S2": [
-                    {
-                        "src": "north_2",
-                        "dst": "south_2"
-                    }
-                ]
-            }
-        }
-    ],
+    "extended_switch_types": [],
     "switches": [
         {
             "id": "DVG",
-            "switch_type": "point",
+            "switch_type": "point_switch",
             "group_change_delay": 0.0,
             "ports": {
-                "base": {
+                "A": {
                     "endpoint": "END",
                     "track": "T0"
                 },
-                "left": {
+                "B1": {
                     "endpoint": "BEGIN",
                     "track": "T1"
                 },
-                "right": {
+                "B2": {
                     "endpoint": "BEGIN",
                     "track": "T2"
                 }
@@ -308,19 +233,59 @@
             }
         },
         {
-            "id": "CVG",
-            "switch_type": "point",
+            "id": "L1-3",
+            "switch_type": "link",
             "group_change_delay": 0.0,
             "ports": {
-                "base": {
+                "A": {
+                    "endpoint": "END",
+                    "track": "T1"
+                },
+                "B": {
+                    "endpoint": "BEGIN",
+                    "track": "T3"
+                }
+            },
+            "extensions": {
+                "sncf": {
+                    "label": "L1-3"
+                }
+            }
+        },
+        {
+            "id": "L2-4",
+            "switch_type": "link",
+            "group_change_delay": 0.0,
+            "ports": {
+                "A": {
+                    "endpoint": "END",
+                    "track": "T2"
+                },
+                "B": {
+                    "endpoint": "BEGIN",
+                    "track": "T4"
+                }
+            },
+            "extensions": {
+                "sncf": {
+                    "label": "L2-4"
+                }
+            }
+        },
+        {
+            "id": "CVG",
+            "switch_type": "point_switch",
+            "group_change_delay": 0.0,
+            "ports": {
+                "A": {
                     "endpoint": "BEGIN",
                     "track": "T5"
                 },
-                "left": {
+                "B1": {
                     "endpoint": "END",
                     "track": "T3"
                 },
-                "right": {
+                "B2": {
                     "endpoint": "END",
                     "track": "T4"
                 }
@@ -329,30 +294,6 @@
                 "sncf": {
                     "label": "CVG"
                 }
-            }
-        }
-    ],
-    "track_section_links": [
-        {
-            "id": "L1-3",
-            "src": {
-                "endpoint": "END",
-                "track": "T1"
-            },
-            "dst": {
-                "endpoint": "BEGIN",
-                "track": "T3"
-            }
-        },
-        {
-            "id": "L2-4",
-            "src": {
-                "endpoint": "END",
-                "track": "T2"
-            },
-            "dst": {
-                "endpoint": "BEGIN",
-                "track": "T4"
             }
         }
     ],
@@ -388,6 +329,7 @@
             "length": 1000.0,
             "slopes": [],
             "curves": [],
+            "loading_gauge_limits": [],
             "extensions": {
                 "sncf": {
                     "line_code": 0,
@@ -428,6 +370,7 @@
             "length": 1000.0,
             "slopes": [],
             "curves": [],
+            "loading_gauge_limits": [],
             "extensions": {
                 "sncf": {
                     "line_code": 0,
@@ -468,6 +411,7 @@
             "length": 1000.0,
             "slopes": [],
             "curves": [],
+            "loading_gauge_limits": [],
             "extensions": {
                 "sncf": {
                     "line_code": 0,
@@ -508,6 +452,7 @@
             "length": 1000.0,
             "slopes": [],
             "curves": [],
+            "loading_gauge_limits": [],
             "extensions": {
                 "sncf": {
                     "line_code": 0,
@@ -548,6 +493,7 @@
             "length": 1000.0,
             "slopes": [],
             "curves": [],
+            "loading_gauge_limits": [],
             "extensions": {
                 "sncf": {
                     "line_code": 0,
@@ -588,6 +534,7 @@
             "length": 1000.0,
             "slopes": [],
             "curves": [],
+            "loading_gauge_limits": [],
             "extensions": {
                 "sncf": {
                     "line_code": 0,
@@ -599,7 +546,7 @@
         }
     ],
     "speed_sections": [],
-    "catenaries": [],
+    "electrifications": [],
     "signals": [
         {
             "track": "T0",
@@ -607,30 +554,24 @@
             "id": "S0",
             "direction": "START_TO_STOP",
             "sight_distance": 400.0,
-            "linked_detector": null,
             "logical_signals": [
                 {
                     "signaling_system": "BAL",
                     "next_signaling_systems": [],
                     "settings": {
                         "Nf": "true"
-                    }
+                    },
+                    "default_parameters": {
+                        "jaune_cli": "false"
+                    },
+                    "conditional_parameters": []
                 }
             ],
             "extensions": {
                 "sncf": {
-                    "aspects": [],
-                    "comment": "",
-                    "default_aspect": "",
-                    "installation_type": "CARRE",
-                    "is_in_service": false,
-                    "is_lightable": false,
-                    "is_operational": false,
                     "label": "S0",
                     "side": "LEFT",
-                    "support_type": "",
-                    "type_code": "",
-                    "value": ""
+                    "kp": ""
                 }
             }
         },
@@ -640,30 +581,24 @@
             "id": "S1",
             "direction": "STOP_TO_START",
             "sight_distance": 400.0,
-            "linked_detector": null,
             "logical_signals": [
                 {
                     "signaling_system": "BAL",
                     "next_signaling_systems": [],
                     "settings": {
                         "Nf": "true"
-                    }
+                    },
+                    "default_parameters": {
+                        "jaune_cli": "false"
+                    },
+                    "conditional_parameters": []
                 }
             ],
             "extensions": {
                 "sncf": {
-                    "aspects": [],
-                    "comment": "",
-                    "default_aspect": "",
-                    "installation_type": "CARRE",
-                    "is_in_service": false,
-                    "is_lightable": false,
-                    "is_operational": false,
                     "label": "S1",
                     "side": "LEFT",
-                    "support_type": "",
-                    "type_code": "",
-                    "value": ""
+                    "kp": ""
                 }
             }
         },
@@ -673,30 +608,24 @@
             "id": "S2",
             "direction": "STOP_TO_START",
             "sight_distance": 400.0,
-            "linked_detector": null,
             "logical_signals": [
                 {
                     "signaling_system": "BAL",
                     "next_signaling_systems": [],
                     "settings": {
                         "Nf": "true"
-                    }
+                    },
+                    "default_parameters": {
+                        "jaune_cli": "false"
+                    },
+                    "conditional_parameters": []
                 }
             ],
             "extensions": {
                 "sncf": {
-                    "aspects": [],
-                    "comment": "",
-                    "default_aspect": "",
-                    "installation_type": "CARRE",
-                    "is_in_service": false,
-                    "is_lightable": false,
-                    "is_operational": false,
                     "label": "S2",
                     "side": "LEFT",
-                    "support_type": "",
-                    "type_code": "",
-                    "value": ""
+                    "kp": ""
                 }
             }
         },
@@ -706,30 +635,24 @@
             "id": "S3",
             "direction": "START_TO_STOP",
             "sight_distance": 400.0,
-            "linked_detector": null,
             "logical_signals": [
                 {
                     "signaling_system": "BAL",
                     "next_signaling_systems": [],
                     "settings": {
                         "Nf": "true"
-                    }
+                    },
+                    "default_parameters": {
+                        "jaune_cli": "false"
+                    },
+                    "conditional_parameters": []
                 }
             ],
             "extensions": {
                 "sncf": {
-                    "aspects": [],
-                    "comment": "",
-                    "default_aspect": "",
-                    "installation_type": "CARRE",
-                    "is_in_service": false,
-                    "is_lightable": false,
-                    "is_operational": false,
                     "label": "S3",
                     "side": "LEFT",
-                    "support_type": "",
-                    "type_code": "",
-                    "value": ""
+                    "kp": ""
                 }
             }
         },
@@ -739,30 +662,24 @@
             "id": "S4",
             "direction": "START_TO_STOP",
             "sight_distance": 400.0,
-            "linked_detector": null,
             "logical_signals": [
                 {
                     "signaling_system": "BAL",
                     "next_signaling_systems": [],
                     "settings": {
                         "Nf": "true"
-                    }
+                    },
+                    "default_parameters": {
+                        "jaune_cli": "false"
+                    },
+                    "conditional_parameters": []
                 }
             ],
             "extensions": {
                 "sncf": {
-                    "aspects": [],
-                    "comment": "",
-                    "default_aspect": "",
-                    "installation_type": "CARRE",
-                    "is_in_service": false,
-                    "is_lightable": false,
-                    "is_operational": false,
                     "label": "S4",
                     "side": "LEFT",
-                    "support_type": "",
-                    "type_code": "",
-                    "value": ""
+                    "kp": ""
                 }
             }
         },
@@ -772,30 +689,24 @@
             "id": "S5",
             "direction": "STOP_TO_START",
             "sight_distance": 400.0,
-            "linked_detector": null,
             "logical_signals": [
                 {
                     "signaling_system": "BAL",
                     "next_signaling_systems": [],
                     "settings": {
                         "Nf": "true"
-                    }
+                    },
+                    "default_parameters": {
+                        "jaune_cli": "false"
+                    },
+                    "conditional_parameters": []
                 }
             ],
             "extensions": {
                 "sncf": {
-                    "aspects": [],
-                    "comment": "",
-                    "default_aspect": "",
-                    "installation_type": "CARRE",
-                    "is_in_service": false,
-                    "is_lightable": false,
-                    "is_operational": false,
                     "label": "S5",
                     "side": "LEFT",
-                    "support_type": "",
-                    "type_code": "",
-                    "value": ""
+                    "kp": ""
                 }
             }
         }
@@ -816,38 +727,32 @@
         {
             "track": "T0",
             "position": 820.0,
-            "id": "D0",
-            "applicable_directions": "BOTH"
+            "id": "D0"
         },
         {
             "track": "T1",
             "position": 180.0,
-            "id": "D1",
-            "applicable_directions": "BOTH"
+            "id": "D1"
         },
         {
             "track": "T2",
             "position": 180.0,
-            "id": "D2",
-            "applicable_directions": "BOTH"
+            "id": "D2"
         },
         {
             "track": "T3",
             "position": 820.0,
-            "id": "D3",
-            "applicable_directions": "BOTH"
+            "id": "D3"
         },
         {
             "track": "T4",
             "position": 820.0,
-            "id": "D4",
-            "applicable_directions": "BOTH"
+            "id": "D4"
         },
         {
             "track": "T5",
             "position": 180.0,
-            "id": "D5",
-            "applicable_directions": "BOTH"
+            "id": "D5"
         }
     ],
     "neutral_sections": []

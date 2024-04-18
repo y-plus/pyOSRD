@@ -8,7 +8,7 @@ import subprocess
 from dataclasses import dataclass
 from importlib.resources import files
 from itertools import combinations
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import networkx as nx
 import numpy as np
@@ -19,15 +19,33 @@ from dotenv import load_dotenv
 from typing_extensions import Self
 
 import pyosrd.use_cases as use_cases
+import pyosrd.scenarii as scenarii
 
 
-def _read_json(json_file: str) -> Union[Dict, List]:
+def _read_json(json_file: str) -> dict | list:
     with open(json_file, 'r') as f:
         try:
             dict_ = json.load(f)
         except ValueError:  # JSONDecodeError inherits from ValueError
             dict_ = {}
     return dict_
+
+
+class classproperty(property):
+    """Create a property for a class method
+
+    This is from the following stack overlflow issue :
+        https://stackoverflow.com/a/13624858
+
+    Use this decorator when you can a proerty decorator
+    and a classmethod decorator on the same method.
+    Since Python 3.13 it is not possible to have them
+    together hence this workaround.
+
+    Do not ask me how it works but it works...
+    """
+    def __get__(self, cls, owner):
+        return classmethod(self.fget).__get__(None, owner)()
 
 
 @dataclass
@@ -68,7 +86,7 @@ class OSRD():
         by default 'delays.json'
     """
     dir: str = '.'
-    use_case: Union[str, None] = None
+    use_case: str | None = None
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
@@ -82,7 +100,7 @@ class OSRD():
         space_time_chart,
         space_time_chart_plotly,
     )
-    from .set_trains import (
+    from .modify_simulation import (
         add_train,
         cancel_train,
         cancel_all_trains,
@@ -148,7 +166,7 @@ class OSRD():
         load_dotenv()
         JAVA = os.getenv('JAVA') or 'java'
 
-        jar_file = files('pyosrd').joinpath('osrd-all.jar')
+        jar_file = files('pyosrd').joinpath('osrd-029.jar')
 
         output = subprocess.run(
             f"{JAVA} -jar {jar_file} standalone-simulation "
@@ -171,32 +189,47 @@ class OSRD():
         """True if the object has simulation results"""
         return self.results != []
 
-    @classmethod
-    @property
-    def use_cases(self) -> List[str]:
+    @classproperty
+    def use_cases(self) -> list[str]:
         """List of available use cases"""
         return [
             name
             for _, name, _ in pkgutil.iter_modules(use_cases.__path__)
         ]
 
+    @classproperty
+    def scenarii(self) -> list[str]:
+        """List of available scenarii"""
+        return [
+            name
+            for _, name, _ in pkgutil.iter_modules(scenarii.__path__)
+        ]
+
     @property
-    def routes(self) -> List[str]:
+    def routes(self) -> list[str]:
         """List of routes ids"""
         return [route['id'] for route in self.infra['routes']]
 
     @property
-    def track_section_lengths(self) -> Dict[str, float]:
+    def track_section_lengths(self) -> dict[str, float]:
         """Dict of track sections and their lengths"""
         return {t['id']: t['length'] for t in self.infra['track_sections']}
 
     @property
-    def num_switches(self) -> int:
-        """Number of switches"""
-        return len(self.infra['switches'])
+    def switches(self) -> list[dict[str, Any]]:
+        """ List of switches (track section links excluded)"""
+        return [
+            switch for switch in self.infra['switches']
+            if switch['switch_type'] != 'link'
+        ]
 
     @property
-    def station_capacities(self) -> Dict[str, int]:
+    def num_switches(self) -> int:
+        """Number of switches"""
+        return len(self.switches)
+
+    @property
+    def station_capacities(self) -> dict[str, int]:
         """Dict of stations ids (operational points) and their capacities"""
         return {
             station['id']: len(station['parts'])
@@ -208,10 +241,10 @@ class OSRD():
         """Number of stations (defined as operational points)"""
         return len(self.station_capacities)
 
-    def _points(self, op_part_tracks: bool = False) -> List[Point]:
+    def _points(self, op_part_tracks: bool = False) -> list[Point]:
 
         points = []
-
+        lengths = self.track_section_lengths
         for detector in self.infra['detectors']:
             points.append(Point(
                 id=detector['id'],
@@ -248,18 +281,6 @@ class OSRD():
                     type='station'
                 ))
 
-        for link in self.infra['track_section_links']:
-            for side in ['src', 'dst']:
-                points.append(Point(
-                    id=link['id'],
-                    track_section=link[side]['track'],
-                    position=(
-                        0 if link[side]['endpoint'] == 'BEGIN'
-                        else self.track_section_lengths[link[side]['track']]
-                    ),
-                    type='link',
-                ))
-
         for switch in self.infra['switches']:
             for port in switch['ports'].values():
                 points.append(Point(
@@ -267,15 +288,21 @@ class OSRD():
                     track_section=port['track'],
                     position=(
                         0 if port['endpoint'] == "BEGIN"
-                        else self.track_section_lengths[port['track']]
+                        else lengths[port['track']]
                     ),
-                    type='switch'
-
+                    type=(
+                        'switch'
+                        if switch['switch_type'] != 'link'
+                        else 'link'
+                    )
                 ))
         return points
 
-    def train_departure(self, train: int) -> Point:
+    def train_departure(self, train: int | str) -> Point:
         """Train departure point"""
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         departure = self._head_position(train)[0]
         return Point(
@@ -285,8 +312,10 @@ class OSRD():
             type='departure'
         )
 
-    def train_arrival(self, train: int) -> Point:
-        """Train arrival point"""
+    def train_arrival(self, train: int | str) -> Point:
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         arrival = self._head_position(train)[-1]
         return Point(
@@ -296,7 +325,10 @@ class OSRD():
             type='arrival'
         )
 
-    def _head_position(self, train, eco_or_base: str = 'base'):
+    def _head_position(self, train: int | str, eco_or_base: str = 'base'):
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         group, idx = self._train_schedule_group[
             self.trains[train]
@@ -305,14 +337,15 @@ class OSRD():
         sim = f'{eco_or_base}_simulations'
         return self.results[group][sim][idx]['head_positions']
 
-    def points_on_track_sections(self, op_part_tracks: bool = False) -> Dict:
+    def points_on_track_sections(self, op_part_tracks: bool = False) -> dict:
         """Dict with for each track, points of interests and their positions"""
 
+        _points = self._points(op_part_tracks=op_part_tracks)
         points_on_track_sections = {}
 
         for t in self.track_section_lengths:
             points = [
-                p for p in self._points(op_part_tracks=op_part_tracks)
+                p for p in _points
                 if p.track_section == t
             ]
             points.sort(key=lambda p: p.position)
@@ -323,8 +356,11 @@ class OSRD():
     def offset_in_path_of_train(
         self,
         point: Point,
-        train: int
+        train: int | str
     ) -> float | None:
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         tracks = self.train_track_sections(train)
         track_ids = [t['id'] for t in tracks]
@@ -415,7 +451,7 @@ class OSRD():
         )
 
     @property
-    def trains(self) -> List[str]:
+    def trains(self) -> list[str]:
         """List of train ids in the simulation"""
         return [
             train['id']
@@ -424,7 +460,7 @@ class OSRD():
         ]
 
     @property
-    def departure_times(self) -> List[float]:
+    def departure_times(self) -> list[float]:
         """List of trains departure times"""
         return [
             train['departure_time']
@@ -433,7 +469,15 @@ class OSRD():
         ]
 
     @property
-    def _train_schedule_group(self) -> Dict[str, int]:
+    def last_arrival_times(self) -> list[float]:
+        """List of train last arrival times"""
+        return [
+            self._head_position(train)[-1]['time']
+            for train in self.trains
+        ]
+
+    @property
+    def _train_schedule_group(self) -> dict[str, int]:
         return {
             train['id']: (group['id'], pos)
             for group in self.simulation['train_schedule_groups']
@@ -449,19 +493,6 @@ class OSRD():
             ts.add_node(self.infra['track_sections'][0]['id'])
             return ts
 
-        for t in self.infra['track_section_links']:
-            ts.add_edge(
-                t['src']['track'],
-                t['dst']['track'],
-                in_by=t['dst']['endpoint'],
-                out_by=t['src']['endpoint'],
-            )
-            ts.add_edge(
-                t['dst']['track'],
-                t['src']['track'],
-                in_by=t['src']['endpoint'],
-                out_by=t['dst']['endpoint'],
-                )
         for switch in self.infra['switches']:
             tracks = [track for _, track in switch['ports'].items()]
             for track1, track2 in combinations(tracks, 2):
@@ -479,8 +510,11 @@ class OSRD():
                 )
         return ts
 
-    def train_track_sections(self, train: int) -> List[Dict[str, str]]:
+    def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
         """List of tracks for a given train trajectory"""
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
 
         head_positions = self._head_position(train=train)
 
@@ -535,12 +569,13 @@ class OSRD():
                 'id': tracks[0],
                 'direction': direction,
             }]
+
         return tracks_directions
 
     def points_encountered_by_train(
         self,
-        train: int,
-        types: List[str] = [
+        train: int | str,
+        types: list[str] = [
             'departure',
             'signal',
             'detector',
@@ -548,21 +583,25 @@ class OSRD():
             'switch',
             'arrival',
         ],
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Points encountered by a train during its trajectory
 
         Parameters
         ----------
-        types : List[str], optional
+        types : list[str], optional
             Types of points, all types by default
 
         Returns
         -------
-        List[Dict[str, Any]]
+        list[Dict[str, Any]]
             Points encountered (id, type, offset)
         """
 
-        ids = [track['id'] for track in self.train_track_sections(train)]
+        if isinstance(train, str):
+            train = self.trains.index(train)
+
+        train_track_sections = self.train_track_sections(train)
+        ids = [track['id'] for track in train_track_sections]
 
         points = {
             point.id: point
@@ -584,10 +623,14 @@ class OSRD():
             if point.type == 'detector':
                 for detector in self.infra['detectors']:
                     if detector['id'] == point.id:
-                        return detector['applicable_directions']
+                        return 'BOTH'  # detector['applicable_directions']
 
-        def train_direction(point: Point, train: int) -> str:
-            for track in self.train_track_sections(train):
+        def train_direction(point: Point, train: int | str) -> str:
+
+            if isinstance(train, str):
+                train = self.trains.index(train)
+
+            for track in train_track_sections:
                 if track['id'] == point.track_section:
                     return track['direction']
 
@@ -652,7 +695,7 @@ class OSRD():
         ]
 
     @property
-    def _tvds(self) -> list[set[str]]:
+    def _tvds(self) -> list[frozenset[str]]:
 
         tvds = []
         for route in self.infra['routes']:
@@ -661,10 +704,11 @@ class OSRD():
             for d in route['release_detectors']:
                 limit_tvds.append(d)
             limit_tvds.append(route['exit_point']['id'])
-            tvds += [
-                set([limit_tvds[i], limit_tvds[i+1]])
+            for tvd in [
+                frozenset([limit_tvds[i], limit_tvds[i+1]])
                 for i, _ in enumerate(limit_tvds[:-1])
-            ]
+            ]:
+                tvds.append(tvd)
 
         unique_tvds = []
         for tvd in tvds:
@@ -674,29 +718,31 @@ class OSRD():
         return unique_tvds
 
     @property
-    def tvd_blocks(self) -> dict[str, str]:
+    def tvd_zones(self) -> dict[str, str]:
 
-        tvd_blocks = {
+        _tvds = self._tvds
+
+        dict_tvd_zones = {
             "<->".join(sorted(d)): "<->".join(sorted(d))
-            for d in self._tvds
+            for d in _tvds
         }
-
-        for switch in self.infra['switches']:
+        points = self.points_on_track_sections()
+        for switch in self.switches:
             detectors = []
             for port in switch['ports'].values():
                 idx = 0 if port['endpoint'] == 'BEGIN' else -1
                 detectors_on_track = [
                     p.id
-                    for p in self.points_on_track_sections()[port['track']]
+                    for p in points[port['track']]
                     if p.type == 'detector'
                 ]
                 detectors.append(detectors_on_track[idx])
 
             for a in combinations(detectors, 2):
-                if set(a) in self._tvds:
-                    tvd_blocks["<->".join(sorted(a))] = switch['id']
+                if set(a) in _tvds:
+                    dict_tvd_zones["<->".join(sorted(a))] = switch['id']
 
-        return tvd_blocks
+        return dict_tvd_zones
 
     def regulate(self, agent: Agent) -> Self:
         """Create and run a regulated simulation
@@ -782,7 +828,7 @@ class OSRD():
             for i, _ in enumerate(limits[:-1]):
                 start = limits[i]
                 end = limits[i+1]
-                zone = self.tvd_blocks["<->".join(sorted([start, end]))]
+                zone = self.tvd_zones["<->".join(sorted([start, end]))]
 
                 for i, p in enumerate(points):
                     if p['id'] == end:
@@ -848,7 +894,7 @@ class OSRD():
                     'id': points[-1]['id'],
                 }
             else:
-                positions[self.tvd_blocks[last_zone]] = {
+                positions[self.tvd_zones[last_zone]] = {
                     'type': 'last_zone',
                     'offset': None,
                 }

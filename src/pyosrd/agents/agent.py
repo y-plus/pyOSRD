@@ -3,7 +3,7 @@ import json
 import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass
@@ -45,7 +45,7 @@ class Agent(ABC):
         return regulated
 
     @abstractmethod
-    def stops(self, osrd) -> List[Dict[str, Any]]:
+    def stops(self, osrd) -> list[dict[str, Any]]:
         ...
 
     def write_stops_json(self, osrd) -> None:
