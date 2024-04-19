@@ -1,18 +1,11 @@
 import os
 
-from importlib.resources import files
-
 from railjson_generator import (
     InfraBuilder,
     SimulationBuilder,
     Location,
 )
 from railjson_generator.schema.infra.direction import Direction
-from railjson_generator.schema.simulation.simulation import (
-    register_rolling_stocks
-)
-
-register_rolling_stocks(files('pyosrd').joinpath('rolling_stocks'))
 
 
 def c1_with_blocks(
@@ -59,7 +52,7 @@ def c1_with_blocks(
         direction=Direction.START_TO_STOP,
         is_route_delimiter=True,
     ).add_logical_signal("BAL", settings={"Nf": "true"})
-   
+
     T.add_signal(
         DA.position + 20,
         label='SA1',
