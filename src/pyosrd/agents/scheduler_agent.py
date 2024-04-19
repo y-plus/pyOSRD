@@ -1,4 +1,5 @@
 from abc import abstractmethod
+import shutil
 
 from dataclasses import dataclass
 
@@ -128,9 +129,11 @@ class SchedulerAgent(Agent):
             The scenario to be regulated
         """
 
-        sim = OSRD(with_delay=scenario)
+        sim = OSRD(dir="tmp", with_delay=scenario)
 
         self.set_schedules_from_osrd(sim, "all_steps")
+
+        shutil.rmtree('tmp', ignore_errors=True)
 
     def regulate_scenario(
         self,
@@ -160,9 +163,11 @@ class SchedulerAgent(Agent):
             When the scenario is unknown
         """
 
-        sim = OSRD(with_delay=scenario)
+        sim = OSRD(dir="tmp", with_delay=scenario)
 
         self.set_schedules_from_osrd(sim, "all_steps")
+
+        shutil.rmtree('tmp', ignore_errors=True)
 
         return pd.DataFrame(
             {
