@@ -53,13 +53,14 @@ def multistation_multitrains_randomdelay(
     sim.reset_delays()
 
     gen = Random(delay_seed)
-    num_delayed_trains = round(min(1 + gen.random() * 2, num_trains))
+    num_delayed_trains = gen.randint(1, num_trains)
 
     for _ in range(0, num_delayed_trains):
-        delayed_train = round(gen.random() * (num_trains - 0.01) + 0.01) - 1
+        delayed_train = gen.randint(0, num_trains-1)
+
         label = 'train'+str(delayed_train)
-        time_threshold = round(gen.random() * 100 * num_stations)
-        delay = round(50 + gen.random() * 150)
+        time_threshold = gen.randint(0, 100 * num_stations)
+        delay = gen.randint(50, 200)
         sim.add_delay(label, time_threshold=time_threshold, delay=delay)
 
     sim.add_delays_in_results()
