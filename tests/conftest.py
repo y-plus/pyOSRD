@@ -131,8 +131,11 @@ def simulation_cvg_dvg():
 
 @pytest.fixture(scope='session')
 def simulation_station_builder():
-    yield OSRD(dir='tmp', simulation='station_builder_1station_2trains')
-    shutil.rmtree('tmp', ignore_errors=True)
+    yield OSRD(
+        dir='tmp_station_builder',
+        simulation='station_builder_1station_2trains'
+    )
+    shutil.rmtree('tmp_station_builder', ignore_errors=True)
 
 
 @pytest.fixture(scope='function')

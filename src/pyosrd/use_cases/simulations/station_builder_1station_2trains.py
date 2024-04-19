@@ -28,6 +28,7 @@ def station_builder_1station_2trains(
     infra_builder = InfraBuilder()
 
     t0 = infra_builder.add_track_section(label="T0", length=1000)
+    t0.add_buffer_stop(0, label='buffer_stop.0')
 
     t0 = build_N_dvg_station_cvg(
         infra_builder,
@@ -35,6 +36,7 @@ def station_builder_1station_2trains(
         "station_builder_1station",
         1
     )
+    t0.add_buffer_stop(1000, label='buffer_stop.1')
 
     os.makedirs(dir, exist_ok=True)
 
