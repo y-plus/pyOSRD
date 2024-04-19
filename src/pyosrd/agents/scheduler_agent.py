@@ -135,7 +135,6 @@ class SchedulerAgent(Agent):
     def regulate_scenario(
         self,
         scenario: str,
-        plot_all=False
     ) -> pd.DataFrame:
         """Regulates the given scenario using the given agent.
 
@@ -162,25 +161,14 @@ class SchedulerAgent(Agent):
         """
 
         sim = OSRD(with_delay=scenario)
-        delayed_sim = sim.delayed()
 
         self.set_schedules_from_osrd(sim, "all_steps")
-
-        delayed_schedule = schedule_from_osrd(delayed_sim)
-        ref_schedule = schedule_from_osrd(sim)
-        regulated_schedule = self.regulated_schedule
-
-        if plot_all:
-            ref_schedule.draw_graph()
-            ref_schedule.plot()
-            delayed_schedule.plot()
-            self.regulated_schedule.plot()
 
         return pd.DataFrame(
             {
                 self.name: [
-                    regulated_schedule.total_weighted_delay(
-                        ref_schedule,
+                    self.regulated_schedule.total_weighted_delay(
+                        self.ref_schedule,
                         weights_.all_steps(sim),
                     )
                 ]
