@@ -118,7 +118,9 @@ def test_station_builder_simulation_trains(simulation_station_builder):
     assert simulation_station_builder.trains == ['train0', 'train1']
 
 
-def test_station_builder_simulation_departure_times(simulation_station_builder):
+def test_station_builder_simulation_departure_times(
+    simulation_station_builder
+):
     assert simulation_station_builder.departure_times == [0, 200]
 
 
