@@ -152,5 +152,20 @@ def simulation_double_switch():
 
 
 @pytest.fixture(scope='session')
+def schedule_cvg_dvg(simulation_cvg_dvg) -> Schedule:
+    return schedule_from_osrd(simulation_cvg_dvg)
+
+
+@pytest.fixture(scope='session')
 def schedule_station_capacity2(simulation_station_capacity2) -> Schedule:
     return schedule_from_osrd(simulation_station_capacity2)
+
+
+@pytest.fixture(scope='session')
+def schedule_straight_line(simulation_straight_line) -> Schedule:
+    return schedule_from_osrd(simulation_straight_line)
+
+
+@pytest.fixture(scope='session')
+def schedule_double_switch(simulation_double_switch) -> Schedule:
+    return schedule_from_osrd(simulation_double_switch)

@@ -7,10 +7,12 @@ from pyosrd.schedules import (
     step_type,
     step_station_id,
 )
-from pyosrd.schedules import schedule_from_osrd
 
 
-def test_step_has_fixed_duration(simulation_station_capacity2):
+def test_step_has_fixed_duration(
+    simulation_station_capacity2,
+    schedule_station_capacity2
+):
     df = step_has_fixed_duration(simulation_station_capacity2)
 
     expected = pd.DataFrame(
@@ -18,13 +20,16 @@ def test_step_has_fixed_duration(simulation_station_capacity2):
             'train0': [False, True, False, np.nan, True, True],
             'train1': [False, True, np.nan, False, True, True],
         },
-        index=schedule_from_osrd(simulation_station_capacity2).df.index
+        index=schedule_station_capacity2.df.index
     )
 
     assert_frame_equal(df, expected)
 
 
-def test_step_type(simulation_station_capacity2):
+def test_step_type(
+    simulation_station_capacity2,
+    schedule_station_capacity2
+):
     df = step_type(simulation_station_capacity2)
 
     expected = pd.DataFrame(
@@ -32,13 +37,16 @@ def test_step_type(simulation_station_capacity2):
             'train0': ['signal', 'switch', 'station', np.nan, 'switch', 'last_zone'],
             'train1': ['signal', 'switch', np.nan, 'station', 'switch', 'last_zone'],
         },
-        index=schedule_from_osrd(simulation_station_capacity2).df.index
+        index=schedule_station_capacity2.df.index
     )
 
     assert_frame_equal(df, expected)
 
 
-def test_step_station_id(simulation_station_capacity2):
+def test_step_station_id(
+    simulation_station_capacity2,
+    schedule_station_capacity2
+):
     df = step_station_id(simulation_station_capacity2)
 
     expected = pd.DataFrame(
@@ -46,7 +54,7 @@ def test_step_station_id(simulation_station_capacity2):
             'train0': [np.nan, np.nan, 'station', np.nan, np.nan, np.nan],
             'train1': [np.nan, np.nan, np.nan, 'station', np.nan, np.nan],
         },
-        index=schedule_from_osrd(simulation_station_capacity2).df.index
+        index=schedule_station_capacity2.df.index
     )
 
     assert_frame_equal(df, expected)
