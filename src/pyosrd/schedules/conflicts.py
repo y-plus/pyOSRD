@@ -16,21 +16,23 @@ def conflicts(self, train: int | str) -> pd.DataFrame:
         pd.concat([self._df[train, 'e']]*self.num_trains, axis=1)
         .set_axis(self.trains, axis=1)
     )
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
 
-    mask1 = self.ends >= starts0
-    max_starts = (
-        pd.concat([starts0, self.starts])
-        .rename_axis('index')
-        .groupby('index').max()
-    )
-    min_ends = (
-        pd.concat([ends0, self.ends])
-        .rename_axis('index')
-        .groupby('index').min()
-    )
-    mask2 = max_starts < min_ends
+        mask1 = self.ends >= starts0
+        max_starts = (
+            pd.concat([starts0, self.starts])
+            .rename_axis('index')
+            .groupby('index').max()
+        )
+        min_ends = (
+            pd.concat([ends0, self.ends])
+            .rename_axis('index')
+            .groupby('index').min()
+        )
+        mask2 = max_starts < min_ends
 
-    conflict_times = self.starts[mask1 & mask2].drop(columns=train)
+        conflict_times = self.starts[mask1 & mask2].drop(columns=train)
 
     return (conflict_times[conflict_times.notna()])
 
