@@ -8,6 +8,7 @@
 - All use cases have been moved to use_cases/simulations
 - All infras have been moved to use_cases/infras
 - All scenarii have been moved to uses_cases/with_delays
+- Parametrized infra and use_case `multistation_multitrains` to set an arbitrary number of successive 2 plaforms stations and an arbitrary numbers of trains with alternating paths
 
 # v0.2.9a (Apr. 4th, 2024)
 ## Railway vocabulary
