@@ -77,7 +77,7 @@ class Weights:
         if isinstance(train, int):
             train = osrd._obj.columns[train]
 
-        osrd._obj[train].loc[zone] = value
+        osrd._obj.loc[zone, train] = value
 
     def train_station_sim(
         osrd,
