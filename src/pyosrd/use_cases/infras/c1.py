@@ -8,7 +8,6 @@ from railjson_generator.schema.infra.infra import Infra
 from railjson_generator.schema.infra.direction import Direction
 
 
-
 def c1(
     dir: str,
     infra_json: str = 'infra.json',
