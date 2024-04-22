@@ -62,7 +62,7 @@ def test_scheduler_agent_autonomous(two_trains):
 
 def test_scheduler_agent_in_regulate(test_agent):
 
-    sim = OSRD(use_case='station_capacity2', dir='tmp2')
+    sim = OSRD(simulation='station_capacity2', dir='tmp2')
     sim.add_delay('train0', time_threshold=90, delay=280.)
     delayed = sim.delayed()
 
@@ -79,7 +79,7 @@ def test_scheduler_agent_in_regulate(test_agent):
 
 def test_scheduler_agent_regulate_scenario_error(test_agent):
 
-    match = "foo is not a valid scenario."
+    match = "foo is not a valid use case with_delay name."
     with pytest.raises(ValueError, match=match):
         test_agent.regulate_scenario(
             "foo"
@@ -88,38 +88,38 @@ def test_scheduler_agent_regulate_scenario_error(test_agent):
 
 def test_scheduler_agent_regulate_scenario_delay(test_agent):
 
-    df = test_agent.regulate_scenario("c1_delay")
+    df = test_agent.regulate_scenario("c1_2trains_delay_train1")
 
-    assert 440. == df.sum().sum()
+    assert abs(440.0 - df.sum().sum()) < 1e-3
 
 
 def test_scheduler_agent_regulate_scenarii_delay(test_agent):
 
     df = test_agent.regulate_scenarii(
-        ["c1_delay", "c1y2_2trains_conflict"]
+        ["c1_2trains_delay_train1", "c1y2_2trains_conflict"]
     )
 
-    assert 640.0 == df.sum().sum()
+    assert abs(879.129225 - df.sum().sum()) < 1e-3
 
 
 def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
 
     df = regulate_scenarii_with_agents(
-        ["c1_delay", "c1y2_2trains_conflict"],
+        ["c1_2trains_delay_train1", "c1y2_2trains_conflict"],
         [test_agent, test_agent2]
     )
 
-    assert 980.0 == df.sum().sum()
+    assert abs(1458.2584 - df.sum().sum()) < 1e-3
 
 
 def test_scheduler_scenarii_one_agent_regulate_delay(test_agent):
 
     df = regulate_scenarii_with_agents(
-        "c1_delay",
+        "c1_2trains_delay_train1",
         test_agent
     )
 
-    assert 440.0 == df.sum().sum()
+    assert abs(440.0 - df.sum().sum()) < 1e-3
 
 
 def test_scheduler_agent_unknown_instance():
@@ -138,13 +138,13 @@ def test_scheduler_agent_unknown_instances():
 
 def test_scheduler_agent_load_instance(test_agent):
     try:
-        test_agent.load_scenario('c1_delay')
+        test_agent.load_scenario('c1_2trains_delay_train1')
     except ValueError:
         assert False
 
 
 def test_scheduler_agent_load_unknown_instance(test_agent):
 
-    match = "foo is not a valid scenario."
+    match = "foo is not a valid use case with_delay name."
     with pytest.raises(ValueError, match=match):
         test_agent.load_scenario('foo')

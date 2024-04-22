@@ -1,6 +1,5 @@
-import importlib
-
 from abc import abstractmethod
+import shutil
 
 from dataclasses import dataclass
 
@@ -129,24 +128,16 @@ class SchedulerAgent(Agent):
         scenario : str
             The scenario to be regulated
         """
-        if scenario not in OSRD.scenarii:
-            raise ValueError(
-                f"{scenario} is not a valid scenario."
-            )
 
-        module = importlib.import_module(
-            f".{scenario}",
-            "pyosrd.scenarii"
-        )
-        function = getattr(module, scenario)
-        sim = function()
+        sim = OSRD(dir="tmp", with_delay=scenario)
 
         self.set_schedules_from_osrd(sim, "all_steps")
+
+        shutil.rmtree('tmp', ignore_errors=True)
 
     def regulate_scenario(
         self,
         scenario: str,
-        plot_all=False
     ) -> pd.DataFrame:
         """Regulates the given scenario using the given agent.
 
@@ -172,36 +163,17 @@ class SchedulerAgent(Agent):
             When the scenario is unknown
         """
 
-        if scenario not in OSRD.scenarii:
-            raise ValueError(
-                f"{scenario} is not a valid scenario."
-            )
-
-        module = importlib.import_module(
-            f".{scenario}",
-            "pyosrd.scenarii"
-        )
-        function = getattr(module, scenario)
-        sim = function()
-        delayed_sim = sim.delayed()
+        sim = OSRD(dir="tmp", with_delay=scenario)
 
         self.set_schedules_from_osrd(sim, "all_steps")
 
-        delayed_schedule = schedule_from_osrd(delayed_sim)
-        ref_schedule = schedule_from_osrd(sim)
-        regulated_schedule = self.regulated_schedule
-
-        if plot_all:
-            ref_schedule.draw_graph()
-            ref_schedule.plot()
-            delayed_schedule.plot()
-            self.regulated_schedule.plot()
+        shutil.rmtree('tmp', ignore_errors=True)
 
         return pd.DataFrame(
             {
                 self.name: [
-                    regulated_schedule.total_weighted_delay(
-                        ref_schedule,
+                    self.regulated_schedule.total_weighted_delay(
+                        self.ref_schedule,
                         weights_.all_steps(sim),
                     )
                 ]
@@ -283,14 +255,14 @@ def regulate_scenarii_with_agents(
     """
 
     if scenarii == 'all':
-        scenarii = OSRD.scenarii
-    elif scenarii in OSRD.scenarii:
+        scenarii = OSRD.with_delays()
+    elif scenarii in OSRD.with_delays():
         scenarii = [scenarii]
     elif isinstance(scenarii, str):
         raise ValueError(f"Unknown scenario {scenarii}.")
 
     for scenario in scenarii:
-        if scenario not in OSRD.scenarii:
+        if scenario not in OSRD.with_delays():
             raise ValueError(
                 f"{scenario} is not a valid scenario."
             )

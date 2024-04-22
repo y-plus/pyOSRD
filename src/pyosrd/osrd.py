@@ -5,6 +5,7 @@ import os
 import pkgutil
 import shutil
 import subprocess
+
 from dataclasses import dataclass
 from importlib.resources import files
 from itertools import combinations
@@ -18,8 +19,9 @@ import requests
 from dotenv import load_dotenv
 from typing_extensions import Self
 
-import pyosrd.use_cases as use_cases
-import pyosrd.scenarii as scenarii
+import pyosrd.use_cases.infras as infras
+import pyosrd.use_cases.simulations as simulations
+import pyosrd.use_cases.with_delays as with_delays
 
 
 def _read_json(json_file: str) -> dict | list:
@@ -29,23 +31,6 @@ def _read_json(json_file: str) -> dict | list:
         except ValueError:  # JSONDecodeError inherits from ValueError
             dict_ = {}
     return dict_
-
-
-class classproperty(property):
-    """Create a property for a class method
-
-    This is from the following stack overlflow issue :
-        https://stackoverflow.com/a/13624858
-
-    Use this decorator when you can a proerty decorator
-    and a classmethod decorator on the same method.
-    Since Python 3.13 it is not possible to have them
-    together hence this workaround.
-
-    Do not ask me how it works but it works...
-    """
-    def __get__(self, cls, owner):
-        return classmethod(self.fget).__get__(None, owner)()
 
 
 @dataclass
@@ -64,9 +49,16 @@ class OSRD():
     ----------
     dir: str, optional
         Directory path, by default current directory
-    use_case: str or None, optional
-        If set, build a use_case
-        among all availables given by `OSRD.use_cases`, by default None
+    infra: str or None, optional
+        If set, build a infra
+        among all availables given by `OSRD.infras`, by default None
+    simulation: str or None, optional
+        If set, build a simulation (composed of an infra and trains)
+        among all availables given by `OSRD.simulations`, by default None
+    with_delay: str or None, optional
+        If set, build a simulation with delays (composed of an infra,
+        trains and delays) among all availables given by
+        `OSRD.with_delays`, by default None
     infra_json: str, optional
         Name of the file containing the infrastructure in rail_json format.
         If the file does not exist, attribute infra will be empty,
@@ -86,7 +78,9 @@ class OSRD():
         by default 'delays.json'
     """
     dir: str = '.'
-    use_case: str | None = None
+    infra: str | None = None
+    simulation: str | None = None
+    with_delay: str | None = None
     infra_json: str = 'infra.json'
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
@@ -110,22 +104,62 @@ class OSRD():
 
     def __post_init__(self):
 
-        if self.use_case:
+        # Load with_delay if any is given
+        if self.with_delay:
 
-            if self.use_case not in self.use_cases:
+            if self.with_delay not in OSRD.with_delays():
                 raise ValueError(
-                    f"{self.use_case} is not a valid use case name."
+                    f"{self.with_delay} is not a valid use case " +
+                    "with_delay name."
                 )
 
             module = importlib.import_module(
-                f".{self.use_case}",
-                "pyosrd.use_cases"
+                f".{self.with_delay}",
+                "pyosrd.use_cases.with_delays"
             )
-            function = getattr(module, self.use_case)
+            function = getattr(module, self.with_delay)
+            function(
+                self.dir,
+                self.infra_json,
+                self.simulation_json,
+                self.delays_json,
+            )
+
+        # Load simulation if any is given
+        elif self.simulation:
+
+            if self.simulation not in OSRD.simulations():
+                raise ValueError(
+                    f"{self.simulation} is not a valid use case " +
+                    "simulation name."
+                )
+
+            module = importlib.import_module(
+                f".{self.simulation}",
+                "pyosrd.use_cases.simulations"
+            )
+            function = getattr(module, self.simulation)
             function(
                 self.dir,
                 self.infra_json,
                 self.simulation_json
+            )
+
+        elif self.infra:
+
+            if self.infra not in OSRD.infras():
+                raise ValueError(
+                    f"{self.infra} is not a valid use case name."
+                )
+
+            module = importlib.import_module(
+                f".{self.infra}",
+                "pyosrd.use_cases.infras"
+            )
+            function = getattr(module, self.infra)
+            function(
+                self.dir,
+                self.infra_json
             )
 
         self.infra = (
@@ -140,7 +174,7 @@ class OSRD():
             else {}
         )
 
-        if self.use_case:
+        if self.simulation:
             self.run()
 
         self.results = (
@@ -157,7 +191,10 @@ class OSRD():
         ValueError
             If missing infra or simulation json file.
         """
-        if self.infra == {} or self.simulation == {}:
+        if (
+            self.infra == {} or self.simulation == {} or
+            self.infra is None or self.simulation is None
+        ):
             raise ValueError("Missing json file to run OSRD")
 
         if os.path.exists(os.path.join(self.dir, self.results_json)):
@@ -189,20 +226,27 @@ class OSRD():
         """True if the object has simulation results"""
         return self.results != []
 
-    @classproperty
-    def use_cases(self) -> list[str]:
-        """List of available use cases"""
+    def infras() -> list[str]:
+        """List of available infras"""
         return [
             name
-            for _, name, _ in pkgutil.iter_modules(use_cases.__path__)
+            for _, name, _ in pkgutil.iter_modules(infras.__path__)
         ]
 
-    @classproperty
-    def scenarii(self) -> list[str]:
-        """List of available scenarii"""
+    def simulations(infra: str | None = None) -> list[str]:
+        """List of available simulations"""
         return [
             name
-            for _, name, _ in pkgutil.iter_modules(scenarii.__path__)
+            for _, name, _ in pkgutil.iter_modules(simulations.__path__)
+            if infra is None or infra+"_" in name
+        ]
+
+    def with_delays(sim: str | None = None) -> list[str]:
+        """List of available simulations"""
+        return [
+            name
+            for _, name, _ in pkgutil.iter_modules(with_delays.__path__)
+            if sim is None or sim+"_" in name
         ]
 
     @property

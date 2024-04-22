@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 
 
-def test_space_time_chart(use_case_cvg_dvg):
+def test_space_time_chart(simulation_cvg_dvg):
 
-    ax = use_case_cvg_dvg.space_time_chart(0, points_to_show=['station'])
+    ax = simulation_cvg_dvg.space_time_chart(0, points_to_show=['station'])
 
     assert ax.dataLim.xmin == 0.
     assert round(ax.dataLim.ymin) == 0.
@@ -16,9 +16,9 @@ def test_space_time_chart(use_case_cvg_dvg):
     plt.close()
 
 
-def test_space_time_chart_by_label(use_case_cvg_dvg):
+def test_space_time_chart_by_label(simulation_cvg_dvg):
 
-    ax = use_case_cvg_dvg.space_time_chart(
+    ax = simulation_cvg_dvg.space_time_chart(
         'train0',
         points_to_show=['station'],
     )

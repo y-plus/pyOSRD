@@ -1,3 +1,14 @@
+# next release
+
+## OSRD class
+- Can no longer be created by givien a param `use_case=XXX`, use `simulation=XXX` instead
+- Can now be created with only infra by giving `infra=XXX`
+- Can now be created with delays by giving `with_delay=XXX`
+## Use cases
+- All use cases have been moved to use_cases/simulations
+- All infras have been moved to use_cases/infras
+- All scenarii have been moved to uses_cases/with_delays
+
 # v0.2.9a (Apr. 4th, 2024)
 ## Railway vocabulary
 - In schedules, indices are now refered to as ‘zones’ instead of ‘blocks’
