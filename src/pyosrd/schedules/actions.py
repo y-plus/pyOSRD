@@ -50,6 +50,7 @@ def add_delay(
     train: int | str,
     zone: int | str,
     delay: float | str,
+    at_arrival: bool = False,
 ) -> Schedule:
 
     if isinstance(train, int):
@@ -63,6 +64,9 @@ def add_delay(
 
     # extend duration in a given zone
     new_schedule._df.loc[zone, (train, 'e')] += delay
+
+    if at_arrival:
+        new_schedule._df.loc[zone, (train, 's')] += delay
 
     # Add delay to all subsequent zones
     new_schedule._df.loc[
