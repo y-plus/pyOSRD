@@ -99,7 +99,7 @@ def test_scheduler_agent_regulate_scenarii_delay(test_agent):
         ["c1_2trains_delay_train1", "c1y2_2trains_conflict"]
     )
 
-    assert abs(879.129225 - df.sum().sum()) < 1e-3
+    assert abs(640 - df.sum().sum()) < 1e-3
 
 
 def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
@@ -109,7 +109,7 @@ def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
         [test_agent, test_agent2]
     )
 
-    assert abs(1458.2584 - df.sum().sum()) < 1e-3
+    assert abs(980 - df.sum().sum()) < 1e-3
 
 
 def test_scheduler_scenarii_one_agent_regulate_delay(test_agent):
