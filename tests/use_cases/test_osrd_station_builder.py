@@ -1,20 +1,6 @@
 """
 osrd_station_builder
----------
-station0 (2 tracks)                        station1 (2 tracks)
-
-        ┎S0                                      S4┐
-(T0)-----D0-                                  --D4---------(T4)-->
-              \   S2┐                   ┎S3  /
-            CVG>-D2-----(T2)--+--(T3)----D3-<DVG
-        ┎S1   /                              \   S5┐
-(T1)-----D1-                                  --D5---------(T5)-->
-
-All tracks are 500m long
-Train 0 starts from T0 at t=0 and arrives at T4
-Train 1 starts from T1 at t=100 and arrives at T5
-"""  # noqa
-
+"""
 import matplotlib.pyplot as plt
 
 from pyosrd.osrd import Point

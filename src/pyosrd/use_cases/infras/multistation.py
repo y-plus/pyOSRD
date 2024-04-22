@@ -1,19 +1,11 @@
 import os
 
-from importlib.resources import files
-
 from railjson_generator import (
     InfraBuilder,
 )
-
 from railjson_generator.schema.infra.infra import Infra
-from railjson_generator.schema.simulation.simulation import (
-    register_rolling_stocks
-)
 
 from pyosrd.infra.helpers.station_builder import build_N_dvg_station_cvg
-
-register_rolling_stocks(files('pyosrd').joinpath('rolling_stocks'))
 
 
 def multistation(
