@@ -77,23 +77,6 @@ def add_delay(
     return new_schedule
 
 
-def is_action_needed(self, train: int) -> bool:
-
-    action_needed = False
-    if self.has_conflicts(train):
-        zone, other_train = self.first_conflict(train)
-        action_needed = (
-            self.is_a_point_switch(train, other_train, zone)
-            or
-            self.is_just_after_a_point_switch(
-                train,
-                other_train,
-                zone
-            )
-        )
-    return action_needed
-
-
 def set_priority_train(
     self: Schedule,
     priority_train: int | str,
