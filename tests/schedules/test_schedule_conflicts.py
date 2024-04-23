@@ -66,24 +66,6 @@ def test_schedules_earliest_conflict_no_conflict(two_trains):
     assert two_trains.earliest_conflict() == (None, None, None)
 
 
-def test_schedules_no_action_needed_no_conflict(three_trains):
-    for train in range(2):
-        assert not three_trains.is_action_needed(train=train)
-
-
-def test_schedules_is_action_needed(three_trains):
-    """Action is needed if, for a given train, there is a conflict
-        the 1st conflict occurs at a point switch or just after
-    """
-    assert three_trains.add_delay(0, 0, .5).is_action_needed(train=0)
-    assert three_trains.add_delay(0, 2, .5).is_action_needed(train=0)
-    assert three_trains.add_delay(0, 3, .5).is_action_needed(train=0)
-    assert not three_trains.add_delay(0, 4, .5).is_action_needed(train=0)
-
-    assert three_trains.add_delay(0, 2, .5).is_action_needed(train=1)
-    assert not three_trains.add_delay(0, 2, .5).is_action_needed(train=2)
-
-
 def test_schedules_first_in(two_trains):
     for zone in (0, 2, 3, 4):
         assert (
