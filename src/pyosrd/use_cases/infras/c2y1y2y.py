@@ -17,8 +17,8 @@ def c2y1y2y(
 
            ┎S0                                                      ┎S4
     (T0)-----D0-                                  --D3.1----(T4)-----D4-
-                 \                         ┎S3  /                        \
-               CVG>-D2-----(T2)--+--(T3)----D3-<DVG                    CVG>-D6-----(T6)-+--(T7)----D7------>
+                 \                         ┎S3  /                        \               ┎S7
+               CVG>-D2-----(T2)--+--(T3)----D3-<DVG                    CVG>-D6-----(T6)-+-D7-(T7)----------->
            ┎S1   /                              \                   ┎S5  /
     (T1)-----D1-                                  --D3.2----(T5)-----D5-
 
@@ -65,7 +65,7 @@ def c2y1y2y(
             label=f"D{i}",
             position=(950 if i in [0, 1, 3, 4, 5, 7] else 50),
         )
-        if i in [0, 1, 3, 4, 5]:
+        if i in [0, 1, 3, 4, 5, 7]:
             s = track.add_signal(
                 d.position - 20,
                 Direction.START_TO_STOP,
