@@ -20,6 +20,26 @@ def test_schedules_previous_station(schedule_station_capacity2):
     ) == 'D2<->D4'
 
 
+def test_schedules_next_station(schedule_station_capacity2):
+
+    assert schedule_station_capacity2.next_station(
+        0,
+        'DVG'
+    ) == 'D1<->D3'
+    assert schedule_station_capacity2.next_station(
+        'train1', 'DVG'
+    ) == 'D2<->D4'
+
+
+def test_schedules_next_station_is_none(schedule_station_capacity2):
+    assert schedule_station_capacity2.next_station(
+        'train1', 'CVG'
+    ) is None
+    assert schedule_station_capacity2.next_station(
+        'train1', 'UNK_ZONE'
+    ) is None
+
+
 def test_schedules_previous_signal(schedule_station_capacity2):
 
     assert schedule_station_capacity2.previous_signal(
