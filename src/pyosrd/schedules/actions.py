@@ -50,6 +50,7 @@ def add_delay(
     train: int | str,
     zone: int | str,
     delay: float | str,
+    at_arrival: bool = False,
 ) -> Schedule:
 
     if isinstance(train, int):
@@ -64,6 +65,9 @@ def add_delay(
     # extend duration in a given zone
     new_schedule._df.loc[zone, (train, 'e')] += delay
 
+    if at_arrival:
+        new_schedule._df.loc[zone, (train, 's')] += delay
+
     # Add delay to all subsequent zones
     new_schedule._df.loc[
         self._df[pd.IndexSlice[train, 's']] > start,
@@ -71,23 +75,6 @@ def add_delay(
     ] += delay
 
     return new_schedule
-
-
-def is_action_needed(self, train: int) -> bool:
-
-    action_needed = False
-    if self.has_conflicts(train):
-        zone, other_train = self.first_conflict(train)
-        action_needed = (
-            self.is_a_point_switch(train, other_train, zone)
-            or
-            self.is_just_after_a_point_switch(
-                train,
-                other_train,
-                zone
-            )
-        )
-    return action_needed
 
 
 def set_priority_train(
