@@ -17,6 +17,7 @@ class Schedule(object):
         trains_order_in_zone,
         previous_signal,
         previous_station,
+        next_station,
         previous_switch,
         previous_switch_protecting_signal
     )
@@ -25,13 +26,15 @@ class Schedule(object):
     from .conflicts import (
         conflicts,
         has_conflicts,
-        first_conflict,
+        train_first_conflict,
         earliest_conflict,
+        first_conflict_zone,
+        are_conflicted,
+        no_conflict,
     )
     from .actions import (
         add_delay,
         shift_train_departure,
-        is_action_needed,
         set_priority_train,
     )
     from .graph import graph, draw_graph

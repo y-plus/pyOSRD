@@ -253,6 +253,45 @@ def previous_station(
     return
 
 
+def next_station(
+    self,
+    train: int | str,
+    zone: int | str,
+) -> str | None:
+    """Next station for given train and zone
+
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+
+    Returns
+    -------
+    str | None
+       Zone label for next station
+    """
+
+    if isinstance(train, str):
+        train = self.trains.index(train)
+
+    if zone not in self.trajectory(train=train):
+        return
+
+    idx = self.trajectory(train=train).index(zone)
+
+    zones = [
+        z
+        for z in self.trajectory(train=train)[idx:]
+        if self.step_type.loc[z, self.trains[train]] == 'station'
+    ]
+
+    if zones:
+        return zones[-1]
+    return
+
+
 def previous_switch(
     self,
     train: int | str,
