@@ -23,6 +23,10 @@ def conflicts(self, train: int | str) -> pd.DataFrame:
         warnings.simplefilter('ignore')
         mask1 = self.ends >= starts0
 
+    with warnings.catch_warnings():
+        warnings.simplefilter('ignore')
+        mask1 = self.ends >= starts0
+
     max_starts = (
         pd.concat([starts0, self.starts])
         .rename_axis('index')
