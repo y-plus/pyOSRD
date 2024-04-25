@@ -7,8 +7,8 @@ from pyosrd.utils import hour_to_seconds
 
 class Schedule(object):
 
-    from .trajectories import (
-        trajectory,
+    from .paths import (
+        path,
         previous_zone,
         next_zone,
         is_a_point_switch,

@@ -8,7 +8,7 @@ import pandas as pd
 class Schedule(Protocol):
     _df: pd.DataFrame
     trains: list[int | str]
-    trajectory: list[int | str]
+    path: list[int | str]
     starts: pd.DataFrame
 
 
@@ -26,7 +26,7 @@ def with_interlocking_constraints(
         Number of blocks/zones (not switch) between two trains
     switch_change_delay : float, optional
         Add a delay for the switch to move when two consecutive
-        trains do not have the same trajectory before/after
+        trains do not have the same path before/after
         the siwtch. Delay in seconds, by default 120.
 
     Returns
@@ -49,7 +49,7 @@ def with_interlocking_constraints(
         )
 
     for train in self.trains:
-        zones = self.trajectory(train)
+        zones = self.path(train)
 
         for zone_idx, zone in enumerate(zones[:-1]):
             next_zone = zones[
@@ -73,10 +73,10 @@ def with_interlocking_constraints(
             )
 
             if next_train is not None:
-                train_comes_from = self.trajectory(train)[zone_idx-1]
-                train_goes_to = self.trajectory(train)[zone_idx+1]
-                next_train_comes_from = self.trajectory(next_train)[zone_idx-1]
-                next_train_goes_to = self.trajectory(next_train)[zone_idx+1]
+                train_comes_from = self.path(train)[zone_idx-1]
+                train_goes_to = self.path(train)[zone_idx+1]
+                next_train_comes_from = self.path(next_train)[zone_idx-1]
+                next_train_goes_to = self.path(next_train)[zone_idx+1]
 
                 route_modification = (
                     (train_comes_from != next_train_comes_from)

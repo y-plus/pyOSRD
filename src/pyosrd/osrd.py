@@ -560,7 +560,7 @@ class OSRD():
         return ts
 
     def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
-        """List of tracks for a given train trajectory"""
+        """List of tracks for a given train path"""
 
         if isinstance(train, str):
             train = self.trains.index(train)
@@ -633,7 +633,7 @@ class OSRD():
             'arrival',
         ],
     ) -> list[dict[str, Any]]:
-        """Points encountered by a train during its trajectory
+        """Points encountered by a train during its path
 
         Parameters
         ----------
@@ -835,7 +835,7 @@ class OSRD():
         -------
         list[dict[str, Any]]
             List of dicts, one by train,where keys are the zones
-            during the train's trajectory and the values are dicts with
+            during the train's path and the values are dicts with
             the stop points, their types and positions.
         """
         stop_positions = []

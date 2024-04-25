@@ -23,7 +23,7 @@ def step_has_fixed_duration(sim: OSRD) -> pd.DataFrame:
         The duration can be modified,
         ie the train can stay longer in this zone.
       - NaN = the step does not exist, ie
-        the zone is not in the train's trajectory
+        the zone is not in the train's path
 
     Parameters
     ----------
@@ -59,7 +59,7 @@ def step_type(sim: OSRD) -> pd.DataFrame:
     - value
       - 'station', "signal' or 'switch'
       - NaN = the step does not exist, ie
-        the zone is not in the train's trajectory
+        the zone is not in the train's path
 
     Parameters
     ----------
