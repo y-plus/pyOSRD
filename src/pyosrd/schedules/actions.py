@@ -20,7 +20,7 @@ def shift_train_departure(
 ) -> Schedule:
     """Shift the departure by a given time
 
-    All the trajectory is shifted
+    All the path is shifted
 
     Parameters
     ----------
@@ -120,7 +120,7 @@ def set_priority_train(
     )
 
     # Which zone shoud be used as a reference to calculate needed wait_time ?
-    t = self.trajectory(train_decelerating)
+    t = self.path(train_decelerating)
     zones_to_free = t[
         t.index(decelerates_in_zone)+1:
         t.index(until_zone_is_free)+1

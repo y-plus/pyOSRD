@@ -1,4 +1,4 @@
-def trajectory(self, train: int | str) -> list[int | str]:
+def path(self, train: int | str) -> list[int | str]:
     """List of zones crossed by a given train
 
     Parameters
@@ -25,7 +25,7 @@ def previous_zone(
     train: int | str,
     zone: int | str,
 ) -> int | str | None:
-    """"Previous zone index in train's trajectory (None if 1st)
+    """"Previous zone index in train's path (None if 1st)
 
     Parameters
     ----------
@@ -40,7 +40,7 @@ def previous_zone(
         Previous zone index or None
     """
 
-    t = self.trajectory(train)
+    t = self.path(train)
     idx = list(t).index(zone)
 
     if idx != 0:
@@ -53,7 +53,7 @@ def next_zone(
     train: int | str,
     zone: int | str,
 ) -> int | str | None:
-    """Next zone index in train's trajectory (None if last)
+    """Next zone index in train's path (None if last)
 
     Parameters
     ----------
@@ -68,7 +68,7 @@ def next_zone(
         Previous zone index or None
     """
 
-    t = self.trajectory(train)
+    t = self.path(train)
     idx = list(t).index(zone)
 
     if idx != len(t) - 1:
@@ -82,7 +82,7 @@ def is_a_point_switch(
     train2: int | str,
     zone: int | str
 ) -> bool:
-    """Given two trains trajectories, is the zone a point switch ?
+    """Given two trains paths, is the zone a point switch ?
 
     Parameters
     ----------
@@ -97,13 +97,13 @@ def is_a_point_switch(
     -------
     bool
         True if it is point switch, False otherwise.
-        False if the zone is not in the trajectory of
+        False if the zone is not in the path of
         one of the trains
     """
     if (
-        zone not in self.trajectory(train1)
+        zone not in self.path(train1)
         or
-        zone not in self.trajectory(train2)
+        zone not in self.path(train2)
     ):
         return False
 
@@ -135,13 +135,13 @@ def is_just_after_a_point_switch(
     -------
     bool
         True if it is just after a point switch, False otherwise
-        False if the zone is not in the trajectory
+        False if the zone is not in the path
         of one of the trains
     """
     if (
-        zone not in self.trajectory(train1)
+        zone not in self.path(train1)
         or
-        zone not in self.trajectory(train2)
+        zone not in self.path(train2)
     ):
         return False
 
@@ -237,14 +237,14 @@ def previous_station(
     if isinstance(train, str):
         train = self.trains.index(train)
 
-    if zone not in self.trajectory(train=train):
+    if zone not in self.path(train=train):
         return
 
-    idx = self.trajectory(train=train).index(zone)
+    idx = self.path(train=train).index(zone)
 
     zones = [
         z
-        for z in self.trajectory(train=train)[:idx][::-1]
+        for z in self.path(train=train)[:idx][::-1]
         if self.step_type.loc[z, self.trains[train]] == 'station'
     ]
 
@@ -276,14 +276,14 @@ def next_station(
     if isinstance(train, str):
         train = self.trains.index(train)
 
-    if zone not in self.trajectory(train=train):
+    if zone not in self.path(train=train):
         return
 
-    idx = self.trajectory(train=train).index(zone)
+    idx = self.path(train=train).index(zone)
 
     zones = [
         z
-        for z in self.trajectory(train=train)[idx:]
+        for z in self.path(train=train)[idx:]
         if self.step_type.loc[z, self.trains[train]] == 'station'
     ]
 
@@ -315,14 +315,14 @@ def previous_switch(
     if isinstance(train, str):
         train = self.trains.index(train)
 
-    if zone not in self.trajectory(train=train):
+    if zone not in self.path(train=train):
         return
 
-    idx = self.trajectory(train=train).index(zone)
+    idx = self.path(train=train).index(zone)
 
     zones = [
         z
-        for z in self.trajectory(train=train)[:idx][::-1]
+        for z in self.path(train=train)[:idx][::-1]
         if self.step_type.loc[z, self.trains[train]] == 'switch'
     ]
 
@@ -354,17 +354,17 @@ def previous_switch_protecting_signal(
     if isinstance(train, str):
         train = self.trains.index(train)
 
-    if zone not in self.trajectory(train=train):
+    if zone not in self.path(train=train):
         return
 
-    idx = self.trajectory(train=train).index(zone)
+    idx = self.path(train=train).index(zone)
 
     if self.step_type.loc[zone, self.trains[train]] == 'switch':
         return previous_signal(self, train, zone)
 
     zones = [
         z
-        for z in self.trajectory(train=train)[:idx][::-1]
+        for z in self.path(train=train)[:idx][::-1]
         if self.step_type.loc[z, self.trains[train]] == 'switch'
     ]
 
@@ -396,14 +396,14 @@ def previous_signal(
     if isinstance(train, str):
         train = self.trains.index(train)
 
-    if zone not in self.trajectory(train=train):
+    if zone not in self.path(train=train):
         return
 
-    idx = self.trajectory(train=train).index(zone)
+    idx = self.path(train=train).index(zone)
 
     zones = [
         z
-        for z in self.trajectory(train=train)[:idx][::-1]
+        for z in self.path(train=train)[:idx][::-1]
         if self.step_type.loc[z, self.trains[train]] in ['signal', 'station']
     ]
 

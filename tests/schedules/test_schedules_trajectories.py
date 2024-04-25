@@ -2,16 +2,16 @@
 from pyosrd.schedules import Schedule
 
 
-def test_schedules_trajectory_by_index(three_trains):
-    assert three_trains.trajectory(0) == [0, 2, 3, 4]
-    assert three_trains.trajectory(1) == [1, 2, 3, 5]
-    assert three_trains.trajectory(2) == [0, 2, 3, 4]
+def test_schedules_path_by_index(three_trains):
+    assert three_trains.path(0) == [0, 2, 3, 4]
+    assert three_trains.path(1) == [1, 2, 3, 5]
+    assert three_trains.path(2) == [0, 2, 3, 4]
 
 
-def test_schedules_trajectory_by_label(three_trains):
-    assert three_trains.trajectory('train1') == [0, 2, 3, 4]
-    assert three_trains.trajectory('train2') == [1, 2, 3, 5]
-    assert three_trains.trajectory('train3') == [0, 2, 3, 4]
+def test_schedules_path_by_label(three_trains):
+    assert three_trains.path('train1') == [0, 2, 3, 4]
+    assert three_trains.path('train2') == [1, 2, 3, 5]
+    assert three_trains.path('train3') == [0, 2, 3, 4]
 
 
 def test_schedules_previous_zone_by_index(three_trains):

@@ -14,7 +14,7 @@ from PIL.JpegImagePlugin import JpegImageFile
 class OSRD(Protocol):
     trains: list[int | str]
 
-    def trajectory(train: int | str):
+    def path(train: int | str):
         ...
 
 
@@ -23,7 +23,7 @@ def graph(self: OSRD) -> nx.DiGraph:
 
     edges = set()
     for train, _ in enumerate(self.trains):
-        traj = self.trajectory(train)
+        traj = self.path(train)
         edges = edges.union({
             (traj[i], traj[i+1])
             for i in range(len(traj)-1)
