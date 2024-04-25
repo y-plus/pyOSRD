@@ -10,7 +10,6 @@ from pyosrd import OSRD
 from pyosrd.schedules import (
     Schedule,
     schedule_from_osrd,
-    step_has_fixed_duration,
     weights as weights_
 )
 from pyosrd.agents import Agent
@@ -24,7 +23,7 @@ class SchedulerAgent(Agent):
 
     ```python3
     @property
-    def steps_extra_delays(self) -> pd.DataFrame:
+    def regulated_schedule(self) -> Schedule:
         ...
     ```
 
@@ -38,13 +37,12 @@ class SchedulerAgent(Agent):
         Schedule for delayed simulation, by default None
     step_has_fixed_duration: pd.DataFrame | None, optional
         DataFrame of booleans indicating if the steps duration can be modified.
-        Can be generated using the function with the same name
-        from subpackage schedules, by default None
+        Is generated automatically when using set_schedules_from_osrd,
+        by default None
     weights: pd.DataFrame | None, optional
         DataFrame of step weights for the weighted total delay.
         Can be generated using methods from the schedules.weight module
         , by default None
-
     """
 
     ref_schedule: Schedule | None = None
@@ -70,14 +68,24 @@ class SchedulerAgent(Agent):
 
         self.ref_schedule = schedule_from_osrd(osrd)
         self.delayed_schedule = schedule_from_osrd(osrd.delayed())
-        self.step_has_fixed_duration = \
-            step_has_fixed_duration(osrd)
+        self.step_has_fixed_duration = (
+            self.step_type == 'switch'
+            if hasattr(self, 'step_type')
+            else self.step_has_fixed_duration
+        )
         self.weights = getattr(weights_, weights)(osrd)
 
     @property
     @abstractmethod
+    def regulated_schedule(self) -> Schedule:
+        ...
+
+    @property
     def steps_extra_delays(self) -> pd.DataFrame:
-        pass
+        return (
+            self.regulated_schedule.durations
+            - self.delayed_schedule.durations
+        ).round(2)
 
     def regulated(self, osrd):
         self.set_schedules_from_osrd(osrd)
@@ -103,19 +111,6 @@ class SchedulerAgent(Agent):
                 )
 
         return stops
-
-    @property
-    def regulated_schedule(self) -> Schedule:
-
-        regulated_schedule = self.delayed_schedule
-
-        for train in self.steps_extra_delays.columns:
-            delays = self.steps_extra_delays[train].replace(0, np.nan)
-            for zone, delay in delays[delays.notna()].to_dict().items():
-                regulated_schedule = \
-                    regulated_schedule.add_delay(train, zone, delay)
-
-        return regulated_schedule
 
     def load_scenario(
         self,
