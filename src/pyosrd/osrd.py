@@ -106,6 +106,25 @@ class OSRD():
 
     def __post_init__(self):
 
+        # If working with a use_case
+        if (
+            self.infra
+            or self.simulation
+            or self.with_delay
+        ):
+            # Clean json files and delayed/ in the indicated directory
+            for json_file in [
+                self.infra_json,
+                self.simulation_json,
+                self.results_json,
+                self.delays_json,
+            ]:
+                if os.path.exists(os.path.join(self.dir, json_file)):
+                    os.remove(os.path.join(self.dir, json_file))
+
+            if os.path.exists(os.path.join(self.dir, 'delayed')):
+                shutil.rmtree(os.path.join(self.dir, 'delayed'))
+
         # Load with_delay if any is given
         if self.with_delay:
 
