@@ -531,9 +531,8 @@ class OSRD():
     def departure_times(self) -> list[float]:
         """List of trains departure times"""
         return [
-            train['departure_time']
-            for group in self.simulation['train_schedule_groups']
-            for train in group['schedules']
+            self._head_position(train)[0]['time']
+            for train in self.trains
         ]
 
     @property
