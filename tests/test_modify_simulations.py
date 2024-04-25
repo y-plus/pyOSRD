@@ -1,4 +1,13 @@
+import shutil
 import pytest
+
+from pyosrd import OSRD
+
+
+@pytest.fixture(scope='function')
+def infra():
+    yield OSRD(dir="c1_tmp", infra='c1')
+    shutil.rmtree('c1_tmp', ignore_errors=True)
 
 
 def test_add_train(modify_sim):
@@ -9,6 +18,38 @@ def test_add_train(modify_sim):
     )
     modify_sim.run()
     assert modify_sim.trains == ['train0', 'train1', 'new_train']
+
+
+def test_add_train_rolling_stock(modify_sim):
+    modify_sim.add_train(
+        label='new_train',
+        locations=[('T0', 300), ('T4', 490)],
+        departure_time=400,
+        rolling_stock='short_fast_rolling_stock'
+    )
+    modify_sim.run()
+    assert modify_sim.trains == ['train0', 'train1', 'new_train']
+
+
+def test_add_train_empty_sim(infra):
+    infra.add_train(
+        label='new_train',
+        locations=[('T', 500), ('T', 9_500)],
+        departure_time=0
+    )
+    infra.run()
+    assert infra.trains == ['new_train']
+
+
+def test_add_train_empty_sim_rolling_stock(infra):
+    infra.add_train(
+        label='new_train',
+        locations=[('T', 500), ('T', 9_500)],
+        departure_time=0,
+        rolling_stock='short_fast_rolling_stock'
+    )
+    infra.run()
+    assert infra.trains == ['new_train']
 
 
 def test_add_train_departure_time_as_string(modify_sim):
