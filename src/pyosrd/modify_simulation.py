@@ -23,6 +23,7 @@ def add_train(
     label: str,
     locations: list[tuple[str, float]],
     departure_time: float | str,
+    rolling_stock: str = 'fast_rolling_stock',
 ):
     """Add a new train schedule
 
@@ -41,7 +42,7 @@ def add_train(
         When the train's label is already used in the simulation
     """
 
-    if label in self.trains:
+    if self.simulation and label in self.trains:
         raise ValueError(f"'{label}' is already used as a train label")
 
     if isinstance(departure_time, str):
@@ -65,12 +66,25 @@ def add_train(
         ],
         label=label,
         departure_time=departure_time,
+        rolling_stock=rolling_stock,
     )
 
     built_simulation = sim_builder.build()
+
+    if not self.simulation:
+        self.simulation = {
+            'train_schedule_groups': [],
+            'rolling_stocks': [],
+            'time_step': 2.0,
+        }
+
     self.simulation['train_schedule_groups'].append(
         built_simulation.format()['train_schedule_groups'][0]
     )
+
+    rs = built_simulation.format()['rolling_stocks'][0]
+    if rs not in self.simulation['rolling_stocks']:
+        self.simulation['rolling_stocks'].append(rs)
 
     with open(os.path.join(self.dir, self.simulation_json), 'w') as f:
         json.dump(self.simulation, f)
