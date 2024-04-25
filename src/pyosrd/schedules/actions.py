@@ -59,6 +59,9 @@ def add_delay(
     if isinstance(delay, str):
         delay = hour_to_seconds(delay)
 
+    if isinstance(zone, int):
+        zone = self._df.index[zone]
+
     start = self._df.loc[zone, (train, 's')]
     new_schedule = copy.deepcopy(self)
 
