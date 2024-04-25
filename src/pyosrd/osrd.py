@@ -106,6 +106,25 @@ class OSRD():
 
     def __post_init__(self):
 
+        # If working with a use_case
+        if (
+            self.infra
+            or self.simulation
+            or self.with_delay
+        ):
+            # Clean json files and delayed/ in the indicated directory
+            for json_file in [
+                self.infra_json,
+                self.simulation_json,
+                self.results_json,
+                self.delays_json,
+            ]:
+                if os.path.exists(os.path.join(self.dir, json_file)):
+                    os.remove(os.path.join(self.dir, json_file))
+
+            if os.path.exists(os.path.join(self.dir, 'delayed')):
+                shutil.rmtree(os.path.join(self.dir, 'delayed'))
+
         # Load with_delay if any is given
         if self.with_delay:
 
@@ -560,7 +579,7 @@ class OSRD():
         return ts
 
     def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
-        """List of tracks for a given train path"""
+        """List of tracks for a given train trajectory"""
 
         if isinstance(train, str):
             train = self.trains.index(train)
@@ -633,7 +652,7 @@ class OSRD():
             'arrival',
         ],
     ) -> list[dict[str, Any]]:
-        """Points encountered by a train during its path
+        """Points encountered by a train during its trajectory
 
         Parameters
         ----------
@@ -835,7 +854,7 @@ class OSRD():
         -------
         list[dict[str, Any]]
             List of dicts, one by train,where keys are the zones
-            during the train's path and the values are dicts with
+            during the train's trajectory and the values are dicts with
             the stop points, their types and positions.
         """
         stop_positions = []
