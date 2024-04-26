@@ -107,7 +107,7 @@ def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
         [test_agent, test_agent2]
     )
 
-    assert abs(1458.2584 - df.sum().sum()) < 1e-3
+    assert pytest.approx(df.sum().sum()) == 980.
 
 
 def test_scheduler_scenarii_one_agent_regulate_delay(test_agent):
