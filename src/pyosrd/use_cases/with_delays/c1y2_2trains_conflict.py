@@ -25,5 +25,5 @@ def c1y2_2trains_conflict(
     )
 
     sim.reset_delays()
-    sim.add_delay('train0', time_threshold=40, delay=120.)
+    sim.add_delay('train0', time_threshold=80, delay=120.)
     sim.add_delays_in_results()
