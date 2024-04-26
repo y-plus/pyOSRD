@@ -16,6 +16,7 @@ class Schedule(object):
         first_in,
         trains_order_in_zone,
         previous_signal,
+        stations,
         previous_station,
         next_station,
         previous_switch,

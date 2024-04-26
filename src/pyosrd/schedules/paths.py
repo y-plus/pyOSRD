@@ -410,3 +410,15 @@ def previous_signal(
     if zones:
         return zones[0]
     return
+
+
+@property
+def stations(self) -> list[str]:
+    """List of zones corresponding to a station"""
+    return (
+        self
+        .step_type[self.step_type == 'station']
+        .dropna(how='all')
+        .index
+        .tolist()
+    )

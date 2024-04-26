@@ -107,3 +107,8 @@ def test_schedules_previous_methods_no_zone_found(schedule_station_capacity2):
         0,
         'D0<->buffer_stop.0'
     ) is None
+
+
+def test_schedules_stations(schedule_station_capacity2):
+    assert schedule_station_capacity2.stations == \
+        ['D1<->D3', 'D2<->D4']
