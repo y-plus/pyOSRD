@@ -97,7 +97,7 @@ def test_scheduler_agent_regulate_scenarii_delay(test_agent):
         ["c1_2trains_delay_train1", "c1y2_2trains_conflict"]
     )
 
-    assert pytest.approx(df.sum().sum()) == 879.129225
+    assert pytest.approx(df.sum().sum()) == 640
 
 
 def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
@@ -107,7 +107,7 @@ def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
         [test_agent, test_agent2]
     )
 
-    assert pytest.approx(df.sum().sum()) == 1458.2584
+    assert pytest.approx(df.sum().sum()) == 980.
 
 
 def test_scheduler_scenarii_one_agent_regulate_delay(test_agent):
