@@ -131,8 +131,11 @@ def simulation_cvg_dvg():
 
 @pytest.fixture(scope='session')
 def simulation_station_builder():
-    yield OSRD(dir='tmp', simulation='station_builder_1station_2trains')
-    shutil.rmtree('tmp', ignore_errors=True)
+    yield OSRD(
+        dir='tmp_station_builder',
+        simulation='station_builder_1station_2trains'
+    )
+    shutil.rmtree('tmp_station_builder', ignore_errors=True)
 
 
 @pytest.fixture(scope='function')
@@ -166,5 +169,20 @@ def simulation_double_switch():
 
 
 @pytest.fixture(scope='session')
+def schedule_cvg_dvg(simulation_cvg_dvg) -> Schedule:
+    return schedule_from_osrd(simulation_cvg_dvg)
+
+
+@pytest.fixture(scope='session')
 def schedule_station_capacity2(simulation_station_capacity2) -> Schedule:
     return schedule_from_osrd(simulation_station_capacity2)
+
+
+@pytest.fixture(scope='session')
+def schedule_straight_line(simulation_straight_line) -> Schedule:
+    return schedule_from_osrd(simulation_straight_line)
+
+
+@pytest.fixture(scope='session')
+def schedule_double_switch(simulation_double_switch) -> Schedule:
+    return schedule_from_osrd(simulation_double_switch)

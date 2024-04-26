@@ -6,6 +6,7 @@ import pytest
 
 
 from pyosrd import OSRD
+from pyosrd.schedules import Schedule
 from pyosrd.agents.scheduler_agent import SchedulerAgent
 from pyosrd.agents.scheduler_agent import regulate_scenarii_with_agents
 
@@ -14,10 +15,8 @@ from pyosrd.agents.scheduler_agent import regulate_scenarii_with_agents
 def test_agent() -> SchedulerAgent:
     class DelayTrain0AtDeparture(SchedulerAgent):
         @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[0, 0] = 100.
-            return df
+        def regulated_schedule(self) -> Schedule:
+            return self.delayed_schedule.add_delay(0, 0, 100)
 
     return DelayTrain0AtDeparture('test')
 
@@ -26,10 +25,8 @@ def test_agent() -> SchedulerAgent:
 def test_agent2() -> SchedulerAgent:
     class DelayTrain1AtDeparture(SchedulerAgent):
         @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            df = self.ref_schedule.durations * 0.
-            df.iloc[1, 0] = 50.
-            return df
+        def regulated_schedule(self) -> Schedule:
+            return self.delayed_schedule.add_delay(0, 1, 50)
 
     return DelayTrain1AtDeparture('test2')
 
@@ -38,8 +35,8 @@ def test_scheduler_agent_autonomous(two_trains):
 
     class DummySchedulerAgent(SchedulerAgent):
         @property
-        def steps_extra_delays(self) -> pd.DataFrame:
-            return self.ref_schedule.durations * 0.
+        def regulated_schedule(self) -> pd.DataFrame:
+            return self.delayed_schedule
 
     agent = DummySchedulerAgent(
         'dummy',
@@ -63,6 +60,7 @@ def test_scheduler_agent_autonomous(two_trains):
 def test_scheduler_agent_in_regulate(test_agent):
 
     sim = OSRD(simulation='station_capacity2', dir='tmp2')
+    sim.reset_delays()
     sim.add_delay('train0', time_threshold=90, delay=280.)
     delayed = sim.delayed()
 
@@ -90,7 +88,7 @@ def test_scheduler_agent_regulate_scenario_delay(test_agent):
 
     df = test_agent.regulate_scenario("c1_2trains_delay_train1")
 
-    assert abs(440.0 - df.sum().sum()) < 1e-3
+    assert pytest.approx(df.sum().sum()) == 440.0
 
 
 def test_scheduler_agent_regulate_scenarii_delay(test_agent):
@@ -99,7 +97,7 @@ def test_scheduler_agent_regulate_scenarii_delay(test_agent):
         ["c1_2trains_delay_train1", "c1y2_2trains_conflict"]
     )
 
-    assert abs(640 - df.sum().sum()) < 1e-3
+    assert pytest.approx(df.sum().sum()) == 640
 
 
 def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
@@ -109,7 +107,7 @@ def test_scheduler_scenarii_agents_regulate_delay(test_agent, test_agent2):
         [test_agent, test_agent2]
     )
 
-    assert abs(980 - df.sum().sum()) < 1e-3
+    assert abs(1458.2584 - df.sum().sum()) < 1e-3
 
 
 def test_scheduler_scenarii_one_agent_regulate_delay(test_agent):
@@ -119,7 +117,7 @@ def test_scheduler_scenarii_one_agent_regulate_delay(test_agent):
         test_agent
     )
 
-    assert abs(440.0 - df.sum().sum()) < 1e-3
+    assert pytest.approx(df.sum().sum()) == 440.0
 
 
 def test_scheduler_agent_unknown_instance():

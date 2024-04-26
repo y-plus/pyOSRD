@@ -2,18 +2,20 @@ import os
 
 from railjson_generator import (
     InfraBuilder,
-    SimulationBuilder,
-    Location,
 )
+from railjson_generator.schema.infra.infra import Infra
+
 from pyosrd.infra.helpers.station_builder import build_N_dvg_station_cvg
 
 
-def station_builder_1station_2trains(
+def multistation(
     dir: str,
     infra_json: str = 'infra.json',
-    simulation_json: str = 'simulation.json'
-) -> None:
-    """Generate a divergence/stations/convergence sequence.
+    num_stations: int = 1
+) -> Infra:
+    """Create a serie of N stations (see build_N_dvg_station_cvg for details).
+
+    Generate a divergence/stations/convergence sequence.
 
                                         stations
 
@@ -33,9 +35,10 @@ def station_builder_1station_2trains(
     t0 = build_N_dvg_station_cvg(
         infra_builder,
         t0,
-        "station_builder_1station",
-        1
+        "multistation",
+        num_stations
     )
+
     t0.add_buffer_stop(1000, label='buffer_stop.1')
 
     os.makedirs(dir, exist_ok=True)
@@ -43,15 +46,4 @@ def station_builder_1station_2trains(
     built_infra = infra_builder.build()
     built_infra.save(os.path.join(dir, infra_json))
 
-    sim_builder = SimulationBuilder()
-
-    for i in range(0, 2):
-        sim_builder.add_train_schedule(
-            Location(built_infra.track_sections[0], 500),
-            Location(built_infra.track_sections[1], 500),
-            label='train'+str(i),
-            departure_time=i*200.+0.,
-        )
-
-    built_simulation = sim_builder.build()
-    built_simulation.save(os.path.join(dir, simulation_json))
+    return built_infra

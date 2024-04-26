@@ -20,7 +20,7 @@ def shift_train_departure(
 ) -> Schedule:
     """Shift the departure by a given time
 
-    All the trajectory is shifted
+    All the path is shifted
 
     Parameters
     ----------
@@ -50,6 +50,7 @@ def add_delay(
     train: int | str,
     zone: int | str,
     delay: float | str,
+    at_arrival: bool = False,
 ) -> Schedule:
 
     if isinstance(train, int):
@@ -58,11 +59,17 @@ def add_delay(
     if isinstance(delay, str):
         delay = hour_to_seconds(delay)
 
+    if isinstance(zone, int):
+        zone = self._df.index[zone]
+
     start = self._df.loc[zone, (train, 's')]
     new_schedule = copy.deepcopy(self)
 
     # extend duration in a given zone
     new_schedule._df.loc[zone, (train, 'e')] += delay
+
+    if at_arrival:
+        new_schedule._df.loc[zone, (train, 's')] += delay
 
     # Add delay to all subsequent zones
     new_schedule._df.loc[
@@ -71,23 +78,6 @@ def add_delay(
     ] += delay
 
     return new_schedule
-
-
-def is_action_needed(self, train: int) -> bool:
-
-    action_needed = False
-    if self.has_conflicts(train):
-        zone, other_train = self.first_conflict(train)
-        action_needed = (
-            self.is_a_point_switch(train, other_train, zone)
-            or
-            self.is_just_after_a_point_switch(
-                train,
-                other_train,
-                zone
-            )
-        )
-    return action_needed
 
 
 def set_priority_train(
@@ -130,7 +120,7 @@ def set_priority_train(
     )
 
     # Which zone shoud be used as a reference to calculate needed wait_time ?
-    t = self.trajectory(train_decelerating)
+    t = self.path(train_decelerating)
     zones_to_free = t[
         t.index(decelerates_in_zone)+1:
         t.index(until_zone_is_free)+1

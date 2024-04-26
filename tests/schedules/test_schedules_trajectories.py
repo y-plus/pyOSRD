@@ -2,16 +2,16 @@
 from pyosrd.schedules import Schedule
 
 
-def test_schedules_trajectory_by_index(three_trains):
-    assert three_trains.trajectory(0) == [0, 2, 3, 4]
-    assert three_trains.trajectory(1) == [1, 2, 3, 5]
-    assert three_trains.trajectory(2) == [0, 2, 3, 4]
+def test_schedules_path_by_index(three_trains):
+    assert three_trains.path(0) == [0, 2, 3, 4]
+    assert three_trains.path(1) == [1, 2, 3, 5]
+    assert three_trains.path(2) == [0, 2, 3, 4]
 
 
-def test_schedules_trajectory_by_label(three_trains):
-    assert three_trains.trajectory('train1') == [0, 2, 3, 4]
-    assert three_trains.trajectory('train2') == [1, 2, 3, 5]
-    assert three_trains.trajectory('train3') == [0, 2, 3, 4]
+def test_schedules_path_by_label(three_trains):
+    assert three_trains.path('train1') == [0, 2, 3, 4]
+    assert three_trains.path('train2') == [1, 2, 3, 5]
+    assert three_trains.path('train3') == [0, 2, 3, 4]
 
 
 def test_schedules_previous_zone_by_index(three_trains):
@@ -71,3 +71,26 @@ def test_schedules_trains_order_in_zone(three_trains):
     assert three_trains.trains_order_in_zone('train3', 'train1', 2) == \
         ['train1', 'train3']
     assert three_trains.trains_order_in_zone(1, 0, 1) == ['train2']
+
+
+def test_schedules_first_in(two_trains):
+    for zone in (0, 2, 3, 4):
+        assert (
+            two_trains.add_delay(0, 0, 0.5)
+            .first_in(0, 1, zone)
+            == 'train1'
+        )
+    for zone in (1, 2, 3, 5):
+        assert (
+            two_trains.add_delay(0, 0, 1.5)
+            .first_in(0, 1, zone)
+            == 'train2'
+        )
+
+
+def test_schedules_first_in_same_time(two_trains):
+    assert (
+        two_trains.add_delay(0, 0, 1)
+        .first_in(0, 1, 2)
+        == ['train1', 'train2']
+    )

@@ -7,6 +7,7 @@ import shutil
 import subprocess
 
 from dataclasses import dataclass
+from dataclasses import field
 from importlib.resources import files
 from itertools import combinations
 from typing import Any
@@ -85,6 +86,7 @@ class OSRD():
     simulation_json: str = 'simulation.json'
     results_json: str = 'results.json'
     delays_json: str = 'delays.json'
+    params_use_case: dict = field(default_factory=dict)
 
     from .agents import Agent
     from .delays import add_delay, add_delays_in_results, delayed, reset_delays
@@ -123,6 +125,7 @@ class OSRD():
                 self.infra_json,
                 self.simulation_json,
                 self.delays_json,
+                **self.params_use_case
             )
 
         # Load simulation if any is given
@@ -142,7 +145,8 @@ class OSRD():
             function(
                 self.dir,
                 self.infra_json,
-                self.simulation_json
+                self.simulation_json,
+                **self.params_use_case
             )
 
         elif self.infra:
@@ -159,7 +163,8 @@ class OSRD():
             function = getattr(module, self.infra)
             function(
                 self.dir,
-                self.infra_json
+                self.infra_json,
+                **self.params_use_case
             )
 
         self.infra = (
@@ -555,7 +560,7 @@ class OSRD():
         return ts
 
     def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
-        """List of tracks for a given train trajectory"""
+        """List of tracks for a given train path"""
 
         if isinstance(train, str):
             train = self.trains.index(train)
@@ -628,7 +633,7 @@ class OSRD():
             'arrival',
         ],
     ) -> list[dict[str, Any]]:
-        """Points encountered by a train during its trajectory
+        """Points encountered by a train during its path
 
         Parameters
         ----------
@@ -830,7 +835,7 @@ class OSRD():
         -------
         list[dict[str, Any]]
             List of dicts, one by train,where keys are the zones
-            during the train's trajectory and the values are dicts with
+            during the train's path and the values are dicts with
             the stop points, their types and positions.
         """
         stop_positions = []
