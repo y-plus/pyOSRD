@@ -81,7 +81,7 @@ class Schedule(object):
         return getattr(
             self,
             '_trains',
-            list(self._df.columns.levels[0])
+            list(self._df.columns.get_level_values(0).unique())
         )
 
     def set_train_labels(self, labels: list[str]) -> None:
