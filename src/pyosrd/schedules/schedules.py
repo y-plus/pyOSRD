@@ -104,7 +104,8 @@ class Schedule(object):
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 's']
-            ].set_axis(self._df.columns.levels[0], axis=1).astype(float)
+            ].set_axis(self._df.columns.get_level_values(0).unique(), axis=1) \
+            .astype(float)
 
     @property
     def ends(self) -> pd.DataFrame:
@@ -112,7 +113,8 @@ class Schedule(object):
         return self._df.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 'e']
-            ].set_axis(self._df.columns.levels[0], axis=1).astype(float)
+            ].set_axis(self._df.columns.get_level_values(0).unique(), axis=1) \
+            .astype(float)
 
     @property
     def durations(self) -> pd.DataFrame:
@@ -180,11 +182,15 @@ class Schedule(object):
             self._min_times.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 'e']
-            ].set_axis(self._min_times.columns.levels[0], axis=1)
+            ].set_axis(
+                self._min_times.columns.get_level_values(0).unique(), axis=1
+            )
             .astype(float)
             - self._min_times.loc[
                 pd.IndexSlice[:],
                 pd.IndexSlice[:, 's']
-            ].set_axis(self._min_times.columns.levels[0], axis=1)
+            ].set_axis(
+                self._min_times.columns.get_level_values(0).unique(), axis=1
+            )
             .astype(float)
         )
