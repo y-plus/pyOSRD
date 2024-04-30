@@ -71,10 +71,11 @@ def step_type(sim: OSRD) -> pd.DataFrame:
     pd.DataFrame
         DataFrame with the same shape as a schedule.
     """
+    stop_positions = sim.stop_positions
     return (
         pd.concat(
             [
-                pd.DataFrame(sim.stop_positions[col]).T.type
+                pd.DataFrame(stop_positions[col]).T.type
                 for col, _ in enumerate(sim.trains)
             ],
             axis=1
@@ -201,22 +202,23 @@ def _schedule_df_from_OSRD(
     return df
 
 
-def _merge_switch_zones(case: OSRD, s: Schedule) -> Schedule:
+def _merge_switch_zones(case: OSRD, s: Schedule, _step_type) -> Schedule:
 
     new_schedule = copy.copy(s)
     G = new_schedule.graph
 
     # Calculate zone_types
-    _step_type = (pd.concat(
-        [
-            pd.DataFrame(case.stop_positions[col]).T.type
-            for col, _ in enumerate(case.trains)
-        ],
-        axis=1
-        )
-        .set_axis(range(case.num_trains), axis=1)
-        .reindex(s.df.index)
-    )
+    # stop_positions = case.stop_positions
+    # _step_type = (pd.concat(
+    #     [
+    #         pd.DataFrame(stop_positions[col]).T.type
+    #         for col, _ in enumerate(case.trains)
+    #     ],
+    #     axis=1
+    #     )
+    #     .set_axis(range(case.num_trains), axis=1)
+    #     .reindex(s.df.index)
+    # )
     # Attach zone types as node attributes
     zone_type = (
         _step_type.T
@@ -234,7 +236,6 @@ def _merge_switch_zones(case: OSRD, s: Schedule) -> Schedule:
         if data.get("type") == "switch"
     )
     subgraph = G.subgraph(nodes)
-
     # Isolate groups of 2 or more consecutive switch nodes
     switch_groups = [
         list(s)
@@ -291,7 +292,20 @@ def schedule_from_osrd(
         s._df = _schedule_df_from_OSRD(sim, eco_or_base='base')
 
     s._min_times = _schedule_df_from_OSRD(sim, eco_or_base='base')
+    # s._step_type = step_type(sim)
 
-    s._step_type = step_type(sim)
-    s = _merge_switch_zones(sim, s)
+    stop_positions = sim.stop_positions
+    s._step_type = (
+        pd.concat(
+            [
+                pd.DataFrame(stop_positions[col]).T.type
+                for col, _ in enumerate(sim.trains)
+            ],
+            axis=1
+        )
+        .set_axis(sim.trains, axis=1)
+        .reindex(s._df.index)
+    )
+
+    s = _merge_switch_zones(sim, s, s._step_type)
     return s
