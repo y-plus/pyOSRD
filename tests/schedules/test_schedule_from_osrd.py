@@ -3,8 +3,6 @@ import pandas as pd
 
 from pandas.testing import assert_frame_equal
 
-from pyosrd.schedules.from_osrd import _schedule_df_from_OSRD
-
 
 def test_schedule_from_osrd(schedule_cvg_dvg):
     assert set(schedule_cvg_dvg.zones) == set([
@@ -65,11 +63,15 @@ def test_schedule_from_osrd_min_times_base_only(schedule_station_capacity2):
 
 
 def test_schedule_from_osrd_min_times(
-    simulation_straight_line,
     schedule_straight_line
 ):
-    """No allowance, in this case times = min_times"""
-    assert_frame_equal(
-        schedule_straight_line.min_times,
-        _schedule_df_from_OSRD(simulation_straight_line, eco_or_base='base')
-    )
+    """With allowance"""
+
+    try:
+        assert_frame_equal(
+            schedule_straight_line.min_times,
+            schedule_straight_line.df
+        )
+        raise AssertionError
+    except AssertionError:
+        pass

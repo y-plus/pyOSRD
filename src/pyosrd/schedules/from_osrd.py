@@ -44,11 +44,11 @@ def step_has_fixed_duration(sim: OSRD) -> pd.DataFrame:
             axis=1
         )
         .set_axis(sim.trains, axis=1)
-        .reindex(_schedule_df_from_OSRD(sim).index)
+        .reindex(_schedule_dfs_from_OSRD(sim)[0].index)
     )
 
 
-def step_type(sim: OSRD) -> pd.DataFrame:
+def step_type(sim: OSRD, s: Schedule | None = None) -> pd.DataFrame:
     """Is the zone a switch, a station lane or a block with a signal ?
 
     Generates a DataFrame with the same shape as a schedule
@@ -71,22 +71,38 @@ def step_type(sim: OSRD) -> pd.DataFrame:
     pd.DataFrame
         DataFrame with the same shape as a schedule.
     """
-    stop_positions = sim.stop_positions
-    return (
-        pd.concat(
-            [
-                pd.DataFrame(stop_positions[col]).T.type
-                for col, _ in enumerate(sim.trains)
-            ],
-            axis=1
-        )
-        .set_axis(sim.trains, axis=1)
-        .reindex(_schedule_df_from_OSRD(sim).index)
-    )
+
+    if s is None:
+        s = schedule_from_osrd(sim)
+
+    st = pd.DataFrame(columns=s.trains, index=s.zones)
+
+    for train in s.trains:
+        p = [
+            p['id']
+            for p in
+            sim.points_encountered_by_train(train, ['station', 'detector'])
+        ]
+        for z in s.path(train):
+            if '<->' in z:
+                A, B = z.split('<->')
+                idxA = p.index(A) if A in p else None
+                idxB = p.index(B) if B in p else None
+
+                points = p[idxA:idxB] if p[idxA:idxB] else p[idxB:idxA]
+                if len(points) > 1 and points != p:
+                    st.loc[z, train] = 'station'
+                elif s.path(train)[-1] == z:
+                    st.loc[z, train] = 'last_zone'
+                else:
+                    st.loc[z, train] = 'signal'
+            else:
+                st.loc[z, train] = 'switch'
+    return st
 
 
 def _step_is_a_station(sim: OSRD) -> pd.DataFrame:
-    return step_type(sim) == 'station'
+    return step_type(sim, schedule_from_osrd(sim)) == 'station'
 
 
 def step_station_id(sim: OSRD) -> pd.DataFrame:
@@ -112,28 +128,37 @@ def step_station_id(sim: OSRD) -> pd.DataFrame:
                 axis=1
             )
             .set_axis(sim.trains, axis=1)
-            .reindex(_schedule_df_from_OSRD(sim).index)
+            .reindex(_schedule_dfs_from_OSRD(sim)[0].index)
         )
     ).replace('', np.nan)
 
 
-def _schedule_df_from_OSRD(
+def _schedule_dfs_from_OSRD(
     sim: OSRD,
     eco_or_base: str = 'base',
-) -> pd.DataFrame:
+    delayed: bool = False
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame | None]:
 
     # STEP 1: CREATE DATAFRAME
     # index USING ZONES FROM INFRASTRUCTURE
     # columns USING TRAINS FROM SIMULATION
 
     tvd_zones = sim.tvd_zones
-    df = pd.DataFrame(
+
+    min_times = pd.DataFrame(
         columns=pd.MultiIndex.from_product(
             [sim.trains, ['s', 'e']]
         ),
         index=["<->".join(sorted(tvd)) for tvd in sim._tvds]
     )
-    df.insert(0, 'zone', tvd_zones.values())
+    min_times.insert(0, 'zone', tvd_zones.values())
+
+    if eco_or_base == 'eco':
+        df = min_times.copy()
+
+    if delayed:
+        sim_d = sim.delayed()
+        df_delayed = min_times.copy(deep=True)
 
     # STEP2: LOOP ON TRAINS IN RESULTS TO FILL IN START 1 END TIMES
     for train in sim.trains:
@@ -151,11 +176,34 @@ def _schedule_df_from_OSRD(
                 else elements
             )
 
-        arrival_time = sim.points_encountered_by_train(
+        arrival_time_base = sim.points_encountered_by_train(
             train=train,
             types='arrival',
-        )[0][f't_{eco_or_base}']
-        detectors = sim.points_encountered_by_train(train, types='detector')
+        )[0]['t_base']
+
+        if eco_or_base == 'eco':
+            arrival_time_eco = sim.points_encountered_by_train(
+                train=train,
+                types='arrival',
+            )[0]['t_eco']
+
+        if delayed:
+            arrival_time_eco = sim_d.points_encountered_by_train(
+                train=train,
+                types='arrival',
+            )[0][f't_{eco_or_base}']
+
+        detectors = sim.points_encountered_by_train(
+            train=train,
+            types='detector',
+        )
+
+        if delayed:
+            detectors_delayed = sim_d.points_encountered_by_train(
+                train=train,
+                types='detector',
+            )
+
         first_detector = detectors[0]['id']
         last_detector = detectors[-1]['id']
         idx_first = tvds_limits.index(first_detector)
@@ -167,59 +215,110 @@ def _schedule_df_from_OSRD(
 
             start = limits[i]
             end = limits[i+1]
-
+            joined = "<->".join(sorted([start, end]))
+            name = tvd_zones[joined]
             t_start = (
                 sim.departure_times[sim.trains.index(train)]
                 if i == 0
                 else [
-                    d[f't_{eco_or_base}']
+                    d['t_base']
                     for d in detectors
                     if d['id'] == start][0]
             )
             t_end = (
-                arrival_time
+                arrival_time_base
                 if i == len(limits)-2
                 else [
-                    d[f't_tail_{eco_or_base}']
+                    d['t_tail_base']
                     for d in detectors
                     if d['id'] == end][0]
             )
-            joined = "<->".join(sorted([start, end]))
-            name = tvd_zones[joined]
-            df.loc[
-                df.zone == name,
+
+            min_times.loc[
+                min_times.zone == name,
                 train
             ] = (t_start, t_end)
 
+            if eco_or_base == 'eco':
+                t_start_eco = (
+                    sim.departure_times[sim.trains.index(train)]
+                    if i == 0
+                    else [
+                        d['t_eco']
+                        for d in detectors
+                        if d['id'] == start][0]
+                )
+                t_end_eco = (
+                    arrival_time_eco
+                    if i == len(limits)-2
+                    else [
+                        d['t_tail_eco']
+                        for d in detectors
+                        if d['id'] == end][0]
+                )
+                df.loc[
+                        df.zone == name,
+                        train
+                    ] = (t_start_eco, t_end_eco)
+
+            if delayed:
+                t_start_delayed = (
+                    sim_d.departure_times[sim_d.trains.index(train)]
+                    if i == 0
+                    else [
+                        d[f't_{eco_or_base}']
+                        for d in detectors_delayed
+                        if d['id'] == start][0]
+                )
+                t_end_delayed = (
+                    arrival_time_eco
+                    if i == len(limits)-2
+                    else [
+                        d[f't_tail_{eco_or_base}']
+                        for d in detectors_delayed
+                        if d['id'] == end][0]
+                )
+                df_delayed.loc[
+                        df_delayed.zone == name,
+                        train
+                    ] = (t_start_delayed, t_end_delayed)
+
     # STEP 3: CLEAN UP
-    df.set_index('zone', inplace=True, drop=True)
-    df.drop_duplicates(inplace=True)
-    df.index.name = None
-    df.columns = pd.MultiIndex.from_product(
+    min_times.set_index('zone', inplace=True, drop=True)
+    min_times.drop_duplicates(inplace=True)
+    min_times.index.name = None
+    min_times.columns = pd.MultiIndex.from_product(
             [sim.trains, ['s', 'e']]
         )
 
-    return df
+    if eco_or_base == 'base':
+        df = min_times.copy()
+    else:
+        df.set_index('zone', inplace=True, drop=True)
+        df.drop_duplicates(inplace=True)
+        df.index.name = None
+        df.columns = pd.MultiIndex.from_product(
+                [sim.trains, ['s', 'e']]
+            )
+
+    if not delayed:
+        df_delayed = None
+    else:
+        df_delayed.set_index('zone', inplace=True, drop=True)
+        df_delayed.drop_duplicates(inplace=True)
+        df_delayed.index.name = None
+        df_delayed.columns = pd.MultiIndex.from_product(
+                [sim.trains, ['s', 'e']]
+            )
+
+    return df, min_times, df_delayed
 
 
-def _merge_switch_zones(case: OSRD, s: Schedule, _step_type) -> Schedule:
+def _merge_switch_zones(s: Schedule, _step_type: pd.DataFrame) -> Schedule:
 
     new_schedule = copy.copy(s)
     G = new_schedule.graph
 
-    # Calculate zone_types
-    # stop_positions = case.stop_positions
-    # _step_type = (pd.concat(
-    #     [
-    #         pd.DataFrame(stop_positions[col]).T.type
-    #         for col, _ in enumerate(case.trains)
-    #     ],
-    #     axis=1
-    #     )
-    #     .set_axis(range(case.num_trains), axis=1)
-    #     .reindex(s.df.index)
-    # )
-    # Attach zone types as node attributes
     zone_type = (
         _step_type.T
         .agg(pd.unique)
@@ -236,6 +335,7 @@ def _merge_switch_zones(case: OSRD, s: Schedule, _step_type) -> Schedule:
         if data.get("type") == "switch"
     )
     subgraph = G.subgraph(nodes)
+
     # Isolate groups of 2 or more consecutive switch nodes
     switch_groups = [
         list(s)
@@ -262,6 +362,7 @@ def _merge_switch_zones(case: OSRD, s: Schedule, _step_type) -> Schedule:
 
 def schedule_from_osrd(
         sim: OSRD,
+        delayed: bool = False,
 ) -> Schedule:
     """Construct a schedule object  from an OSRD simulation
 
@@ -285,27 +386,26 @@ def schedule_from_osrd(
     s = Schedule(len(sim.routes), sim.num_trains)
     s._trains = sim.trains
 
+    if delayed:
+        s_delayed = Schedule(len(sim.routes), sim.num_trains)
+        s_delayed._trains = sim.trains
+
     group, idx = sim._train_schedule_group[sim.trains[0]]
     if sim.results[group]['eco_simulations'][idx]:
-        s._df = _schedule_df_from_OSRD(sim, eco_or_base='eco')
+        eco_or_base = 'eco'
     else:
-        s._df = _schedule_df_from_OSRD(sim, eco_or_base='base')
+        eco_or_base = 'base'
 
-    s._min_times = _schedule_df_from_OSRD(sim, eco_or_base='base')
-    # s._step_type = step_type(sim)
+    s._df, s._min_times, delayed_df =\
+        _schedule_dfs_from_OSRD(sim, eco_or_base, delayed=delayed)
+    s._step_type = step_type(sim, s)
+    if delayed:
+        s_delayed._df = delayed_df
+        s_delayed._min_times = s._min_times.copy()
+        s_delayed._step_type = s._step_type.copy()
 
-    stop_positions = sim.stop_positions
-    s._step_type = (
-        pd.concat(
-            [
-                pd.DataFrame(stop_positions[col]).T.type
-                for col, _ in enumerate(sim.trains)
-            ],
-            axis=1
-        )
-        .set_axis(sim.trains, axis=1)
-        .reindex(s._df.index)
-    )
+    s = _merge_switch_zones(s, s._step_type)
 
-    s = _merge_switch_zones(sim, s, s._step_type)
-    return s
+    if not delayed:
+        return s
+    return s, s_delayed

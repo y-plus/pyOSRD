@@ -701,22 +701,21 @@ class OSRD():
                 if track['id'] == point.track_section:
                     return track['direction']
 
-        list_ = [
-            {
-                'id': point.id,
-                'offset': self.offset_in_path_of_train(point, train),
-                'type': point.type,
-            }
-            for point in list(points.values())
+        list_ = []
+        for point in list(points.values()):
+            offset = self.offset_in_path_of_train(point, train)
             if (
                 (
                     point_direction(point) == train_direction(point, train)
                     or point_direction(point) == 'BOTH'
                 )
-                and self.offset_in_path_of_train(point, train) is not None
-            )
-        ]
-
+                and offset is not None
+            ):
+                list_.append({
+                    'id': point.id,
+                    'offset': offset,
+                    'type': point.type,
+                })
         list_.sort(key=lambda point: point['offset'])
 
         simulations = ['base']
@@ -727,13 +726,14 @@ class OSRD():
             pass
 
         for eco_or_base in simulations:
+            head_position = self._head_position(train, eco_or_base)
             t = [
                 record['time']
-                for record in self._head_position(train, eco_or_base)
+                for record in head_position
             ]
             path_offset = [
                 record['path_offset']
-                for record in self._head_position(train, eco_or_base)
+                for record in head_position
             ]
             for point in list_:
                 point['t_'+eco_or_base] = np.interp(
@@ -862,6 +862,7 @@ class OSRD():
             positions = {}
 
             tvds_limits = []
+
             for track in self.train_track_sections(train_id):
                 elements = [
                     p.id

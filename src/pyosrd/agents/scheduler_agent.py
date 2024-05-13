@@ -66,15 +66,21 @@ class SchedulerAgent(Agent):
                 by default 'stations_only'
         """
 
-        self.ref_schedule = schedule_from_osrd(osrd)
-        self.delayed_schedule = schedule_from_osrd(osrd.delayed())
+        self.ref_schedule, self.delayed_schedule =\
+            schedule_from_osrd(osrd, delayed=True)
         self.step_has_fixed_duration = (
             self.step_type == 'switch'
             if hasattr(self, 'step_type')
             else self.step_has_fixed_duration
         )
-        self.weights = getattr(weights_, weights)(osrd)
-
+        # self.weights = getattr(weights_, weights)(osrd)
+        if weights == 'stations_only':
+            self.weights =\
+                (self.ref_schedule.step_type == 'station').astype(int)
+        elif weights == 'all_steps':
+            self.weights = self.ref_schedule.step_type.notna().astype(int)
+        else:
+            raise ValueError(f"{weights} is not a valid weight identifier")
     @property
     @abstractmethod
     def regulated_schedule(self) -> Schedule:
@@ -162,9 +168,7 @@ class SchedulerAgent(Agent):
 
         self.set_schedules_from_osrd(sim, "all_steps")
 
-        shutil.rmtree('tmp', ignore_errors=True)
-
-        return pd.DataFrame(
+        df = pd.DataFrame(
             {
                 self.name: [
                     self.regulated_schedule.total_weighted_delay(
@@ -175,6 +179,10 @@ class SchedulerAgent(Agent):
             },
             index=[scenario]
         )
+
+        shutil.rmtree('tmp', ignore_errors=True)
+
+        return df
 
     def regulate_scenarii(
         self,
