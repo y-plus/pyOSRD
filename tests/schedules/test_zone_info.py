@@ -34,8 +34,8 @@ def test_step_type(
 
     expected = pd.DataFrame(
         {
-            'train0': ['signal', 'switch', 'station', np.nan, 'switch', 'last_zone'],
-            'train1': ['signal', 'switch', np.nan, 'station', 'switch', 'last_zone'],
+            'train0': ['signal', 'switch', 'station', np.nan, 'switch', 'last_zone'],  # noqa
+            'train1': ['signal', 'switch', np.nan, 'station', 'switch', 'last_zone'],  # noqa
         },
         index=schedule_station_capacity2.df.index
     )
