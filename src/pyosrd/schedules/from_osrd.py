@@ -355,6 +355,7 @@ def _merge_switch_zones(s: Schedule, _step_type: pd.DataFrame) -> Schedule:
                 merged_zone_name,
                 (train, 'e')
             ] = new_schedule.df.loc[switches, (train, 'e')].max()
+
             new_schedule.min_times.loc[
                 merged_zone_name,
                 (train, 's')
@@ -363,6 +364,7 @@ def _merge_switch_zones(s: Schedule, _step_type: pd.DataFrame) -> Schedule:
                 merged_zone_name,
                 (train, 'e')
             ] = new_schedule.min_times.loc[switches, (train, 'e')].max()
+
             new_schedule._step_type.loc[merged_zone_name, train] = 'switch'
 
         new_schedule.df.drop(switches, inplace=True)
@@ -414,15 +416,16 @@ def schedule_from_osrd(
     s._df, s._min_times, delayed_df =\
         _schedule_dfs_from_OSRD(sim, eco_or_base, delayed=delayed)
     s._step_type = step_type(sim, s)
-    if delayed:
-        s_delayed._step_type = s._step_type.copy()
 
-    s = _merge_switch_zones(s, s._step_type)
-    
     if delayed:
         s_delayed._df = delayed_df
         s_delayed._min_times = s._min_times.copy()
-        s_delayed = _merge_switch_zones(s, s_delayed._step_type)
+        s_delayed._step_type = s._step_type.copy()
+
+    s = _merge_switch_zones(s, s._step_type)
+
+    if delayed:
+        s_delayed = _merge_switch_zones(s_delayed, s_delayed._step_type)
 
     if not delayed:
         return s
