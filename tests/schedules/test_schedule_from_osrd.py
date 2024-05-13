@@ -3,6 +3,8 @@ import pandas as pd
 
 from pandas.testing import assert_frame_equal
 
+from pyosrd.schedules import schedule_from_osrd
+
 
 def test_schedule_from_osrd(schedule_cvg_dvg):
     assert set(schedule_cvg_dvg.zones) == set([
@@ -15,12 +17,6 @@ def test_schedule_from_osrd(schedule_cvg_dvg):
         'D5<->buffer_stop.3',
     ])
     assert list(schedule_cvg_dvg._df.columns.levels[0]) == ['train0', 'train1']
-
-
-def test_schedule_from_osrd_merge_switch_zones(schedule_double_switch):
-
-    assert len(schedule_double_switch.zones) == 5
-    assert 'SW0+SW1' in schedule_double_switch.zones
 
 
 def test_schedule_from_osrd_trains(
@@ -75,3 +71,25 @@ def test_schedule_from_osrd_min_times(
         raise AssertionError
     except AssertionError:
         pass
+
+
+def test_schedule_from_osrd_merge_switch_zones(schedule_double_switch):
+
+    assert len(schedule_double_switch.zones) == 5
+    assert 'SW0+SW1' in schedule_double_switch.zones
+    assert len(schedule_double_switch.min_times.index) == 5
+    assert 'SW0+SW1' in schedule_double_switch.min_times.index
+
+
+def test_schedule_from_osrd_merge_switch_zones_delayed(
+    simulation_double_switch
+):
+    s, sd = schedule_from_osrd(simulation_double_switch, delayed=True)
+    assert (
+        s.zones
+        == list(s.min_times.index)
+        == list(s.step_type.index)
+        == list(sd.df.index)
+        == list(sd.min_times.index)
+        == list(sd.step_type.index)
+    )

@@ -355,16 +355,31 @@ def _merge_switch_zones(s: Schedule, _step_type: pd.DataFrame) -> Schedule:
                 merged_zone_name,
                 (train, 'e')
             ] = new_schedule.df.loc[switches, (train, 'e')].max()
+            new_schedule.min_times.loc[
+                merged_zone_name,
+                (train, 's')
+            ] = new_schedule.min_times.loc[switches, (train, 's')].min()
+            new_schedule.min_times.loc[
+                merged_zone_name,
+                (train, 'e')
+            ] = new_schedule.min_times.loc[switches, (train, 'e')].max()
+            new_schedule._step_type.loc[merged_zone_name, train] = 'switch'
 
         new_schedule.df.drop(switches, inplace=True)
+        new_schedule.min_times.drop(switches, inplace=True)
+        new_schedule._step_type.drop(switches, inplace=True)
+
     return new_schedule
 
 
 def schedule_from_osrd(
         sim: OSRD,
         delayed: bool = False,
-) -> Schedule:
-    """Construct a schedule object  from an OSRD simulation
+) -> Schedule | tuple[Schedule, Schedule]:
+    """Construct schedule objects  from OSRD simulations
+
+    If `delayed==True`, returns a tuple of schedules: one for the ref
+    simulation and one for the delayed simulation
 
     Additional informations are created as attributes
     - _trains: list of train labels
@@ -375,12 +390,12 @@ def schedule_from_osrd(
     ----------
     case : OSRD
         OSRD simulation object
-    eco_or_base : str, optional
-        Base results or eco results ?, by default 'base'
+    delayed : bool, optional
+        Also return the delayed schedule ?, by default False
 
     Returns
     -------
-    Schedule
+    Schedule | tuple[Schedule, Schedule]
     """
 
     s = Schedule(len(sim.routes), sim.num_trains)
@@ -400,11 +415,14 @@ def schedule_from_osrd(
         _schedule_dfs_from_OSRD(sim, eco_or_base, delayed=delayed)
     s._step_type = step_type(sim, s)
     if delayed:
-        s_delayed._df = delayed_df
-        s_delayed._min_times = s._min_times.copy()
         s_delayed._step_type = s._step_type.copy()
 
     s = _merge_switch_zones(s, s._step_type)
+    
+    if delayed:
+        s_delayed._df = delayed_df
+        s_delayed._min_times = s._min_times.copy()
+        s_delayed = _merge_switch_zones(s, s_delayed._step_type)
 
     if not delayed:
         return s

@@ -18,6 +18,7 @@
     - `no_conflict() -> bool`
     - `train_first_conflict(train)` replaces `first_conflict(train)`
 - Warnings are silented in conflict detection
+- `from_osrd()` has been been run-time optimized by refactoring the code (avoiding repeating loops and calling the same methods twice). 
 
 # v0.2.9a (Apr. 4th, 2024)
 ## Railway vocabulary
