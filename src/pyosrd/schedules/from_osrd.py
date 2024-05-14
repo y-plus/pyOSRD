@@ -188,7 +188,7 @@ def _schedule_dfs_from_OSRD(
             )[0]['t_eco']
 
         if delayed:
-            arrival_time_eco = sim_d.points_encountered_by_train(
+            arrival_time_delayed = sim_d.points_encountered_by_train(
                 train=train,
                 types='arrival',
             )[0][f't_{eco_or_base}']
@@ -271,7 +271,7 @@ def _schedule_dfs_from_OSRD(
                         if d['id'] == start][0]
                 )
                 t_end_delayed = (
-                    arrival_time_eco
+                    arrival_time_delayed
                     if i == len(limits)-2
                     else [
                         d[f't_tail_{eco_or_base}']
