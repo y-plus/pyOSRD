@@ -41,7 +41,7 @@ def c1_with_blocks_3trains(
         A,
         B,
         label='Second train',
-        departure_time=3*60,
+        departure_time=2*60,
     )
 
     train2.add_standard_single_value_allowance("percentage", 5, )
@@ -50,7 +50,7 @@ def c1_with_blocks_3trains(
         A,
         B,
         label='Third train',
-        departure_time=6*60,
+        departure_time=4*60,
     )
 
     train3.add_standard_single_value_allowance("percentage", 5, )
