@@ -29,6 +29,7 @@ dependencies=[
     "typing_extensions>=4.5.0",
     'railjson_generator @ git+ssh://git@github.com/osrd-project/osrd.git@v0.2.9#subdirectory=python/railjson_generator',  # noqa
     'ipython',
+    'methodtools',
 ]
 
 [project.urls]

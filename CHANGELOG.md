@@ -18,7 +18,7 @@
     - `no_conflict() -> bool`
     - `train_first_conflict(train)` replaces `first_conflict(train)`
 - Warnings are silented in conflict detection
-- `from_osrd()` has been been run-time optimized by refactoring the code (avoiding repeating loops and calling the same methods twice). 
+- `from_osrd()` has been been run-time optimized by refactoring the code (avoiding repeating loops and calling the same methods twice) and chacing methods. 
  ## Bug fixes
  - Fixed bug in `from_osrd()` when successive switch zones have to be merge: now applies to all dataframes: `df`, `min_times` and `step_type`.
 

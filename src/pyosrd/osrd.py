@@ -19,6 +19,7 @@ from PIL.JpegImagePlugin import JpegImageFile
 import requests
 from dotenv import load_dotenv
 from typing_extensions import Self
+from methodtools import lru_cache
 
 import pyosrd.use_cases.infras as infras
 import pyosrd.use_cases.simulations as simulations
@@ -577,6 +578,7 @@ class OSRD():
                 )
         return ts
 
+    @lru_cache()
     def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
         """List of tracks for a given train path"""
 

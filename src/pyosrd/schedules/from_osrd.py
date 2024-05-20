@@ -48,7 +48,11 @@ def step_has_fixed_duration(sim: OSRD) -> pd.DataFrame:
     )
 
 
-def step_type(sim: OSRD, s: Schedule | None = None) -> pd.DataFrame:
+def step_type(
+    sim: OSRD,
+    s: Schedule | None = None,
+    points_encountered_by_trains: dict[str, list] | None = None,
+) -> pd.DataFrame:
     """Is the zone a switch, a station lane or a block with a signal ?
 
     Generates a DataFrame with the same shape as a schedule
@@ -75,13 +79,19 @@ def step_type(sim: OSRD, s: Schedule | None = None) -> pd.DataFrame:
     if s is None:
         s = schedule_from_osrd(sim)
 
+    if points_encountered_by_trains is None:
+        points_encountered_by_trains = {
+            train: sim.points_encountered_by_train(train)
+            for train in sim.trains
+        }
+
     st = pd.DataFrame(columns=s.trains, index=s.zones)
 
     for train in s.trains:
         p = [
-            p['id']
-            for p in
-            sim.points_encountered_by_train(train, ['station', 'detector'])
+            point['id']
+            for point in points_encountered_by_trains[train]
+            if point['type'] in ['station', 'detector']
         ]
         for z in s.path(train):
             if '<->' in z:
@@ -136,8 +146,15 @@ def step_station_id(sim: OSRD) -> pd.DataFrame:
 def _schedule_dfs_from_OSRD(
     sim: OSRD,
     eco_or_base: str = 'base',
-    delayed: bool = False
+    delayed: bool = False,
+    points_encountered_by_trains: dict[str, list] | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame | None]:
+
+    if points_encountered_by_trains is None:
+        points_encountered_by_trains = {
+            train: sim.points_encountered_by_train(train)
+            for train in sim.trains
+        }
 
     # STEP 1: CREATE DATAFRAME
     # index USING ZONES FROM INFRASTRUCTURE
@@ -161,13 +178,15 @@ def _schedule_dfs_from_OSRD(
         df_delayed = min_times.copy(deep=True)
 
     # STEP2: LOOP ON TRAINS IN RESULTS TO FILL IN START 1 END TIMES
+    points_on_track_sections = sim.points_on_track_sections()
+
     for train in sim.trains:
 
         tvds_limits = []
         for track in sim.train_track_sections(train):
             elements = [
                 p.id
-                for p in sim.points_on_track_sections()[track['id']]
+                for p in points_on_track_sections[track['id']]
                 if p.type in ['buffer_stop', 'detector']
             ]
             tvds_limits += (
@@ -176,16 +195,18 @@ def _schedule_dfs_from_OSRD(
                 else elements
             )
 
-        arrival_time_base = sim.points_encountered_by_train(
-            train=train,
-            types='arrival',
-        )[0]['t_base']
+        arrival_time_base = next(
+            point['t_base']
+            for point in points_encountered_by_trains[train]
+            if point['type'] == 'arrival'
+        )
 
         if eco_or_base == 'eco':
-            arrival_time_eco = sim.points_encountered_by_train(
-                train=train,
-                types='arrival',
-            )[0]['t_eco']
+            arrival_time_eco = next(
+                point['t_eco']
+                for point in points_encountered_by_trains[train]
+                if point['type'] == 'arrival'
+            )
 
         if delayed:
             arrival_time_delayed = sim_d.points_encountered_by_train(
@@ -193,11 +214,11 @@ def _schedule_dfs_from_OSRD(
                 types='arrival',
             )[0][f't_{eco_or_base}']
 
-        detectors = sim.points_encountered_by_train(
-            train=train,
-            types='detector',
-        )
-
+        detectors = [
+            point
+            for point in points_encountered_by_trains[train]
+            if point['type'] == 'detector'
+        ]
         if delayed:
             detectors_delayed = sim_d.points_encountered_by_train(
                 train=train,
@@ -413,9 +434,18 @@ def schedule_from_osrd(
     else:
         eco_or_base = 'base'
 
-    s._df, s._min_times, delayed_df =\
-        _schedule_dfs_from_OSRD(sim, eco_or_base, delayed=delayed)
-    s._step_type = step_type(sim, s)
+    points_encountered_by_trains = {
+        train: sim.points_encountered_by_train(train)
+        for train in sim.trains
+    }
+
+    s._df, s._min_times, delayed_df = _schedule_dfs_from_OSRD(
+        sim,
+        eco_or_base,
+        delayed=delayed,
+        points_encountered_by_trains=points_encountered_by_trains
+    )
+    s._step_type = step_type(sim, s, points_encountered_by_trains)
 
     if delayed:
         s_delayed._df = delayed_df
