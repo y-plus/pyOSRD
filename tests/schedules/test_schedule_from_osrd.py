@@ -45,9 +45,15 @@ def test_schedule_from_osrd_step_type(schedule_station_capacity2):
             'CVG',
             'D5<->buffer_stop.5',
         ]
+    ).sort_index()
+    assert_frame_equal(
+        schedule_station_capacity2._step_type.sort_index(),
+        expected
     )
-    assert_frame_equal(schedule_station_capacity2._step_type, expected)
-    assert_frame_equal(schedule_station_capacity2.step_type, expected)
+    assert_frame_equal(
+        schedule_station_capacity2.step_type.sort_index(),
+        expected
+    )
 
 
 def test_schedule_from_osrd_min_times_base_only(schedule_station_capacity2):

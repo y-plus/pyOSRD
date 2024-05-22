@@ -166,16 +166,18 @@ def _schedule_dfs_from_OSRD(
         columns=pd.MultiIndex.from_product(
             [sim.trains, ['s', 'e']]
         ),
-        index=["<->".join(sorted(tvd)) for tvd in sim._tvds]
+        index=list(dict.fromkeys(tvd_zones.values()))
     )
-    min_times.insert(0, 'zone', tvd_zones.values())
+    min_times_dict = {train: {'s': {}, 'e': {}} for train in sim.trains}
 
     if eco_or_base == 'eco':
         df = min_times.copy()
+        df_dict = {train: {'s': {}, 'e': {}} for train in sim.trains}
 
     if delayed:
         sim_d = sim.delayed()
         df_delayed = min_times.copy(deep=True)
+        delayed_dict = {train: {'s': {}, 'e': {}} for train in sim.trains}
 
     # STEP2: LOOP ON TRAINS IN RESULTS TO FILL IN START 1 END TIMES
     points_on_track_sections = sim.points_on_track_sections()
@@ -237,7 +239,7 @@ def _schedule_dfs_from_OSRD(
             start = limits[i]
             end = limits[i+1]
             joined = "<->".join(sorted([start, end]))
-            name = tvd_zones[joined]
+            zone = tvd_zones[joined]
             t_start = (
                 sim.departure_times[sim.trains.index(train)]
                 if i == 0
@@ -255,10 +257,8 @@ def _schedule_dfs_from_OSRD(
                     if d['id'] == end][0]
             )
 
-            min_times.loc[
-                min_times.zone == name,
-                train
-            ] = (t_start, t_end)
+            min_times_dict[train]['s'][zone] = t_start
+            min_times_dict[train]['e'][zone] = t_end
 
             if eco_or_base == 'eco':
                 t_start_eco = (
@@ -277,10 +277,9 @@ def _schedule_dfs_from_OSRD(
                         for d in detectors
                         if d['id'] == end][0]
                 )
-                df.loc[
-                        df.zone == name,
-                        train
-                    ] = (t_start_eco, t_end_eco)
+
+                df_dict[train]['s'][zone] = t_start_eco
+                df_dict[train]['e'][zone] = t_end_eco
 
             if delayed:
                 t_start_delayed = (
@@ -299,14 +298,14 @@ def _schedule_dfs_from_OSRD(
                         for d in detectors_delayed
                         if d['id'] == end][0]
                 )
-                df_delayed.loc[
-                        df_delayed.zone == name,
-                        train
-                    ] = (t_start_delayed, t_end_delayed)
+                delayed_dict[train]['s'][zone] = t_start_delayed
+                delayed_dict[train]['e'][zone] = t_end_delayed
 
     # STEP 3: CLEAN UP
-    min_times.set_index('zone', inplace=True, drop=True)
-    min_times.drop_duplicates(inplace=True)
+    for train in sim.trains:
+        min_times[[(train, 's'), (train, 'e')]] =\
+            pd.DataFrame(min_times_dict[train])
+
     min_times.index.name = None
     min_times.columns = pd.MultiIndex.from_product(
             [sim.trains, ['s', 'e']]
@@ -315,8 +314,10 @@ def _schedule_dfs_from_OSRD(
     if eco_or_base == 'base':
         df = min_times.copy()
     else:
-        df.set_index('zone', inplace=True, drop=True)
-        df.drop_duplicates(inplace=True)
+        for train in sim.trains:
+            df[[(train, 's'), (train, 'e')]] =\
+                pd.DataFrame(df_dict[train])
+
         df.index.name = None
         df.columns = pd.MultiIndex.from_product(
                 [sim.trains, ['s', 'e']]
@@ -325,8 +326,10 @@ def _schedule_dfs_from_OSRD(
     if not delayed:
         df_delayed = None
     else:
-        df_delayed.set_index('zone', inplace=True, drop=True)
-        df_delayed.drop_duplicates(inplace=True)
+        for train in sim.trains:
+            df_delayed[[(train, 's'), (train, 'e')]] =\
+                pd.DataFrame(delayed_dict[train])
+
         df_delayed.index.name = None
         df_delayed.columns = pd.MultiIndex.from_product(
                 [sim.trains, ['s', 'e']]
