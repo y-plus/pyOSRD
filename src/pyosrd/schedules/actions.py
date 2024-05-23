@@ -39,6 +39,7 @@ def shift_train_departure(
         train = self.trains[train]
 
     new_schedule = copy.deepcopy(self)
+    new_schedule.clear_cache()
 
     new_schedule._df[train] += time
 
@@ -64,6 +65,7 @@ def add_delay(
 
     start = self._df.loc[zone, (train, 's')]
     new_schedule = copy.deepcopy(self)
+    new_schedule.clear_cache()
 
     # extend duration in a given zone
     new_schedule._df.loc[zone, (train, 'e')] += delay

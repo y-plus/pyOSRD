@@ -5,37 +5,50 @@ import pandas as pd
 
 def conflicts(self, train: int | str) -> pd.DataFrame:
 
+    trains = self.trains
+    num_trains = len(trains)
+
     if isinstance(train, int):
-        train = self.trains[train]
+        train = trains[train]
 
-    starts0 = (
-        pd.concat([self._df[train, 's']]*self.num_trains, axis=1)
-        .set_axis(self.trains, axis=1)
-    )
-    ends0 = (
-        pd.concat([self._df[train, 'e']]*self.num_trains, axis=1)
-        .set_axis(self.trains, axis=1)
-    )
+    if ('conflicts' not in self._cache):
+        self._cache['conflicts'] = dict()
 
-    with warnings.catch_warnings():
-        warnings.simplefilter('ignore')
-        mask1 = self.ends >= starts0
+    if (train not in self._cache['conflicts']):
+        starts0 = (
+            pd.concat([self._df[train, 's']]*num_trains, axis=1)
+            .set_axis(trains, axis=1)
+        )
+        ends0 = (
+            pd.concat([self._df[train, 'e']]*num_trains, axis=1)
+            .set_axis(trains, axis=1)
+        )
 
-    max_starts = (
-        pd.concat([starts0, self.starts])
-        .rename_axis('index')
-        .groupby('index').max()
-    )
-    min_ends = (
-        pd.concat([ends0, self.ends])
-        .rename_axis('index')
-        .groupby('index').min()
-    )
-    mask2 = max_starts < min_ends
+        starts = self.starts
+        ends = self.ends
 
-    conflict_times = self.starts[mask1 & mask2].drop(columns=train)
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            mask1 = ends >= starts0
 
-    return (conflict_times[conflict_times.notna()])
+        max_starts = (
+            pd.concat([starts0, starts])
+            .rename_axis('index')
+            .groupby('index').max()
+        )
+        min_ends = (
+            pd.concat([ends0, ends])
+            .rename_axis('index')
+            .groupby('index').min()
+        )
+        mask2 = max_starts < min_ends
+
+        conflict_times = starts[mask1 & mask2].drop(columns=train)
+
+        self._cache['conflicts'][train] =\
+            conflict_times[conflict_times.notna()]
+
+    return self._cache['conflicts'][train]
 
 
 def has_conflicts(self, train: int | str) -> bool:
@@ -74,9 +87,10 @@ def earliest_conflict(self) -> tuple[int | str, str, int | str]:
             other_train = np.argmin(conflicts_times)
             other_train = self.trains[other_train]
 
+            first_conflict = self.train_first_conflict(other_train)
             return (
-                self.train_first_conflict(other_train)[0],
-                self.train_first_conflict(other_train)[1],
+                first_conflict[0],
+                first_conflict[1],
                 other_train
                 )
         return None, None, None

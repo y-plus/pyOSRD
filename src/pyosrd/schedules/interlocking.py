@@ -41,13 +41,14 @@ def with_interlocking_constraints(
     """
 
     new_schedule = copy.deepcopy(self)
+    new_schedule.clear_cache()
 
     if n_blocks_between_trains > 1:
         raise NotImplementedError(
             'Current implementation does not allow more than '
             '1 block between trains'
         )
-
+    starts = self.starts
     for train in self.trains:
         zones = self.path(train)
 
@@ -59,7 +60,7 @@ def with_interlocking_constraints(
             ]
 
             trains_sorted = (
-                self.starts
+                starts
                 .loc[zone]
                 .dropna()
                 .sort_values()
@@ -73,10 +74,11 @@ def with_interlocking_constraints(
             )
 
             if next_train is not None:
-                train_comes_from = self.path(train)[zone_idx-1]
-                train_goes_to = self.path(train)[zone_idx+1]
-                next_train_comes_from = self.path(next_train)[zone_idx-1]
-                next_train_goes_to = self.path(next_train)[zone_idx+1]
+                train_comes_from = zones[zone_idx-1]
+                train_goes_to = zones[zone_idx+1]
+                zones_next_train = self.path(next_train)
+                next_train_comes_from = zones_next_train[zone_idx-1]
+                next_train_goes_to = zones_next_train[zone_idx+1]
 
                 route_modification = (
                     (train_comes_from != next_train_comes_from)

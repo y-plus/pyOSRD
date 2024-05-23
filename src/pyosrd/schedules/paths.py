@@ -13,11 +13,17 @@ def path(self, train: int | str) -> list[int | str]:
     if isinstance(train, int):
         train = self.trains[train]
 
-    return list(
-        self.starts[train][self.starts[train].notna()]
-        .sort_values()
-        .index
-    )
+    if ('path' not in self._cache):
+        self._cache['path'] = dict()
+
+    if (train not in self._cache['path']):
+        starts = self.starts
+        self._cache['path'][train] = list(
+            starts[train][starts[train].notna()]
+            .sort_values()
+            .index
+        )
+    return self._cache['path'][train]
 
 
 def previous_zone(

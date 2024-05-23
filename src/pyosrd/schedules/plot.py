@@ -10,8 +10,9 @@ from pyosrd.utils import seconds_to_hour
 def sort(self):
     """Sort the schedule index by occupancies times"""
     new_schedule = copy.deepcopy(self)
+    new_schedule.clear_cache()
     sorted_idx = self.ends.max(axis=1).sort_values().index
-    new_schedule ._df = new_schedule ._df.loc[sorted_idx]
+    new_schedule._df = new_schedule._df.loc[sorted_idx]
     return new_schedule
 
 
@@ -30,6 +31,7 @@ def plot(self, alpha: float = .5) -> Axes:
     """
 
     s = copy.copy(self)
+    s.clear_cache()
     s._df = s.df.dropna(axis=0, how='all')
 
     _, ax = plt.subplots()

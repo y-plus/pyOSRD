@@ -56,6 +56,10 @@ class Schedule(object):
             ),
             index=range(num_zones)
         )
+        self.clear_cache()
+
+    def clear_cache(self) -> None:
+        self._cache = {}
 
     def __repr__(self) -> str:
         return str(self._df)
@@ -101,20 +105,24 @@ class Schedule(object):
     @property
     def starts(self) -> pd.DataFrame:
         """Times when the trains enter the zones"""
-        return self._df.loc[
-                pd.IndexSlice[:],
-                pd.IndexSlice[:, 's']
-            ].set_axis(self._df.columns.get_level_values(0).unique(), axis=1) \
-            .astype(float)
+        if 'starts' not in self._cache:
+            self._cache['starts'] = self._df.loc[
+                    pd.IndexSlice[:],
+                    pd.IndexSlice[:, 's']
+                ].set_axis(self._df.columns.get_level_values(0).unique(), axis=1) \
+                .astype(float)
+        return self._cache['starts']
 
     @property
     def ends(self) -> pd.DataFrame:
         """Times when the trains leave the zones"""
-        return self._df.loc[
-                pd.IndexSlice[:],
-                pd.IndexSlice[:, 'e']
-            ].set_axis(self._df.columns.get_level_values(0).unique(), axis=1) \
-            .astype(float)
+        if 'ends' not in self._cache:
+            self._cache['ends'] = self._df.loc[
+                    pd.IndexSlice[:],
+                    pd.IndexSlice[:, 'e']
+                ].set_axis(self._df.columns.get_level_values(0).unique(), axis=1) \
+                .astype(float)
+        return self._cache['ends']
 
     @property
     def durations(self) -> pd.DataFrame:
