@@ -81,6 +81,7 @@ class SchedulerAgent(Agent):
             self.weights = self.ref_schedule.step_type.notna().astype(int)
         else:
             raise ValueError(f"{weights} is not a valid weight identifier")
+
     @property
     @abstractmethod
     def regulated_schedule(self) -> Schedule:
