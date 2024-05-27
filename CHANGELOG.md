@@ -1,4 +1,4 @@
-# next release
+# v0.2.12
 
 ## OSRD class
 - Can no longer be created by givien a param `use_case=XXX`, use `simulation=XXX` instead
