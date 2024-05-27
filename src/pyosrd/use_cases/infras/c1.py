@@ -15,7 +15,7 @@ def c1(
     """
     station A (1 track)                        station B (1 track)
 
-             ┎SA                                    SB┐
+             ┎SA                                   ┎SB
      (T)-|----DA------------------------------------DB-----|---->
 
     10 km long
