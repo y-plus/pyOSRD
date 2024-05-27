@@ -115,7 +115,7 @@ class TrainsDispatchingEnv(gym.Env):
         self._delayed_schedule = delayed_schedule
         self._schedule = delayed_schedule
         self._n_blocks_between_trains = n_blocks_between_trains
-        self._switch_change_delay = switch_change_delay,
+        self._switch_change_delay = switch_change_delay
 
         self.action_space = spaces.Discrete(len(DISPATCH_OPTIONS))
 
