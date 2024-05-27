@@ -106,22 +106,32 @@ class Schedule(object):
     def starts(self) -> pd.DataFrame:
         """Times when the trains enter the zones"""
         if 'starts' not in self._cache:
-            self._cache['starts'] = self._df.loc[
+            self._cache['starts'] = (
+                self._df.loc[
                     pd.IndexSlice[:],
                     pd.IndexSlice[:, 's']
-                ].set_axis(self._df.columns.get_level_values(0).unique(), axis=1) \
-                .astype(float)
+                ]
+                .set_axis(
+                    self._df.columns.get_level_values(0).unique(),
+                    axis=1
+                )
+                .astype(float))
         return self._cache['starts']
 
     @property
     def ends(self) -> pd.DataFrame:
         """Times when the trains leave the zones"""
         if 'ends' not in self._cache:
-            self._cache['ends'] = self._df.loc[
+            self._cache['ends'] = (
+                self._df.loc[
                     pd.IndexSlice[:],
                     pd.IndexSlice[:, 'e']
-                ].set_axis(self._df.columns.get_level_values(0).unique(), axis=1) \
-                .astype(float)
+                ]
+                .set_axis(
+                    self._df.columns.get_level_values(0).unique(),
+                    axis=1
+                )
+                .astype(float))
         return self._cache['ends']
 
     @property
