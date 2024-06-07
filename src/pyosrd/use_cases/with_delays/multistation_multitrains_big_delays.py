@@ -5,7 +5,9 @@ def multistation_multitrains_big_delays(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
-    delays_json: str = 'delays.json'
+    delays_json: str = 'delays.json',
+    num_stations: int = 5,
+    num_trains: int = 5
 ) -> None:
     """Create a multi train multi station simulation and add random delays.
 
@@ -41,15 +43,17 @@ def multistation_multitrains_big_delays(
         delays_json=delays_json,
         simulation=use_case,
         params_use_case={
-            "num_stations": 10,
-            "num_trains": 10
+            "num_stations": num_stations,
+            "num_trains": num_trains
         }
     )
 
     sim.reset_delays()
 
-    sim.add_delay("train0", 120, 850)
-    sim.add_delay("train2", 550, 850)
-    sim.add_delay("train6", 1550, 550)
+    sim.add_delay("train0", 100, 850)
+    if num_trains > 10:
+        sim.add_delay("train10", 2100, 850)
+    if num_trains > 20:
+        sim.add_delay("train20", 4100, 850)
 
     sim.add_delays_in_results()
