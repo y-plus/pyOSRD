@@ -472,7 +472,7 @@ class OSRD():
         self,
         save: str | None = None,
     ) -> JpegImageFile:
-        """Use mermaid.js to display the infra as a graph of specificpoints
+        """Use mermaid.js to display the infra as a graph of specific points
 
         Parameters
         ----------

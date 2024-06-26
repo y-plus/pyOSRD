@@ -20,6 +20,7 @@ class Schedule(object):
         previous_station,
         next_station,
         previous_switch,
+        next_switch,
         previous_switch_protecting_signal
     )
     from .plot import sort, plot
