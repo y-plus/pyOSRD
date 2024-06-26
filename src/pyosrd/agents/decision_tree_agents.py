@@ -1,3 +1,4 @@
+import copy
 import gymnasium as gym
 import networkx as nx
 
@@ -36,10 +37,11 @@ def apply_dispatch_option(
     priority_train = trains[priority_train_idx]
     other_train = trains[1-priority_train_idx]
 
-    new_schedule = schedule
+    new_schedule = copy.deepcopy(schedule)
     still_conflicted = True
-
+    new_schedule.plot()
     while still_conflicted:
+
         zone = new_schedule.with_interlocking_constraints(
                 n_blocks_between_trains=n_blocks_between_trains,
                 switch_change_delay=switch_change_delay
@@ -56,23 +58,24 @@ def apply_dispatch_option(
                     other_train
                 ]
             )
-        ) if new_schedule.path(priority_train).index(zone) != 0 else schedule
+        ) if new_schedule.path(priority_train).index(zone) != 0 else new_schedule
 
-        if (
-            zone_fn in ['previous_signal', 'previous_station']
-            and new_schedule.path(other_train).index(zone) == 0
-        ):
-            new_schedule = new_schedule.shift_train_departure(
-                other_train,
-                (
-                    new_schedule.ends.loc[
-                        zone,
-                        priority_train
-                    ] - starts.loc[zone, other_train]
-                )
-            )
+        # if (
+        #     zone_fn in ['previous_signal', 'previous_station']
+        #     and new_schedule.path(other_train).index(zone) == 0
+        # ):
 
-        elif wait_at := getattr(after_conflict, zone_fn)(other_train, zone):
+        #     new_schedule = new_schedule.shift_train_departure(
+        #         other_train,
+        #         (
+        #             new_schedule.ends.loc[
+        #                 zone,
+        #                 priority_train
+        #             ] - starts.loc[zone, other_train]
+        #         )
+        #     )
+
+        if wait_at := getattr(after_conflict, zone_fn)(other_train, zone):
             # TODO: Définition de wait_at remonter avant la boucle while ?
             if new_schedule.is_a_point_switch(
                 priority_train,
@@ -88,7 +91,7 @@ def apply_dispatch_option(
                 wait_at,
                 zone_to_free,
                 n_blocks_between_trains=n_blocks_between_trains,
-                switch_change_delay=switch_change_delay,
+                switch_change_delay=switch_change_delay
             )
         else:
             new_schedule = schedule
@@ -99,6 +102,7 @@ def apply_dispatch_option(
             switch_change_delay=switch_change_delay
         ).are_conflicted(priority_train, other_train)
 
+        # new_schedule.plot()
     return new_schedule, priority_train, other_train
 
 
