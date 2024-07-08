@@ -6,7 +6,10 @@ from folium import plugins
 from haversine import haversine
 
 
-def folium_map(osrd) -> folium.folium.Map:
+def folium_map(
+    osrd,
+    markers: list[str] | None = None
+) -> folium.folium.Map:
     """Infra as a folium map"""
 
     track_section_names = {
@@ -109,6 +112,7 @@ def folium_map(osrd) -> folium.folium.Map:
         for switch in osrd.infra['switches']
     }
 
+
     m = folium.Map(location=[49.5, -0.4])
 
     tracks = folium.FeatureGroup(name='Rails')
@@ -173,6 +177,17 @@ def folium_map(osrd) -> folium.folium.Map:
 
     folium.LayerControl().add_to(m)
 
-    m.add_child(plugins.Fullscreen())
+    # m.add_child(plugins.Fullscreen())
+
+    if markers:
+        for marker in markers:
+            for positions in [
+                buffer_stop_geo_positions,
+                detector_geo_positions,
+                signal_geo_positions,
+                switch_geo_positions,
+            ]:
+                if marker in positions:
+                    m.add_child(folium.Marker(positions[marker]))
 
     return m
