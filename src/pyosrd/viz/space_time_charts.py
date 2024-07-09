@@ -39,7 +39,25 @@ def _data_and_points_to_plot(
         if point['type'] in points_to_show
     }
 
-    return data, points
+    station_names = dict()
+    for point in self.points_encountered_by_train(train):
+        if point['type'] == 'station':
+            try:
+                op = next(
+                    o for o in self.infra['operational_points']
+                    if o['id'] == point['id']
+                )
+                name = op['extensions']['identifier']['name']
+                station_names[point['id']] = name
+            except (StopIteration, KeyError):
+                pass
+
+    points_with_station_names = {
+        (k if k not in station_names else station_names[k]): v
+        for k, v in points.items()
+    }
+
+    return data, points_with_station_names
 
 
 def space_time_chart(
