@@ -65,6 +65,14 @@ def folium_map(
         for detector in osrd.infra['detectors']
     }
 
+    buffer_stop_geo_positions = {
+        buffer_stop['id']: coords_from_position_on_track(
+            buffer_stop['track'],
+            buffer_stop['position']
+        )
+        for buffer_stop in osrd.infra['buffer_stops']
+    }
+
     signal_geo_positions = {
         signal['id']: coords_from_position_on_track(
             signal['track'],
@@ -138,6 +146,19 @@ def folium_map(
             </svg></div>"""),
             ).add_to(detectors)
     detectors.add_to(m)
+
+    buffer_stops = folium.FeatureGroup('Buffer Stops', show=False)
+    for id, position in buffer_stop_geo_positions.items():
+        folium.Marker(
+            position,
+            popup=id,
+            icon=folium.DivIcon(html="""
+            <div><svg>
+                <rect x="-5" y="-5" width="20"
+                height="20", fill="black", opacity=".8" />
+            </svg></div>"""),
+            ).add_to(buffer_stops)
+    buffer_stops.add_to(m)
 
     signals = folium.FeatureGroup('Signals', show=False)
     for id, position in signal_geo_positions.items():
