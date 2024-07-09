@@ -1,7 +1,6 @@
 
 import folium
 import numpy as np
-from folium import plugins
 
 from haversine import haversine
 
@@ -119,7 +118,6 @@ def folium_map(
         )
         for switch in osrd.infra['switches']
     }
-
 
     m = folium.Map(location=[49.5, -0.4])
 
