@@ -61,7 +61,7 @@ def add_train(
 
     sim_builder = SimulationBuilder()
 
-    sim_builder.add_train_schedule(
+    train = sim_builder.add_train_schedule(
         *[
             Location(track_sections[t[0]], t[1])
             for t in locations
@@ -70,6 +70,7 @@ def add_train(
         departure_time=departure_time,
         rolling_stock=rolling_stock,
     )
+    train.add_standard_single_value_allowance("percentage", 5, )
 
     built_simulation = sim_builder.build()
 
@@ -82,22 +83,6 @@ def add_train(
 
     train_schedule_group = \
         built_simulation.format()['train_schedule_groups'][0]
-
-    # default allowance
-    allowance = {
-        "allowance_type": "standard",
-        "default_value": {
-            "value_type": "percentage",
-            "percentage": 5.0
-        },
-        "ranges": [],
-        "distribution": "LINEAR",
-        "capacity_speed_limit": -1.0
-    }
-
-    # set default allowance
-    train_schedule_group['schedules'][0]['allowances'] = []
-    train_schedule_group['schedules'][0]['allowances'].append(allowance)
 
     # fill simulation
     self.simulation['train_schedule_groups'].append(
