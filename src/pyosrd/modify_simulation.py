@@ -134,6 +134,14 @@ def add_scheduled_points(
     if isinstance(train, str):
         train = self.trains.index(train)
 
+    group, idx = self._train_schedule_group[
+        self.trains[train]
+    ]
+
+    group_idx = _group_idx(self, group)
+
+    train_schedule = self.simulation['train_schedule_groups'][group_idx]['schedules'][idx] # noqa
+
     # scheduled_points
     json_scheduled_points = []
     if scheduled_points is not None:
@@ -147,9 +155,7 @@ def add_scheduled_points(
             one_point["time"] = scheduled_point[1]
             json_scheduled_points.append(one_point)
 
-    train_schedule_group = self.simulation['train_schedule_groups'][train]
-    train_schedule_group['schedules'][0]['scheduled_points'] = \
-        json_scheduled_points
+    train_schedule['scheduled_points'] = json_scheduled_points
 
     with open(os.path.join(self.dir, self.simulation_json), 'w') as f:
         json.dump(self.simulation, f)
