@@ -186,3 +186,30 @@ def schedule_straight_line(simulation_straight_line) -> Schedule:
 @pytest.fixture(scope='session')
 def schedule_double_switch(simulation_double_switch) -> Schedule:
     return schedule_from_osrd(simulation_double_switch)
+
+
+@pytest.fixture(scope='session')
+def infra_crossing():
+    yield OSRD(dir='tmp_crossing', infra='c2x2')
+    shutil.rmtree('tmp_crossing', ignore_errors=True)
+    shutil.rmtree('tmp_crossing_sub', ignore_errors=True)
+
+
+@pytest.fixture(scope='session')
+def infra_double_slip():
+    yield OSRD(dir='tmp_double_slip', infra='c2xx2')
+    shutil.rmtree('tmp_double_slip', ignore_errors=True)
+    shutil.rmtree('tmp_double_slip_sub', ignore_errors=True)
+
+@pytest.fixture(scope='session')
+def infra_point_switch():
+    yield OSRD(dir='tmp_point_switch', simulation='point_switch')
+    shutil.rmtree('tmp_point_switch', ignore_errors=True)
+    shutil.rmtree('tmp_point_switch_sub', ignore_errors=True)
+
+
+@pytest.fixture(scope='session')
+def infra_station_c2():
+    yield OSRD(dir='tmp_station_c2', simulation='station_capacity2')
+    shutil.rmtree('tmp_station_c2', ignore_errors=True)
+    shutil.rmtree('tmp_station_c2_sub', ignore_errors=True)
