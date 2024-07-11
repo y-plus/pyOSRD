@@ -132,7 +132,10 @@ def test_split_double_slip_9(infra_double_slip):
 
 
 def test_split_double_slip_10(infra_double_slip):
-    sub = filter_by_track_section_ids(infra_double_slip, ['T0', 'T1', 'T3', 'T2'])
+    sub = filter_by_track_section_ids(
+        infra_double_slip,
+        ['T0', 'T1', 'T3', 'T2']
+    )
     sw = next(sw for sw in sub.infra['switches'] if sw['id'] == 'SW')
     assert sw['switch_type'] == 'double_slip_switch'
 
