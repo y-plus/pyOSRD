@@ -39,8 +39,16 @@ def build_dvg_station_cvg(
     TrackSection
         The track section going out of the the station created.
     """ # noqa
-    t1 = infra_builder.add_track_section(label=name+".T1", length=1000)
-    t2 = infra_builder.add_track_section(label=name+".T2", length=1000)
+    t1 = infra_builder.add_track_section(
+        label=name+".T1",
+        length=1000,
+        track_name="V1"
+    )
+    t2 = infra_builder.add_track_section(
+        label=name+".T2",
+        length=1000,
+        track_name="V2"
+    )
     track_out = infra_builder.add_track_section(
         label=name+".Tout",
         length=1000
