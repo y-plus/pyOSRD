@@ -87,18 +87,20 @@ def cvg_dvg(
 
     sim_builder = SimulationBuilder()
 
-    sim_builder.add_train_schedule(
+    train0 = sim_builder.add_train_schedule(
         Location(T[0], 300),
         Location(T[4], 490),
         label='train0',
         departure_time=0.,
     )
-    sim_builder.add_train_schedule(
+    train0.add_standard_single_value_allowance("percentage", 5, )
+    train1 = sim_builder.add_train_schedule(
         Location(T[1], 300),
         Location(T[5], 480),
         label='train1',
         departure_time=100.,
     )
+    train1.add_standard_single_value_allowance("percentage", 5, )
 
     built_simulation = sim_builder.build()
     built_simulation.save(os.path.join(dir, simulation_json))
