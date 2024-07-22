@@ -105,6 +105,32 @@ def folium_map(
         for part in operational_point['parts']
     }
 
+    platform_names = {
+        (operational_point['id'], part['track']): (
+            (
+                operational_point['extensions']['sncf']['ch_long_label']
+                if 'sncf' in operational_point['extensions']
+                else ''
+            )
+            + ' ' + operational_point['extensions']['identifier']['name']
+            + ' ' + track_section_names[part['track']]
+        )
+        for operational_point in osrd.infra['operational_points']
+        for part in operational_point['parts']
+        if operational_point['extensions']['sncf']['ch'] in ['BV', '00']
+    }
+
+    platform_geo_positions = {
+        (operational_point['id'], part['track']):
+            coords_from_position_on_track(
+                part['track'],
+                part['position']
+            )
+        for operational_point in osrd.infra['operational_points']
+        for part in operational_point['parts']
+        if operational_point['extensions']['sncf']['ch'] in ['BV', '00']
+    }
+
     switch_geo_positions = {
         switch['id']: coords_from_position_on_track(
             switch['ports'][list(switch['ports'].keys())[0]]['track'],
@@ -182,6 +208,19 @@ def folium_map(
             </svg></div>"""),
             ).add_to(operational_points)
     operational_points.add_to(m)
+
+    platforms = folium.FeatureGroup('Stations', show=False)
+    for id, position in platform_geo_positions.items():
+        folium.Marker(
+            position,
+            popup=platform_names[id],
+            icon=folium.DivIcon(html="""
+            <div><svg>
+                <rect x="-5" y="-5" width="20"
+                height="20", fill="grey", opacity=".8" />
+            </svg></div>"""),
+            ).add_to(platforms)
+    platforms.add_to(m)
 
     switches = folium.FeatureGroup('Switches', show=False)
     for id, position in switch_geo_positions.items():

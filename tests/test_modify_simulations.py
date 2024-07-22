@@ -72,6 +72,26 @@ def test_add_train_existing_label(modify_sim):
         )
 
 
+def test_add_scheduled_points_unknown_label(modify_sim):
+    with pytest.raises(ValueError):
+        modify_sim.add_scheduled_points(
+            train='train123',
+            scheduled_points=[]
+        )
+
+
+def test_add_scheduled_points_one_point(modify_sim):
+    modify_sim.add_scheduled_points(
+        train='train0',
+        scheduled_points=[(200, 300)]
+    )
+    schedules = modify_sim.simulation['train_schedule_groups'][0]['schedules']
+    waypoints = schedules[0]['scheduled_points'][0]
+    assert waypoints['path_offset'] == 200
+    assert waypoints['time'] == 300
+    print(waypoints)
+
+
 def test_cancel_train_by_label(modify_sim):
     modify_sim.cancel_train('train0')
     modify_sim.run()

@@ -99,6 +99,7 @@ class OSRD():
     )
     from .modify_simulation import (
         add_train,
+        add_scheduled_points,
         cancel_train,
         cancel_all_trains,
         stop_train,
@@ -641,6 +642,12 @@ class OSRD():
 
         return tracks_directions
 
+    def get_point(sim, point_id):
+        for point in sim._points():
+            if point.id == point_id:
+                return point
+        return None
+
     def points_encountered_by_train(
         self,
         train: int | str,
@@ -669,8 +676,8 @@ class OSRD():
         if isinstance(train, str):
             train = self.trains.index(train)
 
-        train_track_sections = self.train_track_sections(train)
-        ids = [track['id'] for track in train_track_sections]
+        train_track_sections_list = self.train_track_sections(train)
+        ids = [track['id'] for track in train_track_sections_list]
 
         points = {
             point.id: point
@@ -699,7 +706,7 @@ class OSRD():
             if isinstance(train, str):
                 train = self.trains.index(train)
 
-            for track in train_track_sections:
+            for track in train_track_sections_list:
                 if track['id'] == point.track_section:
                     return track['direction']
 
