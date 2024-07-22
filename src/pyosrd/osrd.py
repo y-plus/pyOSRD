@@ -228,7 +228,7 @@ class OSRD():
         load_dotenv()
         JAVA = os.getenv('JAVA') or 'java'
 
-        jar_file = files('pyosrd').joinpath('osrd-0212.jar')
+        jar_file = files('pyosrd').joinpath('osrd-0213.jar')
 
         output = subprocess.run(
             f"{JAVA} -jar {jar_file} standalone-simulation "
