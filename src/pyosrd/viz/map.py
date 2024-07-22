@@ -1,5 +1,6 @@
 
 import folium
+import folium.plugins
 import numpy as np
 
 from haversine import haversine
@@ -196,7 +197,7 @@ def folium_map(
 
     folium.LayerControl().add_to(m)
 
-    # m.add_child(plugins.Fullscreen())
+    m.add_child(folium.plugins.Fullscreen())
 
     if markers:
         for marker in markers:
