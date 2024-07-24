@@ -151,7 +151,9 @@ def add_scheduled_points(
                 one_point["path_offset"] = scheduled_point[0]
             else:
                 one_point["path_offset"] = self.offset_in_path_of_train(
-                    self.get_point(scheduled_point[0]), 0)
+                    self.get_point(scheduled_point[0]),
+                    train
+                )
             one_point["time"] = scheduled_point[1]
             json_scheduled_points.append(one_point)
 
