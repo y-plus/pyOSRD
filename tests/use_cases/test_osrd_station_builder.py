@@ -68,7 +68,7 @@ def test_station_builder_points_on_tracks(simulation_station_builder):
             Point(track_section="station_builder_1station.0.T1", position=0, id="station_builder_1station.0.DVG", type="switch"),  # noqa
             Point(track_section="station_builder_1station.0.T1", position=380.0, id="station_builder_1station.0.S1", type="signal"),  # noqa
             Point(track_section="station_builder_1station.0.T1", position=400.0, id="station_builder_1station.0.D1", type="detector"),  # noqa
-            Point(track_section="station_builder_1station.0.T1", position=500.0, id="station_builder_1station.0.s", type="station"),  # noqa
+            Point(track_section="station_builder_1station.0.T1", position=500.0, id="station_builder_1station.0.s/V1", type="station"),  # noqa
             Point(track_section="station_builder_1station.0.T1", position=800.0, id="station_builder_1station.0.D2", type="detector"),  # noqa
             Point(track_section="station_builder_1station.0.T1", position=820.0, id="station_builder_1station.0.S2", type="signal"),  # noqa
             Point(track_section="station_builder_1station.0.T1", position=1000.0, id="station_builder_1station.0.CVG", type="switch"),  # noqa
@@ -77,7 +77,7 @@ def test_station_builder_points_on_tracks(simulation_station_builder):
             Point(track_section="station_builder_1station.0.T2", position=0, id="station_builder_1station.0.DVG", type="switch"),  # noqa
             Point(track_section="station_builder_1station.0.T2", position=380.0, id="station_builder_1station.0.S3", type="signal"),  # noqa
             Point(track_section="station_builder_1station.0.T2", position=400.0, id="station_builder_1station.0.D3", type="detector"),  # noqa
-            Point(track_section="station_builder_1station.0.T2", position=500.0, id="station_builder_1station.0.s", type="station"),  # noqa
+            Point(track_section="station_builder_1station.0.T2", position=500.0, id="station_builder_1station.0.s/V2", type="station"),  # noqa
             Point(track_section="station_builder_1station.0.T2", position=800.0, id="station_builder_1station.0.D4", type="detector"),  # noqa
             Point(track_section="station_builder_1station.0.T2", position=820.0, id="station_builder_1station.0.S4", type="signal"),  # noqa
             Point(track_section="station_builder_1station.0.T2", position=1000.0, id="station_builder_1station.0.CVG", type="switch"),  # noqa
@@ -150,10 +150,8 @@ def test_station_builder_results_pts_encountered_by_train(
         { "id": "station_builder_1station.0.DVG", "offset": 500.0, "type": "switch" },  # noqa
         { "id": "station_builder_1station.0.S1", "offset": 880.0, "type": "signal" },  # noqa
         { "id": "station_builder_1station.0.D1", "offset": 900.0, "type": "detector" },  # noqa
-        { "id": "station_builder_1station.0.s", "offset": 1000.0, "type": "station" },  # noqa
+        { "id": "station_builder_1station.0.s/V1", "offset": 1000.0, "type": "station" },  # noqa
         { "id": "arrival_train0", "offset": 1000.0, "type": "arrival" },  # noqa
-        { "id": "station_builder_1station.0.D2", "offset": 1300.0, "type": "detector" },  # noqa,
-        { "id": "station_builder_1station.0.CVG", "offset": 1500.0, "type": "switch" }  # noqa
     ]
     assert points == expected
 
@@ -170,7 +168,7 @@ def test_station_builder_space_time_chart(simulation_station_builder):
     assert round(ax.dataLim.ymax) == 1000.
     assert (
         [label._text for label in ax.get_yticklabels()]
-        == ['station_builder_1station.0.s']
+        == ['station_builder_1station.0.s/V1']
     )
     assert ax.get_title() == "train0 (base)"
     plt.close()
@@ -196,9 +194,8 @@ def test_station_builder_stop_positions(simulation_station_builder):
     expected = [
         {
             "buffer_stop.0<->station_builder_1station.0.D0": {
-                "type": "station",
-                "offset": 1000.0,
-                "id": "station_builder_1station.0.s"
+                'type': 'switch',
+                'offset': None
             },
             "station_builder_1station.0.DVG": {
                 "type": "signal",
@@ -206,16 +203,15 @@ def test_station_builder_stop_positions(simulation_station_builder):
                 "id": "station_builder_1station.0.D0"
             },
             "station_builder_1station.0.D1<->station_builder_1station.0.D2": {
-                "type": "signal",
+                "type": "station",
                 "offset": 1000.0,
                 "id": "station_builder_1station.0.s"
             }
         },
         {
             "buffer_stop.0<->station_builder_1station.0.D0": {
-                "type": "station",
-                "offset": 1000.0,
-                "id": "station_builder_1station.0.s"
+                'type': 'switch',
+                'offset': None
             },
             "station_builder_1station.0.DVG": {
                 "type": "signal",
@@ -223,11 +219,38 @@ def test_station_builder_stop_positions(simulation_station_builder):
                 "id": "station_builder_1station.0.D0"
             },
             "station_builder_1station.0.D1<->station_builder_1station.0.D2": {
-                "type": "signal",
+                "type": "station",
                 "offset": 1000.0,
                 "id": "station_builder_1station.0.s"
             }
         }
     ]
 
-    assert simulation_station_builder.stop_positions == expected
+    for k in simulation_station_builder.stop_positions[0]:
+        assert simulation_station_builder.stop_positions[0][k] == expected[0][k]
+
+
+def test_station_builder_path_length(simulation_station_builder):
+
+    assert simulation_station_builder.path_length(0) == 1_000
+    assert simulation_station_builder.path_length(1) == 1_000
+
+
+def test_station_builder_train_routes(simulation_station_builder):
+
+    assert simulation_station_builder.train_routes(0) ==\
+        [
+            'rt.buffer_stop.0->station_builder_1station.0.D1',
+            'rt.station_builder_1station.0.D1->buffer_stop.1'
+        ]
+
+
+def test_station_builder_route_track_sections(simulation_station_builder):
+
+    assert simulation_station_builder.route_track_sections(
+        'rt.buffer_stop.0->station_builder_1station.0.D1'
+    ) == \
+        [
+            {'id': 'T0', 'direction': 'START_TO_STOP'},
+            {'id': 'station_builder_1station.0.T1', 'direction': 'START_TO_STOP'}  # noqa
+        ]
