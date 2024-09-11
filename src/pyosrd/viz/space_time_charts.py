@@ -10,7 +10,7 @@ def _data_and_points_to_plot(
     self,
     train: int,
     eco_or_base: str,
-    points_to_show: str,
+    points_to_show: list[str],
 ) -> tuple[list, dict]:
 
     data = []
