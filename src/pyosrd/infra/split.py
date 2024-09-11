@@ -116,10 +116,12 @@ def generate_updated_routes(
                         updated_routes.append(new_route)
 
         if entry not in waypoints and exit in waypoints:
+
             replaced = [
                 switch_id for switch_id in route['switches_directions']
                 if switch_id in switches_to_buffer_stops
             ]
+
             if replaced:
                 new_route = copy.deepcopy(route)
                 port = (
@@ -127,6 +129,7 @@ def generate_updated_routes(
                     .replace('A_', '')
                 )
                 if port in switches_to_buffer_stops[replaced[-1]]:
+
                     bs = switches_to_buffer_stops[replaced[-1]][port]
                     entry_point = {
                         'type': 'BufferStop',
@@ -156,12 +159,14 @@ def generate_updated_routes(
                     else:
                         new_route['entry_point_direction'] = "STOP_TO_START"
                     new_route['release_detectors'] = release_detectors
+
                     if not (
                         new_route['entry_point']['type']
                         == new_route['exit_point']['type']
                         == 'BufferStop'
                     ):
                         updated_routes.append(new_route)
+
     return updated_routes
 
 
@@ -341,7 +346,12 @@ def filter_by_track_section_ids(
                 label=f"bs.{buffer_stops_counter}"
             )
 
-            switches_to_buffer_stops[switch['id']][entry_port] = \
+            if switch['switch_type'] in ['link', 'crossing']:
+                port = 'STATIC'
+            else:
+                port = entry_port
+
+            switches_to_buffer_stops[switch['id']][port] = \
                 f"bs.{buffer_stops_counter}"
             buffer_stops_counter += 1
 
@@ -670,7 +680,7 @@ def filter_by_line_codes(
         if track['extensions']['sncf']['line_code'] in codes
     ]
 
-    return filter_by_track_section_ids(sim, track_section_ids)
+    return filter_by_track_section_ids(sim, track_section_ids, dir)
 
 
 def filter_by_latlng(
