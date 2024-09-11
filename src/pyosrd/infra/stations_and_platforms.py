@@ -73,7 +73,7 @@ def platform_location(
 ) -> tuple[str, float]:
 
     platform = platforms(self, station)[track_name]
-    return (platform['track_section'], platform['offset']-1)
+    return (platform['track_section'], platform['offset'])
 
 
 def lines(
