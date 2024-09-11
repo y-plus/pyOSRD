@@ -1,5 +1,7 @@
 import os
 
+from haversine import inverse_haversine, Direction as Dir
+
 from railjson_generator import (
     InfraBuilder,
 )
@@ -26,7 +28,7 @@ def c1y2(
     infra_builder = InfraBuilder()
 
     T = [
-        infra_builder.add_track_section(label="T"+str(id), length=500)
+        infra_builder.add_track_section(label="T"+str(id), track_name="T"+str(id), length=500)
         for id in range(3)
     ]
     T[0].add_buffer_stop(0, label="buffer_stop.0")
@@ -34,12 +36,28 @@ def c1y2(
     for i in [1, 2]:
         T[i].add_buffer_stop(T[i].length, label=f"buffer_stop.{i}")
 
-    infra_builder.add_point_switch(
+    dvg = infra_builder.add_point_switch(
         T[0].end(),
         T[1].begin(),
         T[2].begin(),
         label="DVG",
     )
+
+    DVG_COORDS = (0.21, 45.575988410701974)
+    PINCH = 0.75
+    dvg.set_coords(*DVG_COORDS)
+
+    t0_begin = inverse_haversine(DVG_COORDS[::-1], 250, direction=Dir.WEST, unit='m')[::-1]
+    T[0].set_remaining_coords([t0_begin])
+
+
+    t1_mid = inverse_haversine(DVG_COORDS[::-1], 250, direction=Dir.NORTHEAST+PINCH, unit='m')[::-1]
+    t1_end = inverse_haversine(t1_mid[::-1], 250, direction=Dir.EAST, unit='m')[::-1]
+    T[1].set_remaining_coords([t1_mid, t1_end])
+    t2_mid = inverse_haversine(DVG_COORDS[::-1], 250, direction=Dir.SOUTHEAST-PINCH, unit='m')[::-1]
+    t2_end = inverse_haversine(t2_mid[::-1], 250, direction=Dir.EAST, unit='m')[::-1]
+    T[2].set_remaining_coords([t2_mid, t2_end])
+
     detectors = [T[0].add_detector(label="D0", position=T[0].length-50)]
     detectors += [
         T[i].add_detector(

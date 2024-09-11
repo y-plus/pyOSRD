@@ -1,5 +1,7 @@
 import os
 
+from haversine import inverse_haversine, Direction as Dir
+
 from railjson_generator import (
     InfraBuilder,
     Location,
@@ -28,39 +30,69 @@ def c2y1sy2sy1s(
 
     infra_builder = InfraBuilder()
 
-    track_lengths = [1_000, 1_000, 6_700, 1000, 4800, 1000]
+    track_lengths = [1_000, 1_000, 6_700, 1_000, 4_800, 1_000]
 
     T = [
         infra_builder.add_track_section(
             label='T'+str(id),
+            track_name='T'+str(id),
             length=track_lengths[id],
         )
         for id, _ in enumerate(track_lengths)
     ]
 
-    infra_builder.add_point_switch(
+    swa = infra_builder.add_point_switch(
         T[2].begin(),
         T[0].end(),
         T[1].end(),
         label='SWA',
     )
 
-    # infra_builder.add_link(T[2].end(), T[3].begin(), label='T2-T3')
-
-    infra_builder.add_point_switch(
+    swc = infra_builder.add_point_switch(
         T[2].end(),
         T[3].begin(),
         T[5].begin(),
         label='SWC'
     )
-    infra_builder.add_point_switch(
+    swc2 = infra_builder.add_point_switch(
         T[4].begin(),
         T[3].end(),
         T[5].end(),
         label='SWC2'
     )
-    # infra_builder.add_link(T[3].end(), T[4].begin(), label='T3-T4')
 
+    SWA_COORDS = (0.21, 45.575988410701974)
+    PINCH = 0.7
+    
+    swa.set_coords(*SWA_COORDS)
+
+
+    t0_mid = inverse_haversine(SWA_COORDS[::-1], 500, direction=Dir.NORTHWEST-PINCH, unit='m')[::-1]
+    t0_begin = inverse_haversine(t0_mid[::-1], 500, direction=Dir.WEST, unit='m')[::-1]
+    T[0].set_remaining_coords([t0_begin, t0_mid])
+
+    
+    t1_mid = inverse_haversine(SWA_COORDS[::-1], 500, direction=Dir.SOUTHWEST+PINCH, unit='m')[::-1]
+    t1_begin = inverse_haversine(t1_mid[::-1], 500, direction=Dir.WEST, unit='m')[::-1]
+    T[1].set_remaining_coords([t1_begin, t1_mid])
+
+    swc_coords = inverse_haversine(SWA_COORDS[::-1], 6_700, direction=Dir.EAST, unit='m')[::-1]
+    swc.set_coords(*swc_coords)
+    
+    t3_1 = inverse_haversine(swc_coords[::-1], 250, direction=Dir.NORTHEAST+PINCH, unit='m')[::-1]
+    t3_2 = inverse_haversine(t3_1[::-1], 500, direction=Dir.EAST, unit='m')[::-1]
+    swc2_coords = inverse_haversine(t3_2[::-1], 250, direction=Dir.SOUTHEAST-PINCH, unit='m')[::-1]
+    T[3].set_remaining_coords([t3_1, t3_2, swc2_coords])
+
+    swc2.set_coords(*swc2_coords)
+
+    t5_1 = inverse_haversine(swc_coords[::-1], 250, direction=Dir.SOUTHEAST-PINCH, unit='m')[::-1]
+    t5_2 = inverse_haversine(t5_1[::-1], 500, direction=Dir.EAST, unit='m')[::-1]
+    T[5].set_remaining_coords([t5_1, t5_2])
+
+    t4_end = inverse_haversine(swc2_coords[::-1], 4_800, direction=Dir.EAST, unit='m')[::-1]
+    T[4].set_remaining_coords([t4_end])
+    
     T[0].add_buffer_stop(0, label='buffer_stop.0', )
     T[1].add_buffer_stop(0, label='buffer_stop.1', )
     T[4].add_buffer_stop(T[4].length, label='buffer_stop.4', )
