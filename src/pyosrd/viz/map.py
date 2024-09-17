@@ -84,12 +84,12 @@ def folium_map(
     operational_point_names = {
         (operational_point['id'], part['track']): (
             (
-                operational_point['extensions']['sncf']['ch_long_label']
+                operational_point['extensions']['identifier']['name']
                 if 'sncf' in operational_point['extensions']
                 else ''
             )
-            + ' ' + operational_point['extensions']['identifier']['name']
-            + ' ' + track_section_names[part['track']]
+            + '/' + operational_point['extensions']['sncf']['ch']
+            + '\n' + operational_point['extensions']['sncf']['ch_long_label']
         )
         for operational_point in osrd.infra['operational_points']
         for part in operational_point['parts']
@@ -153,7 +153,8 @@ def folium_map(
         folium.PolyLine(
             line,
             tooltip=track_section_names[id],
-            color='black'
+            color='black',
+            weight=1.5
         ).add_to(tracks)
     tracks.add_to(m)
 
@@ -166,8 +167,7 @@ def folium_map(
             popup=id,
             icon=folium.DivIcon(html="""
             <div><svg>
-                <rect x="-5" y="-5" width="20"
-                height="20", fill="green", opacity=".8" />
+            <circle cx="5" cy="5" r="5", fill="red", opacity=".8" />
             </svg></div>"""),
             ).add_to(detectors)
     detectors.add_to(m)
@@ -191,9 +191,14 @@ def folium_map(
             position,
             popup=id,
             icon=folium.DivIcon(html="""
-            <div><svg>
-                <circle cx="5" cy="5" r="5", fill="red", opacity=".8" />
-            </svg></div>"""),
+            <div>
+                <svg viewBox="0 0 100 100">
+                <polygon points="20 0, 80 0, 50 100" fill="grey"/>
+                </svg>
+            </div>""",
+            icon_size=[20, 20],
+            icon_anchor=(10, 20),
+            )
             ).add_to(signals)
     signals.add_to(m)
 
