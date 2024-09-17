@@ -5,6 +5,7 @@ import numpy as np
 
 from haversine import haversine
 
+from .result_to_geojson import res2geojson
 
 def folium_map(
     osrd,
@@ -253,5 +254,25 @@ def folium_map(
             ]:
                 if marker in positions:
                     m.add_child(folium.Marker(positions[marker]))
+
+    return m
+
+
+def folium_results(
+    self,
+    ref_sim = None
+) -> folium.Map:
+    """Results as a folium map"""
+
+    m = folium_map(self)
+    data = res2geojson(self, ref_sim)
+    folium.plugins.TimestampedGeoJson(
+        data=data,
+        auto_play=False,
+        loop=False,
+        period='PT5S',
+        min_speed=1,
+        max_speed=12
+    ).add_to(m)
 
     return m

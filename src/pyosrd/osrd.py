@@ -92,7 +92,7 @@ class OSRD():
     from .agents import Agent
     from .delays import add_delay, add_delays_in_results, delayed, reset_delays
     from .regulation import add_stop, add_stops
-    from .viz.map import folium_map
+    from .viz.map import folium_map, folium_results
     from .viz.space_time_charts import (
         space_time_chart,
         space_time_chart_plotly,
@@ -1057,7 +1057,30 @@ class OSRD():
         return list_of_tracks
 
     def path_length(self, train: int | str) -> float:
-        return self._head_position(0)[-1]['path_offset']
+        return self._head_position(train=train)[-1]['path_offset']
+
+    def get_stops(self, train: int | str) -> float:
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
+
+        group, idx = self._train_schedule_group[
+            self.trains[train]
+        ]
+
+        group_idx = _group_idx(self, group)
+
+        return (
+            self.simulation['train_schedule_groups']
+            [group_idx]['schedules'][idx]['stops']
+        )
+
+
+def _group_idx(self, group: str) -> int:
+    return [
+        group['id']
+        for group in self.simulation['train_schedule_groups']
+    ].index(group)
 
 
 SWITCH_EXIT = {
