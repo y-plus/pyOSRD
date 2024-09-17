@@ -27,7 +27,7 @@ def c1_with_blocks(
     T = infra_builder.add_track_section(label='T', length=10_000)
 
     begin = (0.21, 45.575988410701974)
-    end = inverse_haversine(begin[::-1], 10, direction=Dir.WEST, unit='km')[::-1]
+    end = inverse_haversine(begin[::-1], 10, direction=Dir.EAST, unit='km')[::-1]
     T.set_remaining_coords([begin, end])
 
     T.add_buffer_stop(0, label='buffer_stop.0')
