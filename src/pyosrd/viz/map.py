@@ -1,4 +1,5 @@
 
+import distinctipy
 import folium
 import folium.plugins
 import numpy as np
@@ -9,7 +10,8 @@ from .result_to_geojson import res2geojson
 
 def folium_map(
     osrd,
-    markers: list[str] | None = None
+    markers: list[str] | None = None,
+    fit: bool=True
 ) -> folium.folium.Map:
     """Infra as a folium map"""
 
@@ -147,7 +149,11 @@ def folium_map(
         for switch in osrd.infra['switches']
     }
 
-    m = folium.Map(location=[49.5, -0.4])
+    m = folium.Map(location=[49.5, -0.4],tiles=None)
+
+    folium.TileLayer("openstreetmap", name="OpenStreetMap", attr="blank").add_to(m)
+    folium.TileLayer("cartodbpositron", name="Positron", attr="blank", show=False).add_to(m)
+    folium.TileLayer("", name="None", attr="blank", show=False).add_to(m)
 
     tracks = folium.FeatureGroup(name='Rails')
     for id, line in track_section_coordinates.items():
@@ -155,11 +161,12 @@ def folium_map(
             line,
             tooltip=track_section_names[id],
             color='black',
-            weight=1.5
+            weight=1
         ).add_to(tracks)
     tracks.add_to(m)
 
-    m.fit_bounds(tracks.get_bounds())
+    if fit:
+        m.fit_bounds(tracks.get_bounds())
 
     detectors = folium.FeatureGroup('Detectors', show=False)
     for id, position in detector_geo_positions.items():
@@ -240,9 +247,32 @@ def folium_map(
             ).add_to(switches)
     switches.add_to(m)
 
-    folium.LayerControl().add_to(m)
-
     m.add_child(folium.plugins.Fullscreen())
+
+    zones_limits = dict()
+    for tvd, zone in osrd.tvd_zones.items():
+        if zone not in zones_limits:
+            zones_limits[zone] = set()
+        for d in tvd.split('<->'):
+            zones_limits[zone].add(d)
+    colors = distinctipy.get_colors(len(zones_limits))
+    colors_iter = (distinctipy.get_hex(c) for c in colors)
+
+    zones = folium.FeatureGroup('Zones', show=False)
+    limits_geo_positions = detector_geo_positions | buffer_stop_geo_positions
+    for zone, limits in zones_limits.items():
+        zone_group = folium.FeatureGroup(zone)
+        for d in limits:
+            folium.Marker(limits_geo_positions[d]).add_to(zone_group)
+        folium.Rectangle(
+            zone_group.get_bounds(),
+            popup=zone,
+            # color='#' + "%06x" % random.randint(0, 0xFFFFFF),
+            color=next(colors_iter),
+            fill=True,
+            weight=1
+        ).add_to(zones)
+    zones.add_to(m)
 
     if markers:
         for marker in markers:
@@ -255,22 +285,25 @@ def folium_map(
                 if marker in positions:
                     m.add_child(folium.Marker(positions[marker]))
 
+    folium.LayerControl().add_to(m)
     return m
 
 
 def folium_results(
     self,
-    ref_sim = None
+    ref_sim = None,
+    eco_or_base: str = 'base',
+    period: int = 5,
 ) -> folium.Map:
     """Results as a folium map"""
 
     m = folium_map(self)
-    data = res2geojson(self, ref_sim)
+    data = res2geojson(self, ref_sim=ref_sim, period=period, eco_or_base=eco_or_base)
     folium.plugins.TimestampedGeoJson(
         data=data,
         auto_play=False,
         loop=False,
-        period='PT5S',
+        period=f'PT{period}S',
         min_speed=1,
         max_speed=12
     ).add_to(m)
