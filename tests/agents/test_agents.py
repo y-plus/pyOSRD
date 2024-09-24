@@ -13,19 +13,25 @@ def test_base_class_agent():
 
     @dataclass
     class AddStop(Agent):
-        train: int
-        position: float
+        train_label: str
+        zone: str
         duration: float
 
-        def stops(self, osrd) -> list[dict[str, any]]:
-            print(self.delayed)
-            return [{
-                'train': self.train,
-                'position': self.position,
-                'duration': self.duration,
-            }]
+        def departures_to_shift(
+            self: "Agent",
+        ) -> dict[str, float]:
+            return {}
 
-    regulated = sim.regulate(agent=AddStop('name', 0, 2500, 10))
+        def delays_to_add(
+            self: "Agent",
+        ) -> dict[str, dict[str, float]]:
+            return {
+                self.train_label: {
+                    self.zone: self.duration
+                }
+            }
+
+    regulated = sim.regulate(agent=AddStop('name', 0, 'D1<->D3', 10))
 
     arrival_times = [
         s.points_encountered_by_train(0)[-1]['t_base']
