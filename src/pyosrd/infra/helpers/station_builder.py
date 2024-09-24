@@ -1,3 +1,5 @@
+from haversine import inverse_haversine, Direction as Dir
+
 from railjson_generator import (
     InfraBuilder
 )
@@ -14,12 +16,12 @@ def build_dvg_station_cvg(
 
                                         stations
 
-                                     ┎S1           S2┐
-                                ------D1---(t1)----D2--
-                              /                        \
+                                     S1┐         ┎S2
+                                -----D1---(t1)----D2--
+                        ┎S0   /                        \  S5┐
         ----(track_in)---D0--<DVG                    CVG>-D5-----(track_out)-
-                              \     ┎S3           S4┐  /
-                                -----D3----(t2)---D4---
+                              \      S3┐         ┎S4  /
+                                -----D3----(t2)---D4--
 
 
     Parameters
@@ -39,6 +41,8 @@ def build_dvg_station_cvg(
     TrackSection
         The track section going out of the the station created.
     """ # noqa
+
+
     t1 = infra_builder.add_track_section(
         label=name+".T1",
         length=1000,
@@ -54,24 +58,70 @@ def build_dvg_station_cvg(
         length=1000
     )
 
-    infra_builder.add_point_switch(
+    dvg = infra_builder.add_point_switch(
         track_in.end(),
         t1.begin(),
         t2.begin(),
         label=name+'.DVG',
     )
-    infra_builder.add_point_switch(
+    cvg = infra_builder.add_point_switch(
         track_out.begin(),
         t1.end(),
         t2.end(),
         label=name+'.CVG',
     )
 
+    track_in_begin = track_in.coordinates[0][::-1]
+
+    dvg_coords = inverse_haversine(
+        track_in_begin,
+        track_in.length,
+        Dir.EAST,
+        unit='m'
+    )
+    dvg.set_coords(*dvg_coords[::-1])
+
+    t1_1_coords = inverse_haversine(
+        dvg_coords,
+        20,
+        Dir.NORTHEAST,
+        unit='m'
+    )
+    t1_2_coords = inverse_haversine(
+        t1_1_coords,
+        t1.length - 2 * 20.,
+        Dir.EAST,
+        unit='m'
+    )
+    cvg_coords = inverse_haversine(
+        t1_2_coords,
+        20.,
+        Dir.SOUTHEAST,
+        unit='m'
+    )
+    cvg.set_coords(*cvg_coords[::-1])
+    t1.set_remaining_coords([t1_1_coords[::-1], t1_2_coords[::-1]])
+
+    track_out_end = inverse_haversine(
+        cvg_coords,
+        track_out.length,
+        Dir.EAST,
+        unit='m'
+    )
+    track_out.set_remaining_coords([track_out_end[::-1]])
+    
     # D0
     track_in.add_detector(
             label=name+'.D0',
             position=track_in.length - 20,
         )
+    s = track_in.add_signal(
+                    track_in.length - 40,
+                    Direction.START_TO_STOP,
+                    is_route_delimiter=True,
+                    label=name+'.S0',
+                )
+    s.add_logical_signal("BAL", settings={"Nf": "true"})
 
     # D1/S1
     t1.add_detector(
@@ -79,8 +129,8 @@ def build_dvg_station_cvg(
             position=400,
         )
     s = t1.add_signal(
-                    380,
-                    Direction.START_TO_STOP,
+                    420,
+                    Direction.STOP_TO_START,
                     is_route_delimiter=True,
                     label=name+'.S1',
                 )
@@ -89,11 +139,11 @@ def build_dvg_station_cvg(
     # D2/S2
     t1.add_detector(
             label=name+'.D2',
-            position=800,
+            position=820,
         )
     s = t1.add_signal(
-                    820,
-                    Direction.STOP_TO_START,
+                    800,
+                    Direction.START_TO_STOP,
                     is_route_delimiter=True,
                     label=name+'.S2',
                 )
@@ -105,8 +155,8 @@ def build_dvg_station_cvg(
             position=400,
         )
     s = t2.add_signal(
-                    380,
-                    Direction.START_TO_STOP,
+                    420,
+                    Direction.STOP_TO_START,
                     is_route_delimiter=True,
                     label=name+'.S3',
                 )
@@ -115,11 +165,11 @@ def build_dvg_station_cvg(
     # D4/S4
     t2.add_detector(
             label=name+'.D4',
-            position=800,
+            position=820,
         )
     s = t2.add_signal(
-                    820,
-                    Direction.STOP_TO_START,
+                    800,
+                    Direction.START_TO_STOP,
                     is_route_delimiter=True,
                     label=name+'.S4',
                 )
@@ -130,6 +180,13 @@ def build_dvg_station_cvg(
             label=name+'.D5',
             position=20,
         )
+    s = track_out.add_signal(
+        40,
+        Direction.STOP_TO_START,
+        is_route_delimiter=True,
+        label=name+'.S5',
+    )
+    s.add_logical_signal("BAL", settings={"Nf": "true"})
 
     station = infra_builder.add_operational_point(label=name+'.s')
     station.add_part(t1, 500)

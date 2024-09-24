@@ -21,14 +21,15 @@ def multistation_multitrains(
 
                                         stations
 
-                                     ┎S1           S2┐
-                                ------D1---(t1)----D2--
-                              /                        \
+                                     S1┐         ┎S2
+                                -----D1---(t1)----D2--
+                        ┎S0   /                        \  S5┐
         ----(track_in)---D0--<DVG                    CVG>-D5-----(track_out)-
-                              \     ┎S3           S4┐  /
-                                -----D3----(t2)---D4---
+                              \      S3┐         ┎S4  /
+                                -----D3----(t2)---D4--
 
-    """  # noqav
+
+    """  # noqa
 
     infra = multistation(dir, infra_json, num_stations)
 
