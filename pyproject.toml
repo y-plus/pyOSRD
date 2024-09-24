@@ -30,6 +30,7 @@ dependencies=[
     'railjson_generator @ git+ssh://git@github.com/osrd-project/osrd.git@v0.2.13#subdirectory=python/railjson_generator',  # noqa
     'ipython',
     'methodtools',
+    'distinctipy',
 ]
 
 [project.urls]
