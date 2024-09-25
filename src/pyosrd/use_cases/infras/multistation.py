@@ -6,7 +6,7 @@ from railjson_generator import (
 )
 from railjson_generator.schema.infra.infra import Infra
 
-from pyosrd.infra.helpers.station_builder import build_N_dvg_station_cvg
+from pyosrd.use_cases.infras.helpers.station_builder import build_N_dvg_station_cvg
 
 
 def multistation(

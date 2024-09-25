@@ -7,7 +7,7 @@ from railjson_generator import (
     SimulationBuilder,
     Location,
 )
-from pyosrd.infra.helpers.station_builder import build_N_dvg_station_cvg
+from pyosrd.use_cases.infras.helpers.station_builder import build_N_dvg_station_cvg
 
 
 def station_builder_1station_2trains(
