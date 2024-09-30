@@ -101,6 +101,19 @@ def build_dvg_station_cvg(
     )
     cvg.set_coords(*cvg_coords[::-1])
     t1.set_remaining_coords([t1_1_coords[::-1], t1_2_coords[::-1]])
+    t2_1_coords = inverse_haversine(
+            dvg_coords,
+            20,
+            Dir.SOUTHEAST,
+            unit='m'
+        )
+    t2_2_coords = inverse_haversine(
+            t2_1_coords,
+            t2.length - 2 * 20.,
+            Dir.EAST,
+            unit='m'
+    )
+    t2.set_remaining_coords([t2_1_coords[::-1], t2_2_coords[::-1]])
 
     track_out_end = inverse_haversine(
         cvg_coords,
@@ -126,10 +139,10 @@ def build_dvg_station_cvg(
     # D1/S1
     t1.add_detector(
             label=name+'.D1',
-            position=400,
+            position=200,
         )
     s = t1.add_signal(
-                    420,
+                    220,
                     Direction.STOP_TO_START,
                     is_route_delimiter=True,
                     label=name+'.S1',
@@ -152,10 +165,10 @@ def build_dvg_station_cvg(
     # D3/S3
     t2.add_detector(
             label=name+'.D3',
-            position=400,
+            position=200,
         )
     s = t2.add_signal(
-                    420,
+                    220,
                     Direction.STOP_TO_START,
                     is_route_delimiter=True,
                     label=name+'.S3',

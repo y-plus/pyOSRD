@@ -5,10 +5,12 @@ from railjson_generator import (
     SimulationBuilder,
     Location,
 )
+from railjson_generator.schema.simulation.stop import Stop
+
 from pyosrd.use_cases.infras.multistation import multistation
 
 
-def multistation_multitrains(
+def multistation_multitrains_stops(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
@@ -39,14 +41,21 @@ def multistation_multitrains(
 
     for i in range(0, num_trains):
         odds = i % 2
-        locations = [Location(T[0], 500)]
+        locations = [Location(T[0], 400)]
         for j in range(0, num_stations):
             locations.append(Location(T[1+3*j+odds], 500))
+        locations.append(Location(T[-1], 1_000))
         train = sim_builder.add_train_schedule(
             *locations,
             label='train'+str(i),
-            departure_time=i*200.+0.,
+            departure_time=i*300.+0.,
+            initial_speed=15,
+            stops=[
+                Stop(duration=120, position=1_300+2_000*i)
+                for i in range(num_stations)
+            ]
         )
+        train.add_standard_single_value_allowance("percentage", 5, )
 
     built_simulation = sim_builder.build()
     built_simulation.save(os.path.join(dir, simulation_json))

@@ -161,29 +161,6 @@ def gare_terminus_2_4(
     t13_end = inverse_haversine(t13_elbow, 506., direction=Dir.EAST, unit='m')
     T[13].set_remaining_coords([t13_elbow[::-1], t13_end[::-1]])
 
-    
-    print(
-        haversine(
-            t3_elbow,
-            t4_elbow,
-            unit='m'
-        ),
-        haversine(
-            t11_elbow,
-            t12_elbow,
-            unit='m'
-        ),
-        haversine(
-            t0_begin,
-            t8_begin,
-            unit='m'
-        ),
-        haversine(
-            SW0_COORDS,
-            sw4_coords,
-            unit='m'
-        )
-    )
     T[0].add_signal(
         1500,
         is_route_delimiter=True,
