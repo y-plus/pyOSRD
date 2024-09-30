@@ -69,8 +69,8 @@ def test_station_builder_points_on_tracks(simulation_station_builder):
         ],
         'station_builder_1station.0.T1':[
             Point(track_section='station_builder_1station.0.T1', position=0, id='station_builder_1station.0.DVG', type='switch'),
-            Point(track_section='station_builder_1station.0.T1', position=400.0, id='station_builder_1station.0.D1', type='detector'),
-            Point(track_section='station_builder_1station.0.T1', position=420.0, id='station_builder_1station.0.S1', type='signal'),
+            Point(track_section='station_builder_1station.0.T1', position=200.0, id='station_builder_1station.0.D1', type='detector'),
+            Point(track_section='station_builder_1station.0.T1', position=220.0, id='station_builder_1station.0.S1', type='signal'),
             Point(track_section='station_builder_1station.0.T1', position=500.0, id='station_builder_1station.0.s/V1', type='station'),
             Point(track_section='station_builder_1station.0.T1', position=800.0, id='station_builder_1station.0.S2', type='signal'),
             Point(track_section='station_builder_1station.0.T1', position=820.0, id='station_builder_1station.0.D2', type='detector'),
@@ -78,8 +78,8 @@ def test_station_builder_points_on_tracks(simulation_station_builder):
         ],
         'station_builder_1station.0.T2':[
             Point(track_section='station_builder_1station.0.T2', position=0, id='station_builder_1station.0.DVG', type='switch'),
-            Point(track_section='station_builder_1station.0.T2', position=400.0, id='station_builder_1station.0.D3', type='detector'),
-            Point(track_section='station_builder_1station.0.T2', position=420.0, id='station_builder_1station.0.S3', type='signal'),
+            Point(track_section='station_builder_1station.0.T2', position=200.0, id='station_builder_1station.0.D3', type='detector'),
+            Point(track_section='station_builder_1station.0.T2', position=220.0, id='station_builder_1station.0.S3', type='signal'),
             Point(track_section='station_builder_1station.0.T2', position=500.0, id='station_builder_1station.0.s/V2', type='station'),
             Point(track_section='station_builder_1station.0.T2', position=800.0, id='station_builder_1station.0.S4', type='signal'),
             Point(track_section='station_builder_1station.0.T2', position=820.0, id='station_builder_1station.0.D4', type='detector'),
@@ -170,7 +170,7 @@ def test_station_builder_results_pts_encountered_by_train(
         },
         {
             'id': 'station_builder_1station.0.D1',
-            'offset': 900.0,
+            'offset': 700.0,
             'type': 'detector',
         },
         {
