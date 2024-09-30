@@ -326,3 +326,27 @@ class DecisionTreeAgent(SchedulerAgent):
             )
 
         return tree.nodes.get(best_node)['state']
+
+
+class PropagationAgent(SchedulerAgent):
+
+    n_blocks_between_trains: int = 0
+    switch_change_delay: int = 0
+
+    def build_gym_env(self) -> gym.Env:
+        self._env = TrainsDispatchingEnv(
+            ref_schedule=self.ref_schedule,
+            delayed_schedule=self.delayed_schedule,
+            n_blocks_between_trains=self.n_blocks_between_trains,
+            switch_change_delay=self.switch_change_delay
+        )
+
+    @property
+    def regulated_schedule(self) -> Schedule:
+        done = self._env._schedule.no_conflict()
+
+        while not done:
+            _, reward, done, info = self._env.step(0)
+        
+        return self._env._schedule
+
