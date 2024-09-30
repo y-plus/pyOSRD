@@ -9,8 +9,8 @@ from pyosrd.utils import seconds_to_hour
 from pyosrd.delays_between_simulations import calculate_delay_f_time
 
 def _delays_interp(
-    self: "OSRD",
-    ref_sim: "OSRD",
+    self,
+    ref_sim,
     eco_or_base = 'base'
 
 ) -> dict[str, list[float]]:
@@ -36,8 +36,8 @@ def _delays_interp(
 
 
 def delays_chart_plotly(
-    self: "OSRD",
-    ref_sim: "OSRD",
+    self,
+    ref_sim,
     eco_or_base: str = 'base'
 ) -> go.Figure:
     
@@ -61,12 +61,11 @@ def delays_chart_plotly(
             for train, delays in delays.items()
         ],
         layout={
-                "title": f'Cumulated delays over time',
+                "title": 'Cumulated delays over time',
                 "template": "simple_white",
                 "hovermode": "x unified"
             },
     )
-
 
     xmax = round(max(time))
     xticks = list(range(0, xmax + xmax // 5, xmax // 5))
@@ -89,8 +88,8 @@ def delays_chart_plotly(
 
 
 def delays_chart(    
-    self: "OSRD",
-    ref_sim: "OSRD",
+    self,
+    ref_sim,
     eco_or_base: str = 'base'
 ) -> Axes:
     
