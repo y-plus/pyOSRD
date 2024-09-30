@@ -197,21 +197,21 @@ class OSRD():
             if os.path.exists(os.path.join(self.dir, self.infra_json))
             else {}
         )
-
+        
         self.simulation = (
             _read_json(os.path.join(self.dir, self.simulation_json))
             if os.path.exists(os.path.join(self.dir, self.simulation_json))
             else {}
         )
 
-        if self.simulation:
-            self.run()
-
         self.results = (
             _read_json(os.path.join(self.dir, self.results_json))
             if os.path.exists(os.path.join(self.dir, self.results_json))
             else []
         )
+
+        if self.simulation and not self.results:
+            self.run()
 
     def run(self) -> None:
         """run the simulation and store the results in attribute results.
@@ -710,8 +710,6 @@ class OSRD():
                     path_offset,
                     t
                 ).item()
-
-        path_length = self.path_length(train)
         
         points_before_arrival = []
         for p in list_:
