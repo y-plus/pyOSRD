@@ -1,8 +1,9 @@
+import os
+import sys
+import folium.plugins
 from nicegui import ui
 from pyosrd import OSRD
 import folium
-from folium import plugins
-
 
 
 def render_map(
@@ -14,61 +15,71 @@ def render_map(
 
 
 def space_time_charts_with_selector(sim):
-    fig = sim.space_time_chart_plotly(sim.trains[0], points_to_show=['station'], eco_or_base='eco')
+    fig = sim.space_time_chart_plotly(sim.trains[0], points_to_show=['station'], eco_or_base='base')
     def update_graph():
-        fig = sim.space_time_chart_plotly(train.value, points_to_show=['station'], eco_or_base='eco')
+        fig = sim.space_time_chart_plotly(train.value, points_to_show=['station'], eco_or_base='base')
         graph.update_figure(fig)
-    train = ui.select(options=sim.trains, label='Train', value=sim.trains[0]).on_value_change(update_graph)
-    graph = ui.plotly(fig).classes('w-full h-[calc(100vh-80px)]')
+    with ui.column().classes('w-full h-[calc(100vh-80px)]'):
+        train = ui.select(options=sim.trains, label='Train', value=sim.trains[0]).on_value_change(update_graph)
+        graph = ui.plotly(fig).classes('w-full h-[calc(100vh-80px)]')
 
 
-folder: str = 'notebooks/c1_3trains'
+folder: str = sys.argv[1]
+print(folder)
 ref_sim = OSRD(dir=folder)
 
+CASES = {
+    'Reference': '',
+    'Delayed with conflicts': 'delayed',
+    'Interlocking only': 'propagate'
+}
+INV_CASES = {v: k for k, v in CASES.items()}
 
 @ui.page('/')
-def simulation(delayed: str = ''):
+def simulation(case: str | None = None):
 
-    if delayed:
+    if case=='delayed':
         sim = ref_sim.delayed()
-        m = sim.folium_results(ref_sim=ref_sim, eco_or_base='eco')    
-    else:
+        m = sim.folium_results(ref_sim=ref_sim, eco_or_base='base')    
+    elif case=='reference' or case is None:
         sim = ref_sim
-        m = sim.folium_results(eco_or_base='eco')
+        m = sim.folium_results(eco_or_base='base')
+    else:
+        sim = OSRD(
+            dir=folder,
+            infra_json='infra.json',
+            simulation_json='simulation.json',
+            results_json=os.path.join('delayed', case, 'results.json'),
+            delays_json='delays.json',
+        )
+        m = sim.folium_results(ref_sim=ref_sim, eco_or_base='base')
 
-    with ui.header(elevated=True).classes('bg-white text-black items-center justify-between py-2'):
+    with ui.header(elevated=True).classes('bg-white text-black justify-between pl-5', replace='row items-center'):
         with ui.row().classes('items-center'):
             ui.image('app/logo_railwAI.png').on('click', lambda: ui.open('/')).classes('w-40 p-0 m-0 cursor-pointer')
-            ui.button(icon='menu', on_click=lambda: left_drawer.toggle()).props('flat')
-        with ui.row().classes('items-center'):
-            ui.button(icon='public', on_click=lambda: (map.set_visibility(True), get.set_visibility(False), el.set_visibility(False))).props('flat')
-            ui.button(icon="ssid_chart", on_click=lambda: (map.set_visibility(False), get.set_visibility(True), el.set_visibility(False))).props('flat')
-            if delayed:
-                ui.button(icon='area_chart', on_click=lambda: (map.set_visibility(False), get.set_visibility(False),el.set_visibility(True))).props('flat')
-        with ui.row().classes('items-center'):        
-            ui.button('Add delay', icon='update', on_click=lambda: right_drawer.show()).props('outline rounded disabled')
-            ui.button('Dispatch', icon='published_with_changes', on_click=lambda: right_drawer.show()).props('outline rounded disabled')
+ 
+            selector = ui.select(
+                options=list(CASES.keys()),
+                value=INV_CASES[case],
+                on_change=lambda: ui.navigate.to(f"/?case={CASES[selector.value]}")
+            )
 
-    with ui.left_drawer(value=False) as left_drawer:
-        with ui.row().classes('justify-end w-full'):
-            ui.button(icon='close', on_click=lambda: left_drawer.hide()).props('flat')
-        with ui.button('Case', icon='folder_open').props('flat'):
-            ui.tooltip('Open case ...').props('anchor="center right" self="center left" ')
-        with ui.button('Info', icon='info').props('flat'):
-            ui.tooltip('Trains, stations, delays ...').props('anchor="center right" self="center left" ')
-        with ui.button('Reference', icon='checklist_rtl', on_click=lambda: ui.navigate.to("/")).props('flat'):
-            ui.tooltip('Reference schedule').props('anchor="center right" self="center left" ')
-        with ui.button('Delayed', icon='railway_alert', on_click=lambda: ui.navigate.to("/?delayed=true")).props('flat'):
-            ui.tooltip('Delayed schedule (interlocking only)').props('anchor="center right" self="center left" ')
-        with ui.button('Dispatched', icon='published_with_changes').props('flat'):
-            ui.tooltip('Dispatched schedules').props('anchor="center right" self="center left" ') 
+        with ui.tabs(value='Map').classes('items-center text-primary').props('inline-label shrink') as tabs:
+            info = ui.tab(name='Info',label='', icon='info').props('flat')
+            map = ui.tab(name='Map',label='', icon='public').props('flat')
+            get = ui.tab(name='SPACE-TIME',label='', icon="ssid_chart").props('flat')
+            delays = ui.tab(name='Delays',label='', icon='area_chart').props('flat' if case else 'flat disabled')
 
-    map = ui.html(render_map(m)).classes('w-full h-[calc(100vh-80px)]')
-    with ui.element().classes('w-full h-[calc(100vh-80px)]') as get:
-        space_time_charts_with_selector(sim)
-    if delayed:
-        with ui.element().classes('w-full h-[calc(100vh-80px)]') as el:
-            ui.plotly(sim.delays_chart_plotly(ref_sim, eco_or_base='eco')).classes('w-full h-[calc(100vh-80px)]')
+    with ui.tab_panels(tabs, value=map).classes('w-full'):
+        with ui.tab_panel(map).classes('p-0'):
+            ui.html(render_map(m)).classes('w-full h-[calc(100vh-80px)] p-0')
+        with ui.tab_panel(get).classes('p-0'):
+            space_time_charts_with_selector(sim)
+        if case:
+            with ui.tab_panel(delays).classes('p-0'):
+                ui.plotly(sim.delays_chart_plotly(ref_sim, eco_or_base='base')).classes('w-full')
+        with ui.tab_panel(info).classes('p-0'):
+            ui.label('info')
 
     with ui.right_drawer(value=False) as right_drawer:
         with ui.row().classes('justify-end w-full'):
