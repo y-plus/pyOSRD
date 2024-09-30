@@ -173,10 +173,12 @@ def folium_map(
         folium.Marker(
             position,
             popup=id,
-            icon=folium.DivIcon(html="""
-            <div><svg>
-            <circle cx="5" cy="5" r="5", fill="red", opacity=".8" />
-            </svg></div>"""),
+            icon=folium.DivIcon(
+                html="""
+                    <i class="fas fa-equals fa-rotate-by"
+                    style='font-size: 14px; --fa-rotate-angle: -45deg'></i>
+                """,
+            )
             ).add_to(detectors)
     detectors.add_to(m)
 
@@ -198,15 +200,12 @@ def folium_map(
         folium.Marker(
             position,
             popup=id,
-            icon=folium.DivIcon(html="""
-            <div>
-                <svg viewBox="0 0 100 100">
-                <polygon points="20 0, 80 0, 50 100" fill="grey"/>
-                </svg>
-            </div>""",
-            icon_size=[20, 20],
-            icon_anchor=(10, 20),
-            )
+            icon=folium.DivIcon(
+            html="""
+            <i class="fa fa-traffic-light" style='border: 0px solid red; font-size:24px; color: #555'></i><br/>""",
+            icon_size=[25, 50],
+            # icon_anchor=(20, 0),
+            ),
             ).add_to(signals)
     signals.add_to(m)
 
@@ -227,11 +226,10 @@ def folium_map(
         folium.Marker(
             position,
             popup=platform_names[id],
-            icon=folium.DivIcon(html="""
-            <div><svg>
-                <rect x="-5" y="-5" width="20"
-                height="20", fill="grey", opacity=".8" />
-            </svg></div>"""),
+            icon=folium.DivIcon(
+                """<i class="fas fa-house-user" style='font-size: 24px'></i>""",
+                icon_size=[50, 50]
+            )
             ).add_to(platforms)
     platforms.add_to(m)
 
@@ -267,10 +265,10 @@ def folium_map(
         folium.Rectangle(
             zone_group.get_bounds(),
             popup=zone,
-            # color='#' + "%06x" % random.randint(0, 0xFFFFFF),
             color=next(colors_iter),
             fill=True,
-            weight=1
+            weight=1,
+            name=zone,
         ).add_to(zones)
     zones.add_to(m)
 
@@ -286,6 +284,12 @@ def folium_map(
                     m.add_child(folium.Marker(positions[marker]))
 
     folium.LayerControl().add_to(m)
+    
+    folium.plugins.MiniMap(
+        toggle_display=True,
+        zoom_level_offset=-7
+    ).add_to(m)
+
     return m
 
 
