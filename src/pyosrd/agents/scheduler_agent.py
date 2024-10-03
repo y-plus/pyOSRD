@@ -3,7 +3,6 @@ import shutil
 
 from dataclasses import dataclass
 
-import numpy as np
 import pandas as pd
 
 from pyosrd import OSRD
@@ -73,8 +72,8 @@ class SchedulerAgent(Agent):
         self.ref_schedule, self.delayed_schedule =\
             schedule_from_osrd(osrd, delayed=True)
         self.step_has_fixed_duration = (
-            self.step_type == 'switch'
-            if hasattr(self, 'step_type')
+            self.ref_schedule._step_type == 'switch'
+            if hasattr(self.ref_schedule, '_step_type')
             else self.step_has_fixed_duration
         )
         # self.weights = getattr(weights_, weights)(osrd)
