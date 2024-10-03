@@ -16,6 +16,7 @@ def multistation_multitrains_stops(
     simulation_json: str = 'simulation.json',
     num_stations: int = 1,
     num_trains: int = 1,
+    alternate: bool = True,
 ) -> None:
     """Create a serie of N stations (see build_N_dvg_station_cvg for details).
 
@@ -43,7 +44,7 @@ def multistation_multitrains_stops(
         odds = i % 2
         locations = [Location(T[0], 400)]
         for j in range(0, num_stations):
-            locations.append(Location(T[1+3*j+odds], 500))
+            locations.append(Location(T[1+3*j+(odds if alternate else 0)], 500))
         locations.append(Location(T[-1], 1_000))
         train = sim_builder.add_train_schedule(
             *locations,
