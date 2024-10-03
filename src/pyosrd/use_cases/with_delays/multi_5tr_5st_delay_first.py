@@ -7,7 +7,8 @@ def multi_5tr_5st_delay_first(
     simulation_json: str = 'simulation.json',
     delays_json: str = 'delays.json',
     num_stations: int = 5,
-    num_trains: int = 5
+    num_trains: int = 5,
+    alternate: bool=True,
 ) -> None:
     """Create a multi train multi station simulation and add random delays.
 
@@ -44,7 +45,8 @@ def multi_5tr_5st_delay_first(
         simulation=use_case,
         params_use_case={
             "num_stations": num_stations,
-            "num_trains": num_trains
+            "num_trains": num_trains,
+            "alternate": alternate
         }
     )
 
