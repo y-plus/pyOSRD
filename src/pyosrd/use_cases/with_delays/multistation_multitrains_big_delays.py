@@ -9,14 +9,7 @@ def multistation_multitrains_big_delays(
     num_stations: int = 5,
     num_trains: int = 5
 ) -> None:
-    """Create a multi train multi station simulation and add random delays.
-
-    Delays are not completely random and follow the rule :
-    - Number of delayed train is between 1 and min(3, num_trains)
-    - For each delay
-      - train is randomly chosen
-      - the time threshold is between 0 and 100 x num_stations
-      - Duration delay is between 50 and 200
+    """Create a multi train multi station simulation and add big delays.
 
     Parameters
     ----------
@@ -32,8 +25,6 @@ def multistation_multitrains_big_delays(
         _description_, by default 1
     num_trains : int, optional
         _description_, by default 1
-    delay_seed : int, optional
-        _description_, by default 42
     """
     use_case = "multistation_multitrains"
     sim = OSRD(

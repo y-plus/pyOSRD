@@ -1,3 +1,6 @@
+import os
+import json
+
 from pyosrd import OSRD
 
 
@@ -25,6 +28,10 @@ def c2y11s_conflict_20_trains(
         sim.copy_train('train0', f'train0.{i}', departure_time=300.*i)
         sim.copy_train('train1', f'train1.{i}', departure_time=100.+300.*i)
 
+    with open(os.path.join(dir, simulation_json), 'w') as outfile:
+        json.dump(sim.simulation, outfile)
+    sim.run()
+  
     sim.reset_delays()
     sim.add_delay('train0', time_threshold=70, delay=100.)
     sim.add_delays_in_results()
