@@ -159,7 +159,6 @@ class SchedulerAgent(Agent):
         """
 
         sim = OSRD(dir="tmp", with_delay=scenario)
-
         self.set_schedules_from_osrd(sim, "all_steps")
 
         df = pd.DataFrame(

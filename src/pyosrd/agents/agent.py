@@ -61,6 +61,7 @@ class Agent(ABC):
             os.path.join(osrd.dir, 'delayed', self.name),
             exist_ok=True
         )
+
         regulated.results_json = os.path.join(
             'delayed',
             self.name,
