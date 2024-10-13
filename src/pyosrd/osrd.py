@@ -253,6 +253,34 @@ class OSRD():
         except FileNotFoundError:
             raise RuntimeError(output.stderr.decode())
 
+    def validate_infra(self) -> None:
+        """Loads the infra in core and validates"
+
+        Raises
+        ------
+        ValueError
+            If missing infra json file.
+        """
+        if (
+            self.infra == {} or self.infra is None
+        ):
+            raise ValueError("Missing infra json file")
+
+        load_dotenv()
+        JAVA = os.getenv('JAVA') or 'java'
+
+        jar_file = files('pyosrd').joinpath('osrd-0213.jar')
+
+        try:
+            output = subprocess.run(
+                f"{JAVA} -jar {jar_file} load-infra "
+                f"--path {os.path.join(self.dir, self.infra_json)} ",
+                shell=True,
+                stderr=subprocess.PIPE,
+            )
+        except FileNotFoundError:
+            raise RuntimeError(output.stderr.decode())
+
     @property
     def has_results(self) -> bool:
         """True if the object has simulation results"""
@@ -481,7 +509,6 @@ class OSRD():
                 self.track_section_lengths[point.track_section]
                 - point.position
             )
-
         return offset
 
     def draw_infra_points(
@@ -609,6 +636,7 @@ class OSRD():
             'detector',
             'station',
             'switch',
+            # 'link',
             'arrival',
         ],
     ) -> list[dict[str, Any]]:
@@ -1047,16 +1075,21 @@ class OSRD():
             for gr in self.simulation['train_schedule_groups']
             if gr['id'] == group_id
         )
-        last_track = group['waypoints'][-1][-1]['track_section']
+        first_track_id = group['waypoints'][0][0]['track_section']
+        last_track_id = group['waypoints'][-1][-1]['track_section']
         list_of_tracks = []
         for route_id in self.train_routes(train):
             for track in self.route_track_sections(route_id):
                 if track not in list_of_tracks:
                     list_of_tracks.append(track)
-                if track['id'] == last_track:
+                if track['id'] == last_track_id:
                     break
-
-        return list_of_tracks
+        first_track = next(
+            track
+            for track in list_of_tracks
+            if track['id']==first_track_id
+        )
+        return list_of_tracks[list_of_tracks.index(first_track):]
 
     def path_length(self, train: int | str) -> float:
         return self._head_position(train=train)[-1]['path_offset']
