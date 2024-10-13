@@ -48,7 +48,7 @@ def deduplicate_route_ids(self: InfraBuilder) -> None:
     i = 1
     for route in self.infra.routes:
         if route.label in seen_ids:
-            route.label = route.label.replace("rt", f"rt_{i}")
+            route.label = route.label.replace("rt.", f"rt.{i}.")
             i += 1
         seen_ids.add(route.label)
 
@@ -56,7 +56,8 @@ def deduplicate_route_ids(self: InfraBuilder) -> None:
 def station_location(
     infra: Infra,
     station: str,
-    track_name: str
+    track_name: str,
+    offset: float = 0
 ) -> Location:
     station = next(
         op 
@@ -70,4 +71,4 @@ def station_location(
         )
         if track_section.track_name == track_name:
             break
-    return Location(track_section=track_section, offset=p.position)
+    return Location(track_section=track_section, offset=p.position + offset)
