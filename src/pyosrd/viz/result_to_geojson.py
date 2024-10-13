@@ -27,26 +27,19 @@ def coords_from_position_on_track(
         (point[1], point[0])
         for point in track_section['geo']['coordinates']
     ]
-    geo_length = haversine(
-            (
-                track_section['geo']['coordinates'][0][1],
-                track_section['geo']['coordinates'][0][0]
-            ),
-            (
-                track_section['geo']['coordinates'][-1][1],
-                track_section['geo']['coordinates'][-1][0]
-            ),
-            unit='m'
-        )
-
+    
+    geo_lengths = [0]
+    for i, _ in enumerate(coords:= track_section['geo']['coordinates']):
+        if i > 0:
+            geo_lengths.append(
+                round(haversine(
+                    coords[i][::-1],
+                    coords[i-1][::-1],
+                    unit='m'
+                ), 2) + geo_lengths[i-1]
+            )
     pos = position / track_section['length']
-    positions = [
-        haversine(
-            point, coordinates[0], unit='m'
-        )
-        / geo_length
-        for point in coordinates
-    ]
+    positions = [length / geo_lengths[-1] for length in geo_lengths]
 
     lats = [coord[0] for coord in coordinates]
     lngs = [coord[1] for coord in coordinates]
@@ -76,22 +69,58 @@ def res2geojson(
             self._head_position(train_index, eco_or_base)
         )
         
-        for p in self.points_encountered_by_train(train_index):
-            if p ['type'] == 'switch':
-                detector = next(
-                    s for s in self.infra['switches']
-                    if s['id'] == p['id']
-                )
-                port_key = next(p for p in detector['ports'])
-                port = detector['ports'][port_key]
-                position = 0 if port['endpoint'] == 'BEGIN' else self.track_section_lengths[port['track']]
-                positions.append({
-                    'offset': position,
-                    'track_section': port['track'],
-                    'path_offset': p['offset'],
-                    'time': p['t_'+eco_or_base]
-                })
-        
+        # for p in self.points_encountered_by_train(train_index, types=['switch', 'link']):
+        #     switch = next(
+        #         s for s in self.infra['switches']
+        #         if s['id'] == p['id']
+        #     )
+        #     port_key = next(p for p in switch['ports'])
+        #     port = switch['ports'][port_key]
+        #     position = 0 if port['endpoint'] == 'BEGIN' else self.track_section_lengths[port['track']]
+        #     positions.append({
+        #         'offset': position,
+        #         'track_section': port['track'],
+        #         'path_offset': p['offset'],
+        #         'time': p['t_'+eco_or_base]
+        #     })
+
+        t, o = (
+            [p['time'] for p in positions],
+            [p['path_offset'] for p in positions]
+        )
+        for train_track in self.train_track_sections(train_index):
+            track = next(
+                t for t in self.infra['track_sections']
+                if t['id'] == train_track['id']
+            )
+            geo_lengths = [0]
+            for i, _ in enumerate(coordinates:= track['geo']['coordinates']):
+                if i > 0:
+                    geo_lengths.append(
+                        round(haversine(
+                            coordinates[i][::-1],
+                            coordinates[i-1][::-1],
+                            unit='m'
+                        ), 2) + geo_lengths[i-1]
+                    )
+
+            for length in geo_lengths:
+                if path_offset := self.offset_in_path_of_train(
+                    Point(
+                        id='',
+                        track_section=train_track['id'],
+                        type='record',
+                        position=length
+                    ),
+                    train_index
+                ):
+                    positions.append({
+                        'offset': length,
+                        'track_section': train_track['id'],
+                        'path_offset': path_offset,
+                        'time': np.interp([path_offset], o, t).item(),
+                    })
+                    
         positions.sort(key=lambda x: x['path_offset'])
 
         for p in positions:
@@ -102,7 +131,9 @@ def res2geojson(
             ))
             times.append(today_timestamp + 1_000 * p['time'])
 
+
         duration = positions[-1]['time'] - positions[0]['time']
+
         times_interp = np.linspace(min(times), max(times), int(duration/period))
         lats = [c[1] for c in coords]
         lngs = [c[0] for c in coords]

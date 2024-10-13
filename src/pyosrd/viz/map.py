@@ -20,25 +20,22 @@ def folium_map(
         for track in osrd.infra['track_sections']
     }
 
-    track_section_coordinates = {
+    TRACK_SECTIONS_COORDINATES = {
         ts['id']: [(point[1], point[0]) for point in ts['geo']['coordinates']]
         for ts in osrd.infra['track_sections']
     }
 
-    track_section_geo_lengths = {
-        ts['id']: haversine(
-            (
-                ts['geo']['coordinates'][0][1],
-                ts['geo']['coordinates'][0][0]
-            ),
-            (
-                ts['geo']['coordinates'][-1][1],
-                ts['geo']['coordinates'][-1][0]
-            ),
-            unit='m'
-        )
-        for ts in osrd.infra['track_sections']
-    }
+    track_section_geo_lengths = dict()
+    for ts in osrd.infra['track_sections']:
+        geo_length = 0
+        for i, _ in enumerate(coords:= ts['geo']['coordinates']):
+            if i > 0:
+                geo_length += round(haversine(
+                    coords[i][::-1],
+                    coords[i-1][::-1],
+                    unit='m'
+                ), 2)
+        track_section_geo_lengths[ts['id']] = geo_length
 
     def coords_from_position_on_track(
         track_section: str,
@@ -46,15 +43,21 @@ def folium_map(
     ) -> list[float]:
         length = osrd.track_section_lengths[track_section]
         pos = position / length
-        positions = [
-            haversine(
-                point, track_section_coordinates[track_section][0], unit='m'
-            )
-            / track_section_geo_lengths[track_section]
-            for point in track_section_coordinates[track_section]
-        ]
-        lats = [coord[0] for coord in track_section_coordinates[track_section]]
-        lngs = [coord[1] for coord in track_section_coordinates[track_section]]
+        
+        geo_lengths = [0]
+        for i, _ in enumerate(coords:=  TRACK_SECTIONS_COORDINATES[track_section]):
+            if i > 0:
+                geo_lengths.append(
+                    round(haversine(
+                        coords[i][::-1],
+                        coords[i-1][::-1],
+                        unit='m'
+                    ), 2) + geo_lengths[i-1]
+                )
+        positions = [length / geo_lengths[-1] for length in geo_lengths]
+
+        lats = [coord[0] for coord in TRACK_SECTIONS_COORDINATES[track_section]]
+        lngs = [coord[1] for coord in TRACK_SECTIONS_COORDINATES[track_section]]
         return [
             np.interp([pos], positions, lats).item(),
             np.interp([pos], positions, lngs).item(),
@@ -147,16 +150,17 @@ def folium_map(
             ]
         )
         for switch in osrd.infra['switches']
+        if switch['switch_type'] != 'link'
     }
 
     m = folium.Map(location=[49.5, -0.4],tiles=None)
 
-    folium.TileLayer("openstreetmap", name="OpenStreetMap", attr="blank").add_to(m)
-    folium.TileLayer("cartodbpositron", name="Positron", attr="blank", show=False).add_to(m)
+    folium.TileLayer("cartodbpositron", name="Positron", attr="blank").add_to(m)
+    folium.TileLayer("openstreetmap", name="OpenStreetMap", attr="blank", show=False).add_to(m)
     folium.TileLayer("", name="None", attr="blank", show=False).add_to(m)
 
     tracks = folium.FeatureGroup(name='Rails')
-    for id, line in track_section_coordinates.items():
+    for id, line in TRACK_SECTIONS_COORDINATES.items():
         folium.PolyLine(
             line,
             tooltip=track_section_names[id],
