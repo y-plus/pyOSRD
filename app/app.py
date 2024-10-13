@@ -36,12 +36,12 @@ CASES = {
 INV_CASES = {v: k for k, v in CASES.items()}
 
 @ui.page('/')
-def simulation(case: str | None = None):
+def simulation(case: str | None = ''):
 
     if case=='delayed':
         sim = ref_sim.delayed()
         m = sim.folium_results(ref_sim=ref_sim, eco_or_base='base')    
-    elif case=='reference' or case is None:
+    elif case=='reference' or case=='' or case is None:
         sim = ref_sim
         m = sim.folium_results(eco_or_base='base')
     else:
