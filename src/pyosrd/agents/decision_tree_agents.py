@@ -1,7 +1,10 @@
+import copy
+
 import gymnasium as gym
 import networkx as nx
 
 from gymnasium import spaces
+from ortools.linear_solver import pywraplp
 
 from pyosrd.schedules import Schedule
 from pyosrd.agents.scheduler_agent import SchedulerAgent
@@ -11,7 +14,7 @@ DISPATCH_OPTIONS = [
     {'priority': 0, 'wait_at': 'previous_signal'},
     {'priority': 0, 'wait_at': 'previous_switch_protecting_signal'},
     {'priority': 0, 'wait_at': 'previous_station'},
-    {'priority': 1, 'wait_at': 'previous_signal'},
+    # {'priority': 1, 'wait_at': 'previous_signal'},
     {'priority': 1, 'wait_at': 'previous_switch_protecting_signal'},
     {'priority': 1, 'wait_at': 'previous_station'},
 ]
@@ -36,7 +39,7 @@ def apply_dispatch_option(
     priority_train = trains[priority_train_idx]
     other_train = trains[1-priority_train_idx]
 
-    new_schedule = schedule
+    new_schedule = copy.deepcopy(schedule)
     still_conflicted = True
 
     while still_conflicted:
@@ -56,23 +59,23 @@ def apply_dispatch_option(
                     other_train
                 ]
             )
-        ) if new_schedule.path(priority_train).index(zone) != 0 else schedule
+        ) if new_schedule.path(priority_train).index(zone) != 0 else new_schedule
 
-        if (
-            zone_fn in ['previous_signal', 'previous_station']
-            and new_schedule.path(other_train).index(zone) == 0
-        ):
-            new_schedule = new_schedule.shift_train_departure(
-                other_train,
-                (
-                    new_schedule.ends.loc[
-                        zone,
-                        priority_train
-                    ] - starts.loc[zone, other_train]
-                )
-            )
+        # if (
+        #     zone_fn in ['previous_signal', 'previous_station']
+        #     and new_schedule.path(other_train).index(zone) == 0
+        # ):
+        #     new_schedule = new_schedule.shift_train_departure(
+        #         other_train,
+        #         (
+        #             new_schedule.ends.loc[
+        #                 zone,
+        #                 priority_train
+        #             ] - starts.loc[zone, other_train]
+        #         )
+        #     )
 
-        elif wait_at := getattr(after_conflict, zone_fn)(other_train, zone):
+        if wait_at := getattr(after_conflict, zone_fn)(other_train, zone):
             # TODO: Définition de wait_at remonter avant la boucle while ?
             if new_schedule.is_a_point_switch(
                 priority_train,
