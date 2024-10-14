@@ -102,12 +102,14 @@ def c2x2(
         direction=Direction.STOP_TO_START,
     ).add_logical_signal("BAL", settings={"Nf": "true"})
 
-    for i in [0, 1]:
-        station = infra_builder.add_operational_point(label='station'+str(i))
-        station.add_part(T[i], 50)
-    for i in [2, 3]:
-        station = infra_builder.add_operational_point(label='station'+str(i))
-        station.add_part(T[i], 950)
+    stations = [
+        infra_builder.add_operational_point(label='station'+str(i))
+        for i in range(2)
+    ]
+    for track in range(2):
+        stations[0].add_part(T[track], 50)
+    for track in [2, 3]:
+        stations[1].add_part(T[track], 950)
 
     os.makedirs(dir, exist_ok=True)
 

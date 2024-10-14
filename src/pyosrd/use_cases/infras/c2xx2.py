@@ -43,10 +43,10 @@ def c2xx2(
         T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i}')
 
     sw = infra_builder.add_double_slip_switch(
-        south_1=T[0].end(),
-        south_2=T[1].end(),
-        north_1=T[2].begin(),
-        north_2=T[3].begin(),
+        north_1=T[0].end(),  # A1
+        north_2=T[1].end(),  # A2
+        south_1=T[3].begin(), # B1
+        south_2=T[2].begin(), # B2
         label='SW',
     )
 
