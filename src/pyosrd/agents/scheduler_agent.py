@@ -24,7 +24,7 @@ class SchedulerAgent(Agent):
 
     Child classes shoud implement:
 
-    ```python3
+    ```python
     @property
     def regulated_schedule(self) -> Schedule:
         ...

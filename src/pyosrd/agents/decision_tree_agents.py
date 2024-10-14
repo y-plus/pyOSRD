@@ -132,10 +132,14 @@ class TrainsDispatchingEnv(gym.Env):
         return self._schedule.stations
 
     def calculate_reward(self):
-        return -self._schedule.total_delay_at_stations(
-            self._ref_schedule,
-            self._schedule.stations
-        )
+        total_delay = 0
+        for train in self._schedule.trains:
+            last_zone = self._schedule.path(train)[-1]
+            total_delay += (
+                self._schedule.ends.loc[last_zone, train]
+                - self._delayed_schedule.ends.loc[last_zone, train]
+            )
+        return -total_delay
 
     def reset(self):
         self._schedule = self._delayed_schedule
@@ -245,7 +249,6 @@ def branch_and_cut(
                     priority_train=info['priority_train'],
                     other_train=info['other_train'],
                 )
-                print(f"{node}->{new_node_index}")
                 nodes_to_explore.add(new_node_index)
                 explore_node_recursive(
                     nodes_to_explore,
@@ -275,16 +278,16 @@ def branch_and_cut(
         done=False,
         max_node=0
     )
-
-    best_node, best_reward = sorted(
-        [
+    rewards = [
             (node, tree.nodes[node]['reward'])
             for node in tree.nodes
             if tree.nodes[node]['done'] and tree.nodes[node]['valid']
-        ],
+        ]
+    best_node, best_reward = sorted(
+        rewards,
         key=lambda x: -x[1]
     )[0]
-
+    env.set_state(tree.nodes[best_node]['state'])
     return tree, best_node, best_reward
 
 
@@ -303,6 +306,8 @@ class DecisionTreeAgent(SchedulerAgent):
 
     @property
     def regulated_schedule(self) -> Schedule:
+        self.build_gym_env()
+        self._env.reset()
         tree, best_node, best_reward = branch_and_cut(
             self._env,
             max_successive_actions=None
@@ -343,6 +348,8 @@ class PropagationAgent(SchedulerAgent):
 
     @property
     def regulated_schedule(self) -> Schedule:
+        self.build_gym_env()
+        self._env.reset()
         done = self._env._schedule.no_conflict()
 
         while not done:
