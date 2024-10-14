@@ -10,7 +10,7 @@ def test_space_time_chart(simulation_cvg_dvg):
     assert round(ax.dataLim.ymax) == (500. - 300.) + 2 * 500. + 490.
     assert (
         [label._text for label in ax.get_yticklabels()]
-        == ['station0', 'station1']
+        == ['station0/T0', 'station1/T4']
     )
     assert ax.get_title() == "train0 (base)"
     plt.close()
@@ -28,7 +28,7 @@ def test_space_time_chart_by_label(simulation_cvg_dvg):
     assert round(ax.dataLim.ymax) == (500. - 300.) + 2 * 500. + 490.
     assert (
         [label._text for label in ax.get_yticklabels()]
-        == ['station0', 'station1']
+        == ['station0/T0', 'station1/T4']
     )
     assert ax.get_title() == "train0 (base)"
     plt.close()

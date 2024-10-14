@@ -179,7 +179,7 @@ def _schedule_dfs_from_OSRD(
         df_delayed = min_times.copy(deep=True)
         delayed_dict = {train: {'s': {}, 'e': {}} for train in sim.trains}
 
-    # STEP2: LOOP ON TRAINS IN RESULTS TO FILL IN START 1 END TIMES
+    # STEP2: LOOP ON TRAINS IN RESULTS TO FILL IN START & END TIMES
     points_on_track_sections = sim.points_on_track_sections()
 
     for train in sim.trains:

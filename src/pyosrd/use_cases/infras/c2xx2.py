@@ -1,5 +1,7 @@
 import os
 
+from haversine import inverse_haversine, Direction as Dir
+
 from railjson_generator import (
     InfraBuilder,
 )
@@ -30,6 +32,7 @@ def c2xx2(
         infra_builder.add_track_section(
             label='T'+str(i),
             length=1_000,
+            track_name='T'+str(i)
         )
         for i in range(4)
     ]
@@ -39,13 +42,34 @@ def c2xx2(
     for i in [2, 3]:
         T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i}')
 
-    infra_builder.add_double_slip_switch(
+    sw = infra_builder.add_double_slip_switch(
         south_1=T[0].end(),
         south_2=T[1].end(),
         north_1=T[2].begin(),
         north_2=T[3].begin(),
         label='SW',
     )
+
+    SW_COORDS = (0.21, 45.575988410701974)
+    PINCH = 0
+
+    sw.set_coords(*SW_COORDS)
+
+    t0_mid = inverse_haversine(SW_COORDS[::-1], 5, direction=Dir.NORTHWEST-PINCH, unit='m')[::-1]
+    t0_begin = inverse_haversine(t0_mid[::-1], 995, direction=Dir.WEST, unit='m')[::-1]
+    T[0].set_remaining_coords([t0_begin, t0_mid])
+
+    t1_mid = inverse_haversine(SW_COORDS[::-1], 5, direction=Dir.SOUTHWEST+PINCH, unit='m')[::-1]
+    t1_begin = inverse_haversine(t1_mid[::-1], 995, direction=Dir.WEST, unit='m')[::-1]
+    T[1].set_remaining_coords([t1_begin, t1_mid])
+
+    t2_mid = inverse_haversine(SW_COORDS[::-1], 5, direction=Dir.NORTHEAST+PINCH, unit='m')[::-1]
+    t2_begin = inverse_haversine(t2_mid[::-1], 995, direction=Dir.EAST, unit='m')[::-1]
+    T[2].set_remaining_coords([t2_mid, t2_begin])
+
+    t3_mid = inverse_haversine(SW_COORDS[::-1], 5, direction=Dir.SOUTHEAST-PINCH, unit='m')[::-1]
+    t3_begin = inverse_haversine(t3_mid[::-1], 995, direction=Dir.EAST, unit='m')[::-1]
+    T[3].set_remaining_coords([t3_mid, t3_begin])
 
     T[0].add_detector(label='D0', position=980)
     T[0].add_signal(

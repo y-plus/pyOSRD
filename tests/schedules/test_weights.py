@@ -77,8 +77,8 @@ def test_weights_set_for_one_train_at_a_station(
     schedule_station_capacity2
 ):
     w = weights.all_steps(simulation_station_capacity2)
-    w.weights.train_station_sim(0, 'station', 2, simulation_station_capacity2)
-    w.weights.train_station_sim(1, 'station', 2, simulation_station_capacity2)
+    w.weights.train_station_sim(0, 'station/V3', 2, simulation_station_capacity2)
+    w.weights.train_station_sim(1, 'station/V4', 2, simulation_station_capacity2)
     expected = pd.DataFrame(
         {
             'train0': [1, 1, 2, 0, 1, 1],

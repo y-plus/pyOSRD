@@ -51,8 +51,8 @@ def test_step_station_id(
 
     expected = pd.DataFrame(
         {
-            'train0': [np.nan, np.nan, 'station', np.nan, np.nan, np.nan],
-            'train1': [np.nan, np.nan, np.nan, 'station', np.nan, np.nan],
+            'train0': [np.nan, np.nan, 'station/V3', np.nan, np.nan, np.nan],
+            'train1': [np.nan, np.nan, np.nan, 'station/V4', np.nan, np.nan],
         },
         index=schedule_station_capacity2.df.index
     )

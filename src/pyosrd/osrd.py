@@ -92,10 +92,14 @@ class OSRD():
     from .agents import Agent
     from .delays import add_delay, add_delays_in_results, delayed, reset_delays
     from .regulation import add_stop, add_stops
-    from .viz.map import folium_map
+    from .viz.map import folium_map, folium_results
     from .viz.space_time_charts import (
         space_time_chart,
         space_time_chart_plotly,
+    )
+    from .viz.delays_chart import (
+        delays_chart,
+        delays_chart_plotly
     )
     from .modify_simulation import (
         add_train,
@@ -193,21 +197,21 @@ class OSRD():
             if os.path.exists(os.path.join(self.dir, self.infra_json))
             else {}
         )
-
+        
         self.simulation = (
             _read_json(os.path.join(self.dir, self.simulation_json))
             if os.path.exists(os.path.join(self.dir, self.simulation_json))
             else {}
         )
 
-        if self.simulation:
-            self.run()
-
         self.results = (
             _read_json(os.path.join(self.dir, self.results_json))
             if os.path.exists(os.path.join(self.dir, self.results_json))
             else []
         )
+
+        if self.simulation and not self.results:
+            self.run()
 
     def run(self) -> None:
         """run the simulation and store the results in attribute results.
@@ -240,9 +244,39 @@ class OSRD():
             stderr=subprocess.PIPE,
         )
 
+        self.train_track_sections.cache_clear()
+
         try:
             self.results = _read_json(
                 os.path.join(self.dir, self.results_json)
+            )
+        except FileNotFoundError:
+            raise RuntimeError(output.stderr.decode())
+
+    def validate_infra(self) -> None:
+        """Loads the infra in core and validates"
+
+        Raises
+        ------
+        ValueError
+            If missing infra json file.
+        """
+        if (
+            self.infra == {} or self.infra is None
+        ):
+            raise ValueError("Missing infra json file")
+
+        load_dotenv()
+        JAVA = os.getenv('JAVA') or 'java'
+
+        jar_file = files('pyosrd').joinpath('osrd-0213.jar')
+
+        try:
+            output = subprocess.run(
+                f"{JAVA} -jar {jar_file} load-infra "
+                f"--path {os.path.join(self.dir, self.infra_json)} ",
+                shell=True,
+                stderr=subprocess.PIPE,
             )
         except FileNotFoundError:
             raise RuntimeError(output.stderr.decode())
@@ -340,16 +374,22 @@ class OSRD():
             ))
 
         for op in self.infra['operational_points']:
-            for part in op['parts']:
-                points.append(Point(
-                    id=op['id'] + (
-                        f"-{part['track']}" if op_part_tracks
-                        else ''
-                    ),
-                    track_section=part['track'],
-                    position=part['position'],
-                    type='station'
-                ))
+            if op['extensions']['sncf']['ch'] in ['00', 'BV']:
+                for part in op['parts']:
+                    track_section = next(
+                        track 
+                        for track in self.infra['track_sections']
+                        if track['id'] == part['track']
+                    )
+                    name = track_section['extensions']['sncf']['track_name']
+                    if name == 'placeholder_track':
+                        name = track_section['id']
+                    points.append(Point(
+                        id=op['extensions']['identifier']['name'] + f"/{name}",
+                        track_section=part['track'],
+                        position=part['position'],
+                        type='station'
+                    ))
 
         for switch in self.infra['switches']:
             for port in switch['ports'].values():
@@ -451,7 +491,9 @@ class OSRD():
 
         if tracks[0]['direction'] == 'START_TO_STOP':
             offset = (
-                self.track_section_lengths[track_ids[0]]
+                self.track_section_lengths[
+                    self.train_departure(train).track_section
+                ]
                 - self.train_departure(train).position
             )
         else:
@@ -460,11 +502,11 @@ class OSRD():
         for id in track_ids[1:idx_pt_tr]:
             offset += self.track_section_lengths[id]
 
-        if tracks[0:idx_pt_tr][-1]['direction'] == 'START_TO_STOP':
+        if tracks[idx_pt_tr]['direction'] == 'START_TO_STOP':
             offset += point.position
         else:
             offset += (
-                self.track_section_lengths[tracks[0:idx_pt_tr+1][-1]['id']]
+                self.track_section_lengths[point.track_section]
                 - point.position
             )
         return offset
@@ -473,7 +515,7 @@ class OSRD():
         self,
         save: str | None = None,
     ) -> JpegImageFile:
-        """Use mermaid.js to display the infra as a graph of specificpoints
+        """Use mermaid.js to display the infra as a graph of specific points
 
         Parameters
         ----------
@@ -579,69 +621,6 @@ class OSRD():
                 )
         return ts
 
-    @lru_cache()
-    def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
-        """List of tracks for a given train path"""
-
-        if isinstance(train, str):
-            train = self.trains.index(train)
-
-        head_positions = self._head_position(train=train)
-
-        track_sections = list(
-            dict.fromkeys([
-                time["track_section"]
-                for time in head_positions
-            ]))
-
-        # bug fix: if there is no record at a given track,
-        # it won't appear in the list
-        # => insert them by inspecting the links between the tracks
-
-        ts = self._track_section_network
-
-        tracks = track_sections[:1]
-
-        for i, _ in enumerate(track_sections[:-1]):
-            tracks += nx.shortest_path(
-                ts,
-                track_sections[i],
-                track_sections[i+1]
-            )[1:]
-
-        DIRECTION_GIVEN_ENTRY = {
-            'BEGIN': 'START_TO_STOP',
-            'END': 'STOP_TO_START',
-        }
-
-        tracks_directions = []
-
-        if len(tracks) > 1:
-            for i, t in enumerate(tracks):
-                if i == 0:
-                    entry = nx.get_edge_attributes(ts, 'in_by')[
-                        (tracks[i], tracks[i+1])
-                    ]
-                else:
-                    entry = nx.get_edge_attributes(ts, 'in_by')[
-                        (tracks[i-1], tracks[i])
-                    ]
-                tracks_directions.append({
-                    'id': t,
-                    'direction': DIRECTION_GIVEN_ENTRY[entry],
-                })
-        else:
-            direction = 'START_TO_STOP' if (
-                self.train_departure(train).position
-                <= self.train_arrival(train).position
-            ) else 'STOP_TO_START'
-            tracks_directions = [{
-                'id': tracks[0],
-                'direction': direction,
-            }]
-
-        return tracks_directions
-
     def get_point(sim, point_id):
         for point in sim._points():
             if point.id == point_id:
@@ -657,6 +636,7 @@ class OSRD():
             'detector',
             'station',
             'switch',
+            # 'link',
             'arrival',
         ],
     ) -> list[dict[str, Any]]:
@@ -686,7 +666,10 @@ class OSRD():
                 + self._points()
                 + [self.train_arrival(train)]
             )
-            if point.track_section in ids and point.type in types
+            if (
+                point.track_section in ids
+                and point.type in types
+            )
         }
 
         def point_direction(point: Point) -> str:
@@ -755,8 +738,13 @@ class OSRD():
                     path_offset,
                     t
                 ).item()
-
-        return list_
+        
+        points_before_arrival = []
+        for p in list_:
+            points_before_arrival.append(p)
+            if p['type'] == 'arrival':
+                break
+        return points_before_arrival
 
     @property
     def train_lengths(self) -> list[float]:
@@ -778,7 +766,11 @@ class OSRD():
             limit_tvds = []
             limit_tvds.append(route['entry_point']['id'])
             for d in route['release_detectors']:
-                limit_tvds.append(d)
+                if d not in [
+                    route['entry_point']['id'],
+                    route['exit_point']['id']
+                ]:
+                    limit_tvds.append(d)
             limit_tvds.append(route['exit_point']['id'])
             for tvd in [
                 frozenset([limit_tvds[i], limit_tvds[i+1]])
@@ -812,7 +804,8 @@ class OSRD():
                     for p in points[port['track']]
                     if p.type == 'detector'
                 ]
-                detectors.append(detectors_on_track[idx])
+                if detectors_on_track:
+                    detectors.append(detectors_on_track[idx])
 
             for a in combinations(detectors, 2):
                 if set(a) in _tvds:
@@ -978,3 +971,169 @@ class OSRD():
             stop_positions.append(positions)
 
         return stop_positions
+
+    def train_routes(self, train, eco_or_base: str = 'base') -> list[str]:
+        if isinstance(train, str):
+            train = self.trains.index(train)
+
+        group, idx = self._train_schedule_group[
+            self.trains[train]
+        ]
+
+        sim = f'{eco_or_base}_simulations'
+
+        return [
+            route['route']
+            for route in self.results[group][sim][idx]['routing_requirements']
+        ]
+
+    def route_track_sections(
+        self,
+        route_id: str
+    ) -> list[str]:
+
+        SWITCHES_TRACKS = {
+            s['id']: [e['track'] for e in s['ports'].values()]
+            for s in self.infra['switches']
+        }
+
+        route = next(r for r in self.infra['routes'] if r['id'] == route_id)
+
+        curr_track = next(
+            p['track']
+            for p in self.infra['detectors'] + self.infra['buffer_stops']
+            if p['id'] == route['entry_point']['id']
+        )
+
+        if not route['switches_directions']:
+            entry_position = next(
+                p['position']
+                for p in self.infra['detectors'] + self.infra['buffer_stops']
+                if p['id'] == route['entry_point']['id']
+            )
+            exit_position = next(
+                p['position']
+                for p in self.infra['detectors'] + self.infra['buffer_stops']
+                if p['id'] == route['exit_point']['id']
+            )
+            if entry_position < exit_position:
+                direction = 'START_TO_STOP'
+            else:
+                direction = 'STOP_TO_START'
+            return [{'id': curr_track, 'direction': direction}]
+
+        not_visited = set(route['switches_directions'].keys())
+        track_sections = []
+
+        while not_visited:
+            sw = next(
+                switch
+                for switch in self.infra['switches']
+                if curr_track in SWITCHES_TRACKS[switch['id']]
+                and switch['id'] in not_visited
+            )
+            sw_id = sw['id']
+            entry_port = next(
+                p
+                for p, details in sw['ports'].items()
+                if details['track'] == curr_track
+            )
+            switch_direction = route['switches_directions'][sw_id]
+            if not track_sections:
+                direction = (
+                    'START_TO_STOP'
+                    if sw['ports'][entry_port]['endpoint'] == 'END'
+                    else 'STOP_TO_START'
+                )
+                track_sections.append(
+                    {'id': curr_track, 'direction': direction}
+                )
+            exit_port =\
+                SWITCH_EXIT[sw['switch_type']][switch_direction][entry_port]
+            direction = (
+                'START_TO_STOP'
+                if sw['ports'][exit_port]['endpoint'] == 'BEGIN'
+                else 'STOP_TO_START'
+            )
+            curr_track = sw['ports'][exit_port]['track']
+            track_sections.append({'id': curr_track, 'direction': direction})
+            not_visited.remove(sw_id)
+
+        return track_sections
+
+    @lru_cache()
+    def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
+
+        group_id, idx = self._train_schedule_group[
+            self.trains[train]
+        ]
+        group = next(
+            gr
+            for gr in self.simulation['train_schedule_groups']
+            if gr['id'] == group_id
+        )
+        first_track_id = group['waypoints'][0][0]['track_section']
+        last_track_id = group['waypoints'][-1][-1]['track_section']
+        list_of_tracks = []
+        for route_id in self.train_routes(train):
+            for track in self.route_track_sections(route_id):
+                if track not in list_of_tracks:
+                    list_of_tracks.append(track)
+                if track['id'] == last_track_id:
+                    break
+        first_track = next(
+            track
+            for track in list_of_tracks
+            if track['id']==first_track_id
+        )
+        return list_of_tracks[list_of_tracks.index(first_track):]
+
+    def path_length(self, train: int | str) -> float:
+        return self._head_position(train=train)[-1]['path_offset']
+
+    def get_stops(self, train: int | str) -> float:
+
+        if isinstance(train, str):
+            train = self.trains.index(train)
+
+        group, idx = self._train_schedule_group[
+            self.trains[train]
+        ]
+
+        group_idx = _group_idx(self, group)
+
+        return (
+            self.simulation['train_schedule_groups']
+            [group_idx]['schedules'][idx]['stops']
+        )
+
+
+def _group_idx(self, group: str) -> int:
+    return [
+        group['id']
+        for group in self.simulation['train_schedule_groups']
+    ].index(group)
+
+
+SWITCH_EXIT = {
+    'link': {'STATIC': {'A': 'B', 'B': 'A'}},
+    'point_switch': {
+        'A_B1': {'A': 'B1', 'B1': 'A'},
+        'A_B2': {'A': 'B2', 'B2': 'A'},
+    },
+    'crossing': {
+        'STATIC': {
+            'A1': 'B1', 'B1': 'A1',
+            'A2': 'B2', 'B2': 'A2',
+        }
+    },
+    'double_slip_switch': {
+        'A1_B1': {'A1': 'B1', 'B1': 'A1'},
+        'A1_B2': {'A1': 'B2', 'B2': 'A1'},
+        'A2_B1': {'A2': 'B1', 'B1': 'A2'},
+        'A2_B2': {'A2': 'B2', 'B2': 'A2'},
+    }
+}

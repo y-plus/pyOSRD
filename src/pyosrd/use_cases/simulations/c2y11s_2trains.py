@@ -40,7 +40,7 @@ def c2y11s_2trains(
         Location(T[2], 4_990),
         label='train0',
         departure_time=0.,
-    )
+    ).add_standard_single_value_allowance("percentage", 5, )
 
     sim_builder.add_train_schedule(
         Location(T[1], 20),
@@ -48,7 +48,7 @@ def c2y11s_2trains(
         label='train1',
         departure_time=120.,
         # rolling_stock='short_fast_rolling_stock',
-    )
+    ).add_standard_single_value_allowance("percentage", 5, )
 
     built_simulation = sim_builder.build()
     built_simulation.save(os.path.join(dir, simulation_json))

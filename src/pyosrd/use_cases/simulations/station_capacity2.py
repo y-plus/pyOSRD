@@ -30,7 +30,7 @@ def station_capacity2(
 
     infra_builder = InfraBuilder()
     track_sections = [
-        infra_builder.add_track_section(label='T'+str(id), length=1_000)
+        infra_builder.add_track_section(label='T'+str(id), length=1_000, track_name=f'V{id}')
         for id in range(6)
     ]
     track_sections[0].add_buffer_stop(0, label='buffer_stop.0')

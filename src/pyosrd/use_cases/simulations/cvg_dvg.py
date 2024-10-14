@@ -1,5 +1,7 @@
 import os
 
+from haversine import inverse_haversine, Direction as Dir
+
 from railjson_generator import (
     InfraBuilder,
     SimulationBuilder,
@@ -32,7 +34,7 @@ def cvg_dvg(
     infra_builder = InfraBuilder()
 
     T = [
-        infra_builder.add_track_section(label='T'+str(id), length=500)
+        infra_builder.add_track_section(label='T'+str(id), length=500, track_name='T'+str(id),)
         for id in range(6)
     ]
 
@@ -41,19 +43,50 @@ def cvg_dvg(
     for i in [4, 5]:
         T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i-2}')
 
-    infra_builder.add_point_switch(
+    cvg = infra_builder.add_point_switch(
         T[2].begin(),
         T[0].end(),
         T[1].end(),
         label='CVG',
     )
-    infra_builder.add_link(T[2].end(), T[3].begin(), label='L')
-    infra_builder.add_point_switch(
+    
+    CVG_COORDS = (0.21, 45.575988410701974)
+    PINCH = 0.75
+    
+    cvg.set_coords(*CVG_COORDS)
+
+    t0_mid = inverse_haversine(CVG_COORDS[::-1], 250, direction=Dir.NORTHWEST-PINCH, unit='m')[::-1]
+    t0_begin = inverse_haversine(t0_mid[::-1], 250, direction=Dir.WEST, unit='m')[::-1]
+    T[0].set_remaining_coords([t0_begin, t0_mid])
+
+    
+    t1_mid = inverse_haversine(CVG_COORDS[::-1], 250, direction=Dir.SOUTHWEST+PINCH, unit='m')[::-1]
+    t1_begin = inverse_haversine(t1_mid[::-1], 250, direction=Dir.WEST, unit='m')[::-1]
+    T[1].set_remaining_coords([t1_begin, t1_mid])
+
+    link = infra_builder.add_link(T[2].end(), T[3].begin(), label='L')
+    dvg = infra_builder.add_point_switch(
         T[3].end(),
         T[4].begin(),
         T[5].begin(),
         label='DVG',
     )
+
+    link_coords = inverse_haversine(CVG_COORDS[::-1], 500, direction=Dir.EAST, unit='m')[::-1]
+    link.set_coords(*list(link_coords))
+
+    dvg_coords = inverse_haversine(link_coords[::-1], 500, direction=Dir.EAST+.1, unit='m')[::-1]
+    dvg.set_coords(*list(dvg_coords))
+    
+    t4_mid = inverse_haversine(dvg_coords[::-1], 250, direction=Dir.NORTHEAST+PINCH, unit='m')[::-1]
+    t4_end = inverse_haversine(t4_mid[::-1], 250, direction=Dir.EAST, unit='m')[::-1]
+    T[4].set_remaining_coords([t4_mid, t4_end])
+
+    t5_mid = inverse_haversine(dvg_coords[::-1], 250, direction=Dir.SOUTHEAST-PINCH, unit='m')[::-1]
+    t5_end = inverse_haversine(t5_mid[::-1], 250, direction=Dir.EAST, unit='m')[::-1]
+    T[5].set_remaining_coords([t5_mid, t5_end])
+
+
 
     for i, track in enumerate(T):
         d = track.add_detector(

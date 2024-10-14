@@ -1,5 +1,7 @@
 import os
 
+from haversine import inverse_haversine, Direction as Dir
+
 from railjson_generator import (
     InfraBuilder,
 )
@@ -39,13 +41,34 @@ def c2x2(
     for i in [2, 3]:
         T[i].add_buffer_stop(T[i].length, label=f'buffer_stop.{i}')
 
-    infra_builder.add_crossing(
+    cross = infra_builder.add_crossing(
         north=T[0].end(),
         west=T[1].end(),
         east=T[2].begin(),
         south=T[3].begin(),
         label='SW',
     )
+
+    CROSS_COORDS = (0.21, 45.575988410701974)
+    PINCH = 0.75
+
+    cross.set_coords(*CROSS_COORDS)
+
+    t0_mid = inverse_haversine(CROSS_COORDS[::-1], 500, direction=Dir.NORTHWEST-PINCH, unit='m')[::-1]
+    t0_begin = inverse_haversine(t0_mid[::-1], 500, direction=Dir.WEST, unit='m')[::-1]
+    T[0].set_remaining_coords([t0_begin, t0_mid])
+
+    t1_mid = inverse_haversine(CROSS_COORDS[::-1], 500, direction=Dir.SOUTHWEST+PINCH, unit='m')[::-1]
+    t1_begin = inverse_haversine(t1_mid[::-1], 500, direction=Dir.WEST, unit='m')[::-1]
+    T[1].set_remaining_coords([t1_begin, t1_mid])
+
+    t2_mid = inverse_haversine(CROSS_COORDS[::-1], 500, direction=Dir.NORTHEAST+PINCH, unit='m')[::-1]
+    t2_begin = inverse_haversine(t2_mid[::-1], 500, direction=Dir.EAST, unit='m')[::-1]
+    T[2].set_remaining_coords([t2_mid, t2_begin])
+
+    t3_mid = inverse_haversine(CROSS_COORDS[::-1], 500, direction=Dir.SOUTHEAST-PINCH, unit='m')[::-1]
+    t3_begin = inverse_haversine(t3_mid[::-1], 500, direction=Dir.EAST, unit='m')[::-1]
+    T[3].set_remaining_coords([t3_mid, t3_begin])
 
     T[0].add_detector(label='D0', position=980)
     T[0].add_signal(

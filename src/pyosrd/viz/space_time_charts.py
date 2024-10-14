@@ -10,7 +10,7 @@ def _data_and_points_to_plot(
     self,
     train: int,
     eco_or_base: str,
-    points_to_show: str,
+    points_to_show: list[str],
 ) -> tuple[list, dict]:
 
     data = []
@@ -29,9 +29,45 @@ def _data_and_points_to_plot(
                 ),
                 train
             )
-            for record in self._head_position(i)
+            for record in self._head_position(i, eco_or_base)
         ]
-        data.append({"x": t, "y": offset, "label": train_id})
+
+        track_sections = self.train_track_sections(train_id)
+        track_section_ids = [
+            t['id'] for t in track_sections
+        ]
+        for p in self.points_encountered_by_train(train_id):
+            if p ['type'] == 'switch':
+                switch = next(
+                    s for s in self.infra['switches']
+                    if s['id'] == p['id']
+                )
+                port_key = next(
+                    p for p, v in switch['ports'].items()
+                    if v['track'] in track_section_ids
+                )
+                port = switch['ports'][port_key]
+                position = 0 if port['endpoint'] == 'BEGIN' else self.track_section_lengths[port['track']]
+                t.append(p['t_'+eco_or_base])
+                offset.append(
+                    self.offset_in_path_of_train(
+                        Point(
+                            id='',
+                            track_section=port['track'],
+                            type='record',
+                            position=position
+                        ),
+                        train
+                    )
+                )
+        tuples = [
+            t for t in zip(t, offset)
+            if offset is not None
+        ]
+        tuples.sort(key=lambda t: t[0])
+        t_sorted = [t[0] for t in tuples]
+        offset_sorted = [t[1] for t in tuples]            
+        data.append({"x": t_sorted, "y": offset_sorted, "label": train_id})
 
     points = {
         point['id']: point['offset']

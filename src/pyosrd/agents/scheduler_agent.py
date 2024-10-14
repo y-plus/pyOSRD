@@ -3,7 +3,6 @@ import shutil
 
 from dataclasses import dataclass
 
-import numpy as np
 import pandas as pd
 
 from pyosrd import OSRD
@@ -11,6 +10,10 @@ from pyosrd.schedules import (
     Schedule,
     schedule_from_osrd,
     weights as weights_
+)
+from pyosrd.schedules.compare_schedules import (
+    delays_between_schedules,
+    departure_shift_between_schedules
 )
 from pyosrd.agents import Agent
 
@@ -21,7 +24,7 @@ class SchedulerAgent(Agent):
 
     Child classes shoud implement:
 
-    ```python3
+    ```python
     @property
     def regulated_schedule(self) -> Schedule:
         ...
@@ -69,8 +72,8 @@ class SchedulerAgent(Agent):
         self.ref_schedule, self.delayed_schedule =\
             schedule_from_osrd(osrd, delayed=True)
         self.step_has_fixed_duration = (
-            self.step_type == 'switch'
-            if hasattr(self, 'step_type')
+            self.ref_schedule._step_type == 'switch'
+            if hasattr(self.ref_schedule, '_step_type')
             else self.step_has_fixed_duration
         )
         # self.weights = getattr(weights_, weights)(osrd)
@@ -87,37 +90,27 @@ class SchedulerAgent(Agent):
     def regulated_schedule(self) -> Schedule:
         ...
 
-    @property
-    def steps_extra_delays(self) -> pd.DataFrame:
-        return (
-            self.regulated_schedule.durations
-            - self.delayed_schedule.durations
-        ).round(2)
-
     def regulated(self, osrd):
         self.set_schedules_from_osrd(osrd)
         return super().regulated(osrd)
 
-    def stops(self, osrd) -> list[dict[str, any]]:
-        stops = []
+    def departures_to_shift(
+        self: "Agent",
+    ) -> dict[str, float]:
+        rs = self.regulated_schedule
+        return departure_shift_between_schedules(
+            rs,
+            self.delayed_schedule
+        )
 
-        for train in self.steps_extra_delays.columns:
-
-            durations = self.steps_extra_delays[train].replace(0, np.nan)
-            non_zero_durations = durations[durations.notna()].to_dict()
-
-            for zone, duration in non_zero_durations.items():
-                train_idx = osrd.trains.index(train)
-                position = osrd.stop_positions[train_idx][zone]['offset']
-                stops.append(
-                    {
-                        "train": train,
-                        "position": position,
-                        "duration": duration,
-                    }
-                )
-
-        return stops
+    def delays_to_add(
+        self: "Agent",
+    ) -> dict[str, dict[str, float]]:
+        rs = self.regulated_schedule
+        return delays_between_schedules(
+            rs,
+            self.delayed_schedule
+        )
 
     def load_scenario(
         self,
@@ -166,7 +159,6 @@ class SchedulerAgent(Agent):
         """
 
         sim = OSRD(dir="tmp", with_delay=scenario)
-
         self.set_schedules_from_osrd(sim, "all_steps")
 
         df = pd.DataFrame(

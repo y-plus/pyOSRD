@@ -99,14 +99,14 @@ def test_station_capacity2_points_on_tracks(simulation_station_capacity2):
         ],
         "T3": [
             Point(id='L1-3', track_section='T3', position=0, type="link"),  # noqa
-            Point(id='station', track_section='T3', position=790.0, type="station"),  # noqa
+            Point(id='station/V3', track_section='T3', position=790.0, type="station"),  # noqa
             Point(id='S3', track_section='T3', position=800.0, type="signal"),  # noqa
             Point(id='D3', track_section='T3', position=820.0, type="detector"),  # noqa
             Point(id='CVG', track_section='T3', position=1000.0, type="switch"),  # noqa
         ],
         "T4": [
             Point(id='L2-4', track_section='T4', position=0, type="link"),  # noqa
-            Point(id='station', track_section='T4', position=790.0, type="station"),  # noqa
+            Point(id='station/V4', track_section='T4', position=790.0, type="station"),  # noqa
             Point(id='S4', track_section='T4', position=800.0, type="signal"),  # noqa
             Point(id='D4', track_section='T4', position=820.0, type="detector"),  # noqa
             Point(id='CVG', track_section='T4', position=1000.0, type="switch"),  # noqa
@@ -118,7 +118,7 @@ def test_station_capacity2_points_on_tracks(simulation_station_capacity2):
             Point(id='buffer_stop.5', track_section='T5', position=1000.0, type='buffer_stop'),  # noqa
         ],
     }
-
+    print(simulation_station_capacity2.points_on_track_sections())
     assert simulation_station_capacity2.points_on_track_sections() == expected
 
 
@@ -180,7 +180,7 @@ def test_station_capacity2_results_points_encountered_by_train(
         {'id': 'D0', 'offset': 810.0, 'type': 'detector'},
         {'id': 'DVG', 'offset': 990.0, 'type': 'switch'},
         {'id': 'D1', 'offset': 1170.0, 'type': 'detector'},
-        {'id': 'station', 'offset': 2780.0, 'type': 'station'},
+        {'id': 'station/V3', 'offset': 2780.0, 'type': 'station'},
         {'id': 'S3', 'offset': 2790.0, 'type': 'signal'},
         {'id': 'D3', 'offset': 2810.0, 'type': 'detector'},
         {'id': 'CVG', 'offset': 2990.0, 'type': 'switch'},
@@ -202,7 +202,7 @@ def test_station_capacity2_space_time_chart(simulation_station_capacity2):
     assert round(ax.dataLim.ymax) == 3980.
     assert (
         [label._text for label in ax.get_yticklabels()]
-        == ['station', ]
+        == ['station/V3', ]
     )
     assert ax.get_title() == "train0 (base)"
     plt.close()
@@ -221,3 +221,43 @@ def test_station_capacity2_zones(simulation_station_capacity2):
         'D4<->D5': 'CVG',
     }
     assert simulation_station_capacity2.tvd_zones == expected
+
+
+def test_station_capacity2_path_length(simulation_station_capacity2):
+
+    assert simulation_station_capacity2.path_length(0) == 3_980.
+
+
+def test_station_capacity2_train_routes(simulation_station_capacity2):
+
+    assert simulation_station_capacity2.train_routes(0) ==\
+        [
+            'rt.buffer_stop.0->D0',
+            'rt.D0->D3',
+            'rt.D3->buffer_stop.5'
+        ]
+
+
+def test_station_capacity2_route_track_sections(simulation_station_capacity2):
+
+    assert simulation_station_capacity2.route_track_sections(
+        'rt.buffer_stop.0->D0'
+    ) == \
+        [
+            {'id': 'T0', 'direction': 'START_TO_STOP'},
+        ]
+    assert simulation_station_capacity2.route_track_sections(
+        'rt.D0->D3'
+    ) == \
+        [
+            {'id': 'T0', 'direction': 'START_TO_STOP'},
+            {'id': 'T1', 'direction': 'START_TO_STOP'},
+            {'id': 'T3', 'direction': 'START_TO_STOP'},
+        ]
+    assert simulation_station_capacity2.route_track_sections(
+        'rt.D3->buffer_stop.5'
+    ) == \
+        [
+            {'id': 'T3', 'direction': 'START_TO_STOP'},
+            {'id': 'T5', 'direction': 'START_TO_STOP'},
+        ]

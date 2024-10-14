@@ -73,12 +73,12 @@ def test_straight_line_points_on_tracks(simulation_straight_line):
     expected = {
         "T": [
             Point(id='buffer_stop.0', track_section='T', position=0.0, type='buffer_stop'),  # noqa
-            Point(id='stationA', track_section='T', position=460, type='station'),  # noqa
+            Point(id='stationA/T', track_section='T', position=460, type='station'),  # noqa
             Point(id='SA', track_section='T', position=480, type="signal"),  # noqa
             Point(id='DA', track_section='T', position=500, type="detector"),  # noqa
             Point(id='DB', track_section='T', position=9_500, type="detector"),  # noqa
             Point(id='SB', track_section='T', position=9_520, type="signal"),  # noqa
-            Point(id='stationB', track_section='T', position=9_540, type='station'),  # noqa
+            Point(id='stationB/T', track_section='T', position=9_540, type='station'),  # noqa
             Point(id='buffer_stop.1', track_section='T', position=10_000, type='buffer_stop'),  # noqa
         ],
     }
@@ -134,11 +134,11 @@ def test_straight_line_results_points_encountered_by_train(
     ]
     expected = [
         {'id': 'departure_train0', 'offset': 0.0, 'type': 'departure'},
-        {'id': 'stationA', 'offset': 0.0, 'type': 'station'},
+        {'id': 'stationA/T', 'offset': 0.0, 'type': 'station'},
         {'id': 'SA', 'offset': 20.0, 'type': 'signal'},
         {'id': 'DA', 'offset': 40.0, 'type': 'detector'},
         {'id': 'DB', 'offset': 9_040.0, 'type': 'detector'},
-        {'id': 'stationB', 'offset': 9_080.0, 'type': 'station'},
+        {'id': 'stationB/T', 'offset': 9_080.0, 'type': 'station'},
         {'id': 'arrival_train0', 'offset': 9_080.0, 'type': 'arrival'},
     ]
     assert expected == points
@@ -156,11 +156,11 @@ def test_straight_line_results_points_encountered_by_train_revert(
     ]
     expected = [
         {'id': 'departure_train1', 'offset': 0.0, 'type': 'departure'},
-        {'id': 'stationB', 'offset': 0.0, 'type': 'station'},
+        {'id': 'stationB/T', 'offset': 0.0, 'type': 'station'},
         {'id': 'SB', 'offset': 20.0, 'type': 'signal'},
         {'id': 'DB', 'offset': 40.0, 'type': 'detector'},
         {'id': 'DA', 'offset': 9_040.0, 'type': 'detector'},
-        {'id': 'stationA', 'offset': 9_080.0, 'type': 'station'},
+        {'id': 'stationA/T', 'offset': 9_080.0, 'type': 'station'},
         {'id': 'arrival_train1', 'offset': 9_080.0, 'type': 'arrival'},
     ]
     assert expected == points
@@ -178,7 +178,7 @@ def test_straight_line_space_time_chart(simulation_straight_line):
     assert round(ax.dataLim.ymax) == 9_080.
     assert (
         [label._text for label in ax.get_yticklabels()]
-        == ['stationA', 'stationB']
+        == ['stationA/T', 'stationB/T']
     )
     assert ax.get_title() == "train0 (base)"
     plt.close()
@@ -199,3 +199,27 @@ def test_straight_line_tvd_zones(simulation_straight_line):
         'DB<->buffer_stop.1': 'DB<->buffer_stop.1'
     }
     assert simulation_straight_line.tvd_zones == expected
+
+
+def test_straight_line_path_length(simulation_straight_line):
+
+    assert simulation_straight_line.path_length(0) == 9_080
+
+
+def test_straight_line_train_routes(simulation_straight_line):
+
+    assert simulation_straight_line.train_routes(0) ==\
+        [
+            'rt.buffer_stop.0->DA',
+            'rt.DA->buffer_stop.1'
+        ]
+
+
+def test_straight_line_route_track_sections(simulation_straight_line):
+
+    assert simulation_straight_line.route_track_sections(
+        'rt.buffer_stop.0->DA'
+    ) == \
+        [
+            {'id': 'T', 'direction': 'START_TO_STOP'},
+        ]

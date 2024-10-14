@@ -21,14 +21,15 @@ def multistation_multitrains(
 
                                         stations
 
-                                     ┎S1           S2┐
-                                ------D1---(t1)----D2--
-                              /                        \
+                                     S1┐         ┎S2
+                                -----D1---(t1)----D2--
+                        ┎S0   /                        \  S5┐
         ----(track_in)---D0--<DVG                    CVG>-D5-----(track_out)-
-                              \     ┎S3           S4┐  /
-                                -----D3----(t2)---D4---
+                              \      S3┐         ┎S4  /
+                                -----D3----(t2)---D4--
 
-    """  # noqav
+
+    """  # noqa
 
     infra = multistation(dir, infra_json, num_stations)
 
@@ -41,7 +42,7 @@ def multistation_multitrains(
         locations = [Location(T[0], 500)]
         for j in range(0, num_stations):
             locations.append(Location(T[1+3*j+odds], 500))
-        sim_builder.add_train_schedule(
+        train = sim_builder.add_train_schedule(
             *locations,
             label='train'+str(i),
             departure_time=i*200.+0.,

@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies=[
     'gymnasium',
-    'networkx >= 3.0',
+    'networkx >= 3.3',
     'matplotlib>= 3.6.3',
     'pandas>=2.2.1',
     "python-dotenv",
@@ -30,6 +30,7 @@ dependencies=[
     'railjson_generator @ git+ssh://git@github.com/osrd-project/osrd.git@v0.2.13#subdirectory=python/railjson_generator',  # noqa
     'ipython',
     'methodtools',
+    'distinctipy',
 ]
 
 [project.urls]

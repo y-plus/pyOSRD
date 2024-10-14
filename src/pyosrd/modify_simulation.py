@@ -184,6 +184,14 @@ def cancel_train(
             if schedule['id'] != train
         ]
 
+    new_schedule_groups = [
+        schedule_group
+        for schedule_group in self.simulation['train_schedule_groups']
+        if schedule_group['schedules'] != []
+    ]
+
+    self.simulation['train_schedule_groups'] = new_schedule_groups
+
     with open(os.path.join(self.dir, self.simulation_json), 'w') as f:
         json.dump(self.simulation, f)
 

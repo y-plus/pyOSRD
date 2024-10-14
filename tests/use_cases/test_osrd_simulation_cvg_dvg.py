@@ -81,14 +81,14 @@ def test_cvg_dvg_points_on_tracks(simulation_cvg_dvg):
     expected = {
         "T0": [
             Point(id='buffer_stop.0', track_section='T0', position=0.0, type='buffer_stop'),  # noqa
-            Point(track_section='T0', id="station0", position=300, type='station'),  # noqa
+            Point(track_section='T0', id="station0/T0", position=300, type='station'),  # noqa
             Point(track_section='T0', id="S0", position=430, type='signal'),  # noqa
             Point(track_section='T0', id="D0", position=450, type='detector'),  # noqa
             Point(track_section='T0', id="CVG", position=500, type='switch'),  # noqa
         ],
         "T1": [
             Point(id='buffer_stop.1', track_section='T1', position=0.0, type='buffer_stop'),  # noqa
-            Point(track_section='T1', id="station0", position=300, type='station'),  # noqa
+            Point(track_section='T1', id="station0/T1", position=300, type='station'),  # noqa
             Point(track_section='T1', id="S1", position=430, type='signal'),  # noqa
             Point(track_section='T1', id="D1", position=450, type='detector'),  # noqa
             Point(track_section='T1', id="CVG", position=500, type='switch'),  # noqa
@@ -109,14 +109,14 @@ def test_cvg_dvg_points_on_tracks(simulation_cvg_dvg):
             Point(track_section='T4', id="DVG", position=0, type='switch'),  # noqa
             Point(track_section='T4', id="D4", position=50, type='detector'),  # noqa
             Point(track_section='T4', id="S4", position=70, type='signal'),  # noqa
-            Point(track_section='T4', id="station1", position=480, type='station'),  # noqa
+            Point(track_section='T4', id="station1/T4", position=480, type='station'),  # noqa
             Point(id='buffer_stop.2', track_section='T4', position=500.0, type='buffer_stop'),  # noqa
         ],
         "T5": [
             Point(track_section='T5', id="DVG", position=0, type='switch'),  # noqa
             Point(track_section='T5', id="D5", position=50, type='detector'),  # noqa
             Point(track_section='T5', id="S5", position=70, type='signal'),  # noqa
-            Point(track_section='T5', id="station1", position=480, type='station'),  # noqa
+            Point(track_section='T5', id="station1/T5", position=480, type='station'),  # noqa
             Point(id='buffer_stop.3', track_section='T5', position=500.0, type='buffer_stop'),  # noqa
         ],
     }
@@ -219,7 +219,7 @@ def test_cvg_dvg_results_pts_encountered_by_train(simulation_cvg_dvg):
     ]
     expected = [
         {'id': 'departure_train0', 'offset': 0.0, 'type': 'departure'},
-        {'id': 'station0', 'offset': 0.0, 'type': 'station'},
+        {'id': 'station0/T0', 'offset': 0.0, 'type': 'station'},
         {'id': 'S0', 'offset': 130.0, 'type': 'signal'},
         {'id': 'D0', 'offset': 150.0, 'type': 'detector'},
         {'id': 'CVG', 'offset': 200.0, 'type': 'switch'},
@@ -228,7 +228,7 @@ def test_cvg_dvg_results_pts_encountered_by_train(simulation_cvg_dvg):
         {'id': 'D3', 'offset': 1150.0, 'type': 'detector'},
         {'id': 'DVG', 'offset': 1200.0, 'type': 'switch'},
         {'id': 'D4', 'offset': 1250.0, 'type': 'detector'},
-        {'id': 'station1', 'offset': 1680.0, 'type': 'station'},
+        {'id': 'station1/T4', 'offset': 1680.0, 'type': 'station'},
         {'id': 'arrival_train0', 'offset': 1690.0, 'type': 'arrival'},
     ]
     assert points == expected
@@ -243,7 +243,7 @@ def test_cvg_dvg_space_time_chart(simulation_cvg_dvg):
     assert round(ax.dataLim.ymax) == (500. - 300.) + 2 * 500. + 490.
     assert (
         [label._text for label in ax.get_yticklabels()]
-        == ['station0', 'station1']
+        == ['station0/T0', 'station1/T4']
     )
     assert ax.get_title() == "train0 (base)"
     plt.close()
@@ -272,7 +272,7 @@ def test_cvg_dvg_stop_positions(simulation_cvg_dvg):
             'D0<->buffer_stop.0': {
                 'type': 'station',
                 'offset': 0.0,
-                'id': 'station0'
+                'id': 'station0/T0'
             },
             'CVG': {'type': 'switch', 'offset': None},
             'D2<->D3': {'type': 'signal', 'offset': 1130.0, 'id': 'D2'},
@@ -280,24 +280,57 @@ def test_cvg_dvg_stop_positions(simulation_cvg_dvg):
             'D4<->buffer_stop.2': {
                 'type': 'station',
                 'offset': 1680.0,
-                'id': 'station1',
+                'id': 'station1/T4',
             }
         },
         {
             'D1<->buffer_stop.1': {
                 'type': 'station',
                 'offset': 0.0,
-                'id': 'station0',
+                'id': 'station0/T1',
             },
             'CVG': {'type': 'switch', 'offset': None},
             'D2<->D3': {'type': 'signal', 'offset': 1130.0, 'id': 'D2'},
             'DVG': {'type': 'switch', 'offset': None},
             'D5<->buffer_stop.3': {
                 'type': 'station',
-                'offset': None,
-                'id': 'station1',
+                'offset': 1680.0,
+                'id': 'station1/T5',
             }
         }
     ]
 
     assert simulation_cvg_dvg.stop_positions == expected
+
+
+def test_cvg_dvg_path_length(simulation_cvg_dvg):
+
+    assert simulation_cvg_dvg.path_length(0) == 1_690.
+
+
+def test_cvg_dvg_train_routes(simulation_cvg_dvg):
+
+    assert simulation_cvg_dvg.train_routes(0) ==\
+        [
+            'rt.buffer_stop.0->D0',
+            'rt.D0->D3',
+            'rt.D3->buffer_stop.2'
+        ]
+
+
+def test_cvg_dvg_route_track_sections(simulation_cvg_dvg):
+
+    assert simulation_cvg_dvg.route_track_sections(
+        'rt.buffer_stop.0->D0'
+    ) == \
+        [
+            {'id': 'T0', 'direction': 'START_TO_STOP'},
+        ]
+    assert simulation_cvg_dvg.route_track_sections(
+        'rt.D0->D3'
+    ) == \
+        [
+            {'id': 'T0', 'direction': 'START_TO_STOP'},
+            {'id': 'T2', 'direction': 'START_TO_STOP'},
+            {'id': 'T3', 'direction': 'START_TO_STOP'},
+        ]

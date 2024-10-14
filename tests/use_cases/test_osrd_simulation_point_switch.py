@@ -264,3 +264,34 @@ def test_point_switch_tvd_zones(simulation_point_switch):
         'D2<->buffer_stop.2': 'D2<->buffer_stop.2',
     }
     assert simulation_point_switch.tvd_zones == expected
+
+
+def test_point_switch_path_length(simulation_point_switch):
+
+    assert simulation_point_switch.path_length(0) == 19_900.
+
+
+def test_point_switch_train_routes(simulation_point_switch):
+
+    assert simulation_point_switch.train_routes(0) ==\
+        [
+            'rt.buffer_stop.0->D0',
+            'rt.D0->buffer_stop.1'
+        ]
+
+
+def test_point_switch_route_track_sections(simulation_point_switch):
+
+    assert simulation_point_switch.route_track_sections(
+        'rt.buffer_stop.0->D0'
+    ) == \
+        [
+            {'id': 'T0', 'direction': 'START_TO_STOP'},
+        ]
+    assert simulation_point_switch.route_track_sections(
+        'rt.D0->buffer_stop.1'
+    ) == \
+        [
+            {'id': 'T0', 'direction': 'START_TO_STOP'},
+            {'id': 'T1', 'direction': 'START_TO_STOP'},
+        ]
