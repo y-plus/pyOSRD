@@ -428,3 +428,35 @@ def stations(self) -> list[str]:
         .index
         .tolist()
     )
+
+
+def next_switch(
+    self,
+    train: int | str,
+    zone: int | str,
+) -> str | None:
+    """Previous switch for given train and zone
+    Parameters
+    ----------
+    train : int | str
+        Train index or label
+    zone : int | str
+        Zone label
+    Returns
+    -------
+    str | None
+       Zone label for previous switch
+    """
+    if isinstance(train, str):
+        train = self.trains.index(train)
+    if zone not in self.path(train=train):
+        return
+    idx = self.path(train=train).index(zone)
+    zones = [
+        z
+        for z in self.path(train=train)[idx:][::-1]
+        if self.step_type.loc[z, self.trains[train]] == 'switch'
+    ]
+    if zones:
+        return zones[0]
+    return
