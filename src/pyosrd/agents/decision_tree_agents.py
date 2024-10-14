@@ -2,6 +2,7 @@ import copy
 
 import gymnasium as gym
 import networkx as nx
+import pandas as pd
 
 from gymnasium import spaces
 from ortools.linear_solver import pywraplp
@@ -33,6 +34,9 @@ def apply_dispatch_option(
         switch_change_delay=switch_change_delay
     ).earliest_conflict()
 
+    if not first_zone:
+        return schedule, -1, -1
+
     trains = ref_schedule.trains_order_in_zone(train1, train2, first_zone)
 
     priority_train_idx, zone_fn = option.values()
@@ -43,6 +47,7 @@ def apply_dispatch_option(
     still_conflicted = True
 
     while still_conflicted:
+
         zone = new_schedule.with_interlocking_constraints(
                 n_blocks_between_trains=n_blocks_between_trains,
                 switch_change_delay=switch_change_delay
@@ -59,23 +64,33 @@ def apply_dispatch_option(
                     other_train
                 ]
             )
-        ) if new_schedule.path(priority_train).index(zone) != 0 else new_schedule
+        ) if new_schedule.path(priority_train).index(zone) != 0\
+            else new_schedule
 
-        # if (
-        #     zone_fn in ['previous_signal', 'previous_station']
-        #     and new_schedule.path(other_train).index(zone) == 0
-        # ):
-        #     new_schedule = new_schedule.shift_train_departure(
-        #         other_train,
-        #         (
-        #             new_schedule.ends.loc[
-        #                 zone,
-        #                 priority_train
-        #             ] - starts.loc[zone, other_train]
-        #         )
-        #     )
+        if (
+            zone_fn in ['previous_signal', 'previous_station']
+            and new_schedule.path(other_train).index(zone) == 0
+        ):
 
-        if wait_at := getattr(after_conflict, zone_fn)(other_train, zone):
+            new_schedule = new_schedule.shift_train_departure(
+                other_train,
+                (
+                    new_schedule.ends.loc[
+                        zone,
+                        priority_train
+                    ] - starts.loc[zone, other_train]
+                )
+            )
+
+            new_schedule = speeds_up_to_catch_up(
+                new_schedule,
+                other_train,
+                zone,
+                priority_train,
+                ref_schedule
+            )
+
+        elif wait_at := getattr(after_conflict, zone_fn)(other_train, zone):
             # TODO: Définition de wait_at remonter avant la boucle while ?
             if new_schedule.is_a_point_switch(
                 priority_train,
@@ -93,6 +108,14 @@ def apply_dispatch_option(
                 n_blocks_between_trains=n_blocks_between_trains,
                 switch_change_delay=switch_change_delay,
             )
+
+            new_schedule = speeds_up_to_catch_up(
+                new_schedule,
+                other_train,
+                zone,
+                priority_train,
+                ref_schedule
+            )
         else:
             new_schedule = schedule
             break
@@ -103,6 +126,66 @@ def apply_dispatch_option(
         ).are_conflicted(priority_train, other_train)
 
     return new_schedule, priority_train, other_train
+
+
+def speeds_up_to_catch_up(
+    schedule: Schedule,
+    train: int | str,
+    action_zone: str,
+    priority_train: int | str,
+    ref_schedule: Schedule
+) -> Schedule:
+
+    if isinstance(train, int):
+        train = schedule.trains[train]
+
+    if isinstance(priority_train, int):
+        priority_train = schedule.trains[priority_train]
+
+    new_schedule = copy.deepcopy(schedule)
+    solver = pywraplp.Solver.CreateSolver("GLOP")
+    if not solver:
+        return
+
+    if next_station := schedule.next_station(train, action_zone):
+        path = schedule.path(train)
+        zones = path[path.index(action_zone):path.index(next_station)+1]
+        t_in, t_out = dict(), dict()
+        mins_t_in = schedule.ends[priority_train].to_dict()
+        min_durations = schedule.min_durations[train].to_dict()
+        starts = schedule.starts[train].to_dict()
+        ends = schedule.ends[train].to_dict()
+
+        for i, zone in enumerate(zones):
+            t_in[zone] =\
+                solver.NumVar(mins_t_in[zone], solver.infinity(), f"t_in_{zone}")
+            t_out[zone] = solver.NumVar(0, solver.infinity(), f"t_out_{zone}")
+            solver.Add(t_out[zone] - t_in[zone] >= min_durations[zone])
+            if i > 0:
+                previous_zone = zones[zones.index(zone)-1]
+                solver.Add(
+                    t_in[zone] ==
+                    t_out[previous_zone]
+                    - (ends[previous_zone] - starts[zone])
+                )
+            if zone == path[0]:
+                solver.Add(
+                    t_in[zone] == t_out[zone] - (ends[zone] - starts[zone])
+                )
+        solver.Minimize(t_in[zones[-1]])
+        status = solver.Solve()
+
+        if status == pywraplp.Solver.OPTIMAL:
+            new_times = pd.DataFrame(
+                    {
+                        's': [t_in[z].solution_value() for z in zones],
+                        'e': [t_out[z].solution_value() for z in zones]
+                    },
+                    index=zones
+                )
+            new_schedule._df.loc[zones, train] = new_times.values
+
+    return new_schedule
 
 
 class TrainsDispatchingEnv(gym.Env):
@@ -117,6 +200,7 @@ class TrainsDispatchingEnv(gym.Env):
         self._ref_schedule = ref_schedule
         self._delayed_schedule = delayed_schedule
         self._schedule = delayed_schedule
+        self._stations = self._schedule.stations
         self._n_blocks_between_trains = n_blocks_between_trains
         self._switch_change_delay = switch_change_delay
 
@@ -132,7 +216,11 @@ class TrainsDispatchingEnv(gym.Env):
 
     @property
     def stations(self):
-        return self._schedule.stations
+        return self._stations
+
+    @stations.setter
+    def stations(self, station_names: list[str]) -> None:
+        self._stations = station_names
 
     def calculate_reward(self):
         total_delay = 0
@@ -282,10 +370,10 @@ def branch_and_cut(
         max_node=0
     )
     rewards = [
-            (node, tree.nodes[node]['reward'])
-            for node in tree.nodes
-            if tree.nodes[node]['done'] and tree.nodes[node]['valid']
-        ]
+        (node, tree.nodes[node]['reward'])
+        for node in tree.nodes
+        if tree.nodes[node]['done'] and tree.nodes[node]['valid']
+    ]
     best_node, best_reward = sorted(
         rewards,
         key=lambda x: -x[1]
