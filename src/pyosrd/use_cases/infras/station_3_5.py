@@ -31,7 +31,7 @@ def station_3_5(
 
     # Station 3-5
 
-    t1bis = infra_builder.add_track_section(
+    t2 = infra_builder.add_track_section(
         label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
         track_name='V1bis',
         line_name=line_name,
@@ -49,7 +49,7 @@ def station_3_5(
     )
 
 
-    t2 = infra_builder.add_track_section(
+    t1bis = infra_builder.add_track_section(
         label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
         track_name='V2',
         line_name=line_name,
@@ -57,38 +57,38 @@ def station_3_5(
         length=None,
     )
     
-    t1bis.add_buffer_stop(0, label='bs.1bis.south')
+    t2.add_buffer_stop(0, label='bs.1bis.south')
     t1.add_buffer_stop(0, label='bs.1.south')
-    t2.add_buffer_stop(0, label='bs.2.south')
+    t1bis.add_buffer_stop(0, label='bs.2.south')
 
-    t1bis.coordinates[0] = (0.2, 45.575)
+    t2.coordinates[0] = (0.2, 45.575)
     t1.coordinates[0] = (0.20005, 45.575)
-    t2.coordinates[0] = (0.2001, 45.575)
+    t1bis.coordinates[0] = (0.2001, 45.575)
 
-    extend_track(t1bis, 300, GeoDirection.NORTH)
-    extend_track(t1, 300, GeoDirection.NORTH)
     extend_track(t2, 300, GeoDirection.NORTH)
+    extend_track(t1, 300, GeoDirection.NORTH)
+    extend_track(t1bis, 300, GeoDirection.NORTH)
 
-
-    t1bis, t1, t2 = build_station_3_5(
+    t2, t1, t1bis = build_station_3_5(
         infra_builder,
-        t1bis=t1bis,
-        t1=t1,
-        t2=t2,
+        track_in=t2,
+        track_inout=t1,
+        track_out=t1bis,
         geo_direction=GeoDirection.NORTH,
         station_name='A',
         signals_after=False
     )
 
     # Terminations if needed
-    extend_track(t1bis, 50, GeoDirection.NORTH)
-    extend_track(t1, 50, GeoDirection.NORTH)
     extend_track(t2, 50, GeoDirection.NORTH)
+    extend_track(t1, 50, GeoDirection.NORTH)
+    extend_track(t1bis, 50, GeoDirection.NORTH)
 
-    build_blocks(t1bis, 2, geo_direction=GeoDirection.NORTH, forward=True, backward=False)
+    build_blocks(t2, 2, geo_direction=GeoDirection.NORTH, forward=True, backward=False)
     build_blocks(t1, 2, geo_direction=GeoDirection.NORTH, forward=True, backward=True)
-    build_blocks(t2, 2, geo_direction=GeoDirection.NORTH, forward=False, backward=True)
-    t1bis.add_buffer_stop(t1bis.length, label='bs.1bis.north')
+    build_blocks(t1bis, 2, geo_direction=GeoDirection.NORTH, forward=False, backward=True)
+
+    t2.add_buffer_stop(t2.length, label='bs.2.north')
 
 
     ## Build and save

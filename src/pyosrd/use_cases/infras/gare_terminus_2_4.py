@@ -52,8 +52,8 @@ def gare_terminus_2_4(
         'V2',
         'V2',
         'V4'
-
     ]
+
     T = [
         infra_builder.add_track_section(
             label='T'+str(i),

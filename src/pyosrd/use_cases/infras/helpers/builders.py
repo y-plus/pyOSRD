@@ -368,197 +368,197 @@ def build_station(
 
 def build_station_3_5(
     infra_builder: InfraBuilder,
-    t1bis: TrackSection,
-    t1: TrackSection,
-    t2: TrackSection,
+    track_in: TrackSection,
+    track_inout: TrackSection,
+    track_out: TrackSection,
     station_name: str,
     geo_direction: GeoDirection | float = GeoDirection.EAST,
     signals_after: bool = True
 ) -> tuple[TrackSection, TrackSection, TrackSection]:
 
-    extend_track(t1bis, 60, geo_direction)
-    extend_track(t1, 60, geo_direction)
-    extend_track(t2, 60, geo_direction)
+    extend_track(track_in, 60, geo_direction)
+    extend_track(track_inout, 60, geo_direction)
+    extend_track(track_out, 60, geo_direction)
 
     add_carre_with_detector(
-        t1bis,
-        position=t1bis.length - DISTANCE_SIGNAL_SWITCH,
+        track_in,
+        position=track_in.length - DISTANCE_SIGNAL_SWITCH,
         label=f"entree_gare.{station_name}.1bis",
         direction=Direction.START_TO_STOP,
     )
     add_carre_with_detector(
-        t1,
-        position=t1.length - DISTANCE_SIGNAL_SWITCH,
+        track_inout,
+        position=track_inout.length - DISTANCE_SIGNAL_SWITCH,
         label=f"entree_gare.{station_name}.1",
         direction=Direction.START_TO_STOP,
     )
 
-    t1, t2 = build_junction(
+    track_inout, track_out = build_junction(
         infra_builder=infra_builder,
-        track_in_short=t1,
-        track_in_long=t2,
+        track_in_short=track_inout,
+        track_in_long=track_out,
         geo_direction=geo_direction,
         length_after=5,
         length_before=5,
         length_junction=20
     )
-    extend_track(t1bis, 30, geo_direction)
-    t1.add_detector(DISTANCE_SIGNAL_DETECTOR)
-    t2.add_detector(DISTANCE_SIGNAL_DETECTOR)
+    extend_track(track_in, 30, geo_direction)
+    track_inout.add_detector(DISTANCE_SIGNAL_DETECTOR)
+    track_out.add_detector(DISTANCE_SIGNAL_DETECTOR)
 
-    t1, t1bis = build_junction(
+    track_inout, track_in = build_junction(
         infra_builder=infra_builder,
-        track_in_short=t1,
-        track_in_long=t1bis,
+        track_in_short=track_inout,
+        track_in_long=track_in,
         geo_direction=geo_direction,
         length_after=5,
         length_before=5,
         length_junction=20
     )
-    extend_track(t2, 30, geo_direction)
-    t1bis.add_detector(5)
-    t1.add_detector(DISTANCE_SIGNAL_DETECTOR)
+    extend_track(track_out, 30, geo_direction)
+    track_in.add_detector(5)
+    track_inout.add_detector(DISTANCE_SIGNAL_DETECTOR)
 
-    t1bis, t1 = build_junction(
+    track_in, track_inout = build_junction(
         infra_builder=infra_builder,
-        track_in_short=t1bis,
-        track_in_long=t1,
+        track_in_short=track_in,
+        track_in_long=track_inout,
         geo_direction=geo_direction,
         length_after=5,
         length_before=5,
         length_junction=20
     )
-    extend_track(t2, 30, geo_direction)
-    t1bis.add_detector(DISTANCE_SIGNAL_DETECTOR)
-    t1.add_detector(5)
+    extend_track(track_out, 30, geo_direction)
+    track_in.add_detector(DISTANCE_SIGNAL_DETECTOR)
+    track_inout.add_detector(5)
 
-    t2, t1 = build_junction(
+    track_out, track_inout = build_junction(
         infra_builder=infra_builder,
-        track_in_short=t2,
-        track_in_long=t1,
+        track_in_short=track_out,
+        track_in_long=track_inout,
         geo_direction=geo_direction,
         length_after=15,
         length_before=5,
         length_junction=20
     )
-    extend_track(t1bis, 40, geo_direction)
-    t2.add_detector(20)
+    extend_track(track_in, 40, geo_direction)
+    track_out.add_detector(20)
 
-    t1bis = build_station(
+    track_in = build_station(
         infra_builder=infra_builder,
-        track_in=t1bis,
+        track_in=track_in,
         station_name=station_name,
         geo_direction=geo_direction,
         curves=(True, False),
-        track_names=['V5', 'V3'],
-        bv_as_op=False,
-        length_after=10
-    )
-    v3 = infra_builder.infra.track_sections[-3]
-    v5 = infra_builder.infra.track_sections[-2]
-
-    t2 = build_station(
-        infra_builder=infra_builder,
-        track_in=t2,
-        station_name=station_name,
-        geo_direction=geo_direction,
-        curves=(False, True),
-        track_names=['V2', 'V4'],
-        forward=False,
-        backward=True,
+        track_names=['V4', 'V2'],
         bv_as_op=False,
         length_after=10
     )
     v2 = infra_builder.infra.track_sections[-3]
     v4 = infra_builder.infra.track_sections[-2]
 
+    track_out = build_station(
+        infra_builder=infra_builder,
+        track_in=track_out,
+        station_name=station_name,
+        geo_direction=geo_direction,
+        curves=(False, True),
+        track_names=['V3', 'V5'],
+        forward=False,
+        backward=True,
+        bv_as_op=False,
+        length_after=10
+    )
+    v5 = infra_builder.infra.track_sections[-3]
+    v3 = infra_builder.infra.track_sections[-2]
+
     station = infra_builder.add_operational_point(station_name)
     for v in [v2, v3, v4, v5]:
         station.add_part(v, v.length/2)
 
-    extend_track(t1, 810, geo_direction)
-    station.add_part(t1, 415)
+    extend_track(track_inout, 810, geo_direction)
+    station.add_part(track_inout, 415)
 
     add_carre_with_detector(
-        t1,
+        track_inout,
         position=65,
         direction=Direction.STOP_TO_START,
-        label=f'{station_name}.V1.s'
+        label=f'{station_name}.{track_inout.track_name}.s'
     )
     add_carre_with_detector(
-        t1,
+        track_inout,
         position=765,
         direction=Direction.START_TO_STOP,
-        label=f'{station_name}.V1.e'
+        label=f'{station_name}.{track_inout.track_name}.e'
     )
 
-    t2.add_detector(position=10)
-    t1, t2 = build_junction(
+    track_out.add_detector(position=10)
+    track_inout, track_out = build_junction(
         infra_builder=infra_builder,
-        track_in_short=t1,
-        track_in_long=t2,
+        track_in_short=track_inout,
+        track_in_long=track_out,
         geo_direction=geo_direction,
         length_after=5,
         length_before=5,
         length_junction=20
     )
-    extend_track(t1bis, 30, geo_direction,)
-    t1.add_detector(20)
+    extend_track(track_in, 30, geo_direction,)
+    track_inout.add_detector(20)
 
-    t1bis.add_detector(30)
-    t1, t1bis = build_junction(
+    track_in.add_detector(30)
+    track_inout, track_in = build_junction(
         infra_builder=infra_builder,
-        track_in_short=t1,
-        track_in_long=t1bis,
+        track_in_short=track_inout,
+        track_in_long=track_in,
         geo_direction=geo_direction,
         length_after=5,
         length_before=5,
         length_junction=20
     )
-    extend_track(t2, 30, geo_direction)
-    t1bis.add_detector(5)
-    t1.add_detector(20)
-    t2.add_detector(30)
+    extend_track(track_out, 30, geo_direction)
+    track_in.add_detector(5)
+    track_inout.add_detector(20)
+    track_out.add_detector(30)
 
-    t1bis, t1 = build_junction(
+    track_in, track_inout = build_junction(
         infra_builder=infra_builder,
-        track_in_short=t1bis,
-        track_in_long=t1,
+        track_in_short=track_in,
+        track_in_long=track_inout,
         geo_direction=geo_direction,
         length_after=5,
         length_before=5,
         length_junction=20
     )
-    extend_track(t2, 30, geo_direction)
-    t1.add_detector(5)
-    t1bis.add_detector(25)
+    extend_track(track_out, 30, geo_direction)
+    track_inout.add_detector(5)
+    track_in.add_detector(25)
 
-    t2, t1 = build_junction(
+    track_out, track_inout = build_junction(
         infra_builder=infra_builder,
-        track_in_short=t2,
-        track_in_long=t1,
+        track_in_short=track_out,
+        track_in_long=track_inout,
         geo_direction=geo_direction,
         length_after=55,
         length_before=5,
         length_junction=20
     )
-    extend_track(t1bis, 80, geo_direction)
+    extend_track(track_in, 80, geo_direction)
 
     if signals_after:
         add_carre_with_detector(
-            t1,
+            track_inout,
             position=DISTANCE_SIGNAL_SWITCH,
             direction=Direction.STOP_TO_START,
             label=f"sortie_gare.{station_name}.1"
         )
         add_carre_with_detector(
-            t2,
+            track_out,
             position=DISTANCE_SIGNAL_SWITCH,
             direction=Direction.STOP_TO_START,
             label=f"entree_gare.{station_name}.2"
     )
 
-    return t1bis, t1, t2
+    return track_in, track_inout, track_out
 
 def build_terminal_station_3_5(
     infra_builder: InfraBuilder,
@@ -589,7 +589,7 @@ def build_terminal_station_3_5(
         label=f'{station_name}.inout'
     )
 
-    v5, track_inout = build_junction(
+    v4, track_inout = build_junction(
         infra_builder=infra_builder,
         track_in_short=track_out,
         track_in_long=track_inout,
@@ -598,12 +598,12 @@ def build_terminal_station_3_5(
         length_after=5,
         length_junction=20
     )
-    v5.track_name = 'V5'
+    v4.track_name = 'V4'
     extend_track(track_in, 30, geo_direction=geo_direction)
-    v5.add_detector(40)
+    v4.add_detector(40)
     track_inout.add_detector(10)
 
-    v4, track_inout = build_junction(
+    v5, track_inout = build_junction(
         infra_builder=infra_builder,
         track_in_short=track_in,
         track_in_long=track_inout,
@@ -612,15 +612,15 @@ def build_terminal_station_3_5(
         length_after=5,
         length_junction=20
     )
-    v4.add_detector(30)
-    v4.track_name = 'V4'
-    extend_track(v5, 20, geo_direction=geo_direction)
+    v5.add_detector(30)
+    v5.track_name = 'V5'
+    extend_track(v4, 20, geo_direction=geo_direction)
 
-    extend_track(v4, LENGTH_ELBOW, geo_direction=geo_direction-ANGLE_ELBOW)
-    extend_track(v4, 10, geo_direction=geo_direction)
+    extend_track(v5, LENGTH_ELBOW, geo_direction=geo_direction-ANGLE_ELBOW)
+    extend_track(v5, 10, geo_direction=geo_direction)
 
-    extend_track(v5, LENGTH_ELBOW, geo_direction=geo_direction+ANGLE_ELBOW)
-    extend_track(v5, 30, geo_direction=geo_direction)
+    extend_track(v4, LENGTH_ELBOW, geo_direction=geo_direction+ANGLE_ELBOW)
+    extend_track(v4, 30, geo_direction=geo_direction)
 
     extend_track(track_inout, 10, ending=False, geo_direction=geo_direction)
     track_inout.add_detector(track_inout.length/2)
@@ -632,9 +632,9 @@ def build_terminal_station_3_5(
         line_code=line_code,
         length=None,
     )
-    v2 = infra_builder.add_track_section(
+    v3 = infra_builder.add_track_section(
         label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
-        track_name='V2',
+        track_name='V3',
         line_name=line_name,
         line_code=line_code,
         length=None,
@@ -646,9 +646,9 @@ def build_terminal_station_3_5(
         line_code=line_code,
         length=None,
     )
-    v3 = infra_builder.add_track_section(
+    v2 = infra_builder.add_track_section(
         label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
-        track_name='V3',
+        track_name='V2',
         line_name=line_name,
         line_code=line_code,
         length=None,
@@ -657,19 +657,19 @@ def build_terminal_station_3_5(
     sw_213 = infra_builder.add_point_switch(
         track_inout.end(),
         t_13.begin(),
-        v2.begin()
+        v3.begin()
     )
     sw_213.set_coords(
         *track_inout.coordinates[-2]
     )
     
-    extend_track(v2, LENGTH_ELBOW, geo_direction=geo_direction-ANGLE_ELBOW)
-    v2.add_detector(v2.length/2)
+    extend_track(v3, LENGTH_ELBOW, geo_direction=geo_direction-ANGLE_ELBOW)
+    v3.add_detector(v3.length/2)
 
-    v2, v4 = build_junction(
+    v3, v5 = build_junction(
         infra_builder=infra_builder,
-        track_in_short=v2,
-        track_in_long=v4,
+        track_in_short=v3,
+        track_in_long=v5,
         geo_direction=geo_direction,
         length_before=5,
         length_after=LENGTH_STATION/2,
@@ -681,7 +681,7 @@ def build_terminal_station_3_5(
     sw_13 = infra_builder.add_point_switch(
         t_13.end(),
         v1.begin(),
-        v3.begin()
+        v2.begin()
     )
     sw_13.set_coords(
         *t_13.coordinates[-2]
@@ -690,24 +690,24 @@ def build_terminal_station_3_5(
     extend_track(v1, LENGTH_ELBOW, geo_direction=geo_direction-ANGLE_ELBOW)
     extend_track(v1, LENGTH_STATION/2+5, geo_direction=geo_direction)
     
-    extend_track(v3, 10, geo_direction=geo_direction)
-    v3.add_detector(v3.length/2)
+    extend_track(v2, 10, geo_direction=geo_direction)
+    v2.add_detector(v2.length/2)
 
-    v3, v5 = build_junction(
+    v2, v4 = build_junction(
         infra_builder=infra_builder,
-        track_in_short=v3,
-        track_in_long=v5,
+        track_in_short=v2,
+        track_in_long=v4,
         length_before=5,
         length_junction=20,
         length_after=5,
         geo_direction=geo_direction
     )
-    extend_track(v3, LENGTH_STATION/2-15, geo_direction=geo_direction)
-    extend_track(v5, LENGTH_STATION/2-15, geo_direction=geo_direction)
+    extend_track(v2, LENGTH_STATION/2-15, geo_direction=geo_direction)
+    extend_track(v4, LENGTH_STATION/2-15, geo_direction=geo_direction)
 
     station = infra_builder.add_operational_point(station_name)
 
-    for i, v in enumerate([v1, v2, v3, v4, v5]):
+    for i, v in enumerate([v1, v3, v2, v5, v4]):
         add_carre_with_detector(
             v,
             v.length-100.,
@@ -718,4 +718,164 @@ def build_terminal_station_3_5(
         v.add_buffer_stop(v.length, label=f'bs.{station_name}.{i+1}')
         station.add_part(v, v.length-80)
 
-    return v1, v2, v3, v4, v5
+    return v1, v3, v2, v5, v4
+
+
+def build_terminal_station_2_4(
+    infra_builder: InfraBuilder,
+    track_in: TrackSection,
+    track_out: TrackSection,
+    station_name: str,
+    geo_direction: GeoDirection | float
+) -> None:
+    
+    track_out.add_detector(track_out.length - DISTANCE_SIGNAL_SWITCH + DISTANCE_SIGNAL_DETECTOR)
+    
+    track_in, track_out = build_junction(
+        infra_builder=infra_builder,
+        track_in_short=track_in,
+        track_in_long=track_out,
+        length_before=5,
+        length_junction=20,
+        length_after=5,
+        geo_direction=geo_direction,
+    )
+    track_out.add_detector(5)
+    track_in.add_detector(25)
+    track_out, track_in = build_junction(
+        infra_builder=infra_builder,
+        track_in_short=track_out,
+        track_in_long=track_in,
+        length_before=5,
+        length_junction=20,
+        length_after=15,
+        geo_direction=geo_direction,
+    )
+    track_in.add_detector(5)
+    track_out.add_detector(25)
+    v4 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name=f"V{int(track_in.track_name.replace('V','').replace('bis', ''))+2}",
+        line_name=track_in.line_name,
+        line_code=track_in.line_code,
+        length=None,
+    )
+    t2 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name=track_in.track_name,
+        line_name=track_in.line_name,
+        line_code=track_in.line_code,
+        length=None,
+    )
+    sw_in = infra_builder.add_point_switch(
+        track_in.end(),
+        v4.begin(),
+        t2.begin()
+    )
+    sw_in.set_coords(*track_in.coordinates[-1])
+    extend_track(v4, LENGTH_ELBOW, geo_direction - ANGLE_ELBOW)
+    extend_track(t2, LENGTH_ELBOW, geo_direction, ending=False)
+
+    v3 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name=f"V{int(track_out.track_name.replace('V','').replace('bis', ''))+2}",
+        line_name=track_out.line_name,
+        line_code=track_out.line_code,
+        length=None,
+    )
+    t1 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name=track_out.track_name,
+        line_name=track_out.line_name,
+        line_code=track_out.line_code,
+        length=None,
+    )
+    sw_out = infra_builder.add_point_switch(
+        track_out.end(),
+        v3.begin(),
+        t1.begin()
+    )
+    sw_out.set_coords(*track_out.coordinates[-1])
+    extend_track(v3, LENGTH_ELBOW, geo_direction + ANGLE_ELBOW)
+    extend_track(t1, LENGTH_ELBOW, geo_direction, ending=False)
+
+    t1.add_detector(LENGTH_ELBOW)
+    t2.add_detector(LENGTH_ELBOW)
+
+    v2 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name=track_in.track_name,
+        line_name=track_in.line_name,
+        line_code=track_in.line_code,
+        length=None,
+    )
+    v1 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name=track_out.track_name,
+        line_name=track_out.line_name,
+        line_code=track_out.line_code,
+        length=None,
+    )
+
+    dsw = infra_builder.add_double_slip_switch(
+        north_1=t1.end(),
+        north_2=t2.end(),
+        south_1=v1.begin(),
+        south_2=v2.begin(),
+    )
+    mid_point = (
+        (t1.coordinates[-2][0] + t2.coordinates[-2][0])/2,
+        (t1.coordinates[-2][1] + t2.coordinates[-2][1])/2,
+    )
+    dsw_coords = inverse_haversine(
+        mid_point[::-1],
+        LENGTH_ELBOW/2,
+        geo_direction,
+        unit='m'
+    )[::-1]
+    dsw.set_coords(
+        *dsw_coords
+    )
+    v1_1 = inverse_haversine(
+        t1.coordinates[-2][::-1],
+        LENGTH_ELBOW,
+        geo_direction,
+        unit='m'
+    )[::-1]
+    v2_1 = inverse_haversine(
+        t2.coordinates[-2][::-1],
+        LENGTH_ELBOW,
+        geo_direction,
+        unit='m'
+    )[::-1]
+
+    v1.coordinates.insert(1, v1_1)
+    extend_track(v1, LENGTH_STATION - LENGTH_ELBOW, geo_direction)
+
+
+    v2.coordinates.insert(1, v2_1)
+    extend_track(v2, LENGTH_STATION - LENGTH_ELBOW, geo_direction)
+
+    for track in [t1, t2, v1, v2]:
+        length= 0
+        for i, _ in enumerate(track.coordinates):
+            if i > 0:
+                length += round(haversine(
+                        track.coordinates[i][::-1],
+                        track.coordinates[i-1][::-1],
+                        unit='m'
+                    ), 2)
+        track.length = length
+
+    extend_track(v3, LENGTH_STATION, geo_direction)
+    extend_track(v4, LENGTH_STATION, geo_direction)
+
+    station = infra_builder.add_operational_point(station_name)
+    for v in [v1, v2, v3, v4]:
+        add_carre_with_detector(
+            v,
+            100,
+            direction=Direction.STOP_TO_START,
+            label=f"{station_name}.{v.track_name}"
+        )
+        station.add_part(v, 550)
