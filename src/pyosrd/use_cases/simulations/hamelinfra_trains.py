@@ -108,5 +108,22 @@ def hamelinfra_trains(
         stops=[],
     ).add_standard_single_value_allowance("percentage", 5, )
 
+    sim_builder.add_train_schedule(
+        station_location(infra, 'D', 'V1'),
+        station_location(infra, 'C', 'V1', -200),
+        label='trainDC',
+        departure_time=0,
+        stops=[],
+    ).add_standard_single_value_allowance("percentage", 5, )
+
+    sim_builder.add_train_schedule(
+        station_location(infra, 'C', 'V2', 200),
+        station_location(infra, 'D', 'V1'),
+
+        label='trainCD',
+        departure_time=0,
+        stops=[],
+    ).add_standard_single_value_allowance("percentage", 5, )
+
     built_simulation = sim_builder.build()
     built_simulation.save(os.path.join(dir, simulation_json))

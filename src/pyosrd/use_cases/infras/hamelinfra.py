@@ -14,6 +14,7 @@ from pyosrd.infra.build import build_infra
 from pyosrd.use_cases.infras.helpers.builders import (
     build_junction,
     add_carre_with_detector,
+    add_semaphores_with_detector,
     build_blocks,
     build_station,
     extend_track,
@@ -48,16 +49,10 @@ def hamelinfra(
         track_name='VU',
         line_name=line_name,
         line_code=line_code,
-        length=1_500,
+        length=None,
     )
 
     BEGIN = (45.575988410701974, 0.21)
-    t0_end = inverse_haversine(
-        BEGIN,
-        t0.length,
-        direction=GeoDirection.EAST,
-        unit='m'
-    )
     t0.coordinates[0] = tuple(BEGIN[::-1])
     extend_track(t0, 1_500, geo_direction=GeoDirection.EAST)
 
@@ -179,7 +174,7 @@ def hamelinfra(
         backward=False,
         geo_direction=3*math.pi/8
     )
-    extend_track(t2, 200, 3*math.pi/8)
+   
 
     build_blocks(
         t1,
@@ -189,13 +184,99 @@ def hamelinfra(
         geo_direction=3*math.pi/8
     )
 
+# #Sortie pont
+
+    bridge_t1 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name='BRIDGE',
+        line_name=line_name,
+        line_code=line_code,
+        length=None,  
+    )
+    
+
+    link = infra_builder.add_link(
+        t1.end(),
+        bridge_t1.begin(),
+        label='bridge.out'
+    )
+    link.set_coords(*t1.coordinates[-1])
+
+    
+    # add_semaphores_with_detector(
+    #     bridge_t1,
+    #     DISTANCE_SIGNAL_SWITCH,
+    #     backward=True,
+    #     forward=False,
+    #     label='t1'
+    # )
+    extend_track(t2, DISTANCE_SIGNAL_SWITCH, 3*math.pi/8)
+    extend_track(bridge_t1, DISTANCE_SIGNAL_SWITCH, 3*math.pi/8)
+
+    t2, bridge_t1 = build_junction(
+        infra_builder=infra_builder,
+        track_in_short=t2,
+        track_in_long=bridge_t1,
+        length_before=25,
+        length_junction=20,
+        length_after=15,
+        geo_direction=3*math.pi/8,
+    )
+    t2.add_detector(30)
+    bridge_t1.add_detector(10)
+    extend_track(bridge_t1, 10, 3*math.pi/8)
+
+    ####################
+
+    bridge = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name='BRIDGE',
+        line_name=line_name,
+        line_code=line_code,
+        length=None,  
+    )
+
+    connection_c_d = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name='CONNECTION',
+        line_name='CONNECTION',
+        line_code=line_code,
+        length=None,  
+    )
+    
+    sw_connection_west = infra_builder.add_point_switch(
+        bridge_t1.end(),
+        connection_c_d.begin(),
+        bridge.begin()
+    )
+    sw_connection_west.set_coords(*bridge_t1.coordinates[-1])
+
+    add_carre_with_detector(
+        connection_c_d,
+        DISTANCE_SIGNAL_SWITCH, 
+        Direction.STOP_TO_START,
+        label='connection_CD_east'
+    )
+    add_carre_with_detector(
+        bridge,
+        DISTANCE_SIGNAL_SWITCH, 
+        Direction.STOP_TO_START,
+        label='bridge_out'
+    )
+
+    extend_track(connection_c_d, LENGTH_ELBOW, 3*math.pi/8+ANGLE_ELBOW)
+    extend_track(connection_c_d, 900, 3*math.pi/8)
+    extend_track(connection_c_d, 350, GeoDirection.EAST)
+    extend_track(connection_c_d, 100, 5*math.pi/8, ending=False)
+    
+    extend_track(t2, 1_500, 3*math.pi/8)
+    extend_track(bridge, 1_500, 3*math.pi/8)
+
 
     # # Ligne E-I
     line_name="E-I"
     line_code = 2000
 
-
-    
 
     v2_south = infra_builder.add_track_section(
         label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
@@ -213,6 +294,12 @@ def hamelinfra(
         length=None,
     )
     
+    add_carre_with_detector(
+        t2,
+        t2.length - DISTANCE_SIGNAL_SWITCH,
+        Direction.START_TO_STOP,
+        label='raccord-CD'
+    )
     sw2 = infra_builder.add_point_switch(
         v2.begin(),
         t2.end(),
@@ -280,11 +367,42 @@ def hamelinfra(
 
     # # South Station
 
+    extend_track(v1bis_south, 400, GeoDirection.SOUTH)
+    extend_track(v1_south, 400, GeoDirection.SOUTH)
+    extend_track(v2_south, 400, GeoDirection.SOUTH)
+
+    v2_south_2 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name='V1bis',
+        line_name=line_name,
+        line_code=line_code,
+        length=None,
+    )
+
+    sw_connection_south = infra_builder.add_point_switch(
+        v2_south_2.begin(),
+        v2_south.end(),
+        connection_c_d.end()
+    )
+
+    sw_connection_south.set_coords(*v2_south.coordinates[-1])
+
+    connection_c_d.length += haversine(
+        connection_c_d.coordinates[-2][::-1],
+        connection_c_d.coordinates[-1][::-1],
+        unit='m',
+    )
+
+
+    connection_c_d.add_detector(connection_c_d.length - DISTANCE_SIGNAL_SWITCH)
+    v2_south.add_detector(v2_south.length - DISTANCE_SIGNAL_SWITCH)
+    v2_south_2.add_detector(30)
+
     build_terminal_station_3_5(
         infra_builder=infra_builder,
         track_in=v1bis_south,
         track_inout=v1_south,
-        track_out=v2_south,
+        track_out=v2_south_2,
         station_name='D',
         geo_direction=GeoDirection.SOUTH
     )
@@ -308,23 +426,9 @@ def hamelinfra(
     v2.add_detector(20)
     extend_track(v1bis, 720, GeoDirection.NORTH)
 
-    # #Sortie pont
-
-    bridge = infra_builder.add_track_section(
-        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
-        track_name='BRIDGE',
-        line_name=line_name,
-        line_code=line_code,
-        length=None,  
-    )
     
-    link = infra_builder.add_link(
-        t1.end(),
-        bridge.begin(),
-        label='bridge.out'
-    )
-    link.set_coords(*t1.coordinates[-1])
-    extend_track(bridge, 210, 3*math.pi/8)
+
+    # Connexion pont-v1
     extend_track(bridge, 700, GeoDirection.NORTH, ending=False)
 
     new_v1bis = infra_builder.add_track_section(
@@ -567,19 +671,19 @@ def hamelinfra(
     extend_track(v1east, LENGTH_STATION, geo_direction=GeoDirection.NORTHEAST)
     add_carre_with_detector(
         v2east,
-        600,
+        400,
         Direction.STOP_TO_START,
         label='K.1'
     )
     add_carre_with_detector(
         v1east,
-        600,
+        400,
         Direction.STOP_TO_START,
         label='K.2'
     )
     station_k = infra_builder.add_operational_point('K')
-    station_k.add_part(v2east, 400)
-    station_k.add_part(v1east, 400)
+    station_k.add_part(v2east, 600)
+    station_k.add_part(v1east, 600)
 
     # # # BRANCHE EST = Ligne J-L
 
