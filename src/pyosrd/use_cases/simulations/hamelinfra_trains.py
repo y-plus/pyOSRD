@@ -29,7 +29,7 @@ def hamelinfra_trains(
         station_location(infra, 'G', 'V2', 200),
         station_location(infra, 'J', 'V2', 200),
         station_location(infra, 'K', 'V1', 200),
-        label='trainAG',
+        label='trainAK',
         departure_time=0.,
         stops=[
             Stop(120, station_location(infra, 'B', 'V1', 200)),
