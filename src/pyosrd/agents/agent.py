@@ -17,13 +17,6 @@ class Agent(ABC):
         self.delayed = osrd.delayed()
         regulated = copy.deepcopy(self.delayed)
 
-        # regulated.simulation_json = os.path.join(
-        #     'delayed',
-        #     self.name,
-        #     osrd.simulation_json
-        # )
-
-
         for train, delay in self.departures_to_shift().items():
             shift_train_departure(regulated, train, delay)
 
