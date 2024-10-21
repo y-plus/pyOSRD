@@ -46,8 +46,8 @@ def delays_between_schedules(
 
     for train in ref_schedule.trains:
         delays_train = (
-            _times_spent_by_head(schedule, train).round()
-            - _times_spent_by_head(ref_schedule, train).round()
+            _times_spent_by_head(schedule, train)
+            - _times_spent_by_head(ref_schedule, train)
         ).to_dict()
         delays[train] = {
             k: v
