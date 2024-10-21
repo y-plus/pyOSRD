@@ -1,12 +1,3 @@
-import base64
-import os
-import requests
-import shutil
-
-import PIL
-
-from PIL.JpegImagePlugin import JpegImageFile
-
 import networkx as nx
 
 SWITCH_EXIT = {
@@ -32,7 +23,7 @@ SWITCH_EXIT = {
 def switches_and_detectors_on_route(self, route_id: str):
 
     route = next(r for r in self.infra['routes'] if r['id'] == route_id)
-    
+
     curr_track = next(
         p['track']
         for p in self.infra['detectors'] + self.infra['buffer_stops']
@@ -74,7 +65,7 @@ def switches_and_detectors_on_route(self, route_id: str):
 
             release_detectors = [
                 detector | {'type': 'detector'}
-                for detector in self.infra['detectors'] 
+                for detector in self.infra['detectors']
                 if detector['id'] in route['release_detectors']
                 and detector['track'] == curr_track
             ]
@@ -99,7 +90,7 @@ def switches_and_detectors_on_route(self, route_id: str):
         track_sections.append({'id': curr_track, 'direction': direction})
         release_detectors = [
             detector | {'type': 'detector'}
-            for detector in self.infra['detectors'] 
+            for detector in self.infra['detectors']
             if detector['id'] in route['release_detectors']
             and detector['track'] == curr_track
         ]
@@ -130,7 +121,7 @@ def build_zones(self, merge: bool = False):
 
     def route_elements(self, route_id):
 
-        switches_ids = [s['id'] for s in self.switches]   
+        switches_ids = [s['id'] for s in self.switches]
         route = next(r for r in self.infra['routes'] if r['id']==route_id)
         previous = ''
         elements = []
@@ -230,7 +221,7 @@ def build_zones(self, merge: bool = False):
     return tvd_zones, stations
 
 
-def zones_graph(zones) -> nx.Graph:
+def zones_graph(zones) -> nx.DiGraph:
 
     zones_graph = nx.DiGraph()
 
@@ -246,33 +237,3 @@ def zones_graph(zones) -> nx.Graph:
                         )
 
     return zones_graph
-
-
-def draw_graph_zones(
-    self,
-    save: str | None = None,
-) -> JpegImageFile:
-
-    graph = zones_graph(self)
-    g = 'graph LR;'
-
-    for e in graph.edges:
-        g += f"{e[0].replace('<->', '-')}-->{e[1].replace('<->', '-')};"
-
-    graphbytes = g.encode("ascii")
-    base64_bytes = base64.b64encode(graphbytes)
-    base64_string = base64_bytes.decode("ascii")
-    url = "https://mermaid.ink/img/" + base64_string
-
-    response = requests.get(url, stream=True)
-    with open('tmp.png', 'wb') as out_file:
-        shutil.copyfileobj(response.raw, out_file)
-    del response
-    image = PIL.Image.open('tmp.png')
-
-    if save:
-        os.rename('tmp.png', save)
-    else:
-        os.remove('tmp.png')
-
-    return image
