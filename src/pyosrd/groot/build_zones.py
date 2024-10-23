@@ -139,6 +139,7 @@ def build_zones(self, merge: bool = False):
 
 
     tvd_zones = dict()
+    ends_with_a_signal = dict()
     diverging_release_detectors = set()
 
     for route in self.infra['routes']:
@@ -153,6 +154,7 @@ def build_zones(self, merge: bool = False):
 
     for route in self.infra['routes']:
         entry_point_id = route['entry_point']['id']
+        exit_point_id = route['exit_point']['id']
         entry_point_type = route['entry_point']['type']
         exit_point_type = route['exit_point']['type']
         elements = route_elements(self, route['id'])
@@ -170,7 +172,7 @@ def build_zones(self, merge: bool = False):
                         if set(elements[elements.index(entry_point_id)+1:elements.index(d)])
                         else "<->".join(sorted([entry_point_id, d]))
                     )
-
+                ends_with_a_signal[f"{entry_point_id}->{d}"] = d == exit_point_id
                 entry_point_id = d
 
     if merge:
@@ -218,7 +220,7 @@ def build_zones(self, merge: bool = False):
                     tvd_zones[tvd] = p
                     stations.append(p)
 
-    return tvd_zones, stations
+    return tvd_zones, stations, ends_with_a_signal
 
 
 def zones_graph(zones) -> nx.DiGraph:
