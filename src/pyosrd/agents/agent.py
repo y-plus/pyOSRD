@@ -44,7 +44,7 @@ class Agent(ABC):
                     else:
                         limits += [points[-1]]
                 add_delay_between_points(
-                    regulated, 
+                    regulated,
                     train,
                     *[limit['id'] for limit in limits],
                     delay
