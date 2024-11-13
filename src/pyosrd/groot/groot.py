@@ -3,9 +3,10 @@ import itertools
 
 from dataclasses import dataclass, field
 from typing_extensions import Self
-import pandas as pd
-import networkx as nx
+
 import matplotlib.pyplot as plt
+import networkx as nx
+import pandas as pd
 
 from matplotlib.axes._axes import Axes
 
@@ -16,11 +17,12 @@ from .build_zones import zones_graph
 @dataclass
 class Groot(object):
     zones: dict[str, str] = field(default_factory=dict)
-    ends_with_a_signal: dict[str, bool] = field(default_factory=dict)
     stations: list[str] = field(default_factory=list)
+    ends_with_a_signal: dict[str, bool] = field(default_factory=dict)
+    tvd_routes: dict[str, str] = field(default_factory=dict)
     times: dict[str, dict[str, tuple[float, float]]] = field(default_factory=dict)
     min_durations: dict[str, dict[str, float]] = field(default_factory=dict)
-    lengths: dict[str, float] = field(default_factory=dict)
+
 
     @property
     def trains(self) -> list[str]:
@@ -34,7 +36,7 @@ class Groot(object):
 
     def train_zones(self, train) -> list[str]:
         return [self.zones[tvd] for tvd in self.path(train)]
-    
+
     @property
     def times_zones(self) -> dict[str, dict[str, tuple[float, float]]]:
         if not hasattr(self, '_times_zones') or self._times_zones is None:
@@ -108,6 +110,10 @@ class Groot(object):
                 height=1,
                 alpha=.5
             )
+        ax.set_xlim(
+            min(self.departure_times.values()),
+            max(self.last_arrival_times.values())
+        )
         ax.set_xticks(
             [
                 label._x
@@ -119,37 +125,50 @@ class Groot(object):
             ]
         )
         ax.set_xlabel('Time')
+        ax.set_yticks(
+            [
+                label._y
+                for label in ax.get_yticklabels()
+            ],
+            [
+                label.get_text() if label.get_text() in self.stations else ''
+                for label in ax.get_yticklabels()
+            ]
+        )
+        ax.legend()
         return ax
 
     def earliest_conflict(self) -> tuple[str, str, str, float]:
 
         times_zones = self.times_zones
+        train1_conflict, train2_conflict, zone_conflict = None, None, None
+        t_conflict = float('inf')
         for train0, train1 in itertools.combinations(self.trains, 2):
+
             train_zones0 = self.train_zones(train0)
             train_zones1 = self.train_zones(train1)
-            t_conflict = float('inf')
-            train1_conflict, train2_conflict, zone_conflict = None, None, None
-            for zone in train_zones0:
-                if zone in train_zones1:
-                    min_t_out = min(times_zones[train0][zone][1], times_zones[train1][zone][1])
-                    max_t_in = max(times_zones[train0][zone][0], times_zones[train1][zone][0])
-                    min_t_in = min(times_zones[train0][zone][0], times_zones[train1][zone][0])
-                    if max_t_in <= min_t_out and min_t_in < t_conflict:
-                        t_conflict = min_t_in
-                        train1_conflict, train2_conflict, zone_conflict =\
-                            train0, train1, zone
-            if not train1_conflict:
-                t_conflict = None
-            return train1_conflict, train2_conflict, zone_conflict, t_conflict
-        
+
+            for zone in set(train_zones0).intersection(set(train_zones1)):
+                min_t_out = min(times_zones[train0][zone][1], times_zones[train1][zone][1])
+                max_t_in = max(times_zones[train0][zone][0], times_zones[train1][zone][0])
+                min_t_in = min(times_zones[train0][zone][0], times_zones[train1][zone][0])
+                if max_t_in < min_t_out and min_t_in < t_conflict:
+                    t_conflict = min_t_in
+                    train1_conflict, train2_conflict, zone_conflict =\
+                        train0, train1, zone
+        if not train1_conflict:
+            t_conflict = None
+        return train1_conflict, train2_conflict, zone_conflict, t_conflict
+
+
     def has_conflicts(self) -> bool:
         return self.earliest_conflict()[0] is not None
-    
+
     def trains_order_in_zone(self, train1, train2, zone) -> tuple[str, str]:
         if self.times_zones[train1][zone] <= self.times_zones[train2][zone]:
             return (train1, train2)
         return (train2, train1)
-    
+
     def between(
         self,
         t_min: float = 0,
@@ -159,7 +178,7 @@ class Groot(object):
         new._times_zones = None
         new.times = {
             train: {
-                zone: (max(t_min, t[0]), min(t_max, t[1])) 
+                zone: (max(t_min, t[0]), min(t_max, t[1]))
                 for zone, t in data.items()
                 if t[1] > t_min and t[0] < t_max
             }
@@ -182,19 +201,16 @@ class Groot(object):
         new = copy.deepcopy(self)
         new._times_zones = None
         path = self.path(train)
-        tvd = next(
-            tvd for tvd in path
-            if self.zones[tvd] == zone
-        )
+        tvd = self.get_tvd(train, zone)
         idx = path.index(tvd)
         for i, zone in enumerate(path[idx:]):
             new.times[train][zone] = (
                 self.times[train][zone][0] + delay,
                 self.times[train][zone][1] + delay
-            ) if i !=0 else (
+            ) if i !=0 or idx ==0 else (
                 self.times[train][zone][0],
                 self.times[train][zone][1] + delay
-            )    
+            )
         return new
 
     def zones_are_free(
@@ -209,7 +225,7 @@ class Groot(object):
             for train in restricted.times_zones
             for zone in zones
         )
-    
+
     def previous_zones(self, train: str, zone: str) -> list[str]:
         zones = self.train_zones(train)
         return zones[::-1][zones[::-1].index(zone)+1:]
@@ -226,8 +242,11 @@ class Groot(object):
 
     def get_tvd(self, train: str, zone: str) -> str:
         return next(
-            tvd for tvd in self.path(train)
-            if self.zones[tvd] == zone
+            (
+                tvd for tvd in self.path(train)
+                if self.zones[tvd] == zone
+            ),
+            None
         )
 
     def previous_signal(self, train: str, zone: str) -> str:
@@ -296,9 +315,15 @@ class Groot(object):
 
         if not found:
             return []
-        return list(nx.all_simple_paths(subg, start, stop))
 
-    def make_train_wait_after(
+        alt_zones =[]
+
+        for zones in nx.all_simple_paths(subg, start, stop):
+            new_zones = [zone for zone in zones if zone not in self.train_zones(train)]
+            alt_zones.append(zones[zones.index(new_zones[0])-1:zones.index(new_zones[-1])+2])
+        return alt_zones
+
+    def make_train_wait(
         self: Self,
         waiting_train: str,
         priority_train: str,
@@ -309,6 +334,122 @@ class Groot(object):
             zone_to_free = self.next_signal(priority_train, conflict_zone)
             delay = (
                     self.times_zones[priority_train][zone_to_free][1]
-                    - self.times_zones[waiting_train][zone_to_free][0] 
+                    - self.times_zones[waiting_train][zone_to_free][0]
             )
             return self.add_delay(waiting_train, wait_at, delay)
+
+    @property
+    def departure_times(self) -> dict[str, float]:
+        return {
+            train: self.times[train][self.path(train)[0]][0]
+            for train in self.times
+        }
+
+    @property
+    def last_arrival_times(self) -> dict[str, float]:
+        return {
+            train: self.times[train][self.path(train)[-1]][1]
+            for train in self.times
+        }
+
+    def reroute(
+        self: Self,
+        train: str,
+        alt_zones: list[str]
+    ) -> list[str]:
+
+        orig_zones = self.train_zones(train)
+        new_zones = [z for z in alt_zones if z not in orig_zones]
+        dvg = alt_zones[alt_zones.index(new_zones[0])-1]
+        cvg = alt_zones[alt_zones.index(new_zones[-1])+1]
+        d_in = self.get_tvd(train, dvg).split('->')[0]
+        d_out = self.get_tvd(train, cvg).split('->')[1]
+        candidate_tvds =[
+            tvd
+            for tvd, zone in self.zones.items()
+            if zone in alt_zones[alt_zones.index(dvg):alt_zones.index(cvg)+1]
+        ]
+
+        g = nx.DiGraph()
+        for n in candidate_tvds:
+            g.add_edge(*n.split('->'))
+        p = nx.shortest_path(g, d_in, d_out)
+        orig_path = self.path(train)
+
+        orig_tvds = orig_path[
+            orig_path.index(self.get_tvd(train, dvg))
+            :orig_path.index(self.get_tvd(train, cvg))+1
+        ]
+        before = orig_path[
+            orig_path.index(self.get_tvd(train, dvg))-1
+        ]
+        after = orig_path[
+            orig_path.index(self.get_tvd(train, cvg))+1
+        ]
+        new_tvds = [f"{p[i]}->{p[i+1]}" for i, _ in enumerate(p[:-1])]
+
+        first_new_signal = next(
+            (tvd for tvd in new_tvds
+            if self.ends_with_a_signal[tvd]
+            ),
+            None
+        )
+        last_new_signal = next(
+            (tvd for tvd in new_tvds[::-1]
+            if self.ends_with_a_signal[tvd]
+            ),
+            None
+        )
+        first_orig_signal = next(
+            (tvd for tvd in orig_tvds
+            if self.ends_with_a_signal[tvd]
+            ),
+            None
+        )
+        last_orig_signal = next(
+            (tvd for tvd in orig_tvds[::-1]
+            if self.ends_with_a_signal[tvd]
+            ),
+            None
+        )
+        orig_dvgs = orig_tvds[:orig_tvds.index(first_orig_signal)]
+        orig_btws = orig_tvds[orig_tvds.index(first_orig_signal):orig_tvds.index(last_orig_signal)+1]
+        orig_cvgs = orig_tvds[orig_tvds.index(last_orig_signal)+1:]
+        new_dvgs = new_tvds[:new_tvds.index(first_new_signal)]
+        new_btws = new_tvds[new_tvds.index(first_new_signal):new_tvds.index(last_new_signal)+1]
+        new_cvgs = new_tvds[new_tvds.index(last_new_signal)+1:]
+
+        t_tail_before = self.times[train][before][1]
+        t_first_dvg, _ = self.times[train][orig_dvgs[0]]
+        t_last_dvg, t_tail_last_dvg = self.times[train][orig_dvgs[-1]]
+        t_first_btw, _ = self.times[train][orig_btws[0]]
+        _, t_tail_last_btw = self.times[train][orig_btws[-1]]
+        t_first_cvg, _ = self.times[train][orig_cvgs[0]]
+        _, t_tail_last_cvg = self.times[train][orig_cvgs[-1]]
+        t_after = self.times[train][after][0]
+
+        new_groot = copy.deepcopy(self)
+        new_groot._times_zones = None
+
+        for i, tvd in enumerate(new_dvgs):
+            new_groot.times[train][tvd] = [
+                t_first_dvg + (t_first_btw-t_first_dvg)*i/len(new_dvgs),
+                t_tail_last_dvg - (t_tail_last_dvg-t_tail_before)*(len(new_dvgs)-i-1)/len(new_dvgs),
+            ]
+        for i, tvd in enumerate(new_btws):
+            new_groot.times[train][tvd] = [
+                t_first_btw + (t_first_cvg-t_first_btw)*i/len(new_btws),
+                t_tail_last_btw - (t_tail_last_btw-t_last_dvg)*(len(new_btws)-i-1)/len(new_btws),
+            ]
+        for i, tvd in enumerate(new_cvgs):
+            new_groot.times[train][tvd] = [
+                t_first_cvg + (t_after-t_first_cvg)*i/len(new_cvgs),
+                t_tail_last_cvg - (t_tail_last_cvg-t_tail_last_btw)*(len(new_cvgs)-i-1)/len(new_cvgs),
+            ]
+
+        new_groot.times[train] = {
+            k:v for k,v in new_groot.times[train].items()
+            if k not in orig_tvds
+        }
+
+        return new_groot

@@ -13,11 +13,10 @@ def _route_tvds(
             sim.tvd_limits.update(z.split('->'))
 
     route = next(r for r in sim.infra['routes'] if r['id']==route_id)
-    detectors = [d for d in route['release_detectors'] if d in sim.tvd_limits]
+    detectors = set(d for d in route['release_detectors'] if d in sim.tvd_limits)
 
     tvds = []
     in_ = route['entry_point']['id']
-
     while in_:
         tvd = next(
             (
@@ -29,6 +28,7 @@ def _route_tvds(
         if tvd:
             tvds.append(tvd)
             in_ = tvd.split('->')[1]
+            detectors.remove(in_)
         else:
             tvds.append(
                 '->'.join([in_, route['exit_point']['id']])
@@ -38,13 +38,12 @@ def _route_tvds(
     return tvds
 
 
-def get_times_and_lengths(
+def get_times(
     sim: OSRD,
     zones: dict[str, str],
 ) -> tuple[
     dict[str, dict[str, tuple[float, float]]],
     dict[str, dict[str, float]],
-    dict[str, float],
 ]:
 
     times = dict()
@@ -63,10 +62,13 @@ def get_times_and_lengths(
             tvds = _route_tvds(sim, zones, route_id)
             for tvd in tvds:
                 d_in, d_out = tvd.split('->')
+                if (d_in not in points and d_out not in points):
+                    continue                
                 if d_in not in points:
                     d_in = f"departure_{train}"
                 if d_out not in points:
                     d_out = f"arrival_{train}"
+
                 if 't_eco' in points[d_in]:
                     times[train][tvd] = (
                         points[d_in]['t_eco'],
@@ -81,8 +83,5 @@ def get_times_and_lengths(
                     points[d_out]['t_tail_base']
                     - points[d_in]['t_base']
                 )
-                lengths[tvd] = (
-                    points[d_out]['offset']
-                    - points[d_in]['offset']
-                )
-    return times, min_durations, lengths
+
+    return times, min_durations

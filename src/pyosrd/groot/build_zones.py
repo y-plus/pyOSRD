@@ -115,7 +115,39 @@ def diverging_release_detectors_in_route(self, route_id: str) -> set[str]:
     return zone_delimiters
 
 
-def build_zones(self, merge: bool = False):
+
+def distance(
+    self,
+    point1_id: str,
+    point2_id: str,
+    track_section_lengths: dict[str, float],
+    track_section_network: nx.DiGraph,
+) -> float:
+    
+    p1 = self.get_point(point1_id)
+    p2 = self.get_point(point2_id)
+
+    if p1.track_section == p2.track_section:
+        return abs(p2.position - p1.position)
+    
+    path = nx.shortest_path(
+        track_section_network, p1.track_section, p2.track_section
+    )
+
+    in_by = nx.get_edge_attributes(track_section_network, 'in_by')
+    out_by = nx.get_edge_attributes(track_section_network, 'out_by')
+
+    distance = track_section_lengths[path[0]] - p1.position if out_by[(path[0], path[1])] == 'END' else p1.position
+
+    for t in path[1:-1]:
+        distance += track_section_lengths[t]
+
+    distance += p2.position if in_by[(path[-2], path[-1])] == 'BEGIN' else track_section_lengths[path[-1]] - p2.position
+
+    return distance
+
+
+def build_zones(self):
 
     points = self.points_on_track_sections()
 
@@ -162,46 +194,14 @@ def build_zones(self, merge: bool = False):
             continue
         for d in route['release_detectors']+[route['exit_point']['id']]:
             if d in exit_points:
-                if merge:
-                    tvd_zones[f"{entry_point_id}->{d}"] = False if set(
-                        elements[elements.index(entry_point_id)+1:elements.index(d)]
-                    ) else True
-                else:
-                    tvd_zones[f"{entry_point_id}->{d}"] = (
-                        elements[elements.index(entry_point_id)+1]
-                        if set(elements[elements.index(entry_point_id)+1:elements.index(d)])
-                        else "<->".join(sorted([entry_point_id, d]))
-                    )
-                ends_with_a_signal[f"{entry_point_id}->{d}"] = d == exit_point_id
+                tvd = f"{entry_point_id}->{d}"
+                tvd_zones[tvd] = (
+                    elements[elements.index(entry_point_id)+1]
+                    if set(elements[elements.index(entry_point_id)+1:elements.index(d)])
+                    else "<->".join(sorted([entry_point_id, d]))
+                )
+                ends_with_a_signal[tvd] = d == exit_point_id
                 entry_point_id = d
-
-    if merge:
-        # merge switch zones
-        merge_with = dict()
-        for tvd, v in tvd_zones.items():
-            if v:
-                tvd_zones[tvd] = "<->".join(sorted(tvd.split("->")))
-            else:
-                for other_tvd, other_v in tvd_zones.items():
-                    if not other_v:
-                        if set(tvd.split('->')).intersection(set(other_tvd.split('->'))):
-                            if tvd not in merge_with:
-                                merge_with[tvd] = set()
-                            merge_with[tvd].add(other_tvd)
-
-        merge_zones = []
-        for value in merge_with.values():
-            if value not in merge_zones:
-                merge_zones.append(value)
-
-        merges = nx.Graph()
-        for tvd, with_ in merge_with.items():
-            for other_tvd in with_:
-                merges.add_edge(tvd, other_tvd)
-
-        for i, sub in enumerate(nx.connected_components(merges)):
-            for tvd in sub:
-                tvd_zones[tvd] = f'switch_zone.{i}'
 
     # stations
     g = nx.Graph()
