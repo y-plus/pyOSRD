@@ -19,7 +19,6 @@ from PIL.JpegImagePlugin import JpegImageFile
 import requests
 from dotenv import load_dotenv
 from typing_extensions import Self
-from methodtools import lru_cache
 
 import pyosrd.use_cases.infras as infras
 import pyosrd.use_cases.simulations as simulations
@@ -244,7 +243,7 @@ class OSRD():
             stderr=subprocess.PIPE,
         )
 
-        self.train_track_sections.cache_clear()
+        self._train_track_sections = None
 
         try:
             self.results = _read_json(
@@ -1061,36 +1060,43 @@ class OSRD():
 
         return track_sections
 
-    @lru_cache()
+    # @lru_cache()
     def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
 
+        if not hasattr(self, "_train_track_sections"):
+            self._train_track_sections = dict()
+        if self._train_track_sections is None:
+            self._train_track_sections = dict()
         if isinstance(train, str):
             train = self.trains.index(train)
 
-        group_id, idx = self._train_schedule_group[
-            self.trains[train]
-        ]
-        group = next(
-            gr
-            for gr in self.simulation['train_schedule_groups']
-            if gr['id'] == group_id
-        )
-        first_track_id = group['waypoints'][0][0]['track_section']
-        last_track_id = group['waypoints'][-1][-1]['track_section']
-        list_of_tracks = []
-        for route_id in self.train_routes(train):
-            for track in self.route_track_sections(route_id):
-                if track not in list_of_tracks:
-                    list_of_tracks.append(track)
-                if track['id'] == last_track_id:
-                    break
-        first_track = next(
-            track
-            for track in list_of_tracks
-            if track['id']==first_track_id
-        )
-        return list_of_tracks[list_of_tracks.index(first_track):]
-
+        if train not in self._train_track_sections:
+            
+            group_id, idx = self._train_schedule_group[
+                self.trains[train]
+            ]
+            group = next(
+                gr
+                for gr in self.simulation['train_schedule_groups']
+                if gr['id'] == group_id
+            )
+            first_track_id = group['waypoints'][0][0]['track_section']
+            last_track_id = group['waypoints'][-1][-1]['track_section']
+            list_of_tracks = []
+            for route_id in self.train_routes(train):
+                for track in self.route_track_sections(route_id):
+                    if track not in list_of_tracks:
+                        list_of_tracks.append(track)
+                    if track['id'] == last_track_id:
+                        break
+            first_track = next(
+                track
+                for track in list_of_tracks
+                if track['id']==first_track_id
+            )
+            self._train_track_sections[train] = list_of_tracks[list_of_tracks.index(first_track):]
+        return self._train_track_sections[train]
+    
     def path_length(self, train: int | str) -> float:
         return self._head_position(train=train)[-1]['path_offset']
 
