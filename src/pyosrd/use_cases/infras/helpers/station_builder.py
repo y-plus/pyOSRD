@@ -11,6 +11,7 @@ def build_dvg_station_cvg(
     infra_builder: InfraBuilder,
     track_in: TrackSection,
     name: str,
+    length_between_stations: float,
 ) -> TrackSection:
     """Generate a divergence/stations/convergence sequence.
 
@@ -55,7 +56,7 @@ def build_dvg_station_cvg(
     )
     track_out = infra_builder.add_track_section(
         label=name+".Tout",
-        length=1000
+        length=length_between_stations,
     )
 
     dvg = infra_builder.add_point_switch(
@@ -125,67 +126,67 @@ def build_dvg_station_cvg(
     
     # D0
     track_in.add_detector(
-            label=name+'.D0',
-            position=track_in.length - 20,
-        )
+        label=name+'.D0',
+        position=track_in.length - 20,
+    )
     s = track_in.add_signal(
-                    track_in.length - 40,
-                    Direction.START_TO_STOP,
-                    is_route_delimiter=True,
-                    label=name+'.S0',
-                )
+        track_in.length - 40,
+        Direction.START_TO_STOP,
+        is_route_delimiter=True,
+        label=name+'.S0',
+    )
     s.add_logical_signal("BAL", settings={"Nf": "true"})
 
     # D1/S1
     t1.add_detector(
-            label=name+'.D1',
-            position=200,
-        )
+        label=name+'.D1',
+        position=200,
+    )
     s = t1.add_signal(
-                    220,
-                    Direction.STOP_TO_START,
-                    is_route_delimiter=True,
-                    label=name+'.S1',
-                )
+        220,
+        Direction.STOP_TO_START,
+        is_route_delimiter=True,
+        label=name+'.S1',
+    )
     s.add_logical_signal("BAL", settings={"Nf": "true"})
 
     # D2/S2
     t1.add_detector(
-            label=name+'.D2',
-            position=820,
-        )
+        label=name+'.D2',
+        position=820,
+    )
     s = t1.add_signal(
-                    800,
-                    Direction.START_TO_STOP,
-                    is_route_delimiter=True,
-                    label=name+'.S2',
-                )
+        800,
+        Direction.START_TO_STOP,
+        is_route_delimiter=True,
+        label=name+'.S2',
+    )
     s.add_logical_signal("BAL", settings={"Nf": "true"})
 
     # D3/S3
     t2.add_detector(
-            label=name+'.D3',
-            position=200,
-        )
+        label=name+'.D3',
+        position=200,
+    )
     s = t2.add_signal(
-                    220,
-                    Direction.STOP_TO_START,
-                    is_route_delimiter=True,
-                    label=name+'.S3',
-                )
+        220,
+        Direction.STOP_TO_START,
+        is_route_delimiter=True,
+        label=name+'.S3',
+    )
     s.add_logical_signal("BAL", settings={"Nf": "true"})
 
     # D4/S4
     t2.add_detector(
-            label=name+'.D4',
-            position=820,
-        )
+        label=name+'.D4',
+        position=820,
+    )
     s = t2.add_signal(
-                    800,
-                    Direction.START_TO_STOP,
-                    is_route_delimiter=True,
-                    label=name+'.S4',
-                )
+        800,
+        Direction.START_TO_STOP,
+        is_route_delimiter=True,
+        label=name+'.S4',
+    )
     s.add_logical_signal("BAL", settings={"Nf": "true"})
 
     # D5
@@ -212,7 +213,8 @@ def build_N_dvg_station_cvg(
     infra_builder: InfraBuilder,
     track_in: TrackSection,
     base_name: str,
-    N: int
+    N: int,
+    length_between_stations: float,
 ) -> TrackSection:
     """Create a serie of N stations (see build_dvg_station_cvg for details).
 
@@ -241,7 +243,8 @@ def build_N_dvg_station_cvg(
         track = build_dvg_station_cvg(
             infra_builder,
             track,
-            base_name+"."+str(i)
+            base_name+"."+str(i),
+            length_between_stations,
         )
 
     return track

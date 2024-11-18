@@ -9,6 +9,9 @@ def multi_5tr_5st_delay_first(
     num_stations: int = 5,
     num_trains: int = 5,
     alternate: bool=True,
+    length_between_stations: float = 1_000,
+    alternate_omnibus_direct: bool = False,
+    delay: float = 120,
 ) -> None:
     """Create a multi train multi station simulation and add random delays.
 
@@ -46,12 +49,15 @@ def multi_5tr_5st_delay_first(
         params_use_case={
             "num_stations": num_stations,
             "num_trains": num_trains,
-            "alternate": alternate
+            "alternate": alternate,
+            "length_between_stations": length_between_stations,
+            "alternate_omnibus_direct": alternate_omnibus_direct,
+
         }
     )
 
     sim.reset_delays()
 
-    sim.add_delay("train0", 120, 540)
-
-    sim.add_delays_in_results()
+    # sim.add_delay("train0", 120, delay)
+    sim.add_delay_at_station("train0", 'multistation.0.s', delay)
+    # sim.add_delays_in_results()
