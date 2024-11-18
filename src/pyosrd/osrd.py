@@ -89,7 +89,13 @@ class OSRD():
     params_use_case: dict = field(default_factory=dict)
 
     from .agents import Agent
-    from .delays import add_delay, add_delays_in_results, delayed, reset_delays
+    from .delays import (
+        add_delay,
+        add_delays_in_results,
+        delayed,
+        reset_delays,
+        add_delay_at_station,
+    )
     from .regulation import add_stop, add_stops
     from .viz.map import folium_map, folium_results
     from .viz.space_time_charts import (
@@ -1060,19 +1066,21 @@ class OSRD():
 
         return track_sections
 
-    # @lru_cache()
+
     def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
 
         if not hasattr(self, "_train_track_sections"):
             self._train_track_sections = dict()
+
         if self._train_track_sections is None:
             self._train_track_sections = dict()
+
         if isinstance(train, str):
             train = self.trains.index(train)
 
         if train not in self._train_track_sections:
             
-            group_id, idx = self._train_schedule_group[
+            group_id, _ = self._train_schedule_group[
                 self.trains[train]
             ]
             group = next(
