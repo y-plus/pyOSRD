@@ -48,7 +48,6 @@ def get_times(
 
     times = dict()
     min_durations = dict()
-    lengths = dict()
     for train in sim.trains:
         times[train] = dict()
         min_durations[train] = dict()
