@@ -40,7 +40,7 @@ def rerouted_paths(g: Groot, ref: Groot) -> dict[str, list[list[str]]]:
 
     for train in g.trains:
         new_tvds = [tvd if tvd not in ref.path(train) else None for tvd in g.path(train) ]
-
+        
         new_paths = [
             list(v)
             for k, v in itertools.groupby(new_tvds, key=lambda x: x is None)
@@ -51,3 +51,14 @@ def rerouted_paths(g: Groot, ref: Groot) -> dict[str, list[list[str]]]:
             rerouted[train] = new_paths
 
     return rerouted
+
+
+def updated_paths(g1: Groot, g2: Groot) -> dict[str, list[str]]:
+    
+    diff = dict()
+
+    for train in g1.times:
+        if (path1 := g1.path(train)) != g2.path(train):
+            diff[train] = path1
+    
+    return diff
