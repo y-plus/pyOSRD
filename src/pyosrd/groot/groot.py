@@ -331,7 +331,11 @@ class Groot(object):
         conflict_zone: str
     ) -> Self:
 
-            zone_to_free = self.next_signal(priority_train, conflict_zone)
+            if (self.ends_with_a_signal[self.get_tvd(priority_train, conflict_zone)]):
+                zone_to_free = conflict_zone
+            else:
+                zone_to_free = self.next_signal(priority_train, conflict_zone)
+
             delay = (
                     self.times_zones[priority_train][zone_to_free][1]
                     - self.times_zones[waiting_train][zone_to_free][0]
