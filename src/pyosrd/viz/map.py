@@ -289,10 +289,10 @@ def folium_map(
 
     folium.LayerControl().add_to(m)
     
-    folium.plugins.MiniMap(
-        toggle_display=True,
-        zoom_level_offset=-7
-    ).add_to(m)
+    # folium.plugins.MiniMap(
+    #     toggle_display=True,
+    #     zoom_level_offset=-7
+    # ).add_to(m)
 
     return m
 
