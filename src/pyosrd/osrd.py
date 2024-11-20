@@ -19,12 +19,12 @@ from PIL.JpegImagePlugin import JpegImageFile
 import requests
 from dotenv import load_dotenv
 from typing_extensions import Self
-from methodtools import lru_cache
 
 import pyosrd.use_cases.infras as infras
 import pyosrd.use_cases.simulations as simulations
 import pyosrd.use_cases.with_delays as with_delays
 
+from pyosrd.utils import seconds_to_hour
 
 def _read_json(json_file: str) -> dict | list:
     with open(json_file, 'r') as f:
@@ -90,7 +90,13 @@ class OSRD():
     params_use_case: dict = field(default_factory=dict)
 
     from .agents import Agent
-    from .delays import add_delay, add_delays_in_results, delayed, reset_delays
+    from .delays import (
+        add_delay,
+        add_delays_in_results,
+        delayed,
+        reset_delays,
+        add_delay_at_station,
+    )
     from .regulation import add_stop, add_stops
     from .viz.map import folium_map, folium_results
     from .viz.space_time_charts import (
@@ -244,7 +250,7 @@ class OSRD():
             stderr=subprocess.PIPE,
         )
 
-        self.train_track_sections.cache_clear()
+        self._train_track_sections = None
 
         try:
             self.results = _read_json(
@@ -1061,36 +1067,45 @@ class OSRD():
 
         return track_sections
 
-    @lru_cache()
+
     def train_track_sections(self, train: int | str) -> list[dict[str, str]]:
+
+        if not hasattr(self, "_train_track_sections"):
+            self._train_track_sections = dict()
+
+        if self._train_track_sections is None:
+            self._train_track_sections = dict()
 
         if isinstance(train, str):
             train = self.trains.index(train)
 
-        group_id, idx = self._train_schedule_group[
-            self.trains[train]
-        ]
-        group = next(
-            gr
-            for gr in self.simulation['train_schedule_groups']
-            if gr['id'] == group_id
-        )
-        first_track_id = group['waypoints'][0][0]['track_section']
-        last_track_id = group['waypoints'][-1][-1]['track_section']
-        list_of_tracks = []
-        for route_id in self.train_routes(train):
-            for track in self.route_track_sections(route_id):
-                if track not in list_of_tracks:
-                    list_of_tracks.append(track)
-                if track['id'] == last_track_id:
-                    break
-        first_track = next(
-            track
-            for track in list_of_tracks
-            if track['id']==first_track_id
-        )
-        return list_of_tracks[list_of_tracks.index(first_track):]
-
+        if train not in self._train_track_sections:
+            
+            group_id, _ = self._train_schedule_group[
+                self.trains[train]
+            ]
+            group = next(
+                gr
+                for gr in self.simulation['train_schedule_groups']
+                if gr['id'] == group_id
+            )
+            first_track_id = group['waypoints'][0][0]['track_section']
+            last_track_id = group['waypoints'][-1][-1]['track_section']
+            list_of_tracks = []
+            for route_id in self.train_routes(train):
+                for track in self.route_track_sections(route_id):
+                    if track not in list_of_tracks:
+                        list_of_tracks.append(track)
+                    if track['id'] == last_track_id:
+                        break
+            first_track = next(
+                track
+                for track in list_of_tracks
+                if track['id']==first_track_id
+            )
+            self._train_track_sections[train] = list_of_tracks[list_of_tracks.index(first_track):]
+        return self._train_track_sections[train]
+    
     def path_length(self, train: int | str) -> float:
         return self._head_position(train=train)[-1]['path_offset']
 
@@ -1110,6 +1125,36 @@ class OSRD():
             [group_idx]['schedules'][idx]['stops']
         )
 
+
+    def stops_at_stations(self) -> dict[str, dict[str, tuple[str, str]]]:
+        d = dict()
+
+        for train in self.trains:
+            stations = self.points_encountered_by_train(train, types='station')
+            d[train] = dict()
+            for stop in self.get_stops(train):
+                if 'position' not in stop:
+                    stop['position'] = self.offset_in_path_of_train(
+                        Point(
+                            track_section=stop['location']['track_section'],
+                            position=stop['location']['offset'],
+                        ),
+                        train
+                    )
+                if stop['position'] > 0:
+                    station = min(
+                            stations,
+                            key= lambda s: abs(s['offset'] - stop['position'])
+                        )
+                    hp = self._head_position(train)
+                    for i, r in enumerate(hp):
+                        if r['path_offset'] <= stop['position'] and hp[i+1]['path_offset'] > stop['position']:
+                            d[train][station['id']] = (
+                                seconds_to_hour(r['time']).split('.')[0],
+                                seconds_to_hour(r['time']+stop['duration']).split('.')[0],
+                            )
+                            continue
+        return d
 
 def _group_idx(self, group: str) -> int:
     return [

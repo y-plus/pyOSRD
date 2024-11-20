@@ -12,7 +12,8 @@ from pyosrd.use_cases.infras.helpers.station_builder import build_N_dvg_station_
 def multistation(
     dir: str,
     infra_json: str = 'infra.json',
-    num_stations: int = 1
+    num_stations: int = 1,
+    length_between_stations: float = 1_000,
 ) -> Infra:
     """Create a serie of N stations (see build_N_dvg_station_cvg for details).
 
@@ -41,10 +42,11 @@ def multistation(
         infra_builder,
         t0,
         "multistation",
-        num_stations
+        num_stations,
+        length_between_stations=length_between_stations
     )
     
-    t0.add_buffer_stop(1000, label='buffer_stop.1')
+    t0.add_buffer_stop(t0.length, label='buffer_stop.1')
     
     first_track = next(
         t 

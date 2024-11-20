@@ -34,3 +34,38 @@ def calculate_delay_f_time(
     )
 
     return (sim_time - ref_sim_time_interp).round().tolist()
+
+
+def calculate_delays_at_detectors(
+    sim,
+    ref_sim,
+    train: int | str,
+    eco_or_base: str = 'eco'
+) -> list[tuple[float, float]]:
+    
+    detectors_ref = {
+        d['id']: d
+        for d in ref_sim.points_encountered_by_train(
+            train,
+            types=['departure', 'arrival', 'detector']
+        )
+    }
+    detectors = {
+        d['id']: d
+        for d in sim.points_encountered_by_train(
+            train,
+            types=['departure', 'arrival', 'detector']
+        )
+    }
+
+    return [
+        (
+            detectors[detector]['offset'], 
+            round(
+                detectors[detector][f't_{eco_or_base}']
+                - detectors_ref[detector][f't_{eco_or_base}']
+            )
+        )
+        for detector in detectors
+        if detector in detectors_ref
+    ]

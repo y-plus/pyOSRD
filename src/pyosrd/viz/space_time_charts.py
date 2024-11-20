@@ -206,16 +206,24 @@ def space_time_chart_plotly(
         points_to_show=points_to_show,
     )
 
+    for t in data:
+        t['h'] = [seconds_to_hour(x).split('.')[0] for x in t['x']]
+
     fig = go.Figure(
         data=[
-            go.Scatter(x=t['x'], y=t['y'], name=t['label'])
+            go.Scatter(
+                x=t['x'],
+                y=t['y'],
+                customdata=t['h'],
+                name=t['label'],
+                hovertemplate="%{customdata} (%{y:.0f} m)",
+            )
             for t in data
         ],
         layout={
             "title": f'train {train} ({eco_or_base})',
             "template": "simple_white",
-            # "xaxis_title": 'Time',
-            "hovermode": "x unified"
+            # "hovermode": "x unified",
         },
     )
 
