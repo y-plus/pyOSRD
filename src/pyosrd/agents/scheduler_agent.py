@@ -147,7 +147,7 @@ class SchedulerAgent(Agent):
         Returns
         -------
         pd.DataFrame
-            DataFrame containing the indictor value for
+            DataFrame containing the indicator value for
             the agent and the given scenario, eg:
                             agent 1
             scenario 1           12
