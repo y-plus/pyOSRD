@@ -24,6 +24,7 @@ import pyosrd.use_cases.infras as infras
 import pyosrd.use_cases.simulations as simulations
 import pyosrd.use_cases.with_delays as with_delays
 
+from pyosrd.utils import seconds_to_hour
 
 def _read_json(json_file: str) -> dict | list:
     with open(json_file, 'r') as f:
@@ -1124,6 +1125,36 @@ class OSRD():
             [group_idx]['schedules'][idx]['stops']
         )
 
+
+    def stops_at_stations(self) -> dict[str, dict[str, tuple[str, str]]]:
+        d = dict()
+
+        for train in self.trains:
+            stations = self.points_encountered_by_train(train, types='station')
+            d[train] = dict()
+            for stop in self.get_stops(train):
+                if 'position' not in stop:
+                    stop['position'] = self.offset_in_path_of_train(
+                        Point(
+                            track_section=stop['location']['track_section'],
+                            position=stop['location']['offset'],
+                        ),
+                        train
+                    )
+                if stop['position'] > 0:
+                    station = min(
+                            stations,
+                            key= lambda s: abs(s['offset'] - stop['position'])
+                        )
+                    hp = self._head_position(train)
+                    for i, r in enumerate(hp):
+                        if r['path_offset'] <= stop['position'] and hp[i+1]['path_offset'] > stop['position']:
+                            d[train][station['id']] = (
+                                seconds_to_hour(r['time']).split('.')[0],
+                                seconds_to_hour(r['time']+stop['duration']).split('.')[0],
+                            )
+                            continue
+        return d
 
 def _group_idx(self, group: str) -> int:
     return [
