@@ -25,7 +25,6 @@ def space_time_charts_with_selector(sim):
 
 
 folder: str = sys.argv[1]
-print(folder)
 ref_sim = OSRD(dir=folder)
 
 CASES = {
@@ -77,7 +76,7 @@ def simulation(case: str | None = ''):
             space_time_charts_with_selector(sim)
         if case:
             with ui.tab_panel(delays).classes('p-0'):
-                ui.plotly(sim.delays_chart_plotly(ref_sim, eco_or_base='base')).classes('w-full')
+                ui.plotly(sim.plot_delays(ref_sim, eco_or_base='base')).classes('w-full')
         with ui.tab_panel(info).classes('p-0'):
             ui.label('info')
 

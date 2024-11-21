@@ -9,7 +9,7 @@ import branca.colormap as cm
 from haversine import haversine
 
 from pyosrd.osrd import Point
-from pyosrd.delays_between_simulations import calculate_delay_f_time
+from pyosrd.delays_between_simulations import calculate_delays_at_points
 
 
 def coords_from_position_on_track(
@@ -68,21 +68,6 @@ def res2geojson(
         positions = copy.deepcopy(
             self._head_position(train_index, eco_or_base)
         )
-        
-        # for p in self.points_encountered_by_train(train_index, types=['switch', 'link']):
-        #     switch = next(
-        #         s for s in self.infra['switches']
-        #         if s['id'] == p['id']
-        #     )
-        #     port_key = next(p for p in switch['ports'])
-        #     port = switch['ports'][port_key]
-        #     position = 0 if port['endpoint'] == 'BEGIN' else self.track_section_lengths[port['track']]
-        #     positions.append({
-        #         'offset': position,
-        #         'track_section': port['track'],
-        #         'path_offset': p['offset'],
-        #         'time': p['t_'+eco_or_base]
-        #     })
 
         t, o = (
             [p['time'] for p in positions],
@@ -166,12 +151,14 @@ def res2geojson(
         )
 
         if ref_sim is not None:
-            times_orig = [
-                today_timestamp + 1_000 * r['time']
-                for r in self._head_position(train_index, eco_or_base)
-            ]
-            delays = calculate_delay_f_time(self, ref_sim, train_index, eco_or_base)
-            delays_interp = np.interp(times_interp, times_orig, delays)
+
+            delays = calculate_delays_at_points(self, ref_sim, train_index, eco_or_base)
+
+            delays_interp = np.interp(
+                times_interp,
+                [d[1] for d in delays],
+                [d[2] for d in delays],
+            )
             features.append(
                 {
                     "type": "Feature",

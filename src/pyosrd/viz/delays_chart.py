@@ -1,51 +1,38 @@
-
-import matplotlib.pyplot as plt
 import numpy as np
+import plotly.graph_objects as go
 
-from matplotlib.axes._axes import Axes
-from plotly import graph_objects as go
-
+from pyosrd.delays_between_simulations import calculate_delays_at_points
 from pyosrd.utils import seconds_to_hour
-from pyosrd.delays_between_simulations import calculate_delay_f_time
 
-def _delays_interp(
+
+def plot_delays(
     self,
     ref_sim,
-    eco_or_base = 'base'
+    eco_or_base: str = 'eco',
+    tmin : float | None = None,
+    tmax : float | None = None,
+) -> go.Figure:
 
-) -> dict[str, list[float]]:
-    ...
-    tmin, tmax = min(self.departure_times), round(max(self.last_arrival_times))
+    if not tmin:
+        tmin= min(self.departure_times)
+    if not tmax:
+        tmax = round(max(self.last_arrival_times))
     time_interp = np.linspace(tmin, tmax, int(tmax-tmin)+1)
 
-    delays_interp = {'time': time_interp}
+    data = {'time': time_interp}
     for train in self.trains:
-        t = [r['time'] for r in self._head_position(train, eco_or_base)]
-        delay = calculate_delay_f_time(self, ref_sim, train, eco_or_base)
-        delay_interp = np.interp(
+        delay = calculate_delays_at_points(self, ref_sim, train, eco_or_base)
+        t = [d[1] for d in delay]
+        d = [d[2] for d in delay]
+        d_interp= np.interp(
             time_interp,
             t,
-            delay
+            d
         )
-        delays_interp[train] = [
-            delay_interp[i] if time > min(t) else 0
+        data[train] = [
+            d_interp[i] if time > min(t) else 0
             for i, time in enumerate(time_interp)
-    ]
-
-    return delays_interp
-
-
-def delays_chart_plotly(
-    self,
-    ref_sim,
-    eco_or_base: str = 'base'
-) -> go.Figure:
-    
-    data = _delays_interp(
-        self,
-        ref_sim,
-        eco_or_base=eco_or_base
-    )
+        ]
 
     time = data['time']
     delays = {k: v for k, v in data.items() if k != 'time'}
@@ -85,61 +72,3 @@ def delays_chart_plotly(
     )
 
     return fig
-
-
-def delays_chart(    
-    self,
-    ref_sim,
-    eco_or_base: str = 'base'
-) -> Axes:
-    
-    data = _delays_interp(
-        self,
-        ref_sim,
-        eco_or_base=eco_or_base
-    )
-        
-    time = data['time']
-    delays = {k: v for k, v in data.items() if k != 'time'}
-
-    _, ax = plt.subplots()
-
-    ax.stackplot(
-        time,
-        *[
-            v for v in delays.values()
-        ],
-        labels=self.trains
-    )
-    ax.legend(loc='upper left')
-
-    ax.set_xlim(min(time), max(time))
-
-    ax.set_xticks(
-        [
-            label._x
-            for label in ax.get_xticklabels()
-        ],
-        [
-            seconds_to_hour(int(float(label.get_text())))
-            for label in ax.get_xticklabels()
-        ]
-    )
-    ax.set_yticks(
-        [
-            label._y
-            for label in ax.get_yticklabels()
-        ],
-        [
-            seconds_to_hour(int(float(label.get_text())))
-            for label in ax.get_yticklabels()
-        ]
-    )
-    plt.locator_params(axis='x', nbins=6)
-
-    ax.set_title(
-        "Cumulated delays over time"
-        + f" ({eco_or_base})"
-    )
-
-    return ax

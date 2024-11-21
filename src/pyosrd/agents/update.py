@@ -10,8 +10,8 @@ from pyosrd import OSRD
 
 def sim_with_updated_results(
     sim: OSRD,
-    detectors: dict[str, list[tuple[str, float, float]]],
-    updated_name: str,
+    times: dict[str, dict[str, tuple[float, float]]],
+    updated_sim_name: str,
 ) -> OSRD:
 
     track_section_lengths = sim.track_section_lengths
@@ -21,27 +21,41 @@ def sim_with_updated_results(
     updated._train_track_sections = None
 
     for train in sim.trains:
+        times[train] = dict(
+            sorted(
+                times[train].items(),
+                key=lambda x: x[1][0]
+            )
+        )
+        updated_detectors =(
+            [tvd.split('->')[0] for tvd in times[train]]
+            + [list(times[train].keys())[-1].split('->')[1]]
+        )
+
         train_id = sim.trains.index(train)
         group, idx_in_group = sim._train_schedule_group[
                 sim.trains[train_id]
                 ]
+
+        detectors_encountered_by_train =\
+            sim.points_encountered_by_train(train, types=['detector'])
 
         # update routes
         for eco_or_base in ['eco', 'base']:
             if f'{eco_or_base}_simulations' not in updated.results[group]:
                 continue
             updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['routing_requirements'] =\
-                [{'route': route} for route in _updated_routes(sim, train, detectors)]
+                [{'route': route} for route in _updated_routes(sim, train, updated_detectors)]
 
+        
         # get differences in detectors
         orig_detectors =\
-            [d['id'] for d in sim.points_encountered_by_train(train, types=['detector'])]
-        updated_detectors =\
-            [d[0] for d in detectors[train]][1:-1]
+            [d['id'] for d in detectors_encountered_by_train]
+    
 
         new_detectors = [
             d if d not in orig_detectors else None
-            for d in updated_detectors
+            for d in updated_detectors[1:-1]
         ]
 
         new_segments = [
@@ -59,11 +73,11 @@ def sim_with_updated_results(
                 )
 
         for segment in new_segments:
+            last = segment[-1]
             segment.insert(0, updated_detectors[updated_detectors.index(segment[0])-1])
-            segment.append(updated_detectors[updated_detectors.index(segment[-1])+1])
+            segment.append(updated_detectors[updated_detectors.index(last)+1])
 
         for segment in new_segments:
-
             new_length = sum(
                 _distance(
                     sim,
@@ -112,37 +126,102 @@ def sim_with_updated_results(
                 new_hp.sort(key=lambda r: r['time'])
                 updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['head_positions'] =\
                     new_hp
+        
+        detectors_encountered_by_train = updated.points_encountered_by_train(
+            train,
+            types=['departure', 'arrival', 'detector']
+        )
 
         # update times
 
-        updated_train_detectors =\
-            updated.points_encountered_by_train(train, types=['detector'])
-        target_times = {
-            d[0]: d[1] for d in detectors[train]
-        }
-        
-        if 'eco_simulations' not in updated.results[group]:
-            continue
-        for i, detector in enumerate(updated_train_detectors):
-            if detector['id'] in target_times:
-                print(
-                    train,
-                    detector['id'],
-                    detector['offset'],
-                    target_times[detector['id']]-detector['t_eco'],
+        detectors_encountered_by_train = updated.points_encountered_by_train(
+                        train,
+                        types=['departure', 'arrival', 'detector']
+                    )
+        for eco_or_base in ['eco', 'base']:
+            if f'{eco_or_base}_simulations' not in updated.results[group]:
+                continue
+            updated_hp = updated._head_position(train, eco_or_base)
+
+            # train departure
+            ref_departure = sim.departure_times[sim.trains.index(train)]
+            updated_departure = next(t[0] for t in times[train].values())
+            delta = updated_departure - ref_departure
+            
+            if ref_departure != updated_departure:
+                for r in updated_hp:
+                    r['time'] += delta
+                for d in detectors_encountered_by_train:
+                    d[f't_{eco_or_base}'] += delta
+
+            # collect modifications ...
+            modifications = []
+            prev_delta = 0
+            prev_t = updated_departure
+            prev_position = 0
+            for i, (tvd, t) in enumerate(times[train].items()):
+                d_id = tvd.split('->')[0]
+                d = next(
+                    (
+                        detector
+                        for detector in detectors_encountered_by_train
+                        if detector['id'] == d_id
+                    ),
+                    None
                 )
-        print()
+                if not d:
+                    continue
+                if t[0] - d[f't_{eco_or_base }'] - prev_delta != 0:
+                    modifications.append(
+                        {
+                            'id': d['id'],
+                            "position": d['offset'],
+                            'prev_position': prev_position,
+                            'prev_t': prev_t,
+                            "new_t": t[0],
+                            "shift_t":t[0] - d[f't_{eco_or_base }'] - prev_delta,
+                        }
+                    )
+                prev_delta = t[0] - d[f't_{eco_or_base }']
+                prev_position = d['offset']
+                prev_t = d[f't_{eco_or_base}']
+            
+            # ... and apply them
+            for modification in modifications:
+                
+                point = sim.get_point(modification['id'])
+                for r in updated_hp:
+                    if (
+                        r['path_offset'] <= modification['position']
+                        and r['path_offset'] > modification['prev_position']
+                    ):
+                        alpha = (
+                            (r['time'] - modification['prev_t'])
+                            / (modification['new_t'] - modification['shift_t'] - modification['prev_t'])
+                        )
+                        r['time'] = modification['prev_t'] + alpha * (modification['new_t'] - modification['prev_t'])
+                    if r['path_offset'] > modification['position']:
+                        r['time'] += modification['shift_t']
+                updated_hp.append(
+                    {
+
+                        'path_offset': modification['position'],
+                        'time': modification['new_t'],
+                        'track_section':  point.track_section,
+                        'offset': point.position,   
+                    }
+                )
+            updated_hp.sort(key=lambda x: x['time'])
 
     # save updated simulation
-
     os.makedirs(
-        os.path.join(sim.dir, 'delayed', updated_name),
+        os.path.join(sim.dir, 'delayed', updated_sim_name),
         exist_ok=True
     )
 
     updated.results_json = os.path.join(
         'delayed',
-        updated_name,
+        updated_sim_name,
         sim.results_json
     )
     updated.delays_json = os.path.join(
@@ -170,11 +249,11 @@ def _updated_routes(sim: OSRD, train: int | str, detectors: list[str]) -> list[s
 
     new_routes = []
 
-    entry = detectors[train][0][0]
+    entry = detectors[0]
 
     rd=set()
-    for detector in detectors[train][1:]:
-        exit = detector[0]
+    for detector in detectors[1:]:
+        exit = detector
         if (entry, exit) in route_ios.values():
             candidate_routes = [route for route, v in route_ios.items() if (entry, exit)==v]
             if len(candidate_routes) > 1:
