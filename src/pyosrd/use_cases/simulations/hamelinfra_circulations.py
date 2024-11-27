@@ -63,7 +63,7 @@ def hamelinfra_circulations(
             station_location(infra, 'E', 'V4', 200),
             station_location(infra, 'F', 'V4', 200),
             station_location(infra, 'G', 'V4', 200),
-            station_location(infra, 'H', 'V2', 200),
+            station_location(infra, 'H', 'V4', 200),
             station_location(infra, 'I', 'V4', 200),
             label=f'semidirectDI{2+2*i}',
             departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:00:00'),
@@ -72,7 +72,7 @@ def hamelinfra_circulations(
                 # Stop(120, station_location(infra, 'E', 'V4', 200)),
                 # Stop(120, station_location(infra, 'F', 'V4', 200)),
                 Stop(120, station_location(infra, 'G', 'V4', 200)),
-                Stop(120, station_location(infra, 'H', 'V2', 200)),
+                Stop(120, station_location(infra, 'H', 'V4', 200)),
             ]
         ).add_standard_single_value_allowance("percentage", 5, )
 
@@ -136,7 +136,7 @@ def hamelinfra_circulations(
             label=f'omnibusDG{2+2*i}',
             departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:10:00'),
             stops=[
-                # Stop(120, station_location(infra, 'D', 'V4', 200)),
+                # Stop(120, station_location(infra, 'D', 'V2', 0)),
                 Stop(120, station_location(infra, 'E', 'V4', 200)),
                 Stop(120, station_location(infra, 'F', 'V4', 200)),
                 Stop(120, station_location(infra, 'G', 'V4', 200)),
@@ -162,7 +162,7 @@ def hamelinfra_circulations(
             station_location(infra, 'E', 'V4', 200),
             station_location(infra, 'F', 'V4', 200),
             station_location(infra, 'G', 'V4', 200),
-            station_location(infra, 'H', 'V2', 200),
+            station_location(infra, 'H', 'V4', 200),
             station_location(infra, 'I', 'V4', 200),
             label=f'omnibusDI{2+2*i}',
             departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:15:00'),
@@ -171,7 +171,7 @@ def hamelinfra_circulations(
                 Stop(120, station_location(infra, 'E', 'V4', 200)),
                 Stop(120, station_location(infra, 'F', 'V4', 200)),
                 Stop(120, station_location(infra, 'G', 'V4', 200)),
-                Stop(120, station_location(infra, 'H', 'V2', 200)),
+                Stop(120, station_location(infra, 'H', 'V4', 200)),
             ]
         ).add_standard_single_value_allowance("percentage", 5, )
 
