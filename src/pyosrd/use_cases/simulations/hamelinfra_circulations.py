@@ -1,3 +1,4 @@
+import json
 import os
 
 from railjson_generator import (
@@ -360,3 +361,18 @@ def hamelinfra_circulations(
 
     built_simulation = sim_builder.build()
     built_simulation.save(os.path.join(dir, simulation_json))
+
+    # hardcore modification of the json
+    sim = {}
+    with open(os.path.join(dir, simulation_json), 'r') as f:
+        sim = json.load(f)
+        sim["rolling_stocks"][0]["max_speed"] = 40
+        sim["rolling_stocks"][0]["length"] = 150
+        sim["rolling_stocks"][0]["mass"] = 250000
+        sim["rolling_stocks"][0]["effort_curves"]["modes"]["thermal"]["default_curve"]["speeds"] = \
+            sim["rolling_stocks"][0]["effort_curves"]["modes"]["thermal"]["default_curve"]["speeds"][0:9]
+        sim["rolling_stocks"][0]["effort_curves"]["modes"]["thermal"]["default_curve"]["max_efforts"] = \
+            sim["rolling_stocks"][0]["effort_curves"]["modes"]["thermal"]["default_curve"]["max_efforts"][0:9]
+
+    with open(os.path.join(dir, simulation_json), 'w') as f:
+        json.dump(sim, f)
