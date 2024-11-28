@@ -1,5 +1,6 @@
 from railjson_generator.infra_builder import InfraBuilder, generate_routes, Infra
 from railjson_generator import Location
+from railjson_generator.schema.infra.track_section import TrackSection
 
 
 def build_infra(
@@ -18,7 +19,7 @@ def build_infra(
         for duplicate in duplicates:
             print(duplicate.__class__.__name__, duplicate.label)
         raise ValueError("Duplicates found")
-        
+
     self.infra.routes = []
     for route in generate_routes(self.infra, progressive_release):
         self.register_route(route)
@@ -60,7 +61,7 @@ def station_location(
     offset: float = 0
 ) -> Location:
     station = next(
-        op 
+        op
         for op in infra.to_rjs().operational_points
         if op.id == station
     )
@@ -72,3 +73,29 @@ def station_location(
         if track_section.track_name == track_name:
             break
     return Location(track_section=track_section, offset=p.position + offset)
+
+
+def track_from_id(
+    infra: Infra,
+    track_name: str
+) -> TrackSection:
+
+    for t in infra.track_sections:
+        if t.id == track_name:
+            return t
+
+    raise RuntimeError("could not find TrackSection in track_from_id")
+
+
+def detector_location(
+        infra: Infra,
+        detector: str
+) -> Location:
+
+    for d in infra.to_rjs().detectors:
+        if d.id == detector:
+            return Location(
+                track_section=track_from_id(infra=infra, track_name=d.track),
+                offset=d.position)
+
+    raise RuntimeError("could not find location in detector_location")

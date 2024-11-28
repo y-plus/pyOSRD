@@ -8,7 +8,7 @@ from railjson_generator import (
 from railjson_generator.schema.simulation.stop import Stop
 
 from pyosrd.use_cases.infras.hamelinfra import hamelinfra
-from pyosrd.infra.build import station_location
+from pyosrd.infra.build import station_location, detector_location
 
 from pyosrd.utils import hour_to_seconds
 
@@ -47,7 +47,9 @@ def hamelinfra_circulations(
             station_location(infra, 'I', 'V3', 200),
             station_location(infra, 'H', 'V1', -200),
             station_location(infra, 'G', 'V1', -200),
+            detector_location(infra, 'D.track.110.5'),
             station_location(infra, 'F', 'V1', -200),
+            detector_location(infra, 'D.track.080.3'),
             station_location(infra, 'E', 'V1', -200),
             station_location(infra, 'D', 'V1'),
             label=f'directID{2+2*i}',
@@ -75,7 +77,9 @@ def hamelinfra_circulations(
             station_location(infra, 'K', 'V4', 200),
             station_location(infra, 'J', 'V1', -200),
             station_location(infra, 'G', 'V1', -200),
+            detector_location(infra, 'D.track.110.5'),
             station_location(infra, 'F', 'V1', -200),
+            detector_location(infra, 'D.track.080.3'),
             station_location(infra, 'E', 'V1', -200),
             station_location(infra, 'D', 'V1'),
             label=f'directKD{2+2*i}',
