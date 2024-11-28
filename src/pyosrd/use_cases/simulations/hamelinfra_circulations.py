@@ -29,6 +29,33 @@ def hamelinfra_circulations(
         # Frequence 60 min
 
         sim_builder.add_train_schedule(
+            station_location(infra, 'D', 'V1'),
+            station_location(infra, 'E', 'V1', 200),
+            station_location(infra, 'F', 'V1', 200),
+            station_location(infra, 'G', 'V1', 200),
+            station_location(infra, 'H', 'V4', 200),
+            station_location(infra, 'I', 'V4', 200),
+            label=f'directDI{2+2*i}',
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:00:00'),
+            stops=[
+                # Stop(120, station_location(infra, 'D', 'V2', 200)),
+            ]
+        ).add_standard_single_value_allowance("percentage", 5, )
+
+        sim_builder.add_train_schedule(
+            station_location(infra, 'D', 'V1'),
+            station_location(infra, 'E', 'V1', 200),
+            station_location(infra, 'F', 'V1', 200),
+            station_location(infra, 'G', 'V1', 200),
+            station_location(infra, 'J', 'V2', 200),
+            station_location(infra, 'K', 'V4', 200),
+            label=f'directDK{2+2*i}',
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:05:00'),
+            stops=[
+                # Stop(120, station_location(infra, 'D', 'V2', 200)),
+            ]
+        ).add_standard_single_value_allowance("percentage", 5, )
+        sim_builder.add_train_schedule(
             station_location(infra, 'A', 'V2', 200),
             station_location(infra, 'B', 'V2', 200),
             station_location(infra, 'C', 'V2', 200),
@@ -66,7 +93,7 @@ def hamelinfra_circulations(
             station_location(infra, 'H', 'V4', 200),
             station_location(infra, 'I', 'V4', 200),
             label=f'semidirectDI{2+2*i}',
-            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:00:00'),
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:10:00'),
             stops=[
                 # Stop(120, station_location(infra, 'D', 'V4', 200)),
                 # Stop(120, station_location(infra, 'E', 'V4', 200)),
@@ -77,7 +104,7 @@ def hamelinfra_circulations(
         ).add_standard_single_value_allowance("percentage", 5, )
 
         sim_builder.add_train_schedule(
-            station_location(infra, 'I', 'V4', 200),
+            station_location(infra, 'I', 'V3', 200),
             station_location(infra, 'H', 'V1', -200),
             station_location(infra, 'G', 'V5', -200),
             station_location(infra, 'F', 'V5', -200),
@@ -101,7 +128,7 @@ def hamelinfra_circulations(
             station_location(infra, 'J', 'V2', 200),
             station_location(infra, 'K', 'V4', 200),
             label=f'semidirectDK{2+2*i}',
-            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:05:00'),
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:15:00'),
             stops=[
                 # Stop(120, station_location(infra, 'D', 'V4', 200)),
                 # Stop(120, station_location(infra, 'E', 'V4', 200)),
@@ -133,8 +160,23 @@ def hamelinfra_circulations(
             station_location(infra, 'E', 'V4', 200),
             station_location(infra, 'F', 'V4', 200),
             station_location(infra, 'G', 'V4', 200),
-            label=f'omnibusDG{2+2*i}',
-            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:10:00'),
+            label=f'omnibusDG{2+4*i}',
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:20:00'),
+            stops=[
+                # Stop(120, station_location(infra, 'D', 'V2', 0)),
+                Stop(120, station_location(infra, 'E', 'V4', 200)),
+                Stop(120, station_location(infra, 'F', 'V4', 200)),
+                Stop(120, station_location(infra, 'G', 'V4', 200)),
+            ]
+        ).add_standard_single_value_allowance("percentage", 5, )
+
+        sim_builder.add_train_schedule(
+            station_location(infra, 'D', 'V2'),
+            station_location(infra, 'E', 'V4', 200),
+            station_location(infra, 'F', 'V4', 200),
+            station_location(infra, 'G', 'V4', 200),
+            label=f'omnibusDG{4+4*i}',
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:46:00'),
             stops=[
                 # Stop(120, station_location(infra, 'D', 'V2', 0)),
                 Stop(120, station_location(infra, 'E', 'V4', 200)),
@@ -165,7 +207,7 @@ def hamelinfra_circulations(
             station_location(infra, 'H', 'V4', 200),
             station_location(infra, 'I', 'V4', 200),
             label=f'omnibusDI{2+2*i}',
-            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:15:00'),
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:25:00'),
             stops=[
                 # Stop(120, station_location(infra, 'D', 'V4', 200)),
                 Stop(120, station_location(infra, 'E', 'V4', 200)),
@@ -176,7 +218,7 @@ def hamelinfra_circulations(
         ).add_standard_single_value_allowance("percentage", 5, )
 
         sim_builder.add_train_schedule(
-            station_location(infra, 'I', 'V4', 200),
+            station_location(infra, 'I', 'V3', 200),
             station_location(infra, 'H', 'V1', -200),
             station_location(infra, 'G', 'V5', -200),
             station_location(infra, 'F', 'V5', -200),
@@ -200,7 +242,7 @@ def hamelinfra_circulations(
             station_location(infra, 'J', 'V2', 200),
             station_location(infra, 'K', 'V2', 200),
             label=f'omnibusDK{2+2*i}',
-            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:20:00'),
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:30:00'),
             stops=[
                 # Stop(120, station_location(infra, 'D', 'V4', 200)),
                 Stop(120, station_location(infra, 'E', 'V4', 200)),
