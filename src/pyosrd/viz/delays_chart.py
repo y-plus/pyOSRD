@@ -2,19 +2,25 @@ import numpy as np
 import plotly.graph_objects as go
 
 from pyosrd.delays_between_simulations import calculate_delays_at_points
-from pyosrd.utils import seconds_to_hour
+from pyosrd.utils import seconds_to_hour, hour_to_seconds
 
 
 def plot_delays(
     self,
     ref_sim,
     eco_or_base: str = 'eco',
-    tmin : float | None = None,
-    tmax : float | None = None,
+    tmin: float | str | None = None,
+    tmax: float | str | None = None,
+    dmax: float | str | None = None, 
 ) -> go.Figure:
 
     if not tmin:
         tmin= min(self.departure_times)
+    if isinstance(tmin, str):
+        tmin = hour_to_seconds(tmin)
+    if isinstance(tmax, str):
+        tmax = hour_to_seconds(tmax)
+
     if not tmax:
         tmax = round(max(self.last_arrival_times))
     time_interp = np.linspace(tmin, tmax, int(tmax-tmin)+1)
@@ -54,9 +60,15 @@ def plot_delays(
             },
     )
 
+    if isinstance(dmax, str):
+        dmax = hour_to_seconds(dmax)
     xmax = round(max(time))
     xticks = list(range(0, xmax + xmax // 5, xmax // 5))
-    ymax = int(sum(v[-1] for v in delays.values()))
+    if not dmax:
+        ymax = int(sum(v[-1] for v in delays.values())) + 1
+    else:
+        ymax = int(dmax) + 1
+
     yticks = list(range(0, ymax + ymax // 5, ymax // 5))
     fig.update_layout(
         yaxis=dict(
@@ -70,5 +82,6 @@ def plot_delays(
             ticktext=[seconds_to_hour(xtick) for xtick in xticks]
         )
     )
-
+    if dmax:
+        fig.update_yaxes(range=[0, ymax])
     return fig
