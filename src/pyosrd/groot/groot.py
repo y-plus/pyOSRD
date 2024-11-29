@@ -124,6 +124,7 @@ class Groot(object):
                 for label in ax.get_xticklabels()
             ]
         )
+        plt.locator_params(axis='x', nbins=6)
         ax.set_xlabel('Time')
         ax.set_yticks(
             [
@@ -332,13 +333,15 @@ class Groot(object):
     ) -> Self:
 
             if (self.ends_with_a_signal[self.get_tvd(priority_train, conflict_zone)]):
-                zone_to_free = conflict_zone
+                zone_to_free_priority = conflict_zone
+                zone_to_free_waiting = conflict_zone
             else:
-                zone_to_free = self.next_signal(priority_train, conflict_zone)
+                zone_to_free_priority = self.next_signal(priority_train, conflict_zone)
+                zone_to_free_waiting = self.next_signal(waiting_train, conflict_zone)
 
             delay = (
-                    self.times_zones[priority_train][zone_to_free][1]
-                    - self.times_zones[waiting_train][zone_to_free][0]
+                    self.times_zones[priority_train][zone_to_free_priority][1]
+                    - self.times_zones[waiting_train][zone_to_free_waiting][0]
             )
             return self.add_delay(waiting_train, wait_at, delay)
 
