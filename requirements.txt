@@ -6,3 +6,4 @@ pytest-cov
 coverage
 coverage[toml]
 ruff
+kaleido
