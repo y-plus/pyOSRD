@@ -1,7 +1,7 @@
 from pyosrd import OSRD
 
 
-def multi_5tr_5st_delay_first(
+def multi_delay_first_train_first_station(
     dir: str,
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',

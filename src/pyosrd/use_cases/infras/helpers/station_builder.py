@@ -214,7 +214,7 @@ def build_N_dvg_station_cvg(
     track_in: TrackSection,
     base_name: str,
     N: int,
-    length_between_stations: float,
+    length_between_stations: float = 1_000.,
 ) -> TrackSection:
     """Create a serie of N stations (see build_dvg_station_cvg for details).
 
