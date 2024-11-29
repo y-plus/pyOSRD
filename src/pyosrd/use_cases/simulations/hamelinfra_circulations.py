@@ -22,7 +22,7 @@ def hamelinfra_circulations(
 
     sim_builder = SimulationBuilder()
 
-    n_hours = 4
+    n_hours = 2
     start_hour = 8
 
     for i in range(n_hours):
@@ -30,73 +30,145 @@ def hamelinfra_circulations(
         # Frequence 60 min
 
         sim_builder.add_train_schedule(
-            station_location(infra, 'D', 'V1'),
-            station_location(infra, 'E', 'V1', 75),
-            station_location(infra, 'F', 'V1', 75),
-            station_location(infra, 'G', 'V1', 75),
-            station_location(infra, 'H', 'V4', 75),
-            station_location(infra, 'I', 'V4', 200),
+            station_location(infra, 'D', 'V2'),
+            station_location(infra, 'E', 'V2', 75),
+            station_location(infra, 'F', 'V2', 75),
+            station_location(infra, 'G', 'V2', 75),
+            station_location(infra, 'H', 'V2', 75),
+            station_location(infra, 'I', 'V2', 200),
             label=f'directDI{2+2*i}',
             departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:00:00'),
             rolling_stock='hamelin_rolling_stock',
             stops=[
-                Stop(120, station_location(infra, 'D', 'V1', 0)),
-                Stop(120, station_location(infra, 'I', 'V4', 0)),
+                Stop(120, station_location(infra, 'D', 'V2', 0)),
+                Stop(120, station_location(infra, 'I', 'V2', 0)),
             ]
         ).add_standard_single_value_allowance("percentage", 5, )
 
         sim_builder.add_train_schedule(
             station_location(infra, 'I', 'V3'),
-            station_location(infra, 'H', 'V1', -75),
-            station_location(infra, 'G', 'V1', -75),
-            detector_location(infra, 'D.track.110.5'),
-            station_location(infra, 'F', 'V1', -75),
-            detector_location(infra, 'D.track.080.3'),
+            station_location(infra, 'H', 'V3', -75),
+            station_location(infra, 'G', 'V3', -75),
+            # detector_location(infra, 'D.track.110.5'),
+            station_location(infra, 'F', 'V3', -75),
+            # detector_location(infra, 'D.track.080.3'),
             # detector_location(infra, 'detector.29'),
-            station_location(infra, 'E', 'V1', -75),
-            station_location(infra, 'D', 'V1', 75),
+            station_location(infra, 'E', 'V3', -75),
+            station_location(infra, 'D', 'V3', 75),
             label=f'directID{2+2*i}',
-            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:30:00'),
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:00:00'),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'I', 'V3', 0)),
-                Stop(120, station_location(infra, 'D', 'V1', -50)),
+                Stop(120, station_location(infra, 'D', 'V3', -50)),
             ]
         ).add_standard_single_value_allowance("percentage", 5, )
 
         sim_builder.add_train_schedule(
-            station_location(infra, 'D', 'V3'),
-            station_location(infra, 'E', 'V1', 75),
-            station_location(infra, 'F', 'V1', 75),
-            station_location(infra, 'G', 'V1', 75),
+            station_location(infra, 'D', 'V2'),
+            station_location(infra, 'E', 'V2', 75),
+            station_location(infra, 'F', 'V2', 75),
+            station_location(infra, 'G', 'V2', 75),
             station_location(infra, 'J', 'V2', 75),
-            station_location(infra, 'K', 'V4', 200),
+            station_location(infra, 'K', 'V2', 200),
             label=f'directDK{2+2*i}',
             departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:05:00'),
             rolling_stock='hamelin_rolling_stock',
             stops=[
-                Stop(120, station_location(infra, 'D', 'V3', 0)),
-                Stop(120, station_location(infra, 'K', 'V4', 0)),
+                Stop(120, station_location(infra, 'D', 'V2', 0)),
+                Stop(120, station_location(infra, 'K', 'V2', 0)),
             ]
         ).add_standard_single_value_allowance("percentage", 5, )
 
         sim_builder.add_train_schedule(
             station_location(infra, 'K', 'V4'),
             station_location(infra, 'J', 'V1', -75),
-            station_location(infra, 'G', 'V1', -75),
-            detector_location(infra, 'D.track.110.5'),
-            station_location(infra, 'F', 'V1', -75),
-            detector_location(infra, 'D.track.080.3'),
-            station_location(infra, 'E', 'V1', -75),
+            station_location(infra, 'G', 'V3', -75),
+            station_location(infra, 'F', 'V3', -75),
+            station_location(infra, 'E', 'V3', -75),
             station_location(infra, 'D', 'V3', 75),
             label=f'directKD{2+2*i}',
-            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:35:00'),
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:05:00'),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'K', 'V4', 0)),
                 Stop(120, station_location(infra, 'D', 'V3', -50)),
             ]
         ).add_standard_single_value_allowance("percentage", 5, )
+
+        sim_builder.add_train_schedule(
+            station_location(infra, 'D', 'V2'),
+            station_location(infra, 'E', 'V2', 75),
+            station_location(infra, 'F', 'V2', 75),
+            station_location(infra, 'G', 'V2', 75),
+            station_location(infra, 'H', 'V2', 75),
+            station_location(infra, 'I', 'V2', 200),
+            label=f'semidirectDI{2+2*i}',
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:10:00'),
+            rolling_stock='hamelin_rolling_stock',
+            stops=[
+                Stop(120, station_location(infra, 'D', 'V2', 0)),
+                Stop(120, station_location(infra, 'G', 'V2', 75)),
+                Stop(120, station_location(infra, 'H', 'V2', 75)),
+                Stop(120, station_location(infra, 'I', 'V2', 0)),
+            ]
+        ).add_standard_single_value_allowance("percentage", 5, )
+
+        sim_builder.add_train_schedule(
+            station_location(infra, 'I', 'V3'),
+            station_location(infra, 'H', 'V3', -75),
+            station_location(infra, 'G', 'V3', -75),
+            station_location(infra, 'F', 'V3', -75),
+            station_location(infra, 'E', 'V3', -75),
+            station_location(infra, 'D', 'V3', 75),
+            label=f'semidirectID{1+2*i}',
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:10:00'),
+            rolling_stock='hamelin_rolling_stock',
+            stops=[
+                Stop(120, station_location(infra, 'I', 'V3', 0)),
+                Stop(120, station_location(infra, 'H', 'V3', -75)),
+                Stop(120, station_location(infra, 'G', 'V3', -75)),
+                Stop(120, station_location(infra, 'D', 'V3', -50)),
+            ]
+        ).add_standard_single_value_allowance("percentage", 5, )
+
+        sim_builder.add_train_schedule(
+            station_location(infra, 'D', 'V2'),
+            station_location(infra, 'E', 'V2', 75),
+            station_location(infra, 'F', 'V2', 75),
+            station_location(infra, 'G', 'V2', 75),
+            station_location(infra, 'J', 'V2', 75),
+            station_location(infra, 'K', 'V2', 200),
+            label=f'semidirectDK{2+2*i}',
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:15:00'),
+            rolling_stock='hamelin_rolling_stock',
+            stops=[
+                Stop(120, station_location(infra, 'D', 'V2', 0)),
+                Stop(120, station_location(infra, 'G', 'V2', 75)),
+                Stop(120, station_location(infra, 'J', 'V2', 75)),
+                Stop(120, station_location(infra, 'K', 'V2', 0)),
+            ]
+        ).add_standard_single_value_allowance("percentage", 5, )
+
+        sim_builder.add_train_schedule(
+            station_location(infra, 'K', 'V3'),
+            station_location(infra, 'J', 'V1', -75),
+            station_location(infra, 'G', 'V3', -75),
+            station_location(infra, 'F', 'V3', -75),
+            station_location(infra, 'E', 'V3', -75),
+            station_location(infra, 'D', 'V3', 75),
+            label=f'semidirectKD{1+2*i}',
+            departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:15:00'),
+            rolling_stock='hamelin_rolling_stock',
+            stops=[
+                Stop(120, station_location(infra, 'K', 'V3', 0)),
+                Stop(120, station_location(infra, 'J', 'V1', -75)),
+                Stop(120, station_location(infra, 'G', 'V3', -75)),
+                Stop(120, station_location(infra, 'D', 'V3', -50)),
+            ]
+        ).add_standard_single_value_allowance("percentage", 5, )
+
+        # /////////// HISTORY ///////////
 
         # sim_builder.add_train_schedule(
         #     station_location(infra, 'A', 'V2', 200),
@@ -127,80 +199,6 @@ def hamelinfra_circulations(
         #         Stop(120, station_location(infra, 'D', 'V4')),
         #         Stop(120, station_location(infra, 'C', 'V1', -200)),
         #         Stop(120, station_location(infra, 'B', 'V1', -200)),
-        #     ]
-        # ).add_standard_single_value_allowance("percentage", 5, )
-
-        # sim_builder.add_train_schedule(
-        #     station_location(infra, 'D', 'V2'),
-        #     station_location(infra, 'E', 'V4', 200),
-        #     station_location(infra, 'F', 'V4', 200),
-        #     station_location(infra, 'G', 'V4', 200),
-        #     station_location(infra, 'H', 'V4', 200),
-        #     station_location(infra, 'I', 'V4', 200),
-        #     label=f'semidirectDI{2+2*i}',
-        #     departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:10:00'),
-        #     rolling_stock='hamelin_rolling_stock',
-        #     stops=[
-        #         # Stop(120, station_location(infra, 'D', 'V4', 200)),
-        #         # Stop(120, station_location(infra, 'E', 'V4', 200)),
-        #         # Stop(120, station_location(infra, 'F', 'V4', 200)),
-        #         Stop(120, station_location(infra, 'G', 'V4', 200)),
-        #         Stop(120, station_location(infra, 'H', 'V4', 200)),
-        #     ]
-        # ).add_standard_single_value_allowance("percentage", 5, )
-
-        # sim_builder.add_train_schedule(
-        #     station_location(infra, 'I', 'V3', 200),
-        #     station_location(infra, 'H', 'V1', -200),
-        #     station_location(infra, 'G', 'V5', -200),
-        #     station_location(infra, 'F', 'V5', -200),
-        #     station_location(infra, 'E', 'V5', -200),
-        #     station_location(infra, 'D', 'V2', -200),
-        #     label=f'semidirectID{1+2*i}',
-        #     departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:00:00'),
-        #     rolling_stock='hamelin_rolling_stock',
-        #     stops=[
-        #         Stop(120, station_location(infra, 'H', 'V1', -200)),
-        #         Stop(120, station_location(infra, 'G', 'V5', -200)),
-        #         # Stop(120, station_location(infra, 'F', 'V5', -200)),
-        #         # Stop(120, station_location(infra, 'E', 'V5', -200)),
-        #     ]
-        # ).add_standard_single_value_allowance("percentage", 5, )
-
-        # sim_builder.add_train_schedule(
-        #     station_location(infra, 'D', 'V2'),
-        #     station_location(infra, 'E', 'V4', 200),
-        #     station_location(infra, 'F', 'V4', 200),
-        #     station_location(infra, 'G', 'V4', 200),
-        #     station_location(infra, 'J', 'V2', 200),
-        #     station_location(infra, 'K', 'V4', 200),
-        #     label=f'semidirectDK{2+2*i}',
-        #     departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:15:00'),
-        #     rolling_stock='hamelin_rolling_stock',
-        #     stops=[
-        #         # Stop(120, station_location(infra, 'D', 'V4', 200)),
-        #         # Stop(120, station_location(infra, 'E', 'V4', 200)),
-        #         # Stop(120, station_location(infra, 'F', 'V4', 200)),
-        #         Stop(120, station_location(infra, 'G', 'V4', 200)),
-        #         Stop(120, station_location(infra, 'J', 'V2', 200)),
-        #     ]
-        # ).add_standard_single_value_allowance("percentage", 5, )
-
-        # sim_builder.add_train_schedule(
-        #     station_location(infra, 'K', 'V4', 200),
-        #     station_location(infra, 'J', 'V1', -200),
-        #     station_location(infra, 'G', 'V5', -200),
-        #     station_location(infra, 'F', 'V5', -200),
-        #     station_location(infra, 'E', 'V5', -200),
-        #     station_location(infra, 'D', 'V2', -200),
-        #     label=f'semidirectKD{1+2*i}',
-        #     departure_time=hour_to_seconds(f'{str(start_hour+i).zfill(2)}:05:00'),
-        #     rolling_stock='hamelin_rolling_stock',
-        #     stops=[
-        #         Stop(120, station_location(infra, 'J', 'V1', -200)),
-        #         Stop(120, station_location(infra, 'G', 'V5', -200)),
-        #         # Stop(120, station_location(infra, 'F', 'V5', -200)),
-        #         # Stop(120, station_location(infra, 'E', 'V5', -200)),
         #     ]
         # ).add_standard_single_value_allowance("percentage", 5, )
 
