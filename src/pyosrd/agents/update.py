@@ -190,6 +190,7 @@ def sim_with_updated_results(
             for modification in modifications:
                 
                 point = sim.get_point(modification['id'])
+                
                 for r in updated_hp:
                     if (
                         r['path_offset'] <= modification['position']
@@ -200,8 +201,10 @@ def sim_with_updated_results(
                             / (modification['new_t'] - modification['shift_t'] - modification['prev_t'])
                         )
                         r['time'] = modification['prev_t'] + alpha * (modification['new_t'] - modification['prev_t'])
+                    
                     if r['path_offset'] > modification['position']:
                         r['time'] += modification['shift_t']
+                
                 updated_hp.append(
                     {
 
