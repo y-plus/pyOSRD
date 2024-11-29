@@ -69,7 +69,7 @@ def add_delays_in_results(self) -> None:
         with open(os.path.join(self.dir, self.delays_json), 'r') as f:
             delays = json.load(f)
     except FileNotFoundError:
-        delays = {}
+        delays = []
     delays.sort(key=lambda x: x['time_threshold'])
     for train in self.trains:
         previous_delays = 0
