@@ -63,5 +63,5 @@ def seconds_to_hour(seconds: int) -> str:
     >>> seconds_to_hour( 24 * 3600 + 8 * 3600 + 15 * 60 + 23)
     '1 day, 8:15:23'
     """
-    delta = datetime.timedelta(seconds=seconds)
+    delta = datetime.timedelta(seconds=int(seconds))
     return str(delta).zfill(8)
