@@ -460,3 +460,28 @@ class Groot(object):
         }
 
         return new_groot
+
+    def trains_in_zone(self: Self, zone: str) -> list[str]:
+        trains_entries = dict()
+        for train in self.trains:
+            if zone in self.times_zones[train]:
+                trains_entries[train] = self.times_zones[train][zone][0]
+        return [e[0]for e in sorted(trains_entries.items(), key= lambda x: x[1])]
+    
+    def previous_train(self: Self, train: str, zone: str) -> str | None:
+        trains = self.trains_in_zone(zone)
+        if train not in trains:
+            return
+        idx = trains.index(train)
+        if idx == 0:
+            return
+        return trains[idx-1]
+
+    def next_train(self: Self, train: str, zone: str) -> str | None:
+        trains = self.trains_in_zone(zone)
+        if train not in trains:
+            return
+        idx = trains.index(train)
+        if idx == len(trains)-1:
+            return
+        return trains[idx+1]
