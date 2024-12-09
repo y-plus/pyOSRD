@@ -149,10 +149,11 @@ def build_blocks(
     forward: bool = True,
     backward: bool = False,
     geo_direction: GeoDirection | float = GeoDirection.EAST,
+    length_block: float = LENGTH_BLOCK
 ) -> TrackSection:
 
     start_position = track.length
-    extend_track(track=track, distance=num_blocks * LENGTH_BLOCK, geo_direction=geo_direction)
+    extend_track(track=track, distance=num_blocks * length_block, geo_direction=geo_direction)
     if forward:
         add_carre_with_detector(
             track,
@@ -170,7 +171,7 @@ def build_blocks(
     for i in range(1, num_blocks):
         add_semaphores_with_detector(
             track_section=track,
-            position=start_position +  i * LENGTH_BLOCK,
+            position=start_position +  i * length_block,
             label=f"{track.label}.{i}",
             forward=forward,
             backward=backward
