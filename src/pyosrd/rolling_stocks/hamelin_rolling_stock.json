@@ -1,0 +1,75 @@
+{
+  "railjson_version": "3.2",
+  "length": 150,
+  "max_speed": 40,
+  "startup_time": 10,
+  "startup_acceleration": 0.05,
+  "comfort_acceleration": 0.25,
+  "inertia_coefficient": 1.05,
+  "name": "hamelin_rolling_stock",
+  "mass": 250000,
+  "loading_gauge": "G1",
+  "gamma": {
+    "value": 0.5,
+    "type": "CONST"
+  },
+  "rolling_resistance": {
+    "type": "davis",
+    "A": 5400,
+    "B": 200,
+    "C": 12
+  },
+  "effort_curves": {
+    "default_mode": "thermal",
+    "modes": {
+      "thermal": {
+        "curves": [],
+        "default_curve": {
+          "speeds": [
+            0,
+            5,
+            10,
+            15,
+            20,
+            22,
+            27,
+            32,
+            37
+          ],
+          "max_efforts": [
+            441666.6666666667,
+            439473.6842105263,
+            435714.28571428574,
+            427777.77777777775,
+            400000,
+            350971.5388299929,
+            347206.93642395496,
+            346938.7385068534,
+            344395.0325320009
+          ]
+        },
+        "is_electric": false
+      }
+    }
+  },
+  "base_power_class": "1",
+  "metadata": {
+    "detail": "",
+    "number": "1",
+    "reference": "",
+    "family": "",
+    "type": "",
+    "grouping": "",
+    "series": "",
+    "subseries": "",
+    "unit": ""
+  },
+  "power_restrictions": {},
+  "energy_sources": [],
+  "supported_signaling_systems": [
+    "BAL",
+    "BAPR",
+    "TVM300",
+    "TVM430"
+  ]
+}
