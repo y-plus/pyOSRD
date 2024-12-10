@@ -9,6 +9,7 @@ import networkx as nx
 import pandas as pd
 
 from matplotlib.axes._axes import Axes
+from ortools.linear_solver import pywraplp
 
 from pyosrd.utils import seconds_to_hour
 
@@ -485,3 +486,52 @@ class Groot(object):
         if idx == len(trains)-1:
             return
         return trains[idx+1]
+    
+
+    def speedup(self: Self, ref: Self, train: str, zone:str) -> Self:
+
+        new = copy.deepcopy(self)
+        new._times_zones = None
+        solver = pywraplp.Solver.CreateSolver("GLOP")
+        if not solver:
+            return
+        t_in, t_out = dict(), dict()
+        start_tvd = self.get_tvd(train, zone)
+
+        path = self.path(train)
+        steps = path[path.index(start_tvd):]
+
+        for i, tvd in enumerate(steps):
+            t_in_ref, t_out_ref = ref.times[train][tvd]
+            t_in_d, _ = self.times[train][tvd]
+            
+            t_in_min = t_in_ref
+            if prev_train:= self.previous_train(train, self.zones[tvd]):
+                print(prev_train, self.times_zones[prev_train][zone][1])
+                t_in_min = max(
+                    t_in_min,
+                    self.times_zones[prev_train][self.zones[tvd]][1]
+                )
+            t_in[tvd] = solver.NumVar(t_in_min, solver.infinity(), f"t_in_{tvd}")
+            t_out[tvd] = solver.NumVar(t_out_ref, solver.infinity(), f"t_out_{tvd}")
+            solver.Add(t_out[tvd] - t_in[tvd] >= self.min_durations[train][tvd])
+            if i==0:
+                solver.Add (t_in[tvd] == self.times[train][tvd][0])
+            else:
+                previous_tvd = self.path(train)[self.path(train).index(tvd)-1]
+                solver.Add(
+                    t_in[tvd] ==
+                    t_out[previous_tvd]
+                    - (self.times[train][previous_tvd][1] - t_in_d)
+                )
+
+        solver.Minimize(t_in[steps[-1]])
+        status = solver.Solve()
+        if status == pywraplp.Solver.OPTIMAL:
+            for tvd in steps:
+                new.times[train][tvd] = (
+                    t_in[tvd].solution_value(),
+                    t_out[tvd].solution_value()
+                )
+
+        return new
