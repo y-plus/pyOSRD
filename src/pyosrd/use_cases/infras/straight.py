@@ -51,6 +51,8 @@ def straight(
     
 
     built_infra = infra_builder.build()
+
+    os.makedirs(dir, exist_ok=True)
     built_infra.save(os.path.join(dir, infra_json))
 
     return built_infra
