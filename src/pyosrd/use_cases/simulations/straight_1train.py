@@ -14,6 +14,7 @@ def straight_1train(
     infra_json: str = 'infra.json',
     simulation_json: str = 'simulation.json',
     num_stations: int = 4,
+    stop_at_stations: bool = True
 ) -> None:
 
     infra = straight(dir, infra_json, num_stations=num_stations)
@@ -33,8 +34,8 @@ def straight_1train(
         stops=[
             Stop(120, station_location(infra, chr(first+n), 'V1'))
             for n in range(num_stations)
-        ]
-    ).add_standard_single_value_allowance("percentage", 15, )
+        ] if stop_at_stations else []
+    ).add_standard_single_value_allowance("percentage", 25, )
 
 
     built_simulation = sim_builder.build()
