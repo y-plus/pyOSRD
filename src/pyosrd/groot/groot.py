@@ -490,11 +490,13 @@ class Groot(object):
 
     def speedup(self: Self, ref: Self, train: str, zone:str) -> Self:
 
-        new = copy.deepcopy(self)
-        new._times_zones = None
+        reaccelerated = copy.deepcopy(self)
+        reaccelerated._times_zones = None
+
         solver = pywraplp.Solver.CreateSolver("GLOP")
         if not solver:
             return
+
         t_in, t_out = dict(), dict()
         start_tvd = self.get_tvd(train, zone)
 
@@ -529,9 +531,9 @@ class Groot(object):
         status = solver.Solve()
         if status == pywraplp.Solver.OPTIMAL:
             for tvd in steps:
-                new.times[train][tvd] = (
+                reaccelerated.times[train][tvd] = (
                     t_in[tvd].solution_value(),
                     t_out[tvd].solution_value()
                 )
 
-        return new
+        return reaccelerated
