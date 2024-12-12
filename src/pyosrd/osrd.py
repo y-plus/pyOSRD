@@ -1,4 +1,5 @@
 import base64
+import copy
 import importlib
 import json
 import os
@@ -488,7 +489,7 @@ class OSRD():
                 offset = point.position - self.train_departure(train).position
             else:
                 offset = self.train_departure(train).position - point.position
-            if offset < 0:
+            if round(abs(offset), 3) < 0:
                 return None
             return offset
 
@@ -1127,9 +1128,11 @@ class OSRD():
         d = dict()
 
         for train in self.trains:
+            print(train, self.get_stops(train))
             stations = self.points_encountered_by_train(train, types='station')
             d[train] = dict()
-            for stop in self.get_stops(train):
+            stops = copy.deepcopy(self.get_stops(train))
+            for stop in stops:
                 if 'position' not in stop:
                     stop['position'] = self.offset_in_path_of_train(
                         Point(
@@ -1138,11 +1141,11 @@ class OSRD():
                         ),
                         train
                     )
-                if stop['position'] > 0:
+                if stop['position'] >= 0:
                     station = min(
-                            stations,
-                            key= lambda s: abs(s['offset'] - stop['position'])
-                        )
+                        stations,
+                        key= lambda s: abs(s['offset'] - stop['position'])
+                    )
                     hp = self._head_position(train)
                     for i, r in enumerate(hp):
                         if r['path_offset'] <= stop['position'] and hp[i+1]['path_offset'] > stop['position']:
