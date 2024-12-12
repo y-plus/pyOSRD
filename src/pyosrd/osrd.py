@@ -1128,7 +1128,6 @@ class OSRD():
         d = dict()
 
         for train in self.trains:
-            print(train, self.get_stops(train))
             stations = self.points_encountered_by_train(train, types='station')
             d[train] = dict()
             stops = copy.deepcopy(self.get_stops(train))
