@@ -509,7 +509,6 @@ class Groot(object):
             
             t_in_min = t_in_ref
             if prev_train:= self.previous_train(train, self.zones[tvd]):
-                print(prev_train, self.times_zones[prev_train][zone][1])
                 t_in_min = max(
                     t_in_min,
                     self.times_zones[prev_train][self.zones[tvd]][1]
