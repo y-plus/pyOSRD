@@ -17,7 +17,7 @@ def sim_with_updated_results(
     track_section_lengths = sim.track_section_lengths
     track_section_network = sim._track_section_network
 
-    updated: OSRD = copy.deepcopy(sim.delayed())
+    updated: OSRD = copy.deepcopy(sim)
     updated._train_track_sections = None
 
     for train in sim.trains:
@@ -99,8 +99,10 @@ def sim_with_updated_results(
                 hp = updated._head_position(train, eco_or_base)
                 new_hp = []
                 for r in hp:
+
                     if r['path_offset'] < p1:
                         new_hp.append(r)
+
                     elif r['path_offset'] > p2:
                         new_hp.append(
                             {
@@ -194,13 +196,14 @@ def sim_with_updated_results(
                 for r in updated_hp:
                     if (
                         r['path_offset'] <= modification['position']
-                        and r['path_offset'] > modification['prev_position']
+                        and r['path_offset'] >= modification['prev_position']
                     ):
                         alpha = (
                             (r['time'] - modification['prev_t'])
                             / (modification['new_t'] - modification['shift_t'] - modification['prev_t'])
                         )
-                        r['time'] = modification['prev_t'] + alpha * (modification['new_t'] - modification['prev_t'])
+                        r['time'] =\
+                            modification['prev_t'] + alpha * (modification['new_t'] - modification['prev_t'])
                     
                     if r['path_offset'] > modification['position']:
                         r['time'] += modification['shift_t']

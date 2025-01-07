@@ -1124,9 +1124,8 @@ class OSRD():
         )
 
 
-    def stops_at_stations(self) -> dict[str, dict[str, tuple[str, str]]]:
+    def stops_by_trains(self) -> dict[str, dict[str, tuple[str, str]]]:
         d = dict()
-
         for train in self.trains:
             stations = self.points_encountered_by_train(train, types='station')
             d[train] = dict()
@@ -1154,6 +1153,17 @@ class OSRD():
                             )
                             continue
         return d
+
+    def stops_by_stations(self) -> dict[str, dict[str, tuple[float, float]]]:
+        stops_by_trains = self.stops_by_trains()
+        stops_by_stations = dict()
+        for station in self.station_capacities:
+            stops_by_stations[station] = dict()
+            for train, stops in stops_by_trains.items():
+                for stop, times in stops.items():
+                    if "".join(stop.split('/')[:-1]) == station:
+                        stops_by_stations[station][train] = (stop.split('/')[-1],times)
+        return stops_by_stations
 
 def _group_idx(self, group: str) -> int:
     return [

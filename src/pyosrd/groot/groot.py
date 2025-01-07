@@ -364,7 +364,7 @@ class Groot(object):
         self: Self,
         train: str,
         alt_zones: list[str]
-    ) -> list[str]:
+    ) -> Self:
 
         orig_zones = self.train_zones(train)
         new_zones = [z for z in alt_zones if z not in orig_zones]
