@@ -56,7 +56,7 @@ def c1(
     stationB = infra_builder.add_operational_point(label='stationB')
     stationB.add_part(track=T, offset=10_000-60)
 
-    os.makedirs(dir, exist_ok=True)
+
 
     built_infra = infra_builder.build()
 
