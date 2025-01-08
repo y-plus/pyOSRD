@@ -28,7 +28,7 @@ def calculate_delays_at_points(
         (
             points[point]['offset'], 
             points[point][f't_{eco_or_base}'], 
-            round(
+            (
                 points[point][f't_{eco_or_base}']
                 - points_ref[point][f't_{eco_or_base}']
             )

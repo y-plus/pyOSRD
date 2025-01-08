@@ -1,4 +1,5 @@
 import base64
+import copy
 import importlib
 import json
 import os
@@ -488,7 +489,7 @@ class OSRD():
                 offset = point.position - self.train_departure(train).position
             else:
                 offset = self.train_departure(train).position - point.position
-            if offset < 0:
+            if round(abs(offset), 3) < 0:
                 return None
             return offset
 
@@ -1123,13 +1124,13 @@ class OSRD():
         )
 
 
-    def stops_at_stations(self) -> dict[str, dict[str, tuple[str, str]]]:
+    def stops_by_trains(self) -> dict[str, dict[str, tuple[str, str]]]:
         d = dict()
-
         for train in self.trains:
             stations = self.points_encountered_by_train(train, types='station')
             d[train] = dict()
-            for stop in self.get_stops(train):
+            stops = copy.deepcopy(self.get_stops(train))
+            for stop in stops:
                 if 'position' not in stop:
                     stop['position'] = self.offset_in_path_of_train(
                         Point(
@@ -1138,11 +1139,11 @@ class OSRD():
                         ),
                         train
                     )
-                if stop['position'] > 0:
+                if stop['position'] >= 0:
                     station = min(
-                            stations,
-                            key= lambda s: abs(s['offset'] - stop['position'])
-                        )
+                        stations,
+                        key= lambda s: abs(s['offset'] - stop['position'])
+                    )
                     hp = self._head_position(train)
                     for i, r in enumerate(hp):
                         if r['path_offset'] <= stop['position'] and hp[i+1]['path_offset'] > stop['position']:
@@ -1152,6 +1153,17 @@ class OSRD():
                             )
                             continue
         return d
+
+    def stops_by_stations(self) -> dict[str, dict[str, tuple[float, float]]]:
+        stops_by_trains = self.stops_by_trains()
+        stops_by_stations = dict()
+        for station in self.station_capacities:
+            stops_by_stations[station] = dict()
+            for train, stops in stops_by_trains.items():
+                for stop, times in stops.items():
+                    if "".join(stop.split('/')[:-1]) == station:
+                        stops_by_stations[station][train] = (stop.split('/')[-1],times)
+        return stops_by_stations
 
 def _group_idx(self, group: str) -> int:
     return [

@@ -1,10 +1,11 @@
 import shutil
 
 import pytest
+import networkx as nx
 
 from pyosrd import OSRD
 from pyosrd.schedules import Schedule, schedule_from_osrd
-
+from pyosrd.groot import Groot
 
 @pytest.fixture
 def three_trains() -> Schedule:
@@ -213,3 +214,83 @@ def infra_station_c2():
     yield OSRD(dir='tmp_station_c2', simulation='station_capacity2')
     shutil.rmtree('tmp_station_c2', ignore_errors=True)
     shutil.rmtree('tmp_station_c2_sub', ignore_errors=True)
+
+
+@pytest.fixture
+def groot_1train():
+    g = Groot()
+
+    g.zones = {'A': 'A', 'B': 'B', 'C': 'C'}
+    g.times = {
+        'train1': {
+            'A': (0, 3),
+            'B': (2.5, 5.5),
+            'C': (5, 8),
+        },
+    }
+    g._zones_graph = nx.DiGraph()
+    g._zones_graph.add_edges_from(
+        [
+            ('A', 'B'),
+            ('B', 'C'),
+        ]
+    )
+    g.min_durations = {
+        'train1': {
+            'A': 2,
+            'B': 2,
+            'C': 2,
+        },
+    }
+    g.ends_with_a_signal = {
+            'A': True,
+            'B': True,
+            'C': True,
+    }
+    g.stations = ['A', 'C']
+    return g
+
+
+@pytest.fixture
+def groot_2trains():
+    g = Groot()
+
+    g.zones = {'A': 'A', 'B': 'B', 'C': 'C'}
+    g.times = {
+        'train1': {
+            'A': (0, 3),
+            'B': (2.5, 5.5),
+            'C': (5, 8),
+        },
+        'train2': {
+            'A': (4, 7),
+            'B': (6.5, 9.5),
+            'C': (9, 12),
+        },
+    }
+    g._zones_graph = nx.DiGraph()
+    g._zones_graph.add_edges_from(
+        [
+            ('A', 'B'),
+            ('B', 'C'),
+        ]
+    )
+    g.min_durations = {
+        'train1': {
+            'A': 2,
+            'B': 2,
+            'C': 2,
+        },
+        'train2': {
+            'A': 2,
+            'B': 2,
+            'C': 2,
+        },
+    }
+    g.ends_with_a_signal = {
+            'A': True,
+            'B': True,
+            'C': True,
+    }
+    g.stations = ['A', 'C']
+    return g

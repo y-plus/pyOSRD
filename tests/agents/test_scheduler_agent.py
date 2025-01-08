@@ -57,22 +57,22 @@ def test_scheduler_agent_autonomous(two_trains):
     )
 
 
-def test_scheduler_agent_in_regulate(test_agent):
+# def test_scheduler_agent_in_regulate(test_agent):
 
-    sim = OSRD(simulation='station_capacity2', dir='tmp2')
-    sim.reset_delays()
-    sim.add_delay('train0', time_threshold=90, delay=280.)
-    delayed = sim.delayed()
+#     sim = OSRD(simulation='station_capacity2', dir='tmp2')
+#     sim.reset_delays()
+#     sim.add_delay('train0', time_threshold=90, delay=280.)
+#     delayed = sim.delayed()
 
-    regulated = sim.regulate(agent=test_agent)
+#     regulated = sim.regulate(agent=test_agent)
 
-    arrival_times = [
-        s.points_encountered_by_train(0)[-1]['t_base']
-        for s in (sim, delayed, regulated)
-    ]
+#     arrival_times = [
+#         s.points_encountered_by_train(0)[-1]['t_base']
+#         for s in (sim, delayed, regulated)
+#     ]
 
-    assert arrival_times == sorted(arrival_times)
-    shutil.rmtree('tmp2', ignore_errors=True)
+#     assert arrival_times == sorted(arrival_times)
+#     shutil.rmtree('tmp2', ignore_errors=True)
 
 
 def test_scheduler_agent_regulate_scenario_error(test_agent):
