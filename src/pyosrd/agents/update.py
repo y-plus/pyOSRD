@@ -21,6 +21,7 @@ def sim_with_updated_results(
     updated._train_track_sections = None
 
     for train in sim.trains:
+
         times[train] = dict(
             sorted(
                 times[train].items(),
@@ -47,7 +48,6 @@ def sim_with_updated_results(
             updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['routing_requirements'] =\
                 [{'route': route} for route in _updated_routes(sim, train, updated_detectors)]
 
-        
         # get differences in detectors
         orig_detectors =\
             [d['id'] for d in detectors_encountered_by_train]
@@ -126,18 +126,19 @@ def sim_with_updated_results(
                 new_hp.sort(key=lambda r: r['time'])
                 updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['head_positions'] =\
                     new_hp
-        
+
+        # detectors_encountered_by_train = updated.points_encountered_by_train(
+        #     train,
+        #     types=['departure', 'arrival', 'detector']
+        # )
+
+        # update times
+
         detectors_encountered_by_train = updated.points_encountered_by_train(
             train,
             types=['departure', 'arrival', 'detector']
         )
 
-        # update times
-
-        detectors_encountered_by_train = updated.points_encountered_by_train(
-                        train,
-                        types=['departure', 'arrival', 'detector']
-                    )
         for eco_or_base in ['eco', 'base']:
             if f'{eco_or_base}_simulations' not in updated.results[group]:
                 continue
@@ -254,6 +255,8 @@ def _updated_routes(sim: OSRD, train: int | str, detectors: list[str]) -> list[s
 
     entry = detectors[0]
 
+    
+
     rd=set()
     for detector in detectors[1:]:
         exit = detector
@@ -270,8 +273,19 @@ def _updated_routes(sim: OSRD, train: int | str, detectors: list[str]) -> list[s
                 new_routes.append(candidate_routes[0])
             entry = exit
             rd = set()
+        elif route := next(
+            (
+                r for r,v in route_ios.items()
+                if exit == v[1] and entry in route_release_detectors[r]
+            ),
+            None
+        ):
+            new_routes.append(route)
+            entry = exit
+            rd = set()
         else:
             rd.add(exit)
+
     return new_routes
 
 
