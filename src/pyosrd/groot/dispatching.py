@@ -58,9 +58,9 @@ def evaluate_action(
             info['inversion'] = False
 
         case 2:  # reroute second train
-            if not (alt_zones := self.alternative_zones(train2, zone)):
+            if not (list_of_alt_zones := self.alternative_zones(train2, zone)):
                 return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
-            for alt_zones in alt_zones:
+            for alt_zones in list_of_alt_zones:
                 if self.zones_are_free(
                     alt_zones[1:-1],
                     self.times_zones[train2][alt_zones[0]][0],

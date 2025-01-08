@@ -313,13 +313,11 @@ class Groot(object):
             if n1 and n2:
                 if found:= nx.has_path(subg, source=n1, target=n2):
                     start, stop = n1, n2
-                    continue
-
+                    break
         if not found:
             return []
 
         alt_zones =[]
-
         for zones in nx.all_simple_paths(subg, start, stop):
             new_zones = [zone for zone in zones if zone not in self.train_zones(train)]
             alt_zones.append(zones[zones.index(new_zones[0])-1:zones.index(new_zones[-1])+2])
