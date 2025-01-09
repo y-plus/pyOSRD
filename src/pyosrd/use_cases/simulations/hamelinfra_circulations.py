@@ -9,12 +9,10 @@ from railjson_generator.schema.simulation.stop import Stop
 from pyosrd.use_cases.infras.hamelinfra import hamelinfra
 from pyosrd.infra.build import station_location
 
-from pyosrd.utils import hour_to_seconds
 
-
-# helper function to compute seconds from a hour and minutes
-def build_departure_time(hour: int, minutes: int) -> int:
-    return hour_to_seconds(f'{str(hour).zfill(2)}:{str(minutes).zfill(2)}:00')
+# helper function to compute seconds from hours and minutes
+def build_departure_time(hours: int, minutes: int) -> int:
+    return hours*3600+minutes*60
 
 
 def hamelinfra_circulations(
