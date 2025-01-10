@@ -20,10 +20,10 @@ def difference_durations(g1: Groot, g2: Groot) -> dict[str, dict[str, float]]:
     return diff
 
 
-def difference_departures_per_departure_time(
+def difference_departures_per_zone(
         g1: Groot,
         g2: Groot
-) -> dict[str, dict[float, float]]:
+) -> dict[str, dict[str, float]]:
     """ Compute the differences of departure times of all
     zones. Only compute difference if the zone is present in
     both groot.
@@ -39,10 +39,10 @@ def difference_departures_per_departure_time(
 
     Returns
     -------
-    dict[str, dict[float, float]]
+    dict[str, dict[str, float]]
         A dictionnary of all differences in departure time per zone
         per train. Access of the dictionnary is done by
-        dict[train][time of departure] = difference in departure
+        dict[train][zone] = difference in departure
         time of the zone
     """
     diff = dict()
@@ -54,7 +54,7 @@ def difference_departures_per_departure_time(
                 d2 = t[1]
                 if train not in diff:
                     diff[train] = dict()
-                diff[train][d2] = round(d2 - d1, 0)
+                diff[train][tvd] = round(d2 - d1, 0)
 
     return diff
 

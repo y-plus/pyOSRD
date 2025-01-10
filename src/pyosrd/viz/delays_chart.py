@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 from pyosrd.delays_between_simulations import calculate_delays_at_points
 from pyosrd.utils import seconds_to_hour, hour_to_seconds
 from pyosrd.groot import Groot
-from pyosrd.groot.compare import difference_departures_per_departure_time
+from pyosrd.groot.compare import difference_departures_per_zone
 
 
 def merge_time_entries(data: dict[str, dict[float, float]]) -> list[float]:
@@ -66,6 +66,42 @@ def interpolate_entries(
     return new_data
 
 
+def build_dict_difference_departures_per_departure_times(
+        groot: Groot,
+        diff: dict[str, dict[str, float]]
+) -> dict[str, dict[str, float]]:
+    """Create a dictionnary storing the difference of departure time
+    per departure time of each zone.
+
+    Parameters
+    ----------
+    groot : Groot
+        The groot to be used to get departure time from zones
+    diff : dict[str, dict[str, float]]
+        A dictionnary of all differences in departure time per zone
+        per train. Access of the dictionnary is done by
+        dict[train][zone] = difference in departure
+        time of the zone. (from difference_departures_per_zone)
+
+    Returns
+    -------
+    dict[str, dict[str, float]]
+        A dictionnary of all differences in departure time per
+        departure time per train. Access of the dictionnary is done by
+        dict[train][departure_time] = difference in departure
+        time of the zone (corresponding to the departure time).
+    """
+    result = {}
+    for train in diff.keys():
+        train_dict = diff[train]
+        result[train] = {}
+        for tvd in train_dict.keys():
+            departure_time = groot.times[train][tvd][1]
+            result[train][departure_time] = diff[train][tvd]
+
+    return result
+
+
 def plot_groot_delays(
     delayed: Groot,
     ref: Groot
@@ -84,17 +120,20 @@ def plot_groot_delays(
     go.Figure
         A figure showing the cumulated delays of the delayed groot.
     """
-    data = difference_departures_per_departure_time(delayed, ref)
-    all_entries = merge_time_entries(data)
-    new_data = interpolate_entries(data, all_entries)
+    diff_departure_time_per_zone = difference_departures_per_zone(delayed, ref)
+    diff_departure_time_per_dep_time = \
+        build_dict_difference_departures_per_departure_times(
+            delayed,
+            diff_departure_time_per_zone
+        )
+    all_entries = merge_time_entries(diff_departure_time_per_dep_time)
+    new_data = interpolate_entries(
+        diff_departure_time_per_dep_time,
+        all_entries
+    )
 
     time = all_entries
     delays = new_data
-    # time = [1,2,3,4,5]
-    # delays = {
-    #     "train 0" : [1,2,3,4,5],
-    #     "train 1" : [1,2,3,4,5],
-    # }
 
     fig = go.Figure(
         data=[
