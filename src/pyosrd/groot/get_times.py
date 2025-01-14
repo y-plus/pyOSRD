@@ -1,8 +1,8 @@
-from pyosrd import OSRD
+# from pyosrd import OSRD
 
 
 def _route_tvds(
-    sim: OSRD,
+    sim,
     zones: dict[str, str],
     route_id: str
 ) -> list[str]:
@@ -39,7 +39,7 @@ def _route_tvds(
 
 
 def get_times(
-    sim: OSRD,
+    sim,
     zones: dict[str, str],
 ) -> tuple[
     dict[str, dict[str, tuple[float, float]]],

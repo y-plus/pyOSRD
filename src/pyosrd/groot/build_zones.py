@@ -115,13 +115,13 @@ def diverging_release_detectors_in_route(self, route_id: str) -> set[str]:
     return zone_delimiters
 
 
-def build_zones(self):
+def build_zones(sim):
 
-    points = self.points_on_track_sections()
-
+    points = sim.points_on_track_sections()
+    switches_ids = [s['id'] for s in sim.switches]
     def route_elements(self, route_id):
 
-        switches_ids = [s['id'] for s in self.switches]
+        
         route = next(r for r in self.infra['routes'] if r['id']==route_id)
         previous = ''
         elements = []
@@ -142,30 +142,40 @@ def build_zones(self):
     ends_with_a_signal = dict()
     diverging_release_detectors = set()
 
-    for route in self.infra['routes']:
+    for route in sim.infra['routes']:
         diverging_release_detectors = diverging_release_detectors.union(
-            diverging_release_detectors_in_route(self, route['id'])
+            diverging_release_detectors_in_route(sim, route['id'])
         )
 
-    exit_points = set(
+    tvd_exit_points = set(
         route['exit_point']['id']
-        for route in self.infra['routes']
+        for route in sim.infra['routes']
     ).union(diverging_release_detectors)
 
-    for route in self.infra['routes']:
+    for route in sim.infra['routes']:
         entry_point_id = route['entry_point']['id']
         exit_point_id = route['exit_point']['id']
         entry_point_type = route['entry_point']['type']
         exit_point_type = route['exit_point']['type']
-        elements = route_elements(self, route['id'])
+        elements = route_elements(sim, route['id'])
+
         if (entry_point_type==exit_point_type=='BufferStop'):
             continue
         for d in route['release_detectors']+[route['exit_point']['id']]:
-            if d in exit_points:
+            d_idx = elements.index(d)
+
+            if d in tvd_exit_points or all(
+                e in switches_ids
+                for e in (elements[d_idx-1], elements[d_idx+1])
+            ):
+
                 tvd = f"{entry_point_id}->{d}"
                 tvd_zones[tvd] = (
                     elements[elements.index(entry_point_id)+1]
-                    if set(elements[elements.index(entry_point_id)+1:elements.index(d)])
+                    if (
+                        set(elements[elements.index(entry_point_id)+1:elements.index(d)])
+                        and elements[elements.index(entry_point_id)+1] in switches_ids
+                    )
                     else "<->".join(sorted([entry_point_id, d]))
                 )
                 ends_with_a_signal[tvd] = d == exit_point_id
@@ -207,3 +217,19 @@ def zones_graph(zones) -> nx.DiGraph:
                         )
 
     return zones_graph
+
+
+def tvds_graph(zones) -> nx.DiGraph:
+
+    tvds_graph = nx.DiGraph()
+
+    for tvd in zones:
+        for other_tvd in zones:
+            if tvd != other_tvd and zones[tvd] != zones[other_tvd] and tvd.split('->')[1] == other_tvd.split('->')[0]:
+                tvds_graph.add_edge(
+                    tvd,
+                    other_tvd,
+                    detector=tvd.split('->')[1]
+                )
+
+    return tvds_graph

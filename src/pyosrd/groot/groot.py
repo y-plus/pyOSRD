@@ -13,7 +13,7 @@ from ortools.linear_solver import pywraplp
 
 from pyosrd.utils import seconds_to_hour
 
-from .build_zones import zones_graph
+from .build_zones import zones_graph, tvds_graph
 
 @dataclass
 class Groot(object):
@@ -53,6 +53,12 @@ class Groot(object):
             self._zones_graph = zones_graph(self.zones)
         return self._zones_graph
 
+    @property
+    def tvds_graph(self) -> nx.DiGraph:
+        if not hasattr(self, '_tvds_graph'):
+            self._tvds_graph = tvds_graph(self.zones)
+        return self._tvds_graph
+
     def to_df(self) -> pd.DataFrame:
         df = pd.DataFrame(
             columns=pd.MultiIndex.from_product(
@@ -65,56 +71,67 @@ class Groot(object):
         return df.drop_duplicates()
 
 
-    def plot(self) -> Axes:
+    def plot(self, train: str | None = None, legend: bool = True) -> Axes:
 
-        gr = self.zones_graph
+        if not train:
+            gr = self.zones_graph
 
-        extremities = [n for n,d in gr.in_degree() if d<=1]
-        zones_to_sort = set(gr.nodes)
-        sorted_zones = []
+            extremities = [n for n,d in gr.in_degree() if d<=1]
+            zones_to_sort = set(gr.nodes)
+            sorted_zones = []
 
-        for extr in extremities:
-            connected_nodes = [
-                n for n in zones_to_sort
-                if nx.has_path(gr, n, extr)
+            for extr in extremities:
+                connected_nodes = [
+                    n for n in zones_to_sort
+                    if nx.has_path(gr, n, extr)
+                ]
+                zones_to_sort -= set(connected_nodes)
+                sorted_zones += sorted(connected_nodes, key= lambda n: len(nx.shortest_path(gr, n, extr)))
+
+            sorted_zones = [
+                z for z in sorted_zones
+                if any(z in self.train_zones(train) for train in self.trains)
             ]
-            zones_to_sort -= set(connected_nodes)
-            sorted_zones += sorted(connected_nodes, key= lambda n: len(nx.shortest_path(gr, n, extr)))
+        else:
+            sorted_zones = self.train_zones(train)
 
-        sorted_zones = [
-            z for z in sorted_zones
-            if any(z in self.train_zones(train) for train in self.trains)
-        ]
-
+        
+        if train:
+            t1 = self.times_zones[train][self.train_zones(train)[0]][0]
+            t2 = self.times_zones[train][self.train_zones(train)[-1]][1]
+            times_zones = self.between(t1, t2).times_zones
+        else:
+            times_zones = self.times_zones
         _, ax = plt.subplots()
-
-        times_zones = self.times_zones
-
-        for train in self.times:
+        for tr in self.times:
             width = [
-                (times_zones[train][n][1] - times_zones[train][n][0])
-                if n in times_zones[train]
+                (times_zones[tr][n][1] - times_zones[tr][n][0])
+                if n in times_zones[tr]
                 else 0
                 for n in sorted_zones
             ]
             left = [
-                times_zones[train][n][0]
-                if n in times_zones[train]
+                times_zones[tr][n][0]
+                if n in times_zones[tr]
                 else 0
                 for n in sorted_zones
             ]
-            ax.barh(
-                width=width,
-                left=left,
-                y=sorted_zones,
-                label=train,
-                height=1,
-                alpha=.5
+            if sum(width) > 0:
+                ax.barh(
+                    width=width,
+                    left=left,
+                    y=sorted_zones,
+                    label=tr,
+                    height=1,
+                    alpha=.5
+                )
+        if train:
+             ax.set_xlim(t1, t2)
+        else:
+            ax.set_xlim(
+                min(self.departure_times.values()),
+                max(self.last_arrival_times.values())
             )
-        ax.set_xlim(
-            min(self.departure_times.values()),
-            max(self.last_arrival_times.values())
-        )
         ax.set_xticks(
             [
                 label._x
@@ -137,7 +154,10 @@ class Groot(object):
                 for label in ax.get_yticklabels()
             ]
         )
-        ax.legend()
+        if train:
+            ax.set_title(train)
+        if legend:
+            ax.legend()
         return ax
 
     def earliest_conflict(self) -> tuple[str, str, str, float]:
@@ -401,7 +421,7 @@ class Groot(object):
             None
         )
         last_new_signal = next(
-            (tvd for tvd in new_tvds[::-1]
+            (tvd for tvd in new_tvds[1::-1]
             if self.ends_with_a_signal[tvd]
             ),
             None
@@ -413,14 +433,16 @@ class Groot(object):
             None
         )
         last_orig_signal = next(
-            (tvd for tvd in orig_tvds[::-1]
+            (tvd for tvd in orig_tvds[1::-1]
             if self.ends_with_a_signal[tvd]
             ),
             None
         )
+
         orig_dvgs = orig_tvds[:orig_tvds.index(first_orig_signal)]
         orig_btws = orig_tvds[orig_tvds.index(first_orig_signal):orig_tvds.index(last_orig_signal)+1]
         orig_cvgs = orig_tvds[orig_tvds.index(last_orig_signal)+1:]
+
         new_dvgs = new_tvds[:new_tvds.index(first_new_signal)]
         new_btws = new_tvds[new_tvds.index(first_new_signal):new_tvds.index(last_new_signal)+1]
         new_cvgs = new_tvds[new_tvds.index(last_new_signal)+1:]
