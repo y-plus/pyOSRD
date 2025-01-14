@@ -489,7 +489,7 @@ class OSRD():
                 offset = point.position - self.train_departure(train).position
             else:
                 offset = self.train_departure(train).position - point.position
-            if round(abs(offset), 3) < 0:
+            if round(abs(offset), 3) < 0 or offset < 0:
                 return None
             return offset
 
