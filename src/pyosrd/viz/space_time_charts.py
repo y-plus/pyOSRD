@@ -66,8 +66,10 @@ def _data_and_points_to_plot(
         ]
         tuples.sort(key=lambda t: t[0])
         t_sorted = [t[0] for t in tuples]
-        offset_sorted = [t[1] for t in tuples]            
-        data.append({"x": t_sorted, "y": offset_sorted, "label": train_id})
+        offset_sorted = [t[1] for t in tuples]
+       
+        if not all(y is None for y in offset_sorted):
+            data.append({"x": t_sorted, "y": offset_sorted, "label": train_id})
 
     points = {
         point['id']: point['offset']
