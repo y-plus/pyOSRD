@@ -6,11 +6,14 @@ import numpy as np
 
 from haversine import haversine
 
+from pyosrd.groot.build_zones import build_zones
+
 from .result_to_geojson import res2geojson
 
 def folium_map(
     osrd,
     markers: list[str] | None = None,
+    paths: list[list[str]] | None = None,
     fit: bool=True
 ) -> folium.folium.Map:
     """Infra as a folium map"""
@@ -252,10 +255,12 @@ def folium_map(
     m.add_child(folium.plugins.Fullscreen())
 
     zones_limits = dict()
-    for tvd, zone in osrd.tvd_zones.items():
+    tvd_zones, _, _ = build_zones(osrd)
+    # for tvd, zone in osrd.tvd_zones.items():
+    for tvd, zone in tvd_zones.items():
         if zone not in zones_limits:
             zones_limits[zone] = set()
-        for d in tvd.split('<->'):
+        for d in tvd.split('->'):
             zones_limits[zone].add(d)
     colors = distinctipy.get_colors(len(zones_limits))
     colors_iter = (distinctipy.get_hex(c) for c in colors)
@@ -286,13 +291,21 @@ def folium_map(
             ]:
                 if marker in positions:
                     m.add_child(folium.Marker(positions[marker]))
+    if paths:
+        for path in paths:
+            line = []
+            for point in path:
+                for positions in [
+                    buffer_stop_geo_positions,
+                    detector_geo_positions,
+                    signal_geo_positions,
+                    switch_geo_positions,
+                ]:
+                    if point in positions:
+                        line.append(positions[point])
+            m.add_child(folium.PolyLine(line))
 
     folium.LayerControl().add_to(m)
-    
-    # folium.plugins.MiniMap(
-    #     toggle_display=True,
-    #     zoom_level_offset=-7
-    # ).add_to(m)
 
     return m
 
