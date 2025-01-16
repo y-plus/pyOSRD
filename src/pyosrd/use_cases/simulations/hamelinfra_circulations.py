@@ -369,12 +369,6 @@ def hamelinfra_circulations(
                 rolling_stock='hamelin_rolling_stock',
                 stops=[
                     Stop(120, station_location(infra, 'A', 'V2', 0)),
-                    Stop(120, station_location(infra, 'B', 'V2', 75)),
-                    Stop(120, station_location(infra, 'C', 'V2', 75)),
-                    Stop(120, station_location(infra, 'E', 'V4', 75)),
-                    Stop(120, station_location(infra, 'F', 'V4', 75)),
-                    Stop(120, station_location(infra, 'G', 'V4', 75)),
-                    Stop(120, station_location(infra, 'J', 'V2', 75)),
                     Stop(120, station_location(infra, 'K', 'V2', -50)),
                 ]
             ).add_standard_single_value_allowance("percentage", 5, )
@@ -393,12 +387,6 @@ def hamelinfra_circulations(
                 rolling_stock='hamelin_rolling_stock',
                 stops=[
                     Stop(120, station_location(infra, 'K', 'V1', 0)),
-                    Stop(120, station_location(infra, 'J', 'V1', -75)),
-                    Stop(120, station_location(infra, 'G', 'V5', -75)),
-                    Stop(120, station_location(infra, 'F', 'V5', -75)),
-                    Stop(120, station_location(infra, 'E', 'V5', -75)),
-                    Stop(120, station_location(infra, 'C', 'V1', -75)),
-                    Stop(120, station_location(infra, 'B', 'V1', -75)),
                     Stop(120, station_location(infra, 'A', 'V1', 50)),
                 ],
             ).add_standard_single_value_allowance("percentage", 5, )
@@ -417,12 +405,6 @@ def hamelinfra_circulations(
                 rolling_stock='hamelin_rolling_stock',
                 stops=[
                     Stop(120, station_location(infra, 'A', 'V2', 0)),
-                    Stop(120, station_location(infra, 'B', 'V2', 75)),
-                    Stop(120, station_location(infra, 'C', 'V2', 75)),
-                    Stop(120, station_location(infra, 'E', 'V4', 75)),
-                    Stop(120, station_location(infra, 'F', 'V4', 75)),
-                    Stop(120, station_location(infra, 'G', 'V4', 75)),
-                    Stop(120, station_location(infra, 'H', 'V4', 75)),
                     Stop(120, station_location(infra, 'I', 'V4', -50)),
                 ],
             ).add_standard_single_value_allowance("percentage", 5, )
@@ -441,12 +423,6 @@ def hamelinfra_circulations(
                 rolling_stock='hamelin_rolling_stock',
                 stops=[
                     Stop(120, station_location(infra, 'I', 'V3', 0)),
-                    Stop(120, station_location(infra, 'H', 'V3', -75)),
-                    Stop(120, station_location(infra, 'G', 'V5', -75)),
-                    Stop(120, station_location(infra, 'F', 'V5', -75)),
-                    Stop(120, station_location(infra, 'E', 'V5', -75)),
-                    Stop(120, station_location(infra, 'C', 'V1', -75)),
-                    Stop(120, station_location(infra, 'B', 'V1', -75)),
                     Stop(120, station_location(infra, 'A', 'V1', 50)),
                 ],
             ).add_standard_single_value_allowance("percentage", 5, )
