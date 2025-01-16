@@ -28,7 +28,7 @@ def hamelinfra(
     infra_json: str = 'infra.json',
 ) -> Infra:
     """
-    
+
     """  # noqa
 
     LENGTH_STATION = 800.
@@ -36,10 +36,10 @@ def hamelinfra(
     DISTANCE_SIGNAL_DETECTOR = 20.
     LENGTH_ELBOW = 20
     ANGLE_ELBOW = math.pi/16
-    
+
     infra_builder = InfraBuilder()
-    
-    
+
+
     # Ligne ABC
     line_name="A-B-C"
     line_code=1_000
@@ -77,7 +77,7 @@ def hamelinfra(
         forward=True,
         backward=True,
     )
-    
+
     track = build_station(
         infra_builder=infra_builder,
         track_in=track,
@@ -99,14 +99,14 @@ def hamelinfra(
         track_name='V2',
         line_name=line_name,
         line_code=line_code,
-        length=None,  
-    ) 
+        length=None,
+    )
     t1 = infra_builder.add_track_section(
         label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
         track_name='V1',
         line_name=line_name,
         line_code=line_code,
-        length=None,  
+        length=None,
     )
 
     sw1bis = infra_builder.add_point_switch(
@@ -136,7 +136,7 @@ def hamelinfra(
         backward=True,
         geo_direction=GeoDirection.EAST
     )
-       
+
     t1 = build_station(
         infra_builder=infra_builder,
         track_in=t1,
@@ -149,7 +149,7 @@ def hamelinfra(
     )
     v1 = infra_builder.infra.track_sections[-3]
     v3 = infra_builder.infra.track_sections[-2]
-   
+
     t2 = build_station(
         infra_builder=infra_builder,
         track_in=t2,
@@ -174,7 +174,7 @@ def hamelinfra(
         backward=False,
         geo_direction=3*math.pi/8
     )
-   
+
 
     build_blocks(
         t1,
@@ -191,9 +191,9 @@ def hamelinfra(
         track_name='BRIDGE',
         line_name=line_name,
         line_code=line_code,
-        length=None,  
+        length=None,
     )
-    
+
 
     link = infra_builder.add_link(
         t1.end(),
@@ -202,7 +202,7 @@ def hamelinfra(
     )
     link.set_coords(*t1.coordinates[-1])
 
-    
+
     # add_semaphores_with_detector(
     #     bridge_t1,
     #     DISTANCE_SIGNAL_SWITCH,
@@ -233,7 +233,7 @@ def hamelinfra(
         track_name='BRIDGE',
         line_name=line_name,
         line_code=line_code,
-        length=None,  
+        length=None,
     )
 
     connection_c_d = infra_builder.add_track_section(
@@ -241,9 +241,9 @@ def hamelinfra(
         track_name='CONNECTION',
         line_name='CONNECTION',
         line_code=line_code,
-        length=None,  
+        length=None,
     )
-    
+
     sw_connection_west = infra_builder.add_point_switch(
         bridge_t1.end(),
         connection_c_d.begin(),
@@ -253,13 +253,13 @@ def hamelinfra(
 
     add_carre_with_detector(
         connection_c_d,
-        DISTANCE_SIGNAL_SWITCH, 
+        DISTANCE_SIGNAL_SWITCH,
         Direction.STOP_TO_START,
         label='connection_CD_east'
     )
     add_carre_with_detector(
         bridge,
-        DISTANCE_SIGNAL_SWITCH, 
+        DISTANCE_SIGNAL_SWITCH,
         Direction.STOP_TO_START,
         label='bridge_out'
     )
@@ -268,7 +268,7 @@ def hamelinfra(
     extend_track(connection_c_d, 900, 3*math.pi/8)
     extend_track(connection_c_d, 350, GeoDirection.EAST)
     extend_track(connection_c_d, 100, 5*math.pi/8, ending=False)
-    
+
     extend_track(t2, 1_500, 3*math.pi/8)
     extend_track(bridge, 1_500, 3*math.pi/8)
 
@@ -283,7 +283,7 @@ def hamelinfra(
         track_name='V2',
         line_name=line_name,
         line_code=line_code,
-        length=None,  
+        length=None,
     )
 
     v2 = infra_builder.add_track_section(
@@ -293,7 +293,7 @@ def hamelinfra(
         line_code=line_code,
         length=None,
     )
-    
+
     add_carre_with_detector(
         t2,
         t2.length - DISTANCE_SIGNAL_SWITCH,
@@ -312,7 +312,7 @@ def hamelinfra(
         track_name='V1',
         line_name=line_name,
         line_code=line_code,
-        length=None,  
+        length=None,
     )
 
     v1 = infra_builder.add_track_section(
@@ -341,7 +341,7 @@ def hamelinfra(
         track_name='V1bis',
         line_name=line_name,
         line_code=line_code,
-        length=None,  
+        length=None,
     )
 
     v1bis = infra_builder.add_track_section(
@@ -426,7 +426,7 @@ def hamelinfra(
     v2.add_detector(20)
     extend_track(v1bis, 720, GeoDirection.NORTH)
 
-    
+
 
     # Connexion pont-v1
     extend_track(bridge, 700, GeoDirection.NORTH, ending=False)
@@ -578,7 +578,7 @@ def hamelinfra(
     v2east.add_detector(
         DISTANCE_SIGNAL_SWITCH - DISTANCE_SIGNAL_DETECTOR
     )
-    
+
     # ## NORTH EAST BRANCH
 
     build_blocks(
