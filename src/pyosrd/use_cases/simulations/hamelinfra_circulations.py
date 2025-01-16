@@ -146,7 +146,7 @@ def hamelinfra_circulations(
             station_location(infra, 'J', 'V2', 75),
             station_location(infra, 'K', 'V2', 200),
             label=f'semidirectDK{2+2*i}',
-            departure_time=build_departure_time(cur_hour, 15),
+            departure_time=build_departure_time(cur_hour, 20),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'D', 'V2', 0)),
@@ -181,7 +181,7 @@ def hamelinfra_circulations(
             station_location(infra, 'D', 'V4', 75),
 
             label=f'omnibusAD{2+2*i}',
-            departure_time=build_departure_time(cur_hour, 10),
+            departure_time=build_departure_time(cur_hour, 12),
             rolling_stock='hamelin_rolling_stock',
             stops=[
 
@@ -214,7 +214,7 @@ def hamelinfra_circulations(
             station_location(infra, 'F', 'V4', 75),
             station_location(infra, 'G', 'V4', 75),
             label=f'omnibusDG{2+4*i}',
-            departure_time=build_departure_time(cur_hour, 20),
+            departure_time=build_departure_time(cur_hour, 25),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'D', 'V4', 0)),
@@ -247,7 +247,7 @@ def hamelinfra_circulations(
             station_location(infra, 'E', 'V5', 75),
             station_location(infra, 'D', 'V5', 75),
             label=f'omnibusGD{1+4*i}',
-            departure_time=build_departure_time(cur_hour, 20),
+            departure_time=build_departure_time(cur_hour, 17),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'G', 'V5', 0)),
@@ -263,7 +263,7 @@ def hamelinfra_circulations(
             station_location(infra, 'E', 'V5', 75),
             station_location(infra, 'D', 'V5', 75),
             label=f'omnibusGD{3+4*i}',
-            departure_time=build_departure_time(cur_hour, 50),
+            departure_time=build_departure_time(cur_hour, 45),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'G', 'V5', 0)),
@@ -281,7 +281,7 @@ def hamelinfra_circulations(
             station_location(infra, 'H', 'V4', 75),
             station_location(infra, 'I', 'V4', 75),
             label=f'omnibusDI{2+2*i}',
-            departure_time=build_departure_time(cur_hour, 25),
+            departure_time=build_departure_time(cur_hour, 30),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'D', 'V4', 0)),
@@ -321,7 +321,7 @@ def hamelinfra_circulations(
             station_location(infra, 'J', 'V2', 75),
             station_location(infra, 'K', 'V2', 75),
             label=f'omnibusDK{2+2*i}',
-            departure_time=build_departure_time(cur_hour, 30),
+            departure_time=build_departure_time(cur_hour, 35),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'D', 'V2', 0)),
@@ -341,7 +341,7 @@ def hamelinfra_circulations(
             station_location(infra, 'E', 'V5', -75),
             station_location(infra, 'D', 'V3', 75),
             label=f'omnibusKD{1+2*i}',
-            departure_time=build_departure_time(cur_hour, 25),
+            departure_time=build_departure_time(cur_hour, 35),
             rolling_stock='hamelin_rolling_stock',
             stops=[
                 Stop(120, station_location(infra, 'K', 'V4', 0)),
@@ -365,7 +365,7 @@ def hamelinfra_circulations(
                 station_location(infra, 'J', 'V2', 75),
                 station_location(infra, 'K', 'V2', 75),
                 label=f'directAK{2+2*i}',
-                departure_time=build_departure_time(cur_hour, 30),
+                departure_time=build_departure_time(cur_hour, 5),
                 rolling_stock='hamelin_rolling_stock',
                 stops=[
                     Stop(120, station_location(infra, 'A', 'V2', 0)),
