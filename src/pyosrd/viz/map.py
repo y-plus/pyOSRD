@@ -292,6 +292,7 @@ def folium_map(
                 if marker in positions:
                     m.add_child(folium.Marker(positions[marker]))
     if paths:
+        colors_iter = (distinctipy.get_hex(c) for c in colors)
         for path in paths:
             line = []
             for point in path:
@@ -303,7 +304,12 @@ def folium_map(
                 ]:
                     if point in positions:
                         line.append(positions[point])
-            m.add_child(folium.PolyLine(line))
+            m.add_child(
+                folium.PolyLine(
+                    line,
+                    color=next(colors_iter),
+                )
+            )
 
     folium.LayerControl().add_to(m)
 
