@@ -57,7 +57,7 @@ def reroute_train_to_avoid_zone(
     hp = self._sim._head_position(train, 'eco')
 
     while nx.has_path(subg, source=source, target=target):
-
+        
         tvds = nx.shortest_path(subg, source, target)
 
         new_tvds = [tvd for tvd in tvds if tvd not in train_path]
@@ -68,13 +68,13 @@ def reroute_train_to_avoid_zone(
             train_path.index(rerouted_path[-1])+1
         ]
 
-        new_length = sum(distance_between_points(
-                self._sim,
-                tvd.split('->')[0],
-                tvd.split('->')[1],
-                self._track_section_lengths,
-                self._track_section_network
-            ) for tvd in rerouted_path[1:-1])
+        # new_length = sum(distance_between_points(
+        #         self._sim,
+        #         tvd.split('->')[0],
+        #         tvd.split('->')[1],
+        #         self._track_section_lengths,
+        #         self._track_section_network
+        #     ) for tvd in rerouted_path[1:-1])
 
         start = next(p for p in points if p['id']==rerouted_path[0].split('->')[1])
         end = next(p for p in points if p['id']==rerouted_path[-1].split('->')[0])
@@ -94,7 +94,7 @@ def reroute_train_to_avoid_zone(
             [r['path_offset'] for r in hp],
             [r['time'] for r in hp]
         )
-        train_length = self._sim.train_lengths[self._sim.trains.index('semidirectDK2')]
+        train_length = self._sim.train_lengths[self._sim.trains.index(train)]
         new_exit_times = np.interp(
             [new_positions[i+1]+train_length for i, _ in enumerate(new_positions[:-1])],
             [r['path_offset'] for r in hp],
@@ -114,15 +114,16 @@ def reroute_train_to_avoid_zone(
         new_groot.times[train] = {
             k: v
             for k, v in new_groot.times[train].items()
-            if k not in original_path
+            if k not in original_path[1:-1]
         }
-        for tvd, entry_time, exit_time in zip(rerouted_path, new_entry_times, new_exit_times):
+        for tvd, entry_time, exit_time in zip(new_tvds, new_entry_times, new_exit_times):
             new_groot.times[train][tvd] = (
                 entry_time,
                 exit_time
             )
         _, _, conflict_zone, _ = new_groot.earliest_conflict()
         conflict_tvd = new_groot.get_tvd(train, conflict_zone)
+
         if conflict_tvd in rerouted_path:
             subg = nx.subgraph(subg, [n for n in subg if n!=conflict_tvd])
         else:
