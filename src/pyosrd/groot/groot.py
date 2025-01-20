@@ -378,110 +378,6 @@ class Groot(object):
             for train in self.times
         }
 
-    def reroute(
-        self: Self,
-        train: str,
-        alt_zones: list[str]
-    ) -> Self:
-
-        orig_zones = self.train_zones(train)
-        new_zones = [z for z in alt_zones if z not in orig_zones]
-        dvg = alt_zones[alt_zones.index(new_zones[0])-1]
-        cvg = alt_zones[alt_zones.index(new_zones[-1])+1]
-        d_in = self.get_tvd(train, dvg).split('->')[0]
-        d_out = self.get_tvd(train, cvg).split('->')[1]
-        candidate_tvds =[
-            tvd
-            for tvd, zone in self.zones.items()
-            if zone in alt_zones[alt_zones.index(dvg):alt_zones.index(cvg)+1]
-        ]
-
-        g = nx.DiGraph()
-        for n in candidate_tvds:
-            g.add_edge(*n.split('->'))
-        p = nx.shortest_path(g, d_in, d_out)
-        orig_path = self.path(train)
-
-        orig_tvds = orig_path[
-            orig_path.index(self.get_tvd(train, dvg))
-            :orig_path.index(self.get_tvd(train, cvg))+1
-        ]
-        before = orig_path[
-            orig_path.index(self.get_tvd(train, dvg))-1
-        ]
-        after = orig_path[
-            orig_path.index(self.get_tvd(train, cvg))+1
-        ]
-        new_tvds = [f"{p[i]}->{p[i+1]}" for i, _ in enumerate(p[:-1])]
-
-        first_new_signal = next(
-            (tvd for tvd in new_tvds
-            if self.ends_with_a_signal[tvd]
-            ),
-            None
-        )
-        last_new_signal = next(
-            (tvd for tvd in new_tvds[1::-1]
-            if self.ends_with_a_signal[tvd]
-            ),
-            None
-        )
-        first_orig_signal = next(
-            (tvd for tvd in orig_tvds
-            if self.ends_with_a_signal[tvd]
-            ),
-            None
-        )
-        last_orig_signal = next(
-            (tvd for tvd in orig_tvds[1::-1]
-            if self.ends_with_a_signal[tvd]
-            ),
-            None
-        )
-
-        orig_dvgs = orig_tvds[:orig_tvds.index(first_orig_signal)]
-        orig_btws = orig_tvds[orig_tvds.index(first_orig_signal):orig_tvds.index(last_orig_signal)+1]
-        orig_cvgs = orig_tvds[orig_tvds.index(last_orig_signal)+1:]
-
-        new_dvgs = new_tvds[:new_tvds.index(first_new_signal)]
-        new_btws = new_tvds[new_tvds.index(first_new_signal):new_tvds.index(last_new_signal)+1]
-        new_cvgs = new_tvds[new_tvds.index(last_new_signal)+1:]
-
-        t_tail_before = self.times[train][before][1]
-        t_first_dvg, _ = self.times[train][orig_dvgs[0]]
-        t_last_dvg, t_tail_last_dvg = self.times[train][orig_dvgs[-1]]
-        t_first_btw, _ = self.times[train][orig_btws[0]]
-        _, t_tail_last_btw = self.times[train][orig_btws[-1]]
-        t_first_cvg, _ = self.times[train][orig_cvgs[0]]
-        _, t_tail_last_cvg = self.times[train][orig_cvgs[-1]]
-        t_after = self.times[train][after][0]
-
-        new_groot = copy.deepcopy(self)
-        new_groot._times_zones = None
-
-        for i, tvd in enumerate(new_dvgs):
-            new_groot.times[train][tvd] = [
-                t_first_dvg + (t_first_btw-t_first_dvg)*i/len(new_dvgs),
-                t_tail_last_dvg - (t_tail_last_dvg-t_tail_before)*(len(new_dvgs)-i-1)/len(new_dvgs),
-            ]
-        for i, tvd in enumerate(new_btws):
-            new_groot.times[train][tvd] = [
-                t_first_btw + (t_first_cvg-t_first_btw)*i/len(new_btws),
-                t_tail_last_btw - (t_tail_last_btw-t_last_dvg)*(len(new_btws)-i-1)/len(new_btws),
-            ]
-        for i, tvd in enumerate(new_cvgs):
-            new_groot.times[train][tvd] = [
-                t_first_cvg + (t_after-t_first_cvg)*i/len(new_cvgs),
-                t_tail_last_cvg - (t_tail_last_cvg-t_tail_last_btw)*(len(new_cvgs)-i-1)/len(new_cvgs),
-            ]
-
-        new_groot.times[train] = {
-            k:v for k,v in new_groot.times[train].items()
-            if k not in orig_tvds
-        }
-
-        return new_groot
-
     def trains_in_zone(self: Self, zone: str) -> list[str]:
         trains_entries = dict()
         for train in self.trains:
@@ -507,7 +403,6 @@ class Groot(object):
             return
         return trains[idx+1]
     
-
     def speedup(self: Self, ref: Self, train: str, zone:str) -> Self:
 
         reaccelerated = copy.deepcopy(self)
