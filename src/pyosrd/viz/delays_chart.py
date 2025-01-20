@@ -144,6 +144,7 @@ def plot_groot_delays(
                 stackgroup='Delays'
             )
             for train, delays in delays.items()
+            if sum(delays) > 0
         ],
         layout={
                 "title": 'Cumulated delays over time',
