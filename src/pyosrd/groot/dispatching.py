@@ -1,7 +1,7 @@
 from typing import Callable
 from pyosrd.groot import Groot
 from pyosrd.groot.objectives import sum_delays_at_end
-
+from pyosrd.groot.rerouting import reroute_train_to_avoid_zone
 
 def evaluate_action(
     self: Groot,
@@ -58,21 +58,20 @@ def evaluate_action(
             info['inversion'] = False
 
         case 2:  # reroute second train
-            if not (list_of_alt_zones := self.alternative_zones(train2, zone)):
+            r = reroute_train_to_avoid_zone(
+                self,
+                train2,
+                zone
+            )
+            if not r:
                 return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
-            for alt_zones in list_of_alt_zones:
-                if self.zones_are_free(
-                    alt_zones[1:-1],
-                    self.times_zones[train2][alt_zones[0]][0],
-                    self.times_zones[train2][alt_zones[-1]][-1]
-                ):
-                    r = self.reroute(train2, alt_zones)
-                    valid = True
-                    done = not r.has_conflicts()
-                    info['conflict_at'] = zone
-                    info['rerouted_train'] = train2
-                    info['rerouted_zones'] = alt_zones 
-                    break
+            valid = True
+            done = not r.has_conflicts()
+            info['conflict_at'] = zone
+            info['rerouted_train'] = train2
+            info['rerouted_tvds'] = [
+                tvd for tvd in r.path(train2) if tvd not in self.path(train2)
+            ]         
 
         case 3:  # modify order, wait at previous signal
             priority_train = train2
