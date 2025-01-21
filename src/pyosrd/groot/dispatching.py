@@ -10,11 +10,10 @@ def evaluate_action(
     scorer: Callable[[Groot, Groot], float] = sum_delays_at_end,
 ) -> tuple[Groot, dict[str, str|float]]:
     
-    info = {"action": a}
-
+    
     train1, train2, zone, time = self.earliest_conflict()
     if not train1:
-        return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+        return self, {'done': True, 'valid': True, 'score': scorer(self, ref)}
 
     train1, train2 = ref.trains_order_in_zone(train1, train2, zone)
 
