@@ -358,10 +358,15 @@ class Groot(object):
                 zone_to_free_priority = self.next_signal(priority_train, conflict_zone)
                 zone_to_free_waiting = self.next_signal(waiting_train, conflict_zone)
 
-            delay = (
+            delay_zone_to_free = (
                     self.times_zones[priority_train][zone_to_free_priority][1]
                     - self.times_zones[waiting_train][zone_to_free_waiting][0]
             )
+            delay_zone = (
+                    self.times_zones[priority_train][conflict_zone][1]
+                    - self.times_zones[waiting_train][conflict_zone][0]
+            )
+            delay=max(delay_zone_to_free, delay_zone)
             return self.add_delay(waiting_train, wait_at, delay)
 
     @property
