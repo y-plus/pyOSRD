@@ -1,3 +1,5 @@
+import copy
+
 from abc import ABC, abstractmethod
 from typing_extensions import Self
 
@@ -57,7 +59,15 @@ class GrootAgent(ABC):
         self._dispatched_groot = None
 
     def score(self: Self, formatted: bool = False) -> float:
-        s = self._scorer(self.dispatched_groot, self.ref_groot)
+        s = self._scorer(self.dispatched_groot, self._ref_groot)
         if formatted:
             return(seconds_to_hour(s).split('.')[0])
         return s
+    
+    def add_delay(self: Self, train: str, zone: str, delay: float) -> None:
+        self._disrupted_groot = self.disrupted_groot.add_delay(train, zone, delay)
+
+    def reset_disruptions(self: Self) -> None:
+        self._disrupted_groot = copy.deepcopy(self._ref_groot)
+        self.clear_cache()
+    
