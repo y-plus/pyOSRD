@@ -123,10 +123,10 @@ def reroute_train_to_avoid_zone(
         ):
             new_groot.times[train][tvd] = (entry_time, exit_time)
 
-        _, _, conflict_zone, _ = new_groot.earliest_conflict()
+        tr1, tr2, conflict_zone, _ = new_groot.earliest_conflict()
         conflict_tvd = new_groot.get_tvd(train, conflict_zone)
 
-        if conflict_tvd in rerouted_path:
+        if conflict_tvd in rerouted_path and train in (tr1, tr2):
             subg = nx.subgraph(subg, [n for n in subg if n!=conflict_tvd])
         else:
             return new_groot
