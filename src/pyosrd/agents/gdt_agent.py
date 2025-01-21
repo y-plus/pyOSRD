@@ -4,6 +4,7 @@ from typing_extensions import Self
 
 import networkx as nx
 
+from pyosrd.utils import seconds_to_hour
 from pyosrd.groot import Groot
 from pyosrd.agents.groot_agent import GrootAgent
 from pyosrd.groot.dispatching import evaluate_action
@@ -25,8 +26,12 @@ class GDTAgent(GrootAgent):
             valid=True
         )
 
-        nodes_to_explore = [0]
-        best_node = 1
+        if not current_state.has_conflicts():
+            nodes_to_explore = []
+            best_node = 0
+        else:
+            nodes_to_explore = [0]
+            best_node = 1
 
         while nodes_to_explore:
             node = nodes_to_explore[-1]
@@ -54,6 +59,7 @@ class GDTAgent(GrootAgent):
             else:
                 new_node = tree.number_of_nodes()
                 action = len(list(tree.successors(node)))
+
                 groot, info = evaluate_action(
                     tree.nodes[node]['state'],
                     a=action,
@@ -73,10 +79,26 @@ class GDTAgent(GrootAgent):
         sp = nx.shortest_path(tree, 0, best_node)
         pg = nx.path_graph(sp)  # does not pass edges attributes
 
-        self.actions = [
-            tree.edges[edge[0], edge[1]]['info']
-            for edge in pg.edges()
-        ]
+        if tree.number_of_nodes() == 1:
+            self.actions = []
+        else:
+            self.actions = [
+                tree.edges[edge[0], edge[1]]['info']
+                for edge in pg.edges()
+            ]
+            for i, action in enumerate(self.actions):
+                if i > 0:
+                    added_score = action['score'] - self.actions[i-1]['score']
+                else:
+                    added_score = action['score'] + tree.nodes[0]['reward']
+                added_delay = seconds_to_hour(added_score)
+                self.actions[i] = {
+                    **action,
+                    'added_score': added_score,
+                    'delay': seconds_to_hour(action['score']),
+                    'added_delay': added_delay
+                }
+            
 
         return tree.nodes[best_node]['state']
 
