@@ -152,6 +152,8 @@ def plot_groot_delays(
                 "hovermode": "x unified"
             },
     )
+    if not fig.data:
+        return fig
 
     xmax = round(max(time))
     xticks = list(range(0, xmax + xmax // 5, xmax // 5))
