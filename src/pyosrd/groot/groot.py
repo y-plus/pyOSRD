@@ -41,7 +41,7 @@ class Groot(object):
     @property
     def times_zones(self) -> dict[str, dict[str, tuple[float, float]]]:
         if not hasattr(self, '_times_zones') or self._times_zones is None:
-            self._times_zones =  {
+            self._times_zones = {
                 train: {self.zones[k]: v for k, v in data.items()}
                 for train, data in self.times.items()
             }
@@ -70,6 +70,35 @@ class Groot(object):
             df[train] = pd.DataFrame(self.times_zones[train]).T.rename(columns={0: 's', 1:'e'})
         return df.drop_duplicates()
 
+    def with_spacings(self) -> Self:
+        """Generate a new Groot with spacings enabled.
+        Using spaces the zones will be locked longer and
+        only be freed when the next zone in the train path
+        is freed. This is only true when the zone ends with
+        a signal.
+
+        Returns
+        -------
+        Groot
+            The new groot with spacings
+        """
+
+        groot_with_spacings = copy.deepcopy(self)
+        groot_with_spacings._times_zones = None
+
+        for train in groot_with_spacings.times.keys():
+            path_train = groot_with_spacings.path(train)
+            last_tvd = None
+            for tvd in path_train:
+                if last_tvd is not None and self.ends_with_a_signal[last_tvd]:
+                    groot_with_spacings.times[train][last_tvd] = (
+                        groot_with_spacings.times[train][last_tvd][0],
+                        groot_with_spacings.times[train][tvd][1]
+                    )
+
+                last_tvd = tvd
+
+        return groot_with_spacings
 
     def plot(self, train: str | None = None, legend: bool = True) -> Axes:
 
@@ -95,7 +124,7 @@ class Groot(object):
         else:
             sorted_zones = self.train_zones(train)
 
-        
+
         if train:
             t1 = self.times_zones[train][self.train_zones(train)[0]][0]
             t2 = self.times_zones[train][self.train_zones(train)[-1]][1]
@@ -182,6 +211,39 @@ class Groot(object):
             t_conflict = None
         return train1_conflict, train2_conflict, zone_conflict, t_conflict
 
+    def all_conflicts(self) -> list[tuple[str, str, str, float]]:
+        """Generate the list of all conflicts between all trains.
+        Only generate the earliest conflict between two trains.
+
+        Returns
+        -------
+        list[tuple[str, str, str, float]]
+            The list of all conflicts using a tuple with:
+            - train0
+            - train1
+            - tvd
+            - time in seconds of the conflict
+        """
+
+        conflicts = []
+        times_zones = self.times_zones
+        for train0, train1 in itertools.combinations(self.trains, 2):
+            t_conflict = float('inf')
+            tup = None
+
+            train_zones0 = self.train_zones(train0)
+            train_zones1 = self.train_zones(train1)
+
+            for zone in set(train_zones0).intersection(set(train_zones1)):
+                min_t_out = min(times_zones[train0][zone][1], times_zones[train1][zone][1])
+                max_t_in = max(times_zones[train0][zone][0], times_zones[train1][zone][0])
+                min_t_in = min(times_zones[train0][zone][0], times_zones[train1][zone][0])
+                if max_t_in < min_t_out and min_t_in < t_conflict:
+                    t_conflict = min_t_in
+                    tup = (train0, train1, zone, min_t_in)
+            if tup is not None:
+                conflicts.append(tup)
+        return conflicts
 
     def has_conflicts(self) -> bool:
         return self.earliest_conflict()[0] is not None
@@ -389,7 +451,7 @@ class Groot(object):
             if zone in self.times_zones[train]:
                 trains_entries[train] = self.times_zones[train][zone][0]
         return [e[0]for e in sorted(trains_entries.items(), key= lambda x: x[1])]
-    
+
     def previous_train(self: Self, train: str, zone: str) -> str | None:
         trains = self.trains_in_zone(zone)
         if train not in trains:
@@ -407,8 +469,8 @@ class Groot(object):
         if idx == len(trains)-1:
             return
         return trains[idx+1]
-    
-    def speedup(self: Self, ref: Self, train: str, zone:str) -> Self:
+
+    def speedup(self: Self, ref: Self, train: str, zone: str) -> Self:
 
         reaccelerated = copy.deepcopy(self)
         reaccelerated._times_zones = None
@@ -426,7 +488,7 @@ class Groot(object):
         for i, tvd in enumerate(steps):
             t_in_ref, t_out_ref = ref.times[train][tvd]
             t_in_d, _ = self.times[train][tvd]
-            
+
             t_in_min = t_in_ref
             if prev_train:= self.previous_train(train, self.zones[tvd]):
                 t_in_min = max(
