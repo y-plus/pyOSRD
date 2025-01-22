@@ -14,7 +14,7 @@ class GDTAgent(GrootAgent):
 
     NUM_ACTIONS = 5
 
-    def calculate_dispatch(self: Self) -> Groot:
+    def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
         
         current_state = copy.deepcopy(self.disrupted_groot)
         tree = nx.DiGraph()
@@ -59,7 +59,8 @@ class GDTAgent(GrootAgent):
             else:
                 new_node = tree.number_of_nodes()
                 action = len(list(tree.successors(node)))
-
+                if debug:
+                    print(node,'->', new_node, f"({action})")
                 groot, info = evaluate_action(
                     tree.nodes[node]['state'],
                     a=action,

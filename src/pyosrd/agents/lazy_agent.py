@@ -8,7 +8,7 @@ from pyosrd.groot.dispatching import evaluate_action
 
 class LazyAgent(GrootAgent):
 
-    def calculate_dispatch(self: Self) -> Groot:
+    def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
         dispatched_groot =  copy.deepcopy(self.disrupted_groot)
         done = False
         self.actions = []
