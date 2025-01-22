@@ -60,14 +60,14 @@ def reroute_train_to_avoid_zone(
         
         tvds = nx.shortest_path(subg, source, target)
 
-        new_tvds = [tvd for tvd in tvds if tvd not in train_path]
-        rerouted_path = tvds[tvds.index(new_tvds[0])-1:tvds.index(new_tvds[-1])+2]
+        new = [tvd for tvd in tvds if tvd not in train_path]
+        rerouted_path = tvds[tvds.index(new[0])-1:tvds.index(new[-1])+2]
         original_path = train_path[
             train_path.index(rerouted_path[0])
             :
             train_path.index(rerouted_path[-1])+1
         ]
-
+        rerouted_tvds = rerouted_path[1:-1]
         # new_length = sum(distance_between_points(
         #         self._sim,
         #         tvd.split('->')[0],
@@ -87,7 +87,7 @@ def reroute_train_to_avoid_zone(
                 self._track_section_lengths,
                 self._track_section_network
             )
-            for tvd in new_tvds
+            for tvd in rerouted_tvds
         ]
         new_entry_times = np.interp(
             new_positions,
@@ -117,7 +117,7 @@ def reroute_train_to_avoid_zone(
             if k not in original_path[1:-1]
         }
         for tvd, entry_time, exit_time in zip(
-            new_tvds,
+            rerouted_tvds,
             new_entry_times,
             new_exit_times
         ):
