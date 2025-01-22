@@ -71,6 +71,9 @@ def evaluate_action(
             info['rerouted_tvds'] = [
                 tvd for tvd in r.path(train2) if tvd not in self.path(train2)
             ]         
+            info['rerouted_zones'] = [
+                r.zones[tvd] for tvd in info['rerouted_tvds']
+            ]         
 
         case 3:  # modify order, wait at previous signal
             priority_train = train2
