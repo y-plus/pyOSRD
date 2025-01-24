@@ -1,7 +1,6 @@
 import copy
 
 import networkx as nx
-import numpy as np
 
 from pyosrd.infra.distances import distance_between_points
 from pyosrd.groot import Groot
@@ -53,80 +52,177 @@ def reroute_train_to_avoid_zone(
         return None
 
     train_path = self.path(train)
-    points = self._sim.points_encountered_by_train(train)
-    hp = self._sim._head_position(train, 'eco')
 
     while nx.has_path(subg, source=source, target=target):
-        
+
         tvds = nx.shortest_path(subg, source, target)
 
         new = [tvd for tvd in tvds if tvd not in train_path]
-        rerouted_path = tvds[tvds.index(new[0])-1:tvds.index(new[-1])+2]
+
+        new_path = tvds[tvds.index(new[0])-1:tvds.index(new[-1])+2]
         original_path = train_path[
-            train_path.index(rerouted_path[0])
+            train_path.index(new_path[0])
             :
-            train_path.index(rerouted_path[-1])+1
+            train_path.index(new_path[-1])+1
         ]
-        rerouted_tvds = rerouted_path[1:-1]
-        # new_length = sum(distance_between_points(
-        #         self._sim,
-        #         tvd.split('->')[0],
-        #         tvd.split('->')[1],
-        #         self._track_section_lengths,
-        #         self._track_section_network
-        #     ) for tvd in rerouted_path[1:-1])
 
-        start = next(p for p in points if p['id']==rerouted_path[0].split('->')[1])
-        end = next(p for p in points if p['id']==rerouted_path[-1].split('->')[0])
-
-        new_positions = [
-            start['offset'] + distance_between_points(
-                self._sim,
-                start['id'],
-                tvd.split('->')[0],
-                self._track_section_lengths,
-                self._track_section_network
-            )
-            for tvd in rerouted_tvds
-        ]
-        new_entry_times = np.interp(
-            new_positions,
-            [r['path_offset'] for r in hp],
-            [r['time'] for r in hp]
-        )
-        train_length = self._sim.train_lengths[self._sim.trains.index(train)]
-        new_exit_times = np.interp(
-            [new_positions[i+1]+train_length for i, _ in enumerate(new_positions[:-1])],
-            [r['path_offset'] for r in hp],
-            [r['time'] for r in hp]
-        )
-        new_exit_times = np.append(new_exit_times,
-            np.interp(
-                [end['offset'] + train_length],
-                [r['path_offset'] for r in hp],
-                [r['time'] for r in hp]
-            ).item()
-        )
 
         new_groot = copy.deepcopy(self)
         new_groot._times_zones = None
-
         new_groot.times[train] = {
             k: v
             for k, v in new_groot.times[train].items()
             if k not in original_path[1:-1]
         }
-        for tvd, entry_time, exit_time in zip(
-            rerouted_tvds,
-            new_entry_times,
-            new_exit_times
-        ):
-            new_groot.times[train][tvd] = (entry_time, exit_time)
+
+
+        original_zones = [self.zones[tvd] for tvd in original_path[1:-1]]
+        original_station = next((
+            z for z in original_zones if '/' in z
+        ), None)
+        new_zones = [self.zones[tvd] for tvd in new_path[1:-1]]
+        new_station = next((
+            z for z in new_zones if '/' in z
+        ), None)
+
+        if original_station and new_station:
+            new_entry_times, new_exit_times = [], []
+            tvd_original_station = self.get_tvd(train, original_station)
+            tvd_new_station = next(tvd for tvd in new_path if self.zones[tvd]==new_station)
+
+            tvds_before_original_station = original_path[
+                1:
+                original_path.index(tvd_original_station)
+            ]
+            tvds_after_original_station = original_path[
+                original_path.index(tvd_original_station)+1:
+                -1
+            ]
+            tvds_before_new_station = new_path[
+                1:
+                new_path.index(tvd_new_station)
+            ]
+            tvds_after_new_station = new_path[
+                new_path.index(tvd_new_station)+1:
+                -1
+            ]
+
+            t_in_0 = self.times_zones[train][self.zones[tvds_before_original_station[0]]][0]
+            t_out_0 = self.times_zones[train][self.zones[original_path[0]]][1]
+
+            ts_in_0 = self.times[train][tvd_original_station][0]
+            ts_out_0 = self.times[train][tvds_before_original_station[-1]][1]
+
+            ts_in_1 = self.times[train][tvds_after_original_station[0]][0]
+            ts_out_1 = self.times[train][tvd_original_station][1]
+
+            t_in_1 = self.times_zones[train][self.zones[original_path[-1]]][0]
+            t_out_1 = self.times_zones[train][self.zones[original_path[-1]]][1]
+
+            new_length_before_station = sum(
+                distance_between_points(
+                    self._sim,
+                    tvd.split('->')[0],
+                    tvd.split('->')[1],
+                    self._track_section_lengths,
+                    self._track_section_network
+                )
+                for tvd in tvds_before_new_station
+            )
+
+            length = 0
+            for tvd in tvds_before_new_station:
+                t_in = (
+                    t_in_0
+                    + (ts_in_0-t_in_0) * length/new_length_before_station
+                )
+                length += distance_between_points(
+                    self._sim,
+                    tvd.split('->')[0],
+                    tvd.split('->')[1],
+                    self._track_section_lengths,
+                    self._track_section_network
+                )
+                t_out = (
+                    t_out_0
+                    + (ts_out_0-t_out_0) * length/new_length_before_station
+                )
+                new_groot.times[train][tvd] = (t_in, t_out)
+            new_groot.times[train][tvd_new_station] = self.times[train][tvd_original_station]
+            new_length_after_station = sum(
+                distance_between_points(
+                    self._sim,
+                    tvd.split('->')[0],
+                    tvd.split('->')[1],
+                    self._track_section_lengths,
+                    self._track_section_network
+                )
+                for tvd in tvds_before_new_station
+            )
+            length = 0
+            for tvd in tvds_after_new_station:
+                t_in = (
+                    ts_in_1
+                    + (t_in_1-ts_in_1) * length/new_length_after_station
+                )
+                length += distance_between_points(
+                    self._sim,
+                    tvd.split('->')[0],
+                    tvd.split('->')[1],
+                    self._track_section_lengths,
+                    self._track_section_network
+                )
+                t_out = (
+                    ts_out_1
+                    + (t_out_1-ts_out_1) * length/new_length_after_station
+                )
+                new_groot.times[train][tvd] = (t_in, t_out)
+        else:
+            new_length = sum(
+                distance_between_points(
+                    self._sim,
+                    tvd.split('->')[0],
+                    tvd.split('->')[1],
+                    self._track_section_lengths,
+                    self._track_section_network
+                )
+                for tvd in new_path[1:-1]
+            )
+
+            t_in_0 = self.times_zones[train][self.zones[original_path[1]]][0]
+            t_out_0 = self.times_zones[train][self.zones[original_path[0]]][1]
+
+            t_in_1 = self.times_zones[train][self.zones[original_path[-1]]][0]
+            t_out_1 = self.times_zones[train][self.zones[original_path[-2]]][1]
+
+            length=0
+            new_entry_times, new_exit_times = [], []
+            for tvd in new_path[1:-1]:
+                new_entry_times.append(
+                    t_in_0 + (t_in_1-t_in_0) * length/new_length
+                )
+                length += distance_between_points(
+                    self._sim,
+                    tvd.split('->')[0],
+                    tvd.split('->')[1],
+                    self._track_section_lengths,
+                    self._track_section_network
+                )
+                new_exit_times.append(
+                    t_out_0 + (t_out_1-t_out_0) * length/new_length
+                )
+
+            for tvd, entry_time, exit_time in zip(
+                new_path[1:-1],
+                new_entry_times,
+                new_exit_times
+            ):
+                new_groot.times[train][tvd] = (entry_time, exit_time)
 
         tr1, tr2, conflict_zone, _ = new_groot.earliest_conflict()
         conflict_tvd = new_groot.get_tvd(train, conflict_zone)
 
-        if conflict_tvd in rerouted_path and train in (tr1, tr2):
+        if conflict_tvd in new_path and train in (tr1, tr2):
             subg = nx.subgraph(subg, [n for n in subg if n!=conflict_tvd])
         else:
             return new_groot
