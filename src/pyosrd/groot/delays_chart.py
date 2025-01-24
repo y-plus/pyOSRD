@@ -1,7 +1,7 @@
 import numpy as np
 import plotly.graph_objects as go
 
-from pyosrd.utils import seconds_to_hour
+from pyosrd.utils import seconds_to_hour, hour_to_seconds
 from pyosrd.groot import Groot
 from pyosrd.groot.compare import difference_departures_per_zone
 
@@ -31,7 +31,8 @@ def merge_time_entries(data: dict[str, dict[float, float]]) -> list[float]:
 
 def interpolate_entries(
     data: dict[str, dict[float, float]],
-    entries: list[float]
+    entries: list[float],
+    all_trains: bool
 ) -> dict[str, dict[float, float]]:
     """_summary_
 
@@ -43,6 +44,9 @@ def interpolate_entries(
         reference and dispatched groot.
     entries : list[float]
         the sorted list of all departure times.
+    all_trains : bool
+        true if we want to keep delays for all trains or only for
+        trains active at each time point (delay will end at 0 if false)
 
     Returns
     -------
@@ -59,7 +63,9 @@ def interpolate_entries(
         new_data[train] = np.interp(
             entries,
             keys,
-            values
+            values,
+            None if all_trains else 0,
+            None if all_trains else 0
         )
 
     return new_data
@@ -101,34 +107,67 @@ def build_dict_difference_departures_per_departure_times(
     return result
 
 
+def get_groot_delays_timestamp(
+    disrupted: Groot,
+    ref: Groot,
+    all_trains: bool,
+    timestamp: str
+) -> dict[str, float]:
+    diff_departure_time_per_zone = difference_departures_per_zone(disrupted, ref)
+    diff_departure_time_per_dep_time = \
+        build_dict_difference_departures_per_departure_times(
+            disrupted,
+            diff_departure_time_per_zone
+        )
+    timestamp = hour_to_seconds(timestamp)
+    all_entries = merge_time_entries(diff_departure_time_per_dep_time)
+    all_entries.append(timestamp)
+    all_entries.sort()
+    new_data = interpolate_entries(
+        diff_departure_time_per_dep_time,
+        all_entries,
+        all_trains
+    )
+    data_timestamp = {
+        train: new_data[train][all_entries.index(timestamp)]
+        for train in new_data.keys()
+    }
+    return data_timestamp
+
+
 def plot_groot_delays(
-    delayed: Groot,
-    ref: Groot
+    disrupted: Groot,
+    ref: Groot,
+    all_trains: bool = True
 ) -> go.Figure:
-    """Build a figure showing the cumulated delay of the delayed groot
+    """Build a figure showing the cumulated delay of the disrupted groot
 
     Parameters
     ----------
-    delayed : Groot
-        The delayed or dispatched groot.
+    disrupted : Groot
+        The disrupted or dispatched groot.
     ref : Groot
         THe reference groot.
+    all_trains : bool
+        true if we want to keep delays for all trains or only for
+        trains active at each time point (delay will end at 0 if false)
 
     Returns
     -------
     go.Figure
-        A figure showing the cumulated delays of the delayed groot.
+        A figure showing the cumulated delays of the disrupted groot.
     """
-    diff_departure_time_per_zone = difference_departures_per_zone(delayed, ref)
+    diff_departure_time_per_zone = difference_departures_per_zone(disrupted, ref)
     diff_departure_time_per_dep_time = \
         build_dict_difference_departures_per_departure_times(
-            delayed,
+            disrupted,
             diff_departure_time_per_zone
         )
     all_entries = merge_time_entries(diff_departure_time_per_dep_time)
     new_data = interpolate_entries(
         diff_departure_time_per_dep_time,
-        all_entries
+        all_entries,
+        all_trains
     )
 
     time = all_entries
@@ -146,7 +185,9 @@ def plot_groot_delays(
             if sum(delays) > 0
         ],
         layout={
-                "title": 'Cumulated delays over time',
+                "title": 'Cumulated delays over time'
+                if all_trains
+                else 'Active delays over time',
                 "template": "simple_white",
                 "hovermode": "x unified"
             },
@@ -156,7 +197,7 @@ def plot_groot_delays(
 
     xmax = round(max(time))
     xticks = list(range(0, xmax + xmax // 5, xmax // 5))
-    ymax = int(sum(v[-1] for v in delays.values())) + 1
+    ymax = int(sum(max(v) for v in delays.values())) + 1
 
     yticks = list(range(0, ymax + ymax // 5, ymax // 5))
     fig.update_layout(
