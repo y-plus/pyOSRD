@@ -229,7 +229,7 @@ def plot_groot_delays(
     latest_non_zero_delays = get_latest_non_zero_delay(
         diff_departure_time_per_dep_time
     )
-    keys = [
+    sorted_trains = [
         k for k, _ in sorted(
             latest_non_zero_delays.items(),
             reverse=not all_trains,
@@ -250,7 +250,7 @@ def plot_groot_delays(
                 y=delays[train],
                 stackgroup='Delays'
             )
-            for train in keys
+            for train in sorted_trains
             if sum(delays[train]) > 0
         ],
         layout={
