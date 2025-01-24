@@ -15,6 +15,7 @@ from pyosrd.utils import seconds_to_hour
 
 from .build_zones import zones_graph, tvds_graph
 
+
 @dataclass
 class Groot(object):
     zones: dict[str, str] = field(default_factory=dict)
@@ -26,20 +27,20 @@ class Groot(object):
 
 
     @property
-    def trains(self) -> list[str]:
+    def trains(self: Self) -> list[str]:
         return [train for train in self.times]
 
-    def path(self, train) -> list[str]:
+    def path(self: Self, train) -> list[str]:
         return sorted(
             self.times[train],
             key=lambda x:  self.times[train][x][0]
         )
 
-    def train_zones(self, train) -> list[str]:
+    def train_zones(self: Self, train) -> list[str]:
         return [self.zones[tvd] for tvd in self.path(train)]
 
     @property
-    def times_zones(self) -> dict[str, dict[str, tuple[float, float]]]:
+    def times_zones(self: Self) -> dict[str, dict[str, tuple[float, float]]]:
         if not hasattr(self, '_times_zones') or self._times_zones is None:
             self._times_zones =  {
                 train: {self.zones[k]: v for k, v in data.items()}
@@ -48,18 +49,18 @@ class Groot(object):
         return self._times_zones
 
     @property
-    def zones_graph(self) -> nx.DiGraph:
+    def zones_graph(self: Self) -> nx.DiGraph:
         if not hasattr(self, '_zones_graph'):
             self._zones_graph = zones_graph(self.zones)
         return self._zones_graph
 
     @property
-    def tvds_graph(self) -> nx.DiGraph:
+    def tvds_graph(self: Self) -> nx.DiGraph:
         if not hasattr(self, '_tvds_graph'):
             self._tvds_graph = tvds_graph(self.zones)
         return self._tvds_graph
 
-    def to_df(self) -> pd.DataFrame:
+    def to_df(self: Self) -> pd.DataFrame:
         df = pd.DataFrame(
             columns=pd.MultiIndex.from_product(
                 [self.trains, ['s', 'e']]
@@ -71,7 +72,12 @@ class Groot(object):
         return df.drop_duplicates()
 
 
-    def plot(self, train: str | None = None, legend: bool = True) -> Axes:
+    def plot(
+        self: Self,
+        train: str | None = None,
+        legend: bool = True,
+        display_zone_names: bool = False,
+    ) -> Axes:
 
         if not train:
             gr = self.zones_graph
@@ -144,23 +150,36 @@ class Groot(object):
         )
         plt.locator_params(axis='x', nbins=6)
         ax.set_xlabel('Time')
-        ax.set_yticks(
-            [
-                label._y
-                for label in ax.get_yticklabels()
-            ],
-            [
-                label.get_text() if label.get_text() in self.stations else ''
-                for label in ax.get_yticklabels()
-            ]
-        )
+        if not display_zone_names:
+            ax.set_yticks(
+                [
+                    label._y
+                    for label in ax.get_yticklabels()
+                ],
+                [
+                    label.get_text() if label.get_text() in self.stations else ''
+                    for label in ax.get_yticklabels()
+                ]
+            )
+        else:
+            if train:
+                ax.set_yticks(
+                    [
+                        label._y
+                        for label in ax.get_yticklabels()
+                    ],
+                    [
+                        self.get_tvd(train, zone) + f" ({zone})"
+                        for zone in sorted_zones
+                    ]
+                )
         if train:
             ax.set_title(train)
         if legend:
             ax.legend()
         return ax
 
-    def earliest_conflict(self) -> tuple[str, str, str, float]:
+    def earliest_conflict(self: Self) -> tuple[str, str, str, float]:
 
         times_zones = self.times_zones
         train1_conflict, train2_conflict, zone_conflict = None, None, None
@@ -183,16 +202,16 @@ class Groot(object):
         return train1_conflict, train2_conflict, zone_conflict, t_conflict
 
 
-    def has_conflicts(self) -> bool:
+    def has_conflicts(self: Self) -> bool:
         return self.earliest_conflict()[0] is not None
 
-    def trains_order_in_zone(self, train1, train2, zone) -> tuple[str, str]:
+    def trains_order_in_zone(self: Self, train1, train2, zone) -> tuple[str, str]:
         if self.times_zones[train1][zone] <= self.times_zones[train2][zone]:
             return (train1, train2)
         return (train2, train1)
 
     def between(
-        self,
+        self: Self,
         t_min: float = 0,
         t_max: float = float('inf'),
     ) -> Self:
@@ -208,14 +227,14 @@ class Groot(object):
         }
         return new
 
-    def before(self, t: float) -> Self:
+    def before(self: Self, t: float) -> Self:
         return self.between(t_max=t)
 
-    def after(self, t: float) -> Self:
+    def after(self: Self, t: float) -> Self:
         return self.between(t_min=t)
 
     def add_delay(
-        self,
+        self: Self,
         train: str,
         zone: str,
         delay: float
@@ -236,7 +255,7 @@ class Groot(object):
         return new
 
     def zones_are_free(
-        self,
+        self: Self,
         zones: list[str],
         t1=0,
         t2=float('inf')
@@ -248,21 +267,21 @@ class Groot(object):
             for zone in zones
         )
 
-    def previous_zones(self, train: str, zone: str) -> list[str]:
+    def previous_zones(self: Self, train: str, zone: str) -> list[str]:
         zones = self.train_zones(train)
         return zones[::-1][zones[::-1].index(zone)+1:]
 
-    def next_zones(self, train: str, zone: str) -> list[str]:
+    def next_zones(self: Self, train: str, zone: str) -> list[str]:
         zones = self.train_zones(train)
         return zones[zones.index(zone)+1:]
 
-    def previous_station(self, train: str, zone: str) -> str:
+    def previous_station(self: Self, train: str, zone: str) -> str:
         return next((z for z in self.previous_zones(train, zone) if z in self.stations), None)
 
-    def next_station(self, train: str, zone: str) -> str:
+    def next_station(self: Self, train: str, zone: str) -> str:
         return next((z for z in  self.next_zones(train, zone) if z in self.stations), None)
 
-    def get_tvd(self, train: str, zone: str) -> str:
+    def get_tvd(self: Self, train: str, zone: str) -> str:
         return next(
             (
                 tvd for tvd in self.path(train)
@@ -271,7 +290,7 @@ class Groot(object):
             None
         )
 
-    def previous_signal(self, train: str, zone: str) -> str:
+    def previous_signal(self: Self, train: str, zone: str) -> str:
         return next(
             (
                 z for z in self.previous_zones(train, zone)
@@ -280,7 +299,7 @@ class Groot(object):
             None
         )
 
-    def next_signal(self, train: str, zone: str) -> str:
+    def next_signal(self: Self, train: str, zone: str) -> str:
         return next(
             (
                 z for z in  self.next_zones(train, zone)
@@ -290,7 +309,7 @@ class Groot(object):
         )
 
     def previous_common_convergence(
-        self,
+        self: Self,
         train1: str,
         train2: str,
         zone: str
@@ -307,14 +326,14 @@ class Groot(object):
                 return z
         return None
 
-    def is_a_divergence(self, zone: str, train1: str, train2: str) -> bool:
+    def is_a_divergence(self: Self, zone: str, train1: str, train2: str) -> bool:
         train_zones1 = self.train_zones(train1)
         train_zones2 = self.train_zones(train2)
         if zone in [train_zones1[-1], train_zones2[-1]]:
             return False
         return train_zones1[train_zones1.index(zone)+1] != train_zones2[train_zones2.index(zone)+1]
 
-    def alternative_zones(self, train: str, zone: str) -> list[list[str]]:
+    def alternative_zones(self: Self, train: str, zone: str) -> list[list[str]]:
 
         next_station = self.next_station(train, zone)
         next_next_station = self.next_station(train, next_station) if next_station else None
@@ -370,14 +389,14 @@ class Groot(object):
             return self.add_delay(waiting_train, wait_at, delay)
 
     @property
-    def departure_times(self) -> dict[str, float]:
+    def departure_times(self: Self) -> dict[str, float]:
         return {
             train: self.times[train][self.path(train)[0]][0]
             for train in self.times
         }
 
     @property
-    def last_arrival_times(self) -> dict[str, float]:
+    def last_arrival_times(self: Self) -> dict[str, float]:
         return {
             train: self.times[train][self.path(train)[-1]][1]
             for train in self.times
