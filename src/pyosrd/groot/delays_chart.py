@@ -113,7 +113,10 @@ def get_groot_delays_timestamp(
     all_trains: bool,
     timestamp: str
 ) -> dict[str, float]:
-    diff_departure_time_per_zone = difference_departures_per_zone(disrupted, ref)
+    diff_departure_time_per_zone = difference_departures_per_zone(
+        disrupted,
+        ref
+    )
     diff_departure_time_per_dep_time = \
         build_dict_difference_departures_per_departure_times(
             disrupted,
@@ -133,6 +136,54 @@ def get_groot_delays_timestamp(
         for train in new_data.keys()
     }
     return data_timestamp
+
+
+def latest_non_zero_timestamp(entries: dict[float, float]) -> float:
+    """get the latest timestamp where
+    the delay is non zero
+
+    Parameters
+    ----------
+    entries : dict[float, float]
+        the dictionnary containing the delay for each time stamp.
+
+    Returns
+    -------
+    float
+        the latest timestamp
+    """
+    non_zero_entries = [
+        time
+        for time, val in entries.items()
+        if val > 0
+    ]
+    if len(non_zero_entries) == 0:
+        return -1
+    return non_zero_entries[-1]
+
+
+def get_latest_non_zero_delay(
+    entries: dict[str, dict[float, float]]
+) -> dict[str, float]:
+    """get the latest timestamp where
+    the delay is non zero for each train
+
+    Parameters
+    ----------
+    entries : dict[str, dict[float, float]]
+        the dictionnary containing the delay for each time stamp
+        for each train.
+
+    Returns
+    -------
+    dict[str, float]
+        the latest timestamp for each train
+    """
+    return {
+        train: latest_non_zero_timestamp(delays)
+        for train, delays in entries.items()
+        if latest_non_zero_timestamp(delays) > 0
+    }
 
 
 def plot_groot_delays(
@@ -157,7 +208,10 @@ def plot_groot_delays(
     go.Figure
         A figure showing the cumulated delays of the disrupted groot.
     """
-    diff_departure_time_per_zone = difference_departures_per_zone(disrupted, ref)
+    diff_departure_time_per_zone = difference_departures_per_zone(
+        disrupted,
+        ref
+    )
     diff_departure_time_per_dep_time = \
         build_dict_difference_departures_per_departure_times(
             disrupted,
@@ -172,17 +226,32 @@ def plot_groot_delays(
 
     time = all_entries
     delays = new_data
+    latest_non_zero_delays = get_latest_non_zero_delay(
+        diff_departure_time_per_dep_time
+    )
+    keys = [
+        k for k, _ in sorted(
+            latest_non_zero_delays.items(),
+            reverse=not all_trains,
+            key=lambda item: item[1]
+        )
+    ]
+
+    if not all_trains:
+        time = [t for t in time if t < max(
+            [val for _, val in latest_non_zero_delays.items()]
+        )]
 
     fig = go.Figure(
         data=[
             go.Scatter(
                 name=train,
                 x=time,
-                y=delays,
+                y=delays[train],
                 stackgroup='Delays'
             )
-            for train, delays in delays.items()
-            if sum(delays) > 0
+            for train in keys
+            if sum(delays[train]) > 0
         ],
         layout={
                 "title": 'Cumulated delays over time'
@@ -198,8 +267,8 @@ def plot_groot_delays(
     xmax = round(max(time))
     xticks = list(range(0, xmax + xmax // 5, xmax // 5))
     ymax = int(sum(max(v) for v in delays.values())) + 1
-
     yticks = list(range(0, ymax + ymax // 5, ymax // 5))
+
     fig.update_layout(
         yaxis=dict(
             tickmode='array',
