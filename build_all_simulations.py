@@ -1,7 +1,7 @@
 import os
 import shutil
 from pyosrd import OSRD
-from cpagent.cp_agent import CpAgent
+# from cpagent.cp_agent import CpAgent
 
 os.makedirs('tmp_cases', exist_ok=True)
 
@@ -17,7 +17,7 @@ for case in OSRD.with_delays():
     sim=OSRD(with_delay=case, dir=os.path.join('tmp_cases', case))
     try:
         sim.folium_map()
-    except ZeroDivisionError as e:
+    except ZeroDivisionError:
         print(case)
         shutil.rmtree(os.path.join('tmp_cases', case), ignore_errors=True)
 
