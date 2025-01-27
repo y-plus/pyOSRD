@@ -472,6 +472,7 @@ class OSRD():
         point: Point,
         train: int | str,
         tol: float = 1e-3
+        # tol: float = 0
     ) -> float | None:
 
         if isinstance(train, str):
@@ -490,7 +491,8 @@ class OSRD():
                 offset = point.position - self.train_departure(train).position
             else:
                 offset = self.train_departure(train).position - point.position
-            offset = max(-tol, 0)
+            if offset < 0 and offset > -tol:
+                offset = 0
             if round(abs(offset), 3) < 0 or offset < 0:
                 return None
             return offset
