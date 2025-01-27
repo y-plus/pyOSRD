@@ -470,7 +470,8 @@ class OSRD():
     def offset_in_path_of_train(
         self,
         point: Point,
-        train: int | str
+        train: int | str,
+        tol: float = 1e-3
     ) -> float | None:
 
         if isinstance(train, str):
@@ -489,6 +490,7 @@ class OSRD():
                 offset = point.position - self.train_departure(train).position
             else:
                 offset = self.train_departure(train).position - point.position
+            offset = max(-tol, 0)
             if round(abs(offset), 3) < 0 or offset < 0:
                 return None
             return offset
@@ -1130,7 +1132,9 @@ class OSRD():
             stations = self.points_encountered_by_train(train, types='station')
             d[train] = dict()
             stops = copy.deepcopy(self.get_stops(train))
+
             for stop in stops:
+
                 if 'position' not in stop:
                     stop['position'] = self.offset_in_path_of_train(
                         Point(
@@ -1139,19 +1143,21 @@ class OSRD():
                         ),
                         train
                     )
-                if stop['position'] >= 0:
-                    station = min(
-                        stations,
-                        key= lambda s: abs(s['offset'] - stop['position'])
-                    )
-                    hp = self._head_position(train)
-                    for i, r in enumerate(hp):
-                        if r['path_offset'] <= stop['position'] and hp[i+1]['path_offset'] > stop['position']:
-                            d[train][station['id']] = (
-                                seconds_to_hour(r['time']).split('.')[0],
-                                seconds_to_hour(r['time']+stop['duration']).split('.')[0],
-                            )
-                            continue
+                
+                if stop['position'] is not None:
+                    if stop['position'] >= 0:
+                        station = min(
+                            stations,
+                            key= lambda s: abs(s['offset'] - stop['position'])
+                        )
+                        hp = self._head_position(train)
+                        for i, r in enumerate(hp[:-1]):
+                            if r['path_offset'] <= stop['position'] and hp[i+1]['path_offset'] > stop['position']:
+                                d[train][station['id']] = (
+                                    seconds_to_hour(r['time']).split('.')[0],
+                                    seconds_to_hour(r['time']+stop['duration']).split('.')[0],
+                                )
+                                continue
         return d
 
     def stops_by_stations(self) -> dict[str, dict[str, tuple[float, float]]]:
