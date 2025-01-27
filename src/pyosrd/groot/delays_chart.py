@@ -1,4 +1,5 @@
 import numpy as np
+import plotly
 import plotly.graph_objects as go
 
 from pyosrd.utils import seconds_to_hour, hour_to_seconds
@@ -34,7 +35,7 @@ def interpolate_entries(
     entries: list[float],
     all_trains: bool
 ) -> dict[str, dict[float, float]]:
-    """_summary_
+    """Interpolate entries
 
     Parameters
     ----------
@@ -189,7 +190,10 @@ def get_latest_non_zero_delay(
 def plot_groot_delays(
     disrupted: Groot,
     ref: Groot,
-    all_trains: bool = True
+    all_trains: bool = True,
+    tmin: float | str | None = None,
+    tmax: float | str | None = None,
+    dmax: float | str | None = None,
 ) -> go.Figure:
     """Build a figure showing the cumulated delay of the disrupted groot
 
@@ -248,7 +252,9 @@ def plot_groot_delays(
                 name=train,
                 x=time,
                 y=delays[train],
-                stackgroup='Delays'
+                stackgroup='Delays',
+                line={'width': 0},
+
             )
             for train in sorted_trains
             if sum(delays[train]) > 0
@@ -258,15 +264,34 @@ def plot_groot_delays(
                 if all_trains
                 else 'Active delays over time',
                 "template": "simple_white",
-                "hovermode": "x unified"
+                "colorway": (
+                    plotly.colors.qualitative.D3[0:len(sorted_trains)][::-1]
+                    if not all_trains
+                    else plotly.colors.qualitative.D3
+                ),
+                "hovermode": "x unified",
             },
     )
     if not fig.data:
         return fig
 
+    if tmin:
+        if isinstance(tmin, str):
+            tmin = hour_to_seconds(tmin)
+    if tmax:
+        if isinstance(tmax, str):
+            tmax = hour_to_seconds(tmax)
+    if dmax:
+        if isinstance(dmax, str):
+            dmax = hour_to_seconds(dmax)
+    fig.update_xaxes(range=[tmin, tmax]).update_yaxes(range=[0, dmax])
+
     xmax = round(max(time))
     xticks = list(range(0, xmax + xmax // 5, xmax // 5))
-    ymax = int(sum(max(v) for v in delays.values())) + 1
+    if dmax:
+        ymax=dmax
+    else:
+        ymax = int(sum(max(v) for v in delays.values())) + 1
     yticks = list(range(0, ymax + ymax // 5, ymax // 5))
 
     fig.update_layout(
@@ -281,4 +306,5 @@ def plot_groot_delays(
             ticktext=[seconds_to_hour(xtick) for xtick in xticks]
         )
     )
+
     return fig
