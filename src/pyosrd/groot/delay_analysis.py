@@ -1,6 +1,6 @@
 import numpy as np
 
-from pyosrd.utils import hour_to_seconds
+from pyosrd.utils import hour_to_seconds, seconds_to_hour
 from pyosrd.groot import Groot
 from pyosrd.groot.compare import difference_departures_per_zone
 
@@ -69,7 +69,9 @@ def merge_time_entries(data: dict[str, dict[float, float]]) -> list[float]:
         the sorted list of all departure times.
     """
     entries = [
-        time for train_dict in data.values() for time in train_dict.keys()
+        time
+        for train_dict in data.values()
+        for time in train_dict.keys()
     ]
     entries.sort()
     return entries
@@ -237,7 +239,8 @@ def get_earliest_non_zero_delay_for_each_train(
 def get_latest_non_zero_delay(
     disrupted: Groot,
     ref: Groot,
-) -> float:
+    seconds: bool = False,
+) -> float :
     """ Get the latest non zero delay in seconds of the disrupted groot
     compared to the reference groot. This is the time after which all
     trains are back to a normal situation.
@@ -269,5 +272,13 @@ def get_latest_non_zero_delay(
         diff_departure_time_per_dep_time
     )
 
-    return max([latest_non_zero_delay
-                for latest_non_zero_delay in latest_non_zero_delays.values()])
+    time = max(
+        [
+            latest_non_zero_delay
+            for latest_non_zero_delay in latest_non_zero_delays.values()
+        ]
+    )
+
+    if seconds:
+        return time
+    return seconds_to_hour(time)
