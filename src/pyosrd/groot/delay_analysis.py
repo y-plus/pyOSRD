@@ -38,13 +38,16 @@ def interpolate_entries(
     for train, train_dict in data.items():
         keys = [k for k in train_dict.keys()]
         values = [v for v in train_dict.values()]
-        new_data[train] = np.interp(
+        interpolation = np.interp(
             entries,
             keys,
             values,
             None if all_trains else 0,
             None if all_trains else 0
         )
+        new_data[train] = {
+            entries[i]: interpolation[i] for i in range(0, len(interpolation))
+        }
 
     return new_data
 
@@ -158,9 +161,7 @@ def latest_non_zero_timestamp(entries: dict[float, float]) -> float:
         for time, val in entries.items()
         if val > 0
     ]
-    if len(non_zero_entries) == 0:
-        return -1
-    return non_zero_entries[-1]
+    return -1 if len(non_zero_entries) == 0 else non_zero_entries[-1]
 
 
 def get_latest_non_zero_delay_for_each_train(
@@ -184,6 +185,52 @@ def get_latest_non_zero_delay_for_each_train(
         train: latest_non_zero_timestamp(delays)
         for train, delays in entries.items()
         if latest_non_zero_timestamp(delays) > 0
+    }
+
+
+def earliest_non_zero_timestamp(entries: dict[float, float]) -> float:
+    """get the earliest timestamp where
+    the delay is non zero
+
+    Parameters
+    ----------
+    entries : dict[float, float]
+        the dictionnary containing the delay for each time stamp.
+
+    Returns
+    -------
+    float
+        the earliest timestamp
+    """
+    non_zero_entries = [
+        time
+        for time, val in entries.items()
+        if val > 0
+    ]
+    return -1 if len(non_zero_entries) == 0 else non_zero_entries[0]
+
+
+def get_earliest_non_zero_delay_for_each_train(
+    entries: dict[str, dict[float, float]]
+) -> dict[str, float]:
+    """get the earliest timestamp where
+    the delay is non zero for each train
+
+    Parameters
+    ----------
+    entries : dict[str, dict[float, float]]
+        the dictionnary containing the delay for each time stamp
+        for each train.
+
+    Returns
+    -------
+    dict[str, float]
+        the earliest timestamp for each train
+    """
+    return {
+        train: earliest_non_zero_timestamp(delays)
+        for train, delays in entries.items()
+        if earliest_non_zero_timestamp(delays) > 0
     }
 
 

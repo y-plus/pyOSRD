@@ -7,6 +7,7 @@ from pyosrd.groot.compare import difference_departures_per_zone
 from pyosrd.groot.delay_analysis import merge_time_entries, \
     build_dict_difference_departures_per_departure_times, \
     get_latest_non_zero_delay_for_each_train, \
+    get_earliest_non_zero_delay_for_each_train, \
     interpolate_entries
 
 
@@ -45,28 +46,34 @@ def plot_groot_delays(
             diff_departure_time_per_zone
         )
     all_entries = merge_time_entries(diff_departure_time_per_dep_time)
-    new_data = interpolate_entries(
+    interpolated_diffs = interpolate_entries(
         diff_departure_time_per_dep_time,
         all_entries,
         all_trains
     )
 
     time = all_entries
-    delays = new_data
-    latest_non_zero_delays = get_latest_non_zero_delay_for_each_train(
-        diff_departure_time_per_dep_time
+    delays = {
+        val: [val_time for val_time in key.values()]
+        for val, key in interpolated_diffs.items()
+    }
+    earliest_non_zero_delays = get_earliest_non_zero_delay_for_each_train(
+        interpolated_diffs
     )
     sorted_trains = [
         k for k, _ in sorted(
-            latest_non_zero_delays.items(),
+            earliest_non_zero_delays.items(),
             reverse=not all_trains,
             key=lambda item: item[1]
         )
     ]
 
     if not all_trains:
+        latest_non_zero_delays = get_latest_non_zero_delay_for_each_train(
+            interpolated_diffs
+        )
         time = [t for t in time if t < max(
-            [val for _, val in latest_non_zero_delays.items()]
+            [val for val in latest_non_zero_delays.values()]
         )]
 
     fig = go.Figure(
