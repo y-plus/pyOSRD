@@ -114,10 +114,15 @@ def plot_groot_delays(
     if dmax:
         if isinstance(dmax, str):
             dmax = hour_to_seconds(dmax)
-    fig.update_xaxes(range=[tmin, tmax]).update_yaxes(range=[0, dmax])
+    fig.update_xaxes(range=[tmin, tmax])
+    fig.update_yaxes(range=[0, dmax])
 
-    xmax = round(max(time))
-    xticks = list(range(0, xmax + xmax // 5, xmax // 5))
+    if tmin is None:
+        tmin = round(min(time))
+    if tmax is None:
+        tmax = round(max(time))
+    xticks = list(range(tmin, tmax + tmax // 5, (tmax-tmin) // 5))
+
     if dmax:
         ymax = dmax
     else:

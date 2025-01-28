@@ -236,8 +236,9 @@ def space_time_chart_plotly(
             # line_dash="dash",
             line_color="black"
         )
+    xmin = round(min([d['x'][0] for d in data]))
     xmax = round(max([d['x'][-1] for d in data]))
-    xticks = list(range(0, xmax + xmax // 5, xmax // 5))
+    xticks = list(range(xmin, xmax + xmax // 5, (xmax-xmin) // 5))
 
     fig.update_layout(
         yaxis=dict(
