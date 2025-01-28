@@ -219,6 +219,7 @@ def space_time_chart_plotly(
                 customdata=t['h'],
                 name=t['label'],
                 hovertemplate="%{customdata} (%{y:.0f} m)",
+                line = dict(color='black', width=3.5) if t['label']==train else dict(width=1.5)
             )
             for t in data
         ],
