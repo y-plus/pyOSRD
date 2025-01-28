@@ -3,20 +3,19 @@ import itertools
 import json
 import os
 
-from pyosrd import OSRD
 from pyosrd.infra.distances import distance_between_points
 
 
 def sim_with_updated_results(
-    sim: OSRD,
+    sim,
     times: dict[str, dict[str, tuple[float, float]]],
     updated_sim_name: str,
-) -> OSRD:
+):
 
     track_section_lengths = sim.track_section_lengths
     track_section_network = sim._track_section_network
 
-    updated: OSRD = copy.deepcopy(sim)
+    updated = copy.deepcopy(sim)
     updated._train_track_sections = None
 
     for train in sim.trains:
@@ -239,7 +238,7 @@ def sim_with_updated_results(
     return updated
 
 
-def _updated_routes(sim: OSRD, train: int | str, detectors: list[str]) -> list[str]:
+def _updated_routes(sim, train: int | str, detectors: list[str]) -> list[str]:
 
     if isinstance(train, int):
         train = sim.trains[train]
@@ -292,7 +291,7 @@ def _updated_routes(sim: OSRD, train: int | str, detectors: list[str]) -> list[s
 
 
 def _get_train_track_section_distances(
-    sim: OSRD,
+    sim,
     train: int | str,
     track_section_lengths,
 ) -> list[dict[str, str | float]]:
