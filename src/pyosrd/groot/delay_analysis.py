@@ -10,7 +10,9 @@ def interpolate_entries(
     entries: list[float],
     all_trains: bool
 ) -> dict[str, dict[float, float]]:
-    """_summary_
+    """Interpolate all entries in the data dictionnary and
+    the given entries. Usually the entries list will all
+    the keys of the data dictionary merged.
 
     Parameters
     ----------
