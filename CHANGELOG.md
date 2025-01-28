@@ -1,7 +1,16 @@
+ # v0.2.13
+## OSRD class
+- **Compatible with OSRD v0.2.9**
+## Groot Class
+- replaces deprecated `schedules`
+
+## Agents
+- Agents are now based on `groot`
+
 # v0.2.12
 
 ## OSRD class
-- Can no longer be created by givien a param `use_case=XXX`, use `simulation=XXX` instead
+- Can no longer be created by given a param `use_case=XXX`, use `simulation=XXX` instead
 - Can now be created with only infra by giving `infra=XXX`
 - Can now be created with delays by giving `with_delay=XXX`
 ## Use cases

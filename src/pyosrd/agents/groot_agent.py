@@ -3,7 +3,6 @@ import copy
 from abc import ABC, abstractmethod
 from typing_extensions import Self
 
-from pyosrd import OSRD
 from pyosrd.groot import Groot, from_sim
 from pyosrd.agents.update import sim_with_updated_results
 from pyosrd.groot.objectives import sum_delays_at_end
@@ -16,7 +15,7 @@ class GrootAgent(ABC):
     ref_groot: Groot | None = None
     _dispatched_groot: None
 
-    def __init__(self, name: str, sim: OSRD, debug: bool = False) -> None:
+    def __init__(self, name: str, sim, debug: bool = False) -> None:
         self._name = name
         self._sim = sim
         self._ref_groot = from_sim(sim)
@@ -30,7 +29,7 @@ class GrootAgent(ABC):
         return self._name
         
     @property
-    def sim(self) -> OSRD:      
+    def sim(self):
         return self._sim
 
     @property
@@ -59,7 +58,7 @@ class GrootAgent(ABC):
 
     def regulated(
         self: Self,
-    ) -> OSRD:
+    ):
         return sim_with_updated_results(self.sim, self.dispatched_groot.times, self.name)
     
     @abstractmethod

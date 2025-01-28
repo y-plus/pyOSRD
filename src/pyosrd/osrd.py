@@ -90,7 +90,6 @@ class OSRD():
     delays_json: str = 'delays.json'
     params_use_case: dict = field(default_factory=dict)
 
-    from .agents import Agent
     from .delays import (
         add_delay,
         add_delays_in_results,
@@ -820,22 +819,6 @@ class OSRD():
                     dict_tvd_zones["<->".join(sorted(a))] = switch['id']
 
         return dict_tvd_zones
-
-    def regulate(self, agent: Agent) -> Self:
-        """Create and run a regulated simulation
-
-        Parameters
-        ----------
-        agent : agents.Agent
-            Regulation Agent
-
-        Returns
-        -------
-        OSRD
-            Regulated simulation.
-            Results are saved in the directory 'delayed/<agent.name>'
-        """
-        return agent.regulated(self)
 
     @property
     def stop_positions(self) -> list[dict[str, Any]]:
