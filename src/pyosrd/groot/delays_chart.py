@@ -18,6 +18,7 @@ def plot_groot_delays(
     tmin: float | str | None = None,
     tmax: float | str | None = None,
     dmax: float | str | None = None,
+    ref_fig: go.Figure | None = None,
 ) -> go.Figure:
     """Build a figure showing the cumulated delay of the disrupted groot
 
@@ -90,9 +91,6 @@ def plot_groot_delays(
             if sum(delays[train]) > 0
         ],
         layout={
-                "title": 'Cumulated delays over time'
-                if all_trains
-                else 'Active delays over time',
                 "template": "simple_white",
                 "colorway": (
                     plotly.colors.qualitative.D3[0:len(sorted_trains)][::-1]
@@ -105,13 +103,18 @@ def plot_groot_delays(
     if not fig.data:
         return fig
 
-    if tmin:
+    if ref_fig:
+        dmax=ref_fig.layout.yaxis.tickvals[-2]
+        tmin=ref_fig.layout.xaxis.tickvals[0]
+        tmax=ref_fig.layout.xaxis.tickvals[-2]
+
+    if tmin is not None:
         if isinstance(tmin, str):
             tmin = hour_to_seconds(tmin)
-    if tmax:
+    if tmax is not None:
         if isinstance(tmax, str):
             tmax = hour_to_seconds(tmax)
-    if dmax:
+    if dmax is not None:
         if isinstance(dmax, str):
             dmax = hour_to_seconds(dmax)
     fig.update_xaxes(range=[tmin, tmax])
@@ -121,7 +124,7 @@ def plot_groot_delays(
         tmin = round(min(time))
     if tmax is None:
         tmax = round(max(time))
-    xticks = list(range(tmin, tmax + tmax // 5, (tmax-tmin) // 5))
+    xticks = list(range(tmin, tmax + (tmax-tmin) // 5, (tmax-tmin) // 5))
 
     if dmax:
         ymax = dmax
@@ -139,7 +142,10 @@ def plot_groot_delays(
             tickmode='array',
             tickvals=xticks,
             ticktext=[seconds_to_hour(xtick) for xtick in xticks]
-        )
+        ),
+        showlegend=True,
+        legend_title_text='Cumulated delays' if all_trains else 'Active delays',
+        margin=dict(l=20, r=20, t=30, b=30),
     )
 
     return fig
