@@ -44,7 +44,8 @@ def plot_groot_delays(
     diff_departure_time_per_dep_time = \
         build_dict_difference_departures_per_departure_times(
             disrupted,
-            diff_departure_time_per_zone
+            diff_departure_time_per_zone,
+            not all_trains
         )
     all_entries = merge_time_entries(diff_departure_time_per_dep_time)
     interpolated_diffs = interpolate_entries(
@@ -104,9 +105,9 @@ def plot_groot_delays(
         return fig
 
     if ref_fig:
-        dmax=ref_fig.layout.yaxis.tickvals[-2]
-        tmin=ref_fig.layout.xaxis.tickvals[0]
-        tmax=ref_fig.layout.xaxis.tickvals[-2]
+        dmax = ref_fig.layout.yaxis.tickvals[-2]
+        tmin = ref_fig.layout.xaxis.tickvals[0]
+        tmax = ref_fig.layout.xaxis.tickvals[-2]
 
     if tmin is not None:
         if isinstance(tmin, str):
