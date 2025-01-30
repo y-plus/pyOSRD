@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 
+from pyosrd.osrd import Point
 from pyosrd.utils import hour_to_seconds
 
 
@@ -151,7 +152,7 @@ def add_delay_between_points(
     point_id_B: str,
     delay: float,
 ) -> None:
-    
+
     if isinstance(train, str):
         train = self.trains.index(train)
 
@@ -161,24 +162,36 @@ def add_delay_between_points(
         if p['type'] in ['detector', 'departure', 'arrival']
     ]
 
-    try:
-        pointA = next(
-            p for p in points if p['id'] == point_id_A
-        )
-    except StopIteration:
-        raise ValueError(ValueError, f"{point_id_A} is not in the train's path")
-    try:
-        pointB = next(
-            p for p in points if p['id'] == point_id_B
-        )
-    except StopIteration:
-        raise ValueError(ValueError, f"{point_id_B} is not in the train's path")
+
+    pointA = next(
+        (p for p in points if p['id'] == point_id_A),
+        None
+    )
     
+    pointB = next(
+        (p for p in points if p['id'] == point_id_B),
+        None
+    )
+    if pointB is None or pointA is None:
+        return
+
     group, idx = self._train_schedule_group[
         self.trains[train]
     ]
 
     
+    
+    stops = self.get_stops(train)
+    for stop in stops:
+        if 'position' not in stop:
+            stop['position'] = self.offset_in_path_of_train(
+                Point(
+                    track_section=stop['location']['track_section'],
+                    position=stop['location']['offset'],
+                ),
+                train
+            )
+
     for eco_or_base in ['base', 'eco']:
 
         if self.results[group][ f'{eco_or_base}_simulations'] == [None]:
@@ -193,23 +206,44 @@ def add_delay_between_points(
         pos_in, pos_out = limits[0]['offset'], limits[1]['offset']
 
         TIME_TO_STOP = 60  # seconds
+
+        detector = next(
+            (
+                d for d in self.infra['detectors']
+                if d['id'] == limits[1]['id']
+            ),
+            None
+        )
+
+        if detector:
+            self._head_position(train, eco_or_base).append(
+                {
+                    'time': t_out,
+                    'offset': detector['position'],
+                    'path_offset': pos_out,
+                    "track_section": detector['track'],
+                }
+            )
+
+            self._head_position(train, eco_or_base).sort(
+                key=lambda r: r['time']
+            )
+
+
+
         stop = next(
             (
-            s
-                for s in self.get_stops(train)
-                if s['position'] >= pos_in and s['position'] <= pos_out
+                s for s in stops
+                if s['position'] >= pos_in and s['position'] < pos_out
             ),
             None
         )
 
         if stop:
-            for i, r in enumerate(self._head_position(train, eco_or_base)):
-                if (
-                    r['path_offset'] >= stop['position']
-                    and self._head_position(train, eco_or_base)[i-1]['path_offset'] >= stop['position']
-                ):
+            for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+                if r['path_offset'] > stop['position']:
                     r['time'] += delay
-    
+
         elif delay <= 2 * TIME_TO_STOP:
             stretch = (t_out - t_in + delay)/(t_out-t_in)
             for r in self._head_position(train, eco_or_base):
@@ -222,7 +256,6 @@ def add_delay_between_points(
                 if r['time'] > t_out and h[i-1]['time'] > t_out:
                     r['time'] += delay
                 elif r['time'] >= t_out and h[i-1]['time'] < t_out:
-                    # r['time'] = h[i-1]['time']
                     r['time'] += delay - TIME_TO_STOP
                     h[i-1]['time'] += TIME_TO_STOP
                     r['path_offset'] = h[i-1]['path_offset']
