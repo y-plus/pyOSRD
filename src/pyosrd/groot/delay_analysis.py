@@ -73,6 +73,8 @@ def merge_time_entries(data: dict[str, dict[float, float]]) -> list[float]:
         for train_dict in data.values()
         for time in train_dict.keys()
     ]
+    # important to avoid duplicated entries
+    entries = list(set(entries))
     entries.sort()
     return entries
 
