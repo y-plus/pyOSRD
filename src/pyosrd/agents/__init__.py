@@ -1,4 +1,2 @@
-from .gdt_agent import GDTAgent
-from .lazy_agent import LazyAgent
+from .gdt_agent import GDTAgent as GDTAgent
 
-__all__ = [GDTAgent, LazyAgent]
