@@ -81,8 +81,9 @@ def merge_time_entries(data: dict[str, dict[float, float]]) -> list[float]:
 
 def build_dict_difference_departures_per_departure_times(
         groot: Groot,
-        diff: dict[str, dict[str, float]]
-) -> dict[str, dict[str, float]]:
+        diff: dict[str, dict[str, float]],
+        add_fictionnal_point_at_end: bool = False
+) -> dict[str, dict[float, float]]:
     """Create a dictionnary storing the difference of departure time
     per departure time of each zone.
 
@@ -95,10 +96,13 @@ def build_dict_difference_departures_per_departure_times(
         per train. Access of the dictionnary is done by
         dict[train][zone] = difference in departure
         time of the zone. (from difference_departures_per_zone)
+    add_fictionnal_point_at_end : bool
+        If true a fictionnal time point will be added 1 second
+        after the lasgt non null difference
 
     Returns
     -------
-    dict[str, dict[str, float]]
+    dict[str, dict[float, float]]
         A dictionnary of all differences in departure time per
         departure time per train. Access of the dictionnary is done by
         dict[train][departure_time] = difference in departure
@@ -107,10 +111,17 @@ def build_dict_difference_departures_per_departure_times(
     result = {}
     for train in diff.keys():
         train_dict = diff[train]
-        result[train] = {}
+        train_diff = {}
+        max_timestamp = -1
         for tvd in train_dict.keys():
             departure_time = groot.times[train][tvd][1]
-            result[train][departure_time] = diff[train][tvd]
+            if diff[train][tvd] > 0:
+                max_timestamp = max(max_timestamp, departure_time)
+            train_diff[departure_time] = diff[train][tvd]
+
+        if add_fictionnal_point_at_end and max_timestamp > 0:
+            train_diff[max_timestamp+1] = 0
+        result[train] = dict(sorted(train_diff.items()))
 
     return result
 
