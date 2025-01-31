@@ -59,15 +59,22 @@ class GDTAgent(GrootAgent):
             else:
                 new_node = tree.number_of_nodes()
                 action = len(list(tree.successors(node)))
-                if debug:
-                    print(node,'->', new_node, f"({action})")
+                
                 groot, info = evaluate_action(
                     tree.nodes[node]['state'],
                     a=action,
                     ref=self.ref_groot,
                     scorer=self._scorer
                 )
-                tree.add_node(
+                if debug:
+                    done=info['done']
+                    valid=info['valid']
+                    print(
+                        node,'->', new_node,
+                        f"({action=}) [{best_node=}]",
+                        f"{done=} {valid=}"
+                    )
+                    tree.add_node(
                     new_node,
                     done=info['done'],
                     valid=info['valid'],
