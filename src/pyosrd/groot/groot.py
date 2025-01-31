@@ -337,13 +337,13 @@ class Groot(object):
         zones = self.train_zones(train)
         return zones[zones.index(zone)+1:]
 
-    def previous_station(self: Self, train: str, zone: str) -> str:
+    def previous_station(self: Self, train: str, zone: str) -> str | None:
         return next((z for z in self.previous_zones(train, zone) if z in self.stations), None)
 
-    def next_station(self: Self, train: str, zone: str) -> str:
+    def next_station(self: Self, train: str, zone: str) -> str | None:
         return next((z for z in  self.next_zones(train, zone) if z in self.stations), None)
 
-    def get_tvd(self: Self, train: str, zone: str) -> str:
+    def get_tvd(self: Self, train: str, zone: str) -> str | None:
         return next(
             (
                 tvd for tvd in self.path(train)
@@ -352,7 +352,7 @@ class Groot(object):
             None
         )
 
-    def previous_signal(self: Self, train: str, zone: str) -> str:
+    def previous_signal(self: Self, train: str, zone: str) -> str | None:
         return next(
             (
                 z for z in self.previous_zones(train, zone)
@@ -361,7 +361,7 @@ class Groot(object):
             None
         )
 
-    def next_signal(self: Self, train: str, zone: str) -> str:
+    def next_signal(self: Self, train: str, zone: str) -> str | None:
         return next(
             (
                 z for z in  self.next_zones(train, zone)
@@ -375,11 +375,17 @@ class Groot(object):
         train1: str,
         train2: str,
         zone: str
-    ) -> str:
+    ) -> str | None:
+
+        if (
+            zone==self.train_zones(train1)[0]
+            or zone==self.train_zones(train2)[0]
+        ):
+            return None
 
         prev_zones1 = [zone] + self.previous_zones(train1, zone)
         prev_zones2 = [zone] + self.previous_zones(train2, zone)
-
+        
         for i, z in enumerate(prev_zones1[:-1]):
             if (
                 z in prev_zones2
