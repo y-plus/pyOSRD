@@ -74,7 +74,7 @@ class GDTAgent(GrootAgent):
                         f"({action=}) [{best_node=}]",
                         f"{done=} {valid=}"
                     )
-                    tree.add_node(
+                tree.add_node(
                     new_node,
                     done=info['done'],
                     valid=info['valid'],
