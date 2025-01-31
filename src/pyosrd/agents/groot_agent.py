@@ -71,22 +71,27 @@ class GrootAgent(ABC):
         return self._interlocking_groot
 
     def calculate_interlocking(self: Self, debug: bool) -> Groot:
-        new_groot =  copy.deepcopy(self.disrupted_groot)
+        groot =  copy.deepcopy(self.disrupted_groot)
         done = False
         self.interlocking_actions = []
         while not done:
             new_groot, info = evaluate_action(
-                new_groot,
+                groot,
                 a=0,
                 ref=self.ref_groot,
                 scorer=self._scorer
             )
-
-            valid = info['valid']
-            if not valid:
-                print ('Not valid')
+            if not info['valid']:
+                new_groot, info = evaluate_action(
+                groot,
+                a=1,
+                ref=self.ref_groot,
+                scorer=self._scorer
+            )
+            if not info['valid']:
                 return
             done = info['done']
+            groot = new_groot
             self.interlocking_actions.append(info)
         for i, action in enumerate(self.interlocking_actions):
                 if i > 0:
@@ -100,7 +105,7 @@ class GrootAgent(ABC):
                     'delay': seconds_to_hour(action['score']),
                     'added_delay': added_delay
                 }
-        return new_groot
+        return groot
 
     # def regulated(
     #     self: Self,

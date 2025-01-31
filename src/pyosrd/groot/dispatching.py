@@ -24,6 +24,8 @@ def evaluate_action(
             priority_train = train1
             waiting_train = train2
             wait_at = self.previous_signal(waiting_train, zone)
+            if self.train_zones(waiting_train).index(zone) == 0:
+                wait_at = zone
             r = self.make_train_wait(waiting_train, priority_train, wait_at, zone)
             _, _, _, t_new_conlict = r.earliest_conflict()
             done = t_new_conlict is None

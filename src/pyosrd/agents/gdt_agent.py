@@ -1,4 +1,5 @@
 import copy
+import math
 
 from typing_extensions import Self
 
@@ -13,6 +14,7 @@ from pyosrd.groot.dispatching import evaluate_action
 class GDTAgent(GrootAgent):
 
     NUM_ACTIONS = 5
+    MAX_NODES = 200
 
     def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
         
@@ -56,10 +58,11 @@ class GDTAgent(GrootAgent):
 
             if all_actions_evaluated or not_valid or done_and_valid or not_better:
                 nodes_to_explore.pop()
+            elif tree.number_of_nodes() > self.MAX_NODES:
+                nodes_to_explore = []
             else:
                 new_node = tree.number_of_nodes()
                 action = len(list(tree.successors(node)))
-                
                 groot, info = evaluate_action(
                     tree.nodes[node]['state'],
                     a=action,
@@ -69,17 +72,23 @@ class GDTAgent(GrootAgent):
                 if debug:
                     done=info['done']
                     valid=info['valid']
+                    best_score = -tree.nodes[best_node]['reward'] if node > 0 else float('inf')
+                    best_delay = seconds_to_hour(
+                        best_score
+                    )  if math.isfinite(best_score) else ''
                     print(
                         node,'->', new_node,
-                        f"({action=}) [{best_node=}]",
-                        f"{done=} {valid=}"
+                        f"({action=})",
+                        f"[{best_delay}]",
+                        f"{done=} {valid=}",
+                        f"depth={len(nx.shortest_path(tree, 0, node))+1}"
                     )
                 tree.add_node(
                     new_node,
                     done=info['done'],
                     valid=info['valid'],
-                    reward=-info['score'],
-                    state=groot,
+                    reward=-info['score'] if info['valid'] else -float('inf'),
+                    state=groot if info['valid'] else None,
                 )
                 tree.add_edge(node, new_node, info=info)
                 nodes_to_explore.append(new_node)
@@ -94,18 +103,19 @@ class GDTAgent(GrootAgent):
                 tree.edges[edge[0], edge[1]]['info']
                 for edge in pg.edges()
             ]
-            for i, action in enumerate(self.actions):
-                if i > 0:
-                    added_score = action['score'] - self.actions[i-1]['score']
-                else:
-                    added_score = action['score'] + tree.nodes[0]['reward']
-                added_delay = seconds_to_hour(added_score)
-                self.actions[i] = {
-                    **action,
-                    'added_score': added_score,
-                    'delay': seconds_to_hour(action['score']),
-                    'added_delay': added_delay
-                }
+
+        for i, action in enumerate(self.actions):
+            if i > 0:
+                added_score = action['score'] - self.actions[i-1]['score']
+            else:
+                added_score = action['score'] + tree.nodes[0]['reward']
+            added_delay = seconds_to_hour(added_score)
+            self.actions[i] = {
+                **action,
+                'added_score': added_score,
+                'delay': seconds_to_hour(action['score']),
+                'added_delay': added_delay
+            }
             
 
         return tree.nodes[best_node]['state']
