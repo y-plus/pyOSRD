@@ -103,7 +103,6 @@ class OSRD():
         space_time_chart,
         space_time_chart_plotly,
     )
-    from .viz.delays_chart import plot_delays
     from .modify_simulation import (
         add_train,
         add_scheduled_points,
