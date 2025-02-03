@@ -153,7 +153,7 @@ def hamelinfra(
     t2 = build_station(
         infra_builder=infra_builder,
         track_in=t2,
-        station_name='D',
+        station_name='C',
         forward=True,
         backward=False,
         track_names=['V4', 'V2'],
