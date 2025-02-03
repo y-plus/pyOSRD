@@ -219,17 +219,38 @@ def zones_graph(zones) -> nx.DiGraph:
     return zones_graph
 
 
-def tvds_graph(zones) -> nx.DiGraph:
+def tvds_graph(
+    zones,
+    ends_with_a_signal
+) -> nx.DiGraph:
 
     tvds_graph = nx.DiGraph()
 
-    for tvd in zones:
-        for other_tvd in zones:
-            if tvd != other_tvd and zones[tvd] != zones[other_tvd] and tvd.split('->')[1] == other_tvd.split('->')[0]:
+    for tvd in zones.keys():
+        for other_tvd in zones.keys():
+            if (
+                tvd != other_tvd
+                and zones[tvd] != zones[other_tvd]
+                and tvd.split('->')[1] == other_tvd.split('->')[0]
+            ):
                 tvds_graph.add_edge(
                     tvd,
                     other_tvd,
                     detector=tvd.split('->')[1]
                 )
+
+    # Exclude tvd corresponding to stations
+    # where train can not go in the tvd direction
+
+    bad_direction = {
+        tvd
+        for tvd in tvds_graph
+        if '/' in zones[tvd] and not ends_with_a_signal[tvd]
+    }
+
+    tvds_graph = nx.subgraph(
+        tvds_graph,
+        [node for node in tvds_graph if node not in bad_direction]
+    )
 
     return tvds_graph
