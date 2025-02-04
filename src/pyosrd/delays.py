@@ -178,8 +178,6 @@ def add_delay_between_points(
     group, idx = self._train_schedule_group[
         self.trains[train]
     ]
-
-    
     
     stops = self.get_stops(train)
     for stop in stops:
@@ -229,12 +227,11 @@ def add_delay_between_points(
                 key=lambda r: r['time']
             )
 
-
-
         stop = next(
             (
                 s for s in stops
-                if s['position'] >= pos_in and s['position'] < pos_out
+                if s['position'] >= pos_in
+                and s['position'] < pos_out
             ),
             None
         )
@@ -244,23 +241,24 @@ def add_delay_between_points(
                 if r['path_offset'] > stop['position']:
                     r['time'] += delay
 
-        elif delay <= 2 * TIME_TO_STOP:
+        # elif delay <= 2 * TIME_TO_STOP:
+        else:
             stretch = (t_out - t_in + delay)/(t_out-t_in)
             for r in self._head_position(train, eco_or_base):
                 if r['time'] >= t_in and r['time'] < t_out:
                     r['time'] = t_in + (r['time'] - t_in) * stretch
                 elif r['time'] >= t_out:
                     r['time'] += delay
-        else:
-            for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
-                if r['time'] > t_out and h[i-1]['time'] > t_out:
-                    r['time'] += delay
-                elif r['time'] >= t_out and h[i-1]['time'] < t_out:
-                    r['time'] += delay - TIME_TO_STOP
-                    h[i-1]['time'] += TIME_TO_STOP
-                    r['path_offset'] = h[i-1]['path_offset']
-                    r['offset'] =  h[i-1]['offset']
-                    r['track_section'] =  h[i-1]['track_section']
+        # else:
+        #     for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+        #         if r['time'] > t_out and h[i-1]['time'] > t_out:
+        #             r['time'] += delay
+        #         elif r['time'] >= t_out and h[i-1]['time'] < t_out:
+        #             r['time'] += delay - TIME_TO_STOP
+        #             h[i-1]['time'] += TIME_TO_STOP
+        #             r['path_offset'] = h[i-1]['path_offset']
+        #             r['offset'] =  h[i-1]['offset']
+        #             r['track_section'] =  h[i-1]['track_section']
 
 
 def shift_train_departure(
