@@ -14,7 +14,8 @@ from pyosrd.groot.dispatching import evaluate_action
 class GDTAgent(GrootAgent):
 
     NUM_ACTIONS = 5
-    MAX_NODES = 200
+    MAX_NODES = float('inf')
+    DELAY_TOL = 0 #240
 
     def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
         
@@ -43,7 +44,7 @@ class GDTAgent(GrootAgent):
             done_and_valid = tree.nodes[node]['done'] and tree.nodes[node]['valid']
 
             not_better = (
-                tree.nodes[node]['reward'] <= tree.nodes[best_node]['reward']
+                tree.nodes[node]['reward'] - tree.nodes[best_node]['reward'] <= self.DELAY_TOL
             ) if node > 1 else False
 
             if (
@@ -76,12 +77,18 @@ class GDTAgent(GrootAgent):
                     best_delay = seconds_to_hour(
                         best_score
                     )  if math.isfinite(best_score) else ''
+                    delay = seconds_to_hour(
+                        info["score"]
+                    )  if valid else 'not valid'
                     print(
-                        node,'->', new_node,
-                        f"({action=})",
-                        f"[{best_delay}]",
-                        f"{done=} {valid=}",
-                        f"depth={len(nx.shortest_path(tree, 0, node))+1}"
+                        f"{node}->{new_node}",
+                        f"{action=}",
+                        f"{delay=}",
+                        f"{best_delay=}",
+                        f"{done=}",
+                        f"{valid=}",
+                        f"depth={len(nx.shortest_path(tree, 0, node))+1}",
+                        sep = ' | '
                     )
                 tree.add_node(
                     new_node,
@@ -116,7 +123,7 @@ class GDTAgent(GrootAgent):
                 'delay': seconds_to_hour(action['score']),
                 'added_delay': added_delay
             }
-            
-
-        return tree.nodes[best_node]['state']
-
+        
+        best_groot = tree.nodes[best_node]['state']
+        del(tree)
+        return best_groot
