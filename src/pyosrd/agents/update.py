@@ -148,113 +148,114 @@ def updated_sim(
 
     for train in sim.trains:
 
-        times[train] = dict(
-            sorted(
-                times[train].items(),
-                key=lambda x: x[1][0]
-            )
-        )
-        updated_tvd_limits =(
-            [tvd.split('->')[0] for tvd in new_groot.path(train)]
-            + [new_groot.path(train)[-1].split('->')[1]]
-        )
-
         train_id = sim.trains.index(train)
         group, idx_in_group = sim._train_schedule_group[
-                sim.trains[train_id]
-                ]
-
-        detectors_encountered_by_train =\
-            sim.points_encountered_by_train(train, types=['detector'])
-
-        # update routes
-        for eco_or_base in ['eco', 'base']:
-            if f'{eco_or_base}_simulations' not in updated.results[group]:
-                continue
-            updated_route_ids = _updated_routes(sim, train, updated_tvd_limits)
-            updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['routing_requirements'] =\
-                [{'route': route} for route in updated_route_ids]
-
-        # get differences in detectors
-        orig_detectors =\
-            [d['id'] for d in detectors_encountered_by_train]
-    
-
-        new_detectors = [
-            d if d not in orig_detectors else None
-            for d in updated_tvd_limits[1:-1]
+            sim.trains[train_id]
         ]
+        if new_groot.path(train) != ref_groot.path(train):
 
-        new_segments = [
-            list(v)
-            for k, v in itertools.groupby(new_detectors, key=lambda x: x is None)
-            if not k
-        ]
-
-        if new_segments:
-            train_track_section_distances =\
-                _get_train_track_section_distances(
-                    updated,
-                    train=train,
-                    track_section_lengths=track_section_lengths
+            times[train] = dict(
+                sorted(
+                    times[train].items(),
+                    key=lambda x: x[1][0]
                 )
-
-        for segment in new_segments:
-            last = segment[-1]
-            segment.insert(0, updated_tvd_limits[updated_tvd_limits.index(segment[0])-1])
-            segment.append(updated_tvd_limits[updated_tvd_limits.index(last)+1])
-
-        for segment in new_segments:
-            new_length = sum(
-                distance_between_points(
-                    sim,
-                    d,
-                    segment[i+1],
-                    track_section_lengths,
-                    track_section_network
-                )
-                for i, d in enumerate(segment[:-1])
             )
-            p1 = updated.offset_in_path_of_train(updated.get_point(segment[0]), train)
-            p2 = updated.offset_in_path_of_train(updated.get_point(segment[-1]), train)
-            length = p2 - p1
+            updated_tvd_limits =(
+                [tvd.split('->')[0] for tvd in new_groot.path(train)]
+                + [new_groot.path(train)[-1].split('->')[1]]
+            )
 
-            # update track sections and offsets
+            detectors_encountered_by_train =\
+                sim.points_encountered_by_train(train, types=['detector'])
+
+            # update routes
             for eco_or_base in ['eco', 'base']:
                 if f'{eco_or_base}_simulations' not in updated.results[group]:
                     continue
-                hp = updated._head_position(train, eco_or_base)
-                new_hp = []
-                for r in hp:
+                updated_route_ids = _updated_routes(sim, train, updated_tvd_limits)
+                updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['routing_requirements'] =\
+                    [{'route': route} for route in updated_route_ids]
 
-                    if r['path_offset'] < p1:
-                        new_hp.append(r)
+            # get differences in detectors
+            orig_detectors =\
+                [d['id'] for d in detectors_encountered_by_train]
+        
 
-                    elif r['path_offset'] > p2:
-                        new_hp.append(
-                            {
-                                **r,
-                                'path_offset': r['path_offset'] + new_length - length
-                            }
-                        )
-                    else:
-                        new_path_offset = p1 + (r['path_offset'] - p1)/length*new_length
-                        track_section, offset = _get_track_and_position(
-                            train_track_section_distances,
-                            new_path_offset
-                        )
-                        new_hp.append(
-                            {
-                                'time': r['time'],
-                                'path_offset': new_path_offset,
-                                'track_section': track_section,
-                                'offset': offset,
-                            }
-                        )
-                
-                new_hp.sort(key=lambda r: r['time'])
-                updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['head_positions'] =\
-                    new_hp
+            new_detectors = [
+                d if d not in orig_detectors else None
+                for d in updated_tvd_limits[1:-1]
+            ]
+
+            new_segments = [
+                list(v)
+                for k, v in itertools.groupby(new_detectors, key=lambda x: x is None)
+                if not k
+            ]
+
+            if new_segments:
+                train_track_section_distances =\
+                    _get_train_track_section_distances(
+                        updated,
+                        train=train,
+                        track_section_lengths=track_section_lengths
+                    )
+
+            for segment in new_segments:
+                last = segment[-1]
+                segment.insert(0, updated_tvd_limits[updated_tvd_limits.index(segment[0])-1])
+                segment.append(updated_tvd_limits[updated_tvd_limits.index(last)+1])
+
+            for segment in new_segments:
+                new_length = sum(
+                    distance_between_points(
+                        sim,
+                        d,
+                        segment[i+1],
+                        track_section_lengths,
+                        track_section_network
+                    )
+                    for i, d in enumerate(segment[:-1])
+                )
+                p1 = updated.offset_in_path_of_train(updated.get_point(segment[0]), train)
+                p2 = updated.offset_in_path_of_train(updated.get_point(segment[-1]), train)
+                length = p2 - p1
+
+                # update track sections and offsets
+                for eco_or_base in ['eco', 'base']:
+                    if f'{eco_or_base}_simulations' not in updated.results[group]:
+                        continue
+                    hp = updated._head_position(train, eco_or_base)
+                    new_hp = []
+                    for r in hp:
+
+                        if r['path_offset'] < p1:
+                            new_hp.append(r)
+
+                        elif r['path_offset'] > p2:
+                            new_hp.append(
+                                {
+                                    **r,
+                                    'path_offset': r['path_offset'] + new_length - length
+                                }
+                            )
+                        else:
+                            new_path_offset = p1 + (r['path_offset'] - p1)/length*new_length
+                            track_section, offset = _get_track_and_position(
+                                train_track_section_distances,
+                                new_path_offset
+                            )
+                            new_hp.append(
+                                {
+                                    'time': r['time'],
+                                    'path_offset': new_path_offset,
+                                    'track_section': track_section,
+                                    'offset': offset,
+                                }
+                            )
+                    
+                    new_hp.sort(key=lambda r: r['time'])
+                    updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['head_positions'] =\
+                        new_hp
 
 
         # UPDATE TIMES
