@@ -5,7 +5,7 @@ from typing_extensions import Self
 
 from pyosrd.utils import seconds_to_hour
 from pyosrd.groot import Groot, from_sim
-# from pyosrd.agents.update import sim_with_updated_results
+from pyosrd.agents.update import updated_sim
 from pyosrd.groot.objectives import sum_delays_at_end
 from pyosrd.groot.dispatching import evaluate_action
 
@@ -49,6 +49,11 @@ class GrootAgent(ABC):
     def disrupted_groot(self) -> Groot:   
         return self._disrupted_groot
 
+       
+    @property
+    def disrupted_sim(self):
+        return updated_sim(self.disrupted_groot, self.ref_groot, f'{self.name}_disrupted')
+
     @property
     def dispatched_groot(self) -> Groot:
         if self._debug and self._dispatched_groot:
@@ -62,15 +67,20 @@ class GrootAgent(ABC):
         pass
     
     @property
+    def dispatched_sim(self):
+        return updated_sim(self.dispatched_groot, self.ref_groot, f'{self.name}_dispatched')
+
+    @property
     def interlocking_groot(self) -> Groot:
         if self._debug and self._interlocking_groot:
             print('Interlocking Groot is read in cache.')
         if not self._interlocking_groot:
-            print('Calculate interlocking Groot.')
-            self._interlocking_groot = self.calculate_interlocking(self._debug)
+            self._interlocking_groot = self._calculate_interlocking(self._debug)
         return self._interlocking_groot
 
-    def calculate_interlocking(self: Self, debug: bool) -> Groot:
+    def _calculate_interlocking(self: Self, debug: bool) -> Groot:
+        if self._debug:
+            print('Calculate interlocking Groot.')
         groot =  copy.deepcopy(self.disrupted_groot)
         done = False
         self.interlocking_actions = []
@@ -106,11 +116,10 @@ class GrootAgent(ABC):
                     'added_delay': added_delay
                 }
         return groot
-
-    # def regulated(
-    #     self: Self,
-    # ):
-    #     return sim_with_updated_results(self.sim, self.dispatched_groot.times, self.name)
+        
+    @property
+    def interlocking_sim(self):
+        return updated_sim(self.interlocking_groot, self.ref_groot, f'{self.name}_interlocking')
 
     def clear_cache(self: Self) -> None:
         self._interlocking_groot = None
