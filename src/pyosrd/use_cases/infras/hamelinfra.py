@@ -14,7 +14,6 @@ from pyosrd.infra.build import build_infra
 from pyosrd.use_cases.infras.helpers.builders import (
     build_junction,
     add_carre_with_detector,
-    add_semaphores_with_detector,
     build_blocks,
     build_station,
     extend_track,
@@ -112,7 +111,8 @@ def hamelinfra(
     sw1bis = infra_builder.add_point_switch(
         track.end(),
         t1.begin(),
-        t2.begin()
+        t2.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw1bis.set_coords(*track.coordinates[-1])
     extend_track(t1, LENGTH_ELBOW/2, GeoDirection.EAST+ANGLE_ELBOW)
@@ -247,7 +247,8 @@ def hamelinfra(
     sw_connection_west = infra_builder.add_point_switch(
         bridge_t1.end(),
         connection_c_d.begin(),
-        bridge.begin()
+        bridge.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw_connection_west.set_coords(*bridge_t1.coordinates[-1])
 
@@ -303,7 +304,8 @@ def hamelinfra(
     sw2 = infra_builder.add_point_switch(
         v2.begin(),
         t2.end(),
-        v2_south.begin()
+        v2_south.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw2.set_coords(*t2.coordinates[-1])
 
@@ -382,7 +384,8 @@ def hamelinfra(
     sw_connection_south = infra_builder.add_point_switch(
         v2_south_2.begin(),
         v2_south.end(),
-        connection_c_d.end()
+        connection_c_d.end(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
 
     sw_connection_south.set_coords(*v2_south.coordinates[-1])
@@ -551,14 +554,16 @@ def hamelinfra(
 
     link_west = infra_builder.add_link(
         v2.end(),
-        v2west.begin()
+        v2west.begin(),
+        label='link.v2.west'
     )
     link_west.set_coords(*v2.coordinates[-1])
     extend_track(v2west, 100, geo_direction=GeoDirection.NORTHWEST)
 
     link_east = infra_builder.add_link(
         v1bis.end(),
-        v1east.begin()
+        v1east.begin(),
+        label='link.v1.v1bis.east'
     )
     link_east.set_coords(*v1bis.coordinates[-1])
     extend_track(v1east, 100, geo_direction=GeoDirection.NORTHEAST)
@@ -571,6 +576,7 @@ def hamelinfra(
         v1.end(),
         v2east.begin(),
         v1west.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw2.set_coords(*v1.coordinates[-1])
     extend_track(v1west, 100, geo_direction=GeoDirection.NORTHWEST)
@@ -712,7 +718,11 @@ def hamelinfra(
         line_code=5_000,
         length=None,
     )
-    link = infra_builder.add_link(v6.end(), v2east.begin())
+    link = infra_builder.add_link(
+        v6.end(),
+        v2east.begin(),
+        label='link.v6.v2east'
+    )
     link.set_coords(*v6.coordinates[-1])
     extend_track(v2east, 100, 7*math.pi/16)
     build_blocks(

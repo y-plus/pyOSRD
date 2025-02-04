@@ -66,7 +66,8 @@ def build_junction(
     sw_short = infra_builder.add_point_switch(
         track_in_short.end(),
         junction.begin(),
-        track_out_short.begin()
+        track_out_short.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
 
     sw_short.set_coords(*track_in_short.coordinates[-1])
@@ -75,6 +76,7 @@ def build_junction(
         track_out_long.begin(),
         track_in_long.end(),
         junction.end(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw_long.set_coords(*track_in_long.coordinates[-1])
 
@@ -255,6 +257,7 @@ def build_station(
         track_in.end(),
         v1.begin(),
         v2.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
 
     dvg_coords_osrd = track_in.coordinates[-1]
@@ -279,6 +282,7 @@ def build_station(
         track_out.begin(),
         v1.end(),
         v2.end(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     cvg.set_coords(*cvg_coords[::-1])
     
@@ -658,7 +662,8 @@ def build_terminal_station_3_5(
     sw_213 = infra_builder.add_point_switch(
         track_inout.end(),
         t_13.begin(),
-        v3.begin()
+        v3.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw_213.set_coords(
         *track_inout.coordinates[-2]
@@ -682,7 +687,8 @@ def build_terminal_station_3_5(
     sw_13 = infra_builder.add_point_switch(
         t_13.end(),
         v1.begin(),
-        v2.begin()
+        v2.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw_13.set_coords(
         *t_13.coordinates[-2]
@@ -772,7 +778,8 @@ def build_terminal_station_2_4(
     sw_in = infra_builder.add_point_switch(
         track_in.end(),
         v4.begin(),
-        v2.begin()
+        v2.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw_in.set_coords(*track_in.coordinates[-1])
     extend_track(v4, LENGTH_ELBOW, geo_direction - ANGLE_ELBOW)
@@ -795,7 +802,8 @@ def build_terminal_station_2_4(
     sw_out = infra_builder.add_point_switch(
         track_out.end(),
         v3.begin(),
-        v1.begin()
+        v1.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
     )
     sw_out.set_coords(*track_out.coordinates[-1])
     extend_track(v3, LENGTH_ELBOW, geo_direction + ANGLE_ELBOW)
