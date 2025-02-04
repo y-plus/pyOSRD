@@ -14,7 +14,7 @@ from pyosrd.groot.dispatching import evaluate_action
 class GDTAgent(GrootAgent):
 
     NUM_ACTIONS = 5
-    MAX_NODES = float('inf')
+    MAX_NODES = 200 #float('inf')
     DELAY_TOL = 0 #240
 
     def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
