@@ -19,7 +19,6 @@ import PIL
 from PIL.JpegImagePlugin import JpegImageFile
 import requests
 from dotenv import load_dotenv
-from typing_extensions import Self
 
 import pyosrd.use_cases.infras as infras
 import pyosrd.use_cases.simulations as simulations
