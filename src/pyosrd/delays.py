@@ -3,7 +3,6 @@ import json
 import os
 import shutil
 
-from pyosrd.osrd import Point
 from pyosrd.utils import hour_to_seconds
 
 
