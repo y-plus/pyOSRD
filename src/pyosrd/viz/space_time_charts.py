@@ -60,6 +60,23 @@ def _data_and_points_to_plot(
                         train
                     )
                 )
+            if p['type'] == 'detector':
+                detector = next(
+                    d for d in self.infra['detectors']
+                    if d['id'] == p['id']
+                )
+                t.append(p['t_'+eco_or_base])
+                offset.append(
+                    self.offset_in_path_of_train(
+                        Point(
+                            id='',
+                            track_section=detector['track'],
+                            type='record',
+                            position=detector['position']
+                        ),
+                        train
+                    )
+                )
         tuples = [
             t for t in zip(t, offset)
             if offset is not None
@@ -219,7 +236,8 @@ def space_time_chart_plotly(
                 customdata=t['h'],
                 name=t['label'],
                 hovertemplate="%{customdata} (%{y:.0f} m)",
-                line = dict(color='black', width=3.5) if t['label']==train else dict(width=1.5)
+                line = dict(color='black', width=3.5) if t['label']==train else dict(width=1.5),
+                mode='lines',
             )
             for t in data
         ],
