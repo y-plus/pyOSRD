@@ -415,20 +415,22 @@ def add_delay_between_points(
         )
         new_speed =  (pos_out-pos_in)/(t_out+delay-t_in)
         TIME_TO_STOP = 60  # seconds
+        MIN_SPEED = 8.33 # m/s = 30 km/h
+        DISTANCE_STOP_END = 20
+
         if stop:
             for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
                 if r['path_offset'] > stop['position']:
                     r['time'] += delay
 
-        elif new_speed < 8.33 and delay > 2 * TIME_TO_STOP:
-            print(train, point_id_A, point_id_B)
-            pos_stop = pos_out - 20
+        elif new_speed < MIN_SPEED and delay > 2 * TIME_TO_STOP:
+            pos_stop = pos_out - DISTANCE_STOP_END
             t_stop_end = t_out + delay - TIME_TO_STOP
             t_stop_begin = t_in + TIME_TO_STOP
             self._head_position(train, eco_or_base).append(
                 {
                     'time': t_stop_begin,
-                    'offset': exit_detector['position'] - 20,
+                    'offset': exit_detector['position'] - DISTANCE_STOP_END,
                     'path_offset': pos_stop ,
                     "track_section": exit_detector['track'],
                 }
@@ -436,18 +438,18 @@ def add_delay_between_points(
             self._head_position(train, eco_or_base).append(
                 {
                     'time': t_stop_end,
-                    'offset': exit_detector['position'] - 20,
+                    'offset': exit_detector['position'] - DISTANCE_STOP_END,
                     'path_offset': pos_stop,
                     "track_section": exit_detector['track'],
                 }
             )
-            for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+            for r in self._head_position(train, eco_or_base):
                 if r['path_offset'] >= pos_out:
                     r['time'] += delay
             self._head_position(train, eco_or_base).sort(
                 key=lambda r: r['time']
             )
-            for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+            for r in self._head_position(train, eco_or_base):
                 if r['time'] > t_stop_begin and r['time']<t_stop_end + TIME_TO_STOP:
                     r['offset'] = exit_detector['position'] - 20
                     r['path_offset'] = pos_stop
@@ -459,18 +461,7 @@ def add_delay_between_points(
                     r['time'] = t_in + (r['time'] - t_in) * stretch
                 elif r['time'] >= t_out:
                     r['time'] += delay
-        # else:
-            # for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
-            #     if r['time'] >= t_out: #and h[i-1]['time'] > t_out:
-            #         r['time'] += delay
-        #         elif r['time'] >= t_out and h[i-1]['time'] < t_out:
-        #             r['time'] += delay - TIME_TO_STOP
-        #             h[i-1]['time'] += TIME_TO_STOP
-        #             r['path_offset'] = h[i-1]['path_offset']
-        #             r['offset'] =  h[i-1]['offset']
-        #             r['track_section'] =  h[i-1]['track_section']
-
-
+ 
 def shift_train_departure(
     self,
     train: int | str,
