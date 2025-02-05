@@ -3,8 +3,8 @@ import itertools
 import json
 import os
 
+from pyosrd.osrd import Point
 from pyosrd.infra.distances import distance_between_points
-from pyosrd.delays import add_delay_between_points
 
 def _updated_routes(sim, train: int | str, tvd_limits: list[str]) -> list[str]:
 
@@ -303,3 +303,193 @@ def updated_sim(
         json.dump(updated.results, outfile)
 
     return updated
+
+
+def add_delay_between_points(
+    self,
+    train: int | str,
+    point_id_A: str,
+    point_id_B: str,
+    delay: float,
+) -> None:
+
+    if isinstance(train, str):
+        train = self.trains.index(train)
+
+    points = [
+        p
+        for p in self.points_encountered_by_train(train)
+        if p['type'] in ['detector', 'departure', 'arrival']
+    ]
+
+
+    pointA = next(
+        (p for p in points if p['id'] == point_id_A),
+        None
+    )
+    
+    pointB = next(
+        (p for p in points if p['id'] == point_id_B),
+        None
+    )
+    if pointB is None or pointA is None:
+        return
+
+    group, idx = self._train_schedule_group[
+        self.trains[train]
+    ]
+    
+    stops = self.get_stops(train)
+    for stop in stops:
+        if 'position' not in stop:
+            stop['position'] = self.offset_in_path_of_train(
+                Point(
+                    track_section=stop['location']['track_section'],
+                    position=stop['location']['offset'],
+                ),
+                train
+            )
+
+    for eco_or_base in ['base', 'eco']:
+
+        if self.results[group][ f'{eco_or_base}_simulations'] == [None]:
+            break
+
+        limits = sorted(
+            [pointA, pointB],
+            key=lambda x: x[f"t_{eco_or_base}"]
+        )
+
+        t_in, t_out = limits[0][f"t_{eco_or_base}"], limits[1][f"t_{eco_or_base}"]
+        pos_in, pos_out = limits[0]['offset'], limits[1]['offset']
+
+        
+
+        if entry_detector:= next(
+            (
+                d for d in self.infra['detectors']
+                if d['id'] == limits[0]['id']
+            ),
+            None
+        ):
+            self._head_position(train, eco_or_base).append(
+                {
+                    'time': t_in,
+                    'offset': entry_detector['position'],
+                    'path_offset': pos_in,
+                    "track_section": entry_detector['track'],
+                }
+            )
+
+            self._head_position(train, eco_or_base).sort(
+                key=lambda r: r['time']
+            )
+
+        if exit_detector:= next(
+            (
+                d for d in self.infra['detectors']
+                if d['id'] == limits[1]['id']
+            ),
+            None
+        ):
+            self._head_position(train, eco_or_base).append(
+                {
+                    'time': t_out,
+                    'offset': exit_detector['position'],
+                    'path_offset': pos_out,
+                    "track_section": exit_detector['track'],
+                }
+            )
+
+            self._head_position(train, eco_or_base).sort(
+                key=lambda r: r['time']
+            )
+
+        stop = next(
+            (
+                s for s in stops
+                if s['position'] >= pos_in
+                and s['position'] < pos_out
+            ),
+            None
+        )
+        new_speed =  (pos_out-pos_in)/(t_out+delay-t_in)
+        TIME_TO_STOP = 60  # seconds
+        if stop:
+            for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+                if r['path_offset'] > stop['position']:
+                    r['time'] += delay
+
+        elif new_speed < 8.33 and delay > 2 * TIME_TO_STOP:
+            print(train, point_id_A, point_id_B)
+            pos_stop = pos_out - 20
+            t_stop_end = t_out + delay - TIME_TO_STOP
+            t_stop_begin = t_in + TIME_TO_STOP
+            self._head_position(train, eco_or_base).append(
+                {
+                    'time': t_stop_begin,
+                    'offset': exit_detector['position'] - 20,
+                    'path_offset': pos_stop ,
+                    "track_section": exit_detector['track'],
+                }
+            )
+            self._head_position(train, eco_or_base).append(
+                {
+                    'time': t_stop_end,
+                    'offset': exit_detector['position'] - 20,
+                    'path_offset': pos_stop,
+                    "track_section": exit_detector['track'],
+                }
+            )
+            for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+                if r['path_offset'] >= pos_out:
+                    r['time'] += delay
+            self._head_position(train, eco_or_base).sort(
+                key=lambda r: r['time']
+            )
+            for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+                if r['time'] > t_stop_begin and r['time']<t_stop_end + TIME_TO_STOP:
+                    r['offset'] = exit_detector['position'] - 20
+                    r['path_offset'] = pos_stop
+                    r['track_section'] = exit_detector['track']
+        else:
+            stretch = (t_out - t_in + delay)/(t_out-t_in)
+            for r in self._head_position(train, eco_or_base):
+                if r['time'] >= t_in and r['time'] < t_out:
+                    r['time'] = t_in + (r['time'] - t_in) * stretch
+                elif r['time'] >= t_out:
+                    r['time'] += delay
+        # else:
+            # for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+            #     if r['time'] >= t_out: #and h[i-1]['time'] > t_out:
+            #         r['time'] += delay
+        #         elif r['time'] >= t_out and h[i-1]['time'] < t_out:
+        #             r['time'] += delay - TIME_TO_STOP
+        #             h[i-1]['time'] += TIME_TO_STOP
+        #             r['path_offset'] = h[i-1]['path_offset']
+        #             r['offset'] =  h[i-1]['offset']
+        #             r['track_section'] =  h[i-1]['track_section']
+
+
+def shift_train_departure(
+    self,
+    train: int | str,
+    delay: float,
+) -> None:
+    
+    if isinstance(train, str):
+        train = self.trains.index(train)
+
+    group, idx = self._train_schedule_group[
+        self.trains[train]
+    ]
+
+    for eco_or_base in ['base', 'eco']:
+
+        if self.results[group][ f'{eco_or_base}_simulations'] == [None]:
+            break
+
+        for r in self._head_position(train, eco_or_base):
+                r['time'] += delay
+
+
