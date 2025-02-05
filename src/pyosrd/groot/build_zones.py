@@ -253,4 +253,4 @@ def tvds_graph(
         [node for node in tvds_graph if node not in bad_direction]
     )
 
-    return tvds_graph
+    return tvds_graph.copy()
