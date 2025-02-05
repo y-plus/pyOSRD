@@ -507,6 +507,7 @@ def hamelinfra(
             track_out=v1bis,
             station_name=station,
             geo_direction=GeoDirection.NORTH,
+            signals_before=False,
             signals_after=False
         )
     v1.add_detector(v1.length/2)

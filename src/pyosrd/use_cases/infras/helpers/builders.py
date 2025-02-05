@@ -378,6 +378,7 @@ def build_station_3_5(
     track_out: TrackSection,
     station_name: str,
     geo_direction: GeoDirection | float = GeoDirection.EAST,
+    signals_before: bool = True,
     signals_after: bool = True
 ) -> tuple[TrackSection, TrackSection, TrackSection]:
 
@@ -385,18 +386,19 @@ def build_station_3_5(
     extend_track(track_inout, 60, geo_direction)
     extend_track(track_out, 60, geo_direction)
 
-    add_carre_with_detector(
-        track_in,
-        position=track_in.length - DISTANCE_SIGNAL_SWITCH,
-        label=f"entree_gare.{station_name}.1bis",
-        direction=Direction.START_TO_STOP,
-    )
-    add_carre_with_detector(
-        track_inout,
-        position=track_inout.length - DISTANCE_SIGNAL_SWITCH,
-        label=f"entree_gare.{station_name}.1",
-        direction=Direction.START_TO_STOP,
-    )
+    if signals_before:
+        add_carre_with_detector(
+            track_in,
+            position=track_in.length - DISTANCE_SIGNAL_SWITCH,
+            label=f"entree_gare.{station_name}.1bis",
+            direction=Direction.START_TO_STOP,
+        )
+        add_carre_with_detector(
+            track_inout,
+            position=track_inout.length - DISTANCE_SIGNAL_SWITCH,
+            label=f"entree_gare.{station_name}.1",
+            direction=Direction.START_TO_STOP,
+        )
 
     track_inout, track_out = build_junction(
         infra_builder=infra_builder,
