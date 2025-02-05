@@ -205,21 +205,39 @@ def add_delay_between_points(
 
         TIME_TO_STOP = 60  # seconds
 
-        detector = next(
+        if entry_detector:= next(
+            (
+                d for d in self.infra['detectors']
+                if d['id'] == limits[0]['id']
+            ),
+            None
+        ):
+            self._head_position(train, eco_or_base).append(
+                {
+                    'time': t_in,
+                    'offset': entry_detector['position'],
+                    'path_offset': pos_in,
+                    "track_section": entry_detector['track'],
+                }
+            )
+
+            self._head_position(train, eco_or_base).sort(
+                key=lambda r: r['time']
+            )
+
+        if exit_detector:= next(
             (
                 d for d in self.infra['detectors']
                 if d['id'] == limits[1]['id']
             ),
             None
-        )
-
-        if detector:
+        ):
             self._head_position(train, eco_or_base).append(
                 {
                     'time': t_out,
-                    'offset': detector['position'],
+                    'offset': exit_detector['position'],
                     'path_offset': pos_out,
-                    "track_section": detector['track'],
+                    "track_section": exit_detector['track'],
                 }
             )
 
