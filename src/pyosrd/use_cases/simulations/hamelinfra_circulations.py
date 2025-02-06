@@ -199,7 +199,7 @@ def hamelinfra_circulations(
             station_location(infra, 'C', 'V1', -75),
             station_location(infra, 'B', 'V1', -75),
             station_location(infra, 'A', 'V2', -75),
-            label=f'omnibusDA{1*i+1}',
+            label=f'omnibusDA{1+2*i}',
             departure_time=build_departure_time(cur_hour, 41),
             rolling_stock='hamelin_rolling_stock',
             stops=[
