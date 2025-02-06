@@ -16,12 +16,18 @@ class GrootAgent(ABC):
     _dispatched_groot = None
     _interlocking_groot = None
 
-    def __init__(self, name: str, sim, debug: bool = False) -> None:
+    def __init__(
+        self, name: str,
+        sim,
+        debug: bool = False,
+        limit_max_actions: bool = True,
+    ) -> None:
         self._name = name
         self._sim = sim
         self._ref_groot = from_sim(sim)
         self._disrupted_groot = from_sim(sim.delayed())
         self._debug = debug
+        self.limit_max_actions = limit_max_actions
         self._scorer = sum_delays_at_end
         self.clear_cache()
 

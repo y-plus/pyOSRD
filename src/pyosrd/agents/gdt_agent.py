@@ -14,7 +14,7 @@ from pyosrd.groot.dispatching import evaluate_action
 class GDTAgent(GrootAgent):
 
     NUM_ACTIONS = 5
-    MAX_NODES = 200 #float('inf')
+    MAX_NODES = float('inf')
     DELAY_TOL = 0 #240
 
     def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
@@ -38,14 +38,23 @@ class GDTAgent(GrootAgent):
 
         while nodes_to_explore:
             node = nodes_to_explore[-1]
+
             all_actions_evaluated = \
                 len(list(tree.successors(node))) == self.NUM_ACTIONS
-            not_valid = not tree.nodes[node]['valid']
+            
+            unvalid = not tree.nodes[node]['valid']
+            
             done_and_valid = tree.nodes[node]['done'] and tree.nodes[node]['valid']
 
             not_better = (
                 tree.nodes[node]['reward'] - tree.nodes[best_node]['reward'] <= self.DELAY_TOL
             ) if node > 1 else False
+
+            depth = len(nx.shortest_path(tree, 0, node))
+            if self.interlocking_actions is None:
+                self.interlocking_groot
+                max_depth = len(self.interlocking_actions)
+            max_depth_reached = depth > max_depth
 
             if (
                 node > 1 and
@@ -57,7 +66,7 @@ class GDTAgent(GrootAgent):
             if node > 1 and len(list(tree.successors(1))) == 1:
                 best_node = node
 
-            if all_actions_evaluated or not_valid or done_and_valid or not_better:
+            if all_actions_evaluated or unvalid or done_and_valid or not_better or max_depth_reached:
                 nodes_to_explore.pop()
             elif tree.number_of_nodes() > self.MAX_NODES:
                 nodes_to_explore = []
