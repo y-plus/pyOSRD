@@ -9,8 +9,8 @@ def evaluate_action(
     ref: Groot,
     scorer: Callable[[Groot, Groot], float] = sum_delays_at_end,
 ) -> tuple[Groot, dict[str, str|float]]:
-    
-    
+
+
     train1, train2, zone, time = self.earliest_conflict()
     if not train1:
         return self, {'done': True, 'valid': True, 'score': scorer(self, ref)}
@@ -38,7 +38,7 @@ def evaluate_action(
             info['waiting_train'] = waiting_train
             info['wait_at'] = wait_at
             info['inversion'] = False
-            
+
 
         case 1:  # keep order, wait at previous station
             priority_train = train1
@@ -72,10 +72,10 @@ def evaluate_action(
             info['rerouted_train'] = train2
             info['rerouted_tvds'] = [
                 tvd for tvd in r.path(train2) if tvd not in self.path(train2)
-            ]         
+            ]
             info['rerouted_zones'] = [
                 r.zones[tvd] for tvd in info['rerouted_tvds']
-            ]         
+            ]
 
         case 3:  # modify order, wait at previous signal
             priority_train = train2

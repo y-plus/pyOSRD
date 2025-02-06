@@ -253,7 +253,7 @@ def get_latest_non_zero_delay(
     disrupted: Groot,
     ref: Groot,
     seconds: bool = False,
-) -> float :
+) -> str | float:
     """ Get the latest non zero delay in seconds of the disrupted groot
     compared to the reference groot. This is the time after which all
     trains are back to a normal situation.
@@ -265,12 +265,16 @@ def get_latest_non_zero_delay(
     ref : Groot
         The reference groot to be used the analyze the disrupted one.
         The delays are computed comparing the two groots.
+    seconds : bool
+        If true the return will be the number of seconds else it is
+        the formated time.
 
     Returns
     -------
-    float
+    str | float
         The latest time where there is a delay in the disrupted groot.
-        That time is given in seconds.
+        if seconds is set to True it returns the number of seconds else
+        it returns the formated time
     """
     diff_departure_time_per_zone = difference_departures_per_zone(
         disrupted,
