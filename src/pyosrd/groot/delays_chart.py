@@ -44,6 +44,7 @@ def plot_groot_delays(
     diff_departure_time_per_dep_time = \
         build_dict_difference_departures_per_departure_times(
             disrupted,
+            ref,
             diff_departure_time_per_zone,
             not all_trains
         )
