@@ -80,7 +80,8 @@ def merge_time_entries(data: dict[str, dict[float, float]]) -> list[float]:
 
 
 def build_dict_difference_departures_per_departure_times(
-        groot: Groot,
+        disrupted: Groot,
+        ref: Groot,
         diff: dict[str, dict[str, float]],
         add_fictionnal_point_at_end: bool = False
 ) -> dict[str, dict[float, float]]:
@@ -89,8 +90,10 @@ def build_dict_difference_departures_per_departure_times(
 
     Parameters
     ----------
-    groot : Groot
+    disrupted : Groot
         The groot to be used to get departure time from zones
+    ref : Groot
+        The groot to be used to get departure time from the first zone
     diff : dict[str, dict[str, float]]
         A dictionnary of all differences in departure time per zone
         per train. Access of the dictionnary is done by
@@ -113,14 +116,20 @@ def build_dict_difference_departures_per_departure_times(
         train_dict = diff[train]
         train_diff = {}
         max_timestamp = -1
+        first_ref_arrival_time = -1
         for tvd in train_dict.keys():
-            departure_time = groot.times[train][tvd][1]
+            departure_time = disrupted.times[train][tvd][1]
             if diff[train][tvd] > 0:
                 max_timestamp = max(max_timestamp, departure_time)
+                first_ref_arrival_time = ref.times[train][tvd][0] if \
+                    first_ref_arrival_time < 0 else \
+                    min(ref.times[train][tvd][0], first_ref_arrival_time)
             train_diff[departure_time] = diff[train][tvd]
 
         if add_fictionnal_point_at_end and max_timestamp > 0:
             train_diff[max_timestamp+1] = 0
+        if first_ref_arrival_time >= 0:
+            train_diff[first_ref_arrival_time] = 0
         result[train] = dict(sorted(train_diff.items()))
 
     return result
@@ -139,6 +148,7 @@ def get_groot_delays_timestamp(
     diff_departure_time_per_dep_time = \
         build_dict_difference_departures_per_departure_times(
             disrupted,
+            ref,
             diff_departure_time_per_zone
         )
     timestamp = hour_to_seconds(timestamp)
@@ -283,6 +293,7 @@ def get_latest_non_zero_delay(
     diff_departure_time_per_dep_time = \
         build_dict_difference_departures_per_departure_times(
             disrupted,
+            ref,
             diff_departure_time_per_zone
         )
     latest_non_zero_delays = get_latest_non_zero_delay_for_each_train(
