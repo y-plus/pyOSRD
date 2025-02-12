@@ -97,6 +97,7 @@ class GrootAgent(ABC):
                 ref=self.ref_groot,
                 scorer=self._scorer
             )
+            
             if not info['valid']:
                 new_groot, info = evaluate_action(
                 groot,
@@ -105,7 +106,7 @@ class GrootAgent(ABC):
                 scorer=self._scorer
             )
             if not info['valid']:
-                return
+                raise ValueError('No interlocking solution found')
             done = info['done']
             groot = new_groot
             self.interlocking_actions.append(info)
