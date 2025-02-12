@@ -401,35 +401,6 @@ class Groot(object):
             return False
         return train_zones1[train_zones1.index(zone)+1] != train_zones2[train_zones2.index(zone)+1]
 
-    def alternative_zones(self: Self, train: str, zone: str) -> list[list[str]]:
-
-        next_station = self.next_station(train, zone)
-        next_next_station = self.next_station(train, next_station) if next_station else None
-        prev_station = self.previous_station(train, zone)
-        prev_prev_station = self.previous_station(train, prev_station) if prev_station else None
-
-        if prev_station is None and zone != self.train_zones(train)[0]:
-            prev_station = self.train_zones(train)[0]
-        if next_station is None and zone != self.train_zones(train)[-1]:
-            next_station = self.train_zones(train)[-1]
-
-        graph = self.zones_graph
-        subg = nx.subgraph(graph, [n for n in graph if n!=zone])
-        found = False
-        for n1, n2 in [(prev_station, next_station), (prev_prev_station, next_station), (prev_station, next_next_station)]:
-            if n1 and n2:
-                if found:= nx.has_path(subg, source=n1, target=n2):
-                    start, stop = n1, n2
-                    break
-        if not found:
-            return []
-
-        alt_zones =[]
-        for zones in nx.all_simple_paths(subg, start, stop):
-            new_zones = [zone for zone in zones if zone not in self.train_zones(train)]
-            alt_zones.append(zones[zones.index(new_zones[0])-1:zones.index(new_zones[-1])+2])
-        return alt_zones
-
     def make_train_wait(
         self: Self,
         waiting_train: str,
