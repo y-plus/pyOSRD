@@ -27,11 +27,11 @@ def evaluate_action(
             if self.path_zones(waiting_train).index(zone) == 0:
                 wait_at = zone
             r = self.make_train_wait(waiting_train, priority_train, wait_at, zone)
-            _, _, _, t_new_conlict = r.earliest_conflict()
+            tr1, tr2, _, t_new_conlict = r.earliest_conflict()
             done = t_new_conlict is None
             valid = True
             if not done:
-                if t_new_conlict < time:
+                if t_new_conlict < time  and {tr1,tr2} == {train1, train2}:
                     valid = False
             info['conflict_at'] = zone
             info['priority_train'] = priority_train
@@ -49,9 +49,9 @@ def evaluate_action(
             _, _, _, t_new_conlict = r.earliest_conflict()
             done = t_new_conlict is None
             valid = True
-            if not done:
-                if t_new_conlict < time:
-                    valid = False
+            # if not done:
+            #     if t_new_conlict < time and {tr1,tr2} == {train1, train2}:
+            #         valid = False
             info['conflict_at'] = zone
             info['priority_train'] = priority_train
             info['waiting_train'] = waiting_train
@@ -86,11 +86,11 @@ def evaluate_action(
 
             wait_at = self.previous_signal(waiting_train, cvg)
             r = self.make_train_wait(waiting_train, priority_train, wait_at, zone)
-            _, _, _, t_new_conlict = r.earliest_conflict()
+            tr1, tr2, _, t_new_conlict = r.earliest_conflict()
             done = t_new_conlict is None
             valid = True
             if not done:
-                if t_new_conlict < time:
+                if t_new_conlict < time and {tr1, tr2} == {train1, train2}:
                     valid = False
             info['conflict_at'] = zone
             info['priority_train'] = priority_train
