@@ -21,10 +21,8 @@ class Groot(object):
     zones: dict[str, str] = field(default_factory=dict)
     stations: list[str] = field(default_factory=list)
     ends_with_a_signal: dict[str, bool] = field(default_factory=dict)
-    tvd_routes: dict[str, str] = field(default_factory=dict)
     times: dict[str, dict[str, tuple[float, float]]] = field(default_factory=dict)
     min_durations: dict[str, dict[str, float]] = field(default_factory=dict)
-
 
     @property
     def trains(self: Self) -> list[str]:
@@ -36,7 +34,7 @@ class Groot(object):
             key=lambda x:  self.times[train][x][0]
         )
 
-    def train_zones(self: Self, train) -> list[str]:
+    def path_zones(self: Self, train) -> list[str]:
         return [self.zones[tvd] for tvd in self.path(train)]
 
     @property
@@ -125,15 +123,15 @@ class Groot(object):
 
             sorted_zones = [
                 z for z in sorted_zones
-                if any(z in self.train_zones(train) for train in self.trains)
+                if any(z in self.path_zones(train) for train in self.trains)
             ]
         else:
-            sorted_zones = self.train_zones(train)
+            sorted_zones = self.path_zones(train)
 
 
         if train:
-            t1 = self.times_zones[train][self.train_zones(train)[0]][0]
-            t2 = self.times_zones[train][self.train_zones(train)[-1]][1]
+            t1 = self.times_zones[train][self.path_zones(train)[0]][0]
+            t2 = self.times_zones[train][self.path_zones(train)[-1]][1]
             times_zones = self.between(t1, t2).times_zones
         else:
             times_zones = self.times_zones
@@ -215,8 +213,8 @@ class Groot(object):
         t_conflict = float('inf')
         for train0, train1 in itertools.combinations(self.trains, 2):
 
-            train_zones0 = self.train_zones(train0)
-            train_zones1 = self.train_zones(train1)
+            train_zones0 = self.path_zones(train0)
+            train_zones1 = self.path_zones(train1)
 
             for zone in set(train_zones0).intersection(set(train_zones1)):
                 min_t_out = min(times_zones[train0][zone][1], times_zones[train1][zone][1])
@@ -250,8 +248,8 @@ class Groot(object):
             t_conflict = float('inf')
             tup = None
 
-            train_zones0 = self.train_zones(train0)
-            train_zones1 = self.train_zones(train1)
+            train_zones0 = self.path_zones(train0)
+            train_zones1 = self.path_zones(train1)
 
             for zone in set(train_zones0).intersection(set(train_zones1)):
                 min_t_out = min(times_zones[train0][zone][1], times_zones[train1][zone][1])
@@ -316,25 +314,12 @@ class Groot(object):
             )
         return new
 
-    def zones_are_free(
-        self: Self,
-        zones: list[str],
-        t1=0,
-        t2=float('inf')
-    ) -> bool:
-        restricted = self.between(t1, t2)
-        return all(
-            zone not in restricted.times_zones[train]
-            for train in restricted.times_zones
-            for zone in zones
-        )
-
     def previous_zones(self: Self, train: str, zone: str) -> list[str]:
-        zones = self.train_zones(train)
+        zones = self.path_zones(train)
         return zones[::-1][zones[::-1].index(zone)+1:]
 
     def next_zones(self: Self, train: str, zone: str) -> list[str]:
-        zones = self.train_zones(train)
+        zones = self.path_zones(train)
         return zones[zones.index(zone)+1:]
 
     def previous_station(self: Self, train: str, zone: str) -> str | None:
@@ -378,8 +363,8 @@ class Groot(object):
     ) -> str | None:
 
         if (
-            zone==self.train_zones(train1)[0]
-            or zone==self.train_zones(train2)[0]
+            zone==self.path_zones(train1)[0]
+            or zone==self.path_zones(train2)[0]
         ):
             return None
 
@@ -395,8 +380,8 @@ class Groot(object):
         return None
 
     def is_a_divergence(self: Self, zone: str, train1: str, train2: str) -> bool:
-        train_zones1 = self.train_zones(train1)
-        train_zones2 = self.train_zones(train2)
+        train_zones1 = self.path_zones(train1)
+        train_zones2 = self.path_zones(train2)
         if zone in [train_zones1[-1], train_zones2[-1]]:
             return False
         return train_zones1[train_zones1.index(zone)+1] != train_zones2[train_zones2.index(zone)+1]

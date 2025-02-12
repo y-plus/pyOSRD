@@ -17,10 +17,10 @@ def reroute_train_to_avoid_zone(
     prev_station = self.previous_station(train, zone)
     prev_prev_station = self.previous_station(train, prev_station) if prev_station else None
 
-    if prev_station is None and zone != self.train_zones(train)[0]:
-        prev_station = self.train_zones(train)[0]
-    if next_station is None and zone != self.train_zones(train)[-1]:
-        next_station = self.train_zones(train)[-1]
+    if prev_station is None and zone != self.path_zones(train)[0]:
+        prev_station = self.path_zones(train)[0]
+    if next_station is None and zone != self.path_zones(train)[-1]:
+        next_station = self.path_zones(train)[-1]
 
     tvd_prev_station = self.get_tvd(train, prev_station)
     tvd_next_station = self.get_tvd(train, next_station)
