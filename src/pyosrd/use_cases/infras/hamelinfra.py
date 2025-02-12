@@ -397,7 +397,10 @@ def hamelinfra(
     )
 
 
-    connection_c_d.add_detector(connection_c_d.length - DISTANCE_SIGNAL_SWITCH)
+    connection_c_d.add_detector(
+        connection_c_d.length - DISTANCE_SIGNAL_SWITCH,
+        label='D.connection_CD_west'
+    )
     v2_south.add_detector(v2_south.length - DISTANCE_SIGNAL_SWITCH)
     v2_south_2.add_detector(30)
 
