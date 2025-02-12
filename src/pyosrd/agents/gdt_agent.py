@@ -51,9 +51,8 @@ class GDTAgent(GrootAgent):
             ) if node > 1 else False
 
             depth = len(nx.shortest_path(tree, 0, node))
-            if self.interlocking_actions is None:
-                self.interlocking_groot
-                max_depth = len(self.interlocking_actions)
+            _ = self.interlocking_groot
+            max_depth = len(self.interlocking_actions)
             max_depth_reached = depth > max_depth
 
             if (
