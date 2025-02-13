@@ -17,8 +17,22 @@ class GDTAgent(GrootAgent):
     MAX_NODES = float('inf')
     DELAY_TOL = 0 #240
 
+    @property
+    def n_interlocking_actions(self: Self) -> int:
+        if not hasattr(self, '_n_interlocking_actions'):
+            _ = self.interlocking_groot
+            self._n_interlocking_actions = len(self.interlocking_actions)
+        return self._n_interlocking_actions
+
     def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
         
+        now = 0
+        for train in self.ref_groot.trains:
+            for tvd, (t1, t2) in self.ref_groot.times[train].items():
+                if self.disrupted_groot.times[train][tvd] != (t1, t2):
+                    now = t1
+                    break
+                
         current_state = copy.deepcopy(self.disrupted_groot)
         tree = nx.DiGraph()
         tree.add_node(
@@ -34,7 +48,7 @@ class GDTAgent(GrootAgent):
             best_node = 0
         else:
             nodes_to_explore = [0]
-            best_node = 1
+            best_node = None
 
         while nodes_to_explore:
             node = nodes_to_explore[-1]
@@ -48,21 +62,19 @@ class GDTAgent(GrootAgent):
 
             not_better = (
                 tree.nodes[node]['reward'] - tree.nodes[best_node]['reward'] <= self.DELAY_TOL
-            ) if node > 1 else False
+            ) if best_node else False
 
             depth = len(nx.shortest_path(tree, 0, node))
-            _ = self.interlocking_groot
-            max_depth = len(self.interlocking_actions)
-            max_depth_reached = depth > max_depth
+            max_depth = self.n_interlocking_actions
+            max_depth_reached = (depth > max_depth)
 
+            if best_node is None and done_and_valid:
+                best_node = node
             if (
                 node > 1 and
                 done_and_valid
                 and tree.nodes[node]['reward'] > tree.nodes[best_node]['reward']
             ):
-                best_node = node
-
-            if node > 1 and len(list(tree.successors(1))) == 1:
                 best_node = node
 
             if all_actions_evaluated or unvalid or done_and_valid or not_better or max_depth_reached:
@@ -76,12 +88,16 @@ class GDTAgent(GrootAgent):
                     tree.nodes[node]['state'],
                     a=action,
                     ref=self.ref_groot,
-                    scorer=self._scorer
+                    scorer=self._scorer,
+                    now=now,
                 )
                 if debug:
                     done=info['done']
                     valid=info['valid']
-                    best_score = -tree.nodes[best_node]['reward'] if node > 0 else float('inf')
+                    best_score = (
+                        -tree.nodes[best_node]['reward']
+                        if best_node else float('inf')
+                    )
                     best_delay = seconds_to_hour(
                         best_score
                     )  if math.isfinite(best_score) else ''
@@ -89,12 +105,10 @@ class GDTAgent(GrootAgent):
                         info["score"]
                     )  if valid else 'not valid'
                     print(
-                        f"{node}->{new_node}",
-                        f"{action=}",
+                        f"{node}-({action=})->{new_node}",
                         f"{delay=}",
                         f"{best_delay=}",
                         f"{done=}",
-                        f"{valid=}",
                         f"depth={len(nx.shortest_path(tree, 0, node))+1}",
                         sep = ' | '
                     )

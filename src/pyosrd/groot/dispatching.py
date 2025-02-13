@@ -8,6 +8,7 @@ def evaluate_action(
     a: int,
     ref: Groot,
     scorer: Callable[[Groot, Groot], float] = sum_delays_at_end,
+    now: float = 0.,
 ) -> tuple[Groot, dict[str, str|float]]:
 
 
@@ -85,6 +86,10 @@ def evaluate_action(
                 return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
 
             wait_at = self.previous_signal(waiting_train, cvg)
+
+            if self.times_zones[waiting_train][wait_at][1] < now:
+                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+
             r = self.make_train_wait(waiting_train, priority_train, wait_at, zone)
             tr1, tr2, _, t_new_conlict = r.earliest_conflict()
             done = t_new_conlict is None
@@ -102,10 +107,16 @@ def evaluate_action(
             priority_train = train2
             waiting_train = train1
             cvg = self.previous_common_convergence(train1, train2, zone)
+
             if not cvg:
                 return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+            
             if not (wait_at := self.previous_station(waiting_train, cvg)):
-                return self, True, False, scorer(self, ref)
+                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+            
+            if self.times_zones[waiting_train][wait_at][1] < now:
+                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+
             r = self.make_train_wait(waiting_train, priority_train, wait_at, zone)
             _, _, _, t_new_conlict = r.earliest_conflict()
             done = t_new_conlict is None
