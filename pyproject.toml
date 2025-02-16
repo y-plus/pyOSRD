@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyosrd"
-version = "0.2.9a"
+version = "0.2.13b"
 authors = [
   { name="Renan HILBERT", email="renan.hilbert.ext@eurodecision.com" },
 ]
@@ -17,7 +17,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies=[
-    'gymnasium',
+    "ortools",
     'networkx >= 3.3',
     'matplotlib>= 3.6.3',
     'pandas>=2.2.1',
