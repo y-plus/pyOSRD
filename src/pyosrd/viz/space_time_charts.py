@@ -195,6 +195,7 @@ def space_time_chart_plotly(
     eco_or_base: str = 'base',
     points_to_show: list[str] =
         ['station', 'switch', 'departure', 'arrival'],
+    reverse: bool = False,
 ) -> go.Figure:
     """Draw space-time graph for a given train
 
@@ -271,5 +272,7 @@ def space_time_chart_plotly(
             ticktext=[seconds_to_hour(xtick) for xtick in xticks]
         )
     )
+    if reverse:
+        fig.update_yaxes(autorange='reversed')
 
     return fig
