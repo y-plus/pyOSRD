@@ -104,6 +104,7 @@ class Groot(object):
         train: str | None = None,
         legend: bool = True,
         display_zone_names: bool = False,
+        reverse: bool = False
     ) -> Axes:
 
         if not train:
@@ -204,6 +205,8 @@ class Groot(object):
             ax.set_title(train)
         if legend:
             ax.legend()
+        if reverse:
+            ax.yaxis.set_inverted(True)
         return ax
 
     def earliest_conflict(self: Self) -> tuple[str, str, str, float]:
