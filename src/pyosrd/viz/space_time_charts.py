@@ -226,6 +226,11 @@ def space_time_chart_plotly(
         points_to_show=points_to_show,
     )
 
+    if isinstance(train, int):
+        train_label = self.trains[train]
+    else:
+        train_label = train
+
     for t in data:
         t['h'] = [seconds_to_hour(x).split('.')[0] for x in t['x']]
 
@@ -237,13 +242,13 @@ def space_time_chart_plotly(
                 customdata=t['h'],
                 name=t['label'],
                 hovertemplate="%{customdata} (%{y:.0f} m)",
-                line = dict(color='black', width=3.5) if t['label']==train else dict(width=1.5),
+                line = dict(color='black', width=3.5) if t['label']==train_label else dict(width=1.5),
                 mode='lines',
             )
             for t in data
         ],
         layout={
-            "title": f'train {train} ({eco_or_base})',
+            "title": f'{train_label} ({eco_or_base})',
             "template": "simple_white",
             # "hovermode": "x unified",
         },
