@@ -227,7 +227,7 @@ def extend_track(
     if not ending:
         track.coordinates.append((None, None))
 
-def build_station(
+def build_station_1_2(
     infra_builder: InfraBuilder,
     track_in: TrackSection,
     station_name: str,
@@ -371,6 +371,97 @@ def build_station(
     return track_out
 
 
+def build_terminal_station_1_2(
+    infra_builder: InfraBuilder,
+    track_in: TrackSection,
+    station_name: str,
+    track_names: list[str] = ['V1', 'V2'],
+    curves: tuple[bool] = (True, True),
+    geo_direction: GeoDirection | float = GeoDirection.EAST,
+    bv_as_op: bool = True,
+) -> TrackSection:
+    v1 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name=track_names[0],
+        line_name=track_in.line_name,
+        line_code=track_in.line_code,
+        length=LENGTH_STATION,
+    )
+    v2 = infra_builder.add_track_section(
+        label=f'track.{str(len(infra_builder.infra.track_sections)).zfill(3)}',
+        track_name=track_names[1],
+        line_name=track_in.line_name,
+        line_code=track_in.line_code,
+        length=LENGTH_STATION,
+    )
+    dvg = infra_builder.add_point_switch(
+        track_in.end(),
+        v1.begin(),
+        v2.begin(),
+        label=f'switch.{str(len(infra_builder.infra.switches)).zfill(3)}',
+    )
+
+    dvg_coords_osrd = track_in.coordinates[-1]
+    dvg.set_coords(*dvg_coords_osrd)
+    
+    if curves[0]:
+        v1_1_coords = inverse_haversine(
+            dvg_coords_osrd[::-1],
+            LENGTH_ELBOW,
+            geo_direction - ANGLE_ELBOW,
+            unit='m'
+        )
+        v1_2_coords = inverse_haversine(
+            v1_1_coords,
+            v1.length - LENGTH_ELBOW,
+            geo_direction,
+            unit='m'
+        )
+        v1.set_remaining_coords([v1_1_coords[::-1], v1_2_coords[::-1]])
+
+    if curves[1]:
+        v2_1_coords = inverse_haversine(
+                dvg_coords_osrd[::-1],
+                LENGTH_ELBOW,
+                geo_direction + ANGLE_ELBOW,
+                unit='m'
+            )
+        v2_2_coords = inverse_haversine(
+                v2_1_coords,
+                v2.length - LENGTH_ELBOW,
+                geo_direction,
+                unit='m'
+        )
+        v2.set_remaining_coords([v2_1_coords[::-1], v2_2_coords[::-1]])
+
+    add_carre_with_detector(
+        track_section=v1,
+        position=DISTANCE_SIGNAL_SWITCH,
+        direction=Direction.STOP_TO_START,
+        label=f'{station_name}.{track_names[0]}.s',
+    )
+    add_carre_with_detector(
+        track_section=v2,
+        position=DISTANCE_SIGNAL_SWITCH,
+        direction=Direction.STOP_TO_START,
+        label=f'{station_name}.{track_names[1]}.s',
+    )
+    # if not forward:
+    #     v1.add_detector(
+    #         position=v1.length - DISTANCE_SIGNAL_SWITCH + DISTANCE_SIGNAL_DETECTOR,
+    #         label=f'D.{station_name}.{track_names[0]}.e',
+    #     )
+    #     v2.add_detector(
+    #         position=v1.length - DISTANCE_SIGNAL_SWITCH + DISTANCE_SIGNAL_DETECTOR,
+    #         label=f'D.{station_name}.{track_names[1]}.e',
+    #     )
+    
+    if bv_as_op:
+        bv = infra_builder.add_operational_point(station_name)
+        bv.add_part(v1, LENGTH_STATION/2)
+        bv.add_part(v2, LENGTH_STATION/2)
+
+    return
 def build_station_3_5(
     infra_builder: InfraBuilder,
     track_in: TrackSection,
@@ -451,7 +542,7 @@ def build_station_3_5(
     extend_track(track_in, 40, geo_direction)
     track_out.add_detector(20)
 
-    track_in = build_station(
+    track_in = build_station_1_2(
         infra_builder=infra_builder,
         track_in=track_in,
         station_name=station_name,
@@ -464,7 +555,7 @@ def build_station_3_5(
     v2 = infra_builder.infra.track_sections[-3]
     v4 = infra_builder.infra.track_sections[-2]
 
-    track_out = build_station(
+    track_out = build_station_1_2(
         infra_builder=infra_builder,
         track_in=track_out,
         station_name=station_name,

@@ -15,7 +15,7 @@ from pyosrd.use_cases.infras.helpers.builders import (
     build_junction,
     add_carre_with_detector,
     build_blocks,
-    build_station,
+    build_station_1_2,
     extend_track,
     build_station_3_5,
     build_terminal_station_3_5,
@@ -62,7 +62,7 @@ def hamelinfra(
         label=f"{'A'}_entrance"
     )
 
-    track = build_station(
+    track = build_station_1_2(
         infra_builder=infra_builder,
         track_in=t0,
         station_name='A',
@@ -77,7 +77,7 @@ def hamelinfra(
         backward=True,
     )
 
-    track = build_station(
+    track = build_station_1_2(
         infra_builder=infra_builder,
         track_in=track,
         station_name='B',
@@ -137,7 +137,7 @@ def hamelinfra(
         geo_direction=GeoDirection.EAST
     )
 
-    t1 = build_station(
+    t1 = build_station_1_2(
         infra_builder=infra_builder,
         track_in=t1,
         station_name='C',
@@ -150,7 +150,7 @@ def hamelinfra(
     v1 = infra_builder.infra.track_sections[-3]
     v3 = infra_builder.infra.track_sections[-2]
 
-    t2 = build_station(
+    t2 = build_station_1_2(
         infra_builder=infra_builder,
         track_in=t2,
         station_name='C',
@@ -608,7 +608,7 @@ def hamelinfra(
 
     station_j_start = v1east.coordinates[-1]
 
-    v2east = build_station(
+    v2east = build_station_1_2(
         infra_builder=infra_builder,
         track_in=v2east,
         station_name='J',
@@ -623,7 +623,7 @@ def hamelinfra(
     v2 = infra_builder.infra.track_sections[-3]
 
 
-    v1east = build_station(
+    v1east = build_station_1_2(
         infra_builder=infra_builder,
         track_in=v1east,
         station_name='J',
@@ -759,7 +759,7 @@ def hamelinfra(
         geo_direction=GeoDirection.NORTHWEST,
     )
 
-    v2west = build_station(
+    v2west = build_station_1_2(
         infra_builder=infra_builder,
         track_in=v2west,
         station_name='H',
@@ -774,7 +774,7 @@ def hamelinfra(
     v2 = infra_builder.infra.track_sections[-3]
 
 
-    v1west = build_station(
+    v1west = build_station_1_2(
         infra_builder=infra_builder,
         track_in=v1west,
         station_name='H',
