@@ -14,7 +14,7 @@ from pyosrd.groot.dispatching import evaluate_action
 class GDTAgent(GrootAgent):
 
     NUM_ACTIONS = 5
-    MAX_NODES = float('inf')
+    MAX_NODES = 10_000 #float('inf')
     DELAY_TOL = 0 #240
 
     @property
@@ -79,6 +79,8 @@ class GDTAgent(GrootAgent):
 
             if all_actions_evaluated or unvalid or done_and_valid or not_better or max_depth_reached:
                 nodes_to_explore.pop()
+                if not done_and_valid:
+                    del tree.nodes[node]['state']
             elif tree.number_of_nodes() > self.MAX_NODES:
                 nodes_to_explore = []
             else:
@@ -110,6 +112,7 @@ class GDTAgent(GrootAgent):
                         f"{best_delay=}",
                         f"{done=}",
                         f"depth={len(nx.shortest_path(tree, 0, node))+1}",
+                        f"buffer_size={len(nodes_to_explore)}",
                         sep = ' | '
                     )
                 tree.add_node(
