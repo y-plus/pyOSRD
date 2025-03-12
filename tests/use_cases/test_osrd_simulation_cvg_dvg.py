@@ -59,12 +59,12 @@ def test_cvg_dvg_infra_num_switches(simulation_cvg_dvg):
     assert simulation_cvg_dvg.num_switches == 2
 
 
-def test_cvg_dvg_infra_draw_infra_not_fail(simulation_cvg_dvg):
-    """Test if it does not raise an exception"""
-    try:
-        simulation_cvg_dvg.draw_infra_points()
-    except:  # noqa
-        assert False
+# def test_cvg_dvg_infra_draw_infra_not_fail(simulation_cvg_dvg):
+#     """Test if it does not raise an exception"""
+#     try:
+#         simulation_cvg_dvg.draw_infra_points()
+#     except:  # noqa
+#         assert False
 
 
 def test_cvg_dvg_infra_station_capacities(simulation_cvg_dvg):

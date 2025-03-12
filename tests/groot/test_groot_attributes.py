@@ -14,7 +14,7 @@ def test_groot_path(groot_1train):
 
 
 def test_groot_train_zones(groot_1train):
-    assert groot_1train.train_zones('train1') == ['A', 'B', 'C']
+    assert groot_1train.path_zones('train1') == ['A', 'B', 'C']
 
 
 def test_groot_times_zones(groot_1train):

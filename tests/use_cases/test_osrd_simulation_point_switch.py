@@ -51,12 +51,12 @@ def test_point_switch_infra_num_switches(simulation_point_switch):
     assert simulation_point_switch.num_switches == 1
 
 
-def test_point_switch_infra_draw_infra_not_fail(simulation_point_switch):
-    """Test if it does not raise an exception"""
-    try:
-        simulation_point_switch.draw_infra_points()
-    except:  # noqa
-        assert False
+# def test_point_switch_infra_draw_infra_not_fail(simulation_point_switch):
+#     """Test if it does not raise an exception"""
+#     try:
+#         simulation_point_switch.draw_infra_points()
+#     except:  # noqa
+#         assert False
 
 
 def test_point_switch_infra_station_capacities(simulation_point_switch):

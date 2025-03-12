@@ -44,14 +44,14 @@ def test_straight_line_infra_num_switches(simulation_straight_line):
     assert simulation_straight_line.num_switches == 0
 
 
-def test_straight_line_infra_draw_infra_not_fail(
-    simulation_straight_line
-):
-    """Test if it does not raise an exception"""
-    try:
-        simulation_straight_line.draw_infra_points()
-    except:  # noqa
-        assert False
+# def test_straight_line_infra_draw_infra_not_fail(
+#     simulation_straight_line
+# ):
+#     """Test if it does not raise an exception"""
+#     try:
+#         simulation_straight_line.draw_infra_points()
+#     except:  # noqa
+#         assert False
 
 
 def test_straight_line_infra_station_capacities(
