@@ -87,7 +87,7 @@ def voie_unique_circulations(
                 + intermediate_stops[::-1]
                 + [Stop(120, station_location(infra, 'A', 'V1', -100))]
             )
-            print(locations)
+
         sim_builder.add_train_schedule(
             *locations,
             label=f'train{str(i).zfill(2)}',
