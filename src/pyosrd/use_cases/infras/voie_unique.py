@@ -83,7 +83,7 @@ def voie_unique(
             station_name=chr(ord('A')+station-1),
             forward=True,
             backward=True,
-            track_names=['V2', 'V1']
+            track_names=['V1', 'V2']
         )
         build_blocks(
             track1,
@@ -96,7 +96,7 @@ def voie_unique(
         infra_builder=infra_builder,
         track_in=track1,
         station_name=chr(ord('A')+num_stations-1),
-        track_names=['V2', 'V1']
+        track_names=['V1', 'V2']
     )
 
 
