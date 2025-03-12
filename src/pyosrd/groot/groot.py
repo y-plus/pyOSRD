@@ -209,24 +209,34 @@ class Groot(object):
             ax.yaxis.set_inverted(True)
         return ax
 
-    def earliest_conflict(self: Self) -> tuple[str, str, str, float]:
+    def earliest_conflict(
+        self: Self,
+        train1: str | None = None,
+        train2: str | None = None,
+    ) -> tuple[str, str, str, float]:
 
         times_zones = self.times_zones
         train1_conflict, train2_conflict, zone_conflict = None, None, None
         t_conflict = float('inf')
-        for train0, train1 in itertools.combinations(self.trains, 2):
 
-            train_zones0 = self.path_zones(train0)
+        if train1 is None:
+            trains =  itertools.combinations(self.trains, 2)
+        else:
+            trains = [(train1, train2)]
+
+        for tr1, train1 in trains:
+
+            train_zones0 = self.path_zones(tr1)
             train_zones1 = self.path_zones(train1)
 
             for zone in set(train_zones0).intersection(set(train_zones1)):
-                min_t_out = min(times_zones[train0][zone][1], times_zones[train1][zone][1])
-                max_t_in = max(times_zones[train0][zone][0], times_zones[train1][zone][0])
-                min_t_in = min(times_zones[train0][zone][0], times_zones[train1][zone][0])
+                min_t_out = min(times_zones[tr1][zone][1], times_zones[train1][zone][1])
+                max_t_in = max(times_zones[tr1][zone][0], times_zones[train1][zone][0])
+                min_t_in = min(times_zones[tr1][zone][0], times_zones[train1][zone][0])
                 if max_t_in < min_t_out and min_t_in < t_conflict:
                     t_conflict = min_t_in
                     train1_conflict, train2_conflict, zone_conflict =\
-                        train0, train1, zone
+                        tr1, train1, zone
         if not train1_conflict:
             t_conflict = None
         return train1_conflict, train2_conflict, zone_conflict, t_conflict
@@ -413,7 +423,24 @@ class Groot(object):
                     - self.times_zones[waiting_train][conflict_zone][0]
             )
             delay=max(delay_zone_to_free, delay_zone)
-            return self.add_delay(waiting_train, wait_at, delay)
+            new_groot =  self.add_delay(waiting_train, wait_at, delay)
+
+            tr1, tr2, new_conflict_zone, _ = new_groot.earliest_conflict(priority_train, waiting_train)
+            if (
+                new_conflict_zone
+                and (
+                    self.path_zones(waiting_train).index(wait_at)
+                    <= self.path_zones(waiting_train).index(new_conflict_zone)
+                    < self.path_zones(waiting_train).index(conflict_zone)
+                )
+            ):
+                new_groot = self.add_delay(
+                    waiting_train,
+                    wait_at,
+                    self.times_zones[priority_train][new_conflict_zone][1]
+                    - self.times_zones[waiting_train][new_conflict_zone][0]
+                )
+            return new_groot
 
     @property
     def departure_times(self: Self) -> dict[str, float]:
