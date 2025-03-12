@@ -55,7 +55,7 @@ class Groot(object):
     @property
     def tvds_graph(self: Self) -> nx.DiGraph:
         if not hasattr(self, '_tvds_graph'):
-            self._tvds_graph = tvds_graph(self.zones)
+            self._tvds_graph = tvds_graph(self.zones, self.ends_with_a_signal)
         return self._tvds_graph
 
     def to_df(self: Self) -> pd.DataFrame:
@@ -383,7 +383,7 @@ class Groot(object):
 
         prev_zones1 = [zone] + self.previous_zones(train1, zone)
         prev_zones2 = [zone] + self.previous_zones(train2, zone)
-        
+
         for i, z in enumerate(prev_zones1[:-1]):
             if (
                 z in prev_zones2
@@ -391,13 +391,6 @@ class Groot(object):
             ):
                 return z
         return None
-
-    def is_a_divergence(self: Self, zone: str, train1: str, train2: str) -> bool:
-        train_zones1 = self.path_zones(train1)
-        train_zones2 = self.path_zones(train2)
-        if zone in [train_zones1[-1], train_zones2[-1]]:
-            return False
-        return train_zones1[train_zones1.index(zone)+1] != train_zones2[train_zones2.index(zone)+1]
 
     def make_train_wait(
         self: Self,
