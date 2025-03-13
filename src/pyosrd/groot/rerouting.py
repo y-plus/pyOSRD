@@ -49,6 +49,7 @@ def reroute_train_to_avoid_zone(
                 source, target = n1, n2
                 break
     if not found:
+        print('No path found')
         return None
 
     train_path = self.path(train)
@@ -117,7 +118,7 @@ def reroute_train_to_avoid_zone(
             ts_out_1 = self.times[train][tvd_original_station][1]
 
             t_in_1 = self.times_zones[train][self.zones[original_path[-1]]][0]
-            t_out_1 = self.times_zones[train][self.zones[original_path[-1]]][1]
+            t_out_1 = self.times_zones[train][self.zones[original_path[-2]]][1]
 
             new_length_before_station = sum(
                 distance_between_points(
@@ -177,6 +178,11 @@ def reroute_train_to_avoid_zone(
                     + (t_out_1-ts_out_1) * length/new_length_after_station
                 )
                 new_groot.times[train][tvd] = (t_in, t_out)
+
+            zones_that_must_be_free = [
+                self.zones[tvd] for tvd in tvds_after_new_station
+            ] + [new_station]
+
         else:
             new_length = sum(
                 distance_between_points(
@@ -218,11 +224,12 @@ def reroute_train_to_avoid_zone(
                 new_exit_times
             ):
                 new_groot.times[train][tvd] = (entry_time, exit_time)
-
+            zones_that_must_be_free = new_zones
+    
         tr1, tr2, conflict_zone, _ = new_groot.earliest_conflict()
         conflict_tvd = new_groot.get_tvd(train, conflict_zone)
 
-        if conflict_tvd in new_path and train in (tr1, tr2):
+        if conflict_zone in zones_that_must_be_free and train in (tr1, tr2):
             subg = nx.subgraph(subg, [n for n in subg if n!=conflict_tvd])
         else:
             return new_groot
