@@ -38,18 +38,17 @@ def reroute_train_to_avoid_zone(
 
     graph = self.tvds_graph
     subg = nx.subgraph(graph, [n for n in graph if n!=tvd_conflict])
-    found = False
+    path_found = False
     for n1, n2 in [
         (tvd_prev_station, tvd_next_station),
         (tvd_prev_prev_station, tvd_next_station),
         (tvd_prev_station, tvd_next_next_station)
     ]:
         if n1 and n2:
-            if found:= nx.has_path(subg, source=n1, target=n2):
+            if path_found:= nx.has_path(subg, source=n1, target=n2):
                 source, target = n1, n2
                 break
-    if not found:
-        print('No path found')
+    if not path_found:
         return None
 
     train_path = self.path(train)
