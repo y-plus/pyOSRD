@@ -33,6 +33,10 @@ def solve_conflict(
 ) -> Groot:
 
     train1, train2, conflict_zone, t = self.earliest_conflict()
+
+    if not conflict_zone:
+        return self
+
     priority_train, waiting_train = ref.trains_order_in_zone(
         train1,
         train2,
