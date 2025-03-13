@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.axes._axes import Axes
+import plotly
 from plotly import graph_objects as go
 
 from pyosrd.osrd import Point
@@ -192,9 +193,10 @@ def space_time_chart(
 def space_time_chart_plotly(
     self,
     train: int | str,
-    eco_or_base: str = 'base',
+    ref = None,
+    eco_or_base: str = 'eco',
     points_to_show: list[str] =
-        ['station', 'switch', 'departure', 'arrival'],
+        ['station'],
     reverse: bool = False,
 ) -> go.Figure:
     """Draw space-time graph for a given train
@@ -206,7 +208,7 @@ def space_time_chart_plotly(
     train : int | str
         Train index or label
     eco_or_base : str, optional
-        Draw eco or base simulation ?, by default 'base'
+        Draw eco or base simulation ?, by default 'eco'
     points_to_show : list[str], optional
         list of points types shown on y-axis.
         Possible choices are 'signal', 'detector', 'station', 'switch',
@@ -226,26 +228,63 @@ def space_time_chart_plotly(
         points_to_show=points_to_show,
     )
 
+    if ref:
+        ref_data, _ = _data_and_points_to_plot(
+        ref,
+        train=train,
+        eco_or_base=eco_or_base,
+        points_to_show=points_to_show,
+    )
+    else:
+        ref_data = data
+
+    ref_data = [
+        ref_d
+        for ref_d in ref_data
+        if ref_d != next(d for d in data if d['label']==ref_d['label'])
+    ]
+
     if isinstance(train, int):
         train_label = self.trains[train]
     else:
         train_label = train
 
-    for t in data:
-        t['h'] = [seconds_to_hour(x).split('.')[0] for x in t['x']]
+    for d in data + ref_data:
+        d['h'] = [seconds_to_hour(x).split('.')[0] for x in d['x']]
 
     fig = go.Figure(
         data=[
             go.Scatter(
-                x=t['x'],
-                y=t['y'],
-                customdata=t['h'],
-                name=t['label'],
+                x=d['x'],
+                y=d['y'],
+                customdata=d['h'],
+                name=d['label'],
                 hovertemplate="%{customdata} (%{y:.0f} m)",
-                line = dict(color='black', width=3.5) if t['label']==train_label else dict(width=1.5),
+                line = dict(color='black', width=3.5) if d['label']==train_label else dict(width=1.5),
                 mode='lines',
             )
-            for t in data
+            for d in data
+        ] + [
+            go.Scatter(
+                x=d['x'],
+                y=d['y'],
+                customdata=d['h'],
+                name=d['label']+'(ref)',
+                hovertemplate="%{customdata} (%{y:.0f} m)",
+                line = (
+                    dict(color='black', width=2.5, dash='dash') 
+                    if d['label']==train_label
+                    else dict(
+                        width=1.5,
+                        dash='dash',
+                        color=plotly.colors.qualitative.D3[
+                            self.trains.index(d['label']) % 10
+                        ]
+                    )
+                ),
+                mode='lines',
+            )
+            for d in ref_data
         ],
         layout={
             "title": f'{train_label} ({eco_or_base})',
