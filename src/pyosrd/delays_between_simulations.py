@@ -19,7 +19,6 @@ def calculate_delays_at_points(
             # types=['departure', 'arrival', 'detector', 'station'],
         )
     }
-    delays = []
 
     if isinstance(train, int):
         train = sim.trains[train]
