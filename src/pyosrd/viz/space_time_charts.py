@@ -5,7 +5,7 @@ from plotly import graph_objects as go
 
 from pyosrd.osrd import Point
 from pyosrd.utils import seconds_to_hour
-
+from pyosrd.viz.colors import train_colors
 
 def _data_and_points_to_plot(
     self,
@@ -237,11 +237,16 @@ def space_time_chart_plotly(
     )
     else:
         ref_data = data
+    trains = [d['label'] for d in data]
 
     ref_data = [
         ref_d
         for ref_d in ref_data
-        if ref_d != next(d for d in data if d['label']==ref_d['label'])
+        if (
+            ref_d['label'] in trains
+            and self.last_arrival_times[self.trains.index(ref_d['label'])]
+            != ref.last_arrival_times[ref.trains.index(ref_d['label'])]
+        ) 
     ]
 
     if isinstance(train, int):
@@ -252,6 +257,7 @@ def space_time_chart_plotly(
     for d in data + ref_data:
         d['h'] = [seconds_to_hour(x).split('.')[0] for x in d['x']]
 
+    colors = train_colors(self)
     fig = go.Figure(
         data=[
             go.Scatter(
@@ -260,7 +266,11 @@ def space_time_chart_plotly(
                 customdata=d['h'],
                 name=d['label'],
                 hovertemplate="%{customdata} (%{y:.0f} m)",
-                line = dict(color='black', width=3.5) if d['label']==train_label else dict(width=1.5),
+                line = (
+                    dict(color='black', width=3.5)
+                    if d['label']==train_label
+                    else dict(width=1.5, color=colors[d['label']])
+                ),
                 mode='lines',
             )
             for d in data
@@ -272,14 +282,12 @@ def space_time_chart_plotly(
                 name=d['label']+'(ref)',
                 hovertemplate="%{customdata} (%{y:.0f} m)",
                 line = (
-                    dict(color='black', width=2.5, dash='dash') 
+                    dict(color='black', width=2, dash='dot') 
                     if d['label']==train_label
                     else dict(
-                        width=1.5,
-                        dash='dash',
-                        color=plotly.colors.qualitative.D3[
-                            self.trains.index(d['label']) % 10
-                        ]
+                        width=1.0,
+                        dash='dot',
+                        color=colors[d['label']]
                     )
                 ),
                 mode='lines',
