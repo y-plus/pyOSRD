@@ -12,6 +12,7 @@ def train_colors(
             for c in distinctipy.get_colors(
                 len(self.trains),
                 rng=42,
+                pastel_factor=.2,
             )]
     )
 
