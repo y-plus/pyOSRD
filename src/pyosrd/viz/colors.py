@@ -1,19 +1,15 @@
 import plotly
 import distinctipy
-from pyosrd import OSRD
-
-
 
 def train_colors(
-    self: OSRD,
+    self,
 ) -> dict[str, str]:
     colors = (
         plotly.colors.qualitative.D3
         + 
         [
             '#%02x%02x%02x' % tuple(int(255*p) for p in c)
-            for c in
-            distinctipy.get_colors(
+            for c in distinctipy.get_colors(
                 self.num_trains,
                 rng=42,
             )]
