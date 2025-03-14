@@ -267,7 +267,7 @@ def space_time_chart_plotly(
                 name=d['label'],
                 hovertemplate="%{customdata} (%{y:.0f} m)",
                 line = (
-                    dict(color='black', width=3.5)
+                    dict(color=colors[d['label']], width=3.5)
                     if d['label']==train_label
                     else dict(width=1.5, color=colors[d['label']])
                 ),
@@ -282,7 +282,7 @@ def space_time_chart_plotly(
                 name=d['label']+'(ref)',
                 hovertemplate="%{customdata} (%{y:.0f} m)",
                 line = (
-                    dict(color='black', width=2, dash='dot') 
+                    dict(color=colors[d['label']], width=2, dash='dot') 
                     if d['label']==train_label
                     else dict(
                         width=1.0,

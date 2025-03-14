@@ -12,6 +12,7 @@ from matplotlib.axes._axes import Axes
 from ortools.linear_solver import pywraplp
 
 from pyosrd.utils import seconds_to_hour
+from pyosrd.viz.colors import train_colors
 
 from .build_zones import zones_graph, tvds_graph
 
@@ -107,6 +108,7 @@ class Groot(object):
         reverse: bool = False
     ) -> Axes:
 
+
         if not train:
             gr = self.zones_graph
 
@@ -136,6 +138,8 @@ class Groot(object):
             times_zones = self.between(t1, t2).times_zones
         else:
             times_zones = self.times_zones
+
+        colors = train_colors(self)
         _, ax = plt.subplots()
         for tr in self.times:
             width = [
@@ -157,7 +161,8 @@ class Groot(object):
                     y=sorted_zones,
                     label=tr,
                     height=1,
-                    alpha=.5
+                    alpha=.5,
+                    color=colors[tr]
                 )
         if train:
              ax.set_xlim(t1, t2)

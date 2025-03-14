@@ -4,13 +4,11 @@ from typing import Any
 
 import numpy as np
 
-import branca.colormap as cm
-
 from haversine import haversine
 
 from pyosrd.osrd import Point
 from pyosrd.delays_between_simulations import calculate_delays_at_points
-
+from pyosrd.viz.colors import train_colors
 
 def coords_from_position_on_track(
     self,
@@ -58,6 +56,7 @@ def res2geojson(
 ) -> dict[str, Any]:
 
     features = []
+    colors = train_colors(self)
 
     for train_index, _ in enumerate(self.trains):
 
@@ -129,6 +128,7 @@ def res2geojson(
             )
         )
         coords_interp[-1] = (None, None)
+
         features.append(
             {
                 "type": "Feature",
@@ -140,7 +140,7 @@ def res2geojson(
                     "times": list(times_interp),
                     "icon": "circle",
                     "iconstyle": {
-                        "fillColor": "black",
+                        "fillColor": colors[self.trains[train_index]],
                         "fillOpacity": 0.9,
                         "stroke": "false",
                         "radius": 3,

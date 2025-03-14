@@ -10,6 +10,7 @@ from pyosrd.groot.delay_analysis import merge_time_entries, \
     get_earliest_non_zero_delay_for_each_train, \
     interpolate_entries
 
+from pyosrd.viz.colors import train_colors
 
 def plot_groot_delays(
     disrupted: Groot,
@@ -79,6 +80,8 @@ def plot_groot_delays(
             [val for val in latest_non_zero_delays.values()]
         )]
 
+    colors = train_colors(disrupted)
+
     fig = go.Figure(
         data=[
             go.Scatter(
@@ -87,6 +90,7 @@ def plot_groot_delays(
                 y=delays[train],
                 stackgroup='Delays',
                 line={'width': 0},
+                fillcolor=colors[train]
 
             )
             for train in sorted_trains
@@ -94,11 +98,6 @@ def plot_groot_delays(
         ],
         layout={
                 "template": "simple_white",
-                "colorway": (
-                    plotly.colors.qualitative.D3[0:len(sorted_trains)][::-1]
-                    if not all_trains
-                    else plotly.colors.qualitative.D3
-                ),
                 "hovermode": "x unified",
             },
     )

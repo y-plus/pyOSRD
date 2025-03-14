@@ -10,7 +10,7 @@ def train_colors(
         [
             '#%02x%02x%02x' % tuple(int(255*p) for p in c)
             for c in distinctipy.get_colors(
-                self.num_trains,
+                len(self.trains),
                 rng=42,
             )]
     )
