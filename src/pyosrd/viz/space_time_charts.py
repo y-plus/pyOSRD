@@ -228,6 +228,8 @@ def space_time_chart_plotly(
         points_to_show=points_to_show,
     )
 
+    trains = [d['label'] for d in data]
+
     if ref:
         ref_data, _ = _data_and_points_to_plot(
         ref,
@@ -235,19 +237,17 @@ def space_time_chart_plotly(
         eco_or_base=eco_or_base,
         points_to_show=points_to_show,
     )
+        ref_data = [
+            ref_d
+            for ref_d in ref_data
+            if (
+                ref_d['label'] in trains
+                and self.last_arrival_times[self.trains.index(ref_d['label'])]
+                != ref.last_arrival_times[ref.trains.index(ref_d['label'])]
+            ) 
+        ]
     else:
-        ref_data = data
-    trains = [d['label'] for d in data]
-
-    ref_data = [
-        ref_d
-        for ref_d in ref_data
-        if (
-            ref_d['label'] in trains
-            and self.last_arrival_times[self.trains.index(ref_d['label'])]
-            != ref.last_arrival_times[ref.trains.index(ref_d['label'])]
-        ) 
-    ]
+        ref_data = []   
 
     if isinstance(train, int):
         train_label = self.trains[train]
