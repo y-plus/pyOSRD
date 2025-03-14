@@ -153,21 +153,13 @@ def res2geojson(
         if ref_sim is not None:
 
             delays = calculate_delays_at_points(self, ref_sim, train_index, eco_or_base)
-            
+
             delays_interp = np.interp(
                 times_interp,
                 [today_timestamp + 1_000 * d[1] for d in delays],
                 [d[2] for d in delays],
             )
 
-            if delays_interp[0] != 0:
-                import matplotlib.pyplot as plt
-                plt.figure()
-                plt.plot([d[1] for d in delays],
-                [d[2] for d in delays])
-                plt.figure()
-                plt.plot(times_interp, delays_interp)
-                print(train_index, self.trains[train_index], delays[0], delays_interp[0])
             features.append(
                 {
                     "type": "Feature",
