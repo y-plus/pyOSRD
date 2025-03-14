@@ -16,8 +16,10 @@ def evaluate_action(
     if not train1:
         return self, {'done': True, 'valid': True, 'score': scorer(self, ref)}
 
-    train1, train2 = ref.trains_order_in_zone(train1, train2, zone)
-
+    try:
+        train1, train2 = ref.trains_order_in_zone(train1, train2, zone)
+    except KeyError:
+        train1, train2 = self.trains_order_in_zone(train1, train2, zone)
     info = {"action": a}
 
     match a:
