@@ -1,4 +1,6 @@
 import copy
+import pickle
+
 
 from abc import ABC, abstractmethod
 from typing_extensions import Self
@@ -30,6 +32,16 @@ class GrootAgent(ABC):
         self.limit_max_actions = limit_max_actions
         self._scorer = sum_delays_at_end
         self.clear_cache()
+
+    def save(self, path_to_file: str) -> None:
+        with open(path_to_file, "wb") as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def load(cls, path_to_file: str) -> Self:
+        with open(path_to_file, "rb") as f:
+            agent = pickle.load(f)
+        return agent
 
     @property
     def name(self) -> str:

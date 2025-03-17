@@ -5,6 +5,8 @@ import pytest
 from pyosrd import OSRD
 
 from .groot.fixtures import *
+from .agents.fixtures import *
+
 
 @pytest.fixture(scope='session')
 def osrd_cvg_dvg_missing_sim():
