@@ -157,7 +157,7 @@ def reroute_train_to_avoid_zone(
                     self._track_section_lengths,
                     self._track_section_network
                 )
-                for tvd in tvds_before_new_station
+                for tvd in tvds_after_new_station
             )
             length = 0
             for tvd in tvds_after_new_station:
