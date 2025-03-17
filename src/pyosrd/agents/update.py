@@ -419,18 +419,26 @@ def add_delay_between_points(
         DISTANCE_STOP_END = 20
 
         if stop:
-            for i, r in enumerate(h:= self._head_position(train, eco_or_base)):
+            for i, r in enumerate(self._head_position(train, eco_or_base)):
                 if r['path_offset'] > stop['position']:
                     r['time'] += delay
 
         elif new_speed < MIN_SPEED and delay > 2 * TIME_TO_STOP:
+            direction = next(
+                    tr['direction'] for tr in self.train_track_sections(train)
+                    if tr['id'] == exit_detector['track']
+            )
+            if direction == 'START_TO_STOP':
+                offset = exit_detector['position'] - DISTANCE_STOP_END
+            else:
+                offset = exit_detector['position'] + DISTANCE_STOP_END
             pos_stop = pos_out - DISTANCE_STOP_END
             t_stop_end = t_out + delay - TIME_TO_STOP
             t_stop_begin = t_in + TIME_TO_STOP
             self._head_position(train, eco_or_base).append(
                 {
                     'time': t_stop_begin,
-                    'offset': exit_detector['position'] - DISTANCE_STOP_END,
+                    'offset': offset,
                     'path_offset': pos_stop ,
                     "track_section": exit_detector['track'],
                 }
@@ -438,7 +446,7 @@ def add_delay_between_points(
             self._head_position(train, eco_or_base).append(
                 {
                     'time': t_stop_end,
-                    'offset': exit_detector['position'] - DISTANCE_STOP_END,
+                    'offset': offset,
                     'path_offset': pos_stop,
                     "track_section": exit_detector['track'],
                 }
@@ -451,7 +459,7 @@ def add_delay_between_points(
             )
             for r in self._head_position(train, eco_or_base):
                 if r['time'] > t_stop_begin and r['time']<t_stop_end + TIME_TO_STOP:
-                    r['offset'] = exit_detector['position'] - 20
+                    r['offset'] = offset
                     r['path_offset'] = pos_stop
                     r['track_section'] = exit_detector['track']
         else:
