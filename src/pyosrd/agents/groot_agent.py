@@ -37,12 +37,6 @@ class GrootAgent(ABC):
         with open(path_to_file, "wb") as f:
             pickle.dump(self, f)
 
-    @classmethod
-    def load(cls, path_to_file: str) -> Self:
-        with open(path_to_file, "rb") as f:
-            agent = pickle.load(f)
-        return agent
-
     @property
     def name(self) -> str:
         return self._name
@@ -165,3 +159,8 @@ class GrootAgent(ABC):
         self._disrupted_groot = copy.deepcopy(self._ref_groot)
         self.clear_cache()
     
+
+def load_agent(path_to_file: str) -> GrootAgent:
+    with open(path_to_file, "rb") as f:
+        agent = pickle.load(f)
+    return agent
