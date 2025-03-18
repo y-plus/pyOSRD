@@ -25,6 +25,23 @@ class Groot(object):
     times: dict[str, dict[str, tuple[float, float]]] = field(default_factory=dict)
     min_durations: dict[str, dict[str, float]] = field(default_factory=dict)
 
+    def set_times(
+        self: Self,
+        times: dict[str, dict[str, tuple[float, float]]],
+        in_place: bool = False
+    ) -> Self | None:
+        
+        if in_place:
+            groot_with_new_times = self
+        else:
+            groot_with_new_times = copy.deepcopy(self)
+        
+        groot_with_new_times.times = times
+        groot_with_new_times._times_zones = None
+
+        if not in_place:
+            return groot_with_new_times
+
     @property
     def trains(self: Self) -> list[str]:
         return [train for train in self.times]
@@ -70,7 +87,10 @@ class Groot(object):
             df[train] = pd.DataFrame(self.times_zones[train]).T.rename(columns={0: 's', 1:'e'})
         return df.drop_duplicates()
 
-    def with_spacings(self) -> Self:
+    def with_spacings(
+        self: Self,
+        in_place: bool = True,
+    ) -> Self | None:
         """Generate a new Groot with spacings enabled.
         Using spaces the zones will be locked longer and
         only be freed when the next zone in the train path
@@ -83,7 +103,10 @@ class Groot(object):
             The new groot with spacings
         """
 
-        groot_with_spacings = copy.deepcopy(self)
+        if in_place:
+            groot_with_spacings = self
+        else:
+            groot_with_spacings = copy.deepcopy(self)
         groot_with_spacings._times_zones = None
 
         for train in groot_with_spacings.times.keys():
@@ -98,7 +121,8 @@ class Groot(object):
 
                 last_tvd = tvd
 
-        return groot_with_spacings
+        if not in_place:
+            return groot_with_spacings
 
     def plot(
         self: Self,
@@ -292,45 +316,58 @@ class Groot(object):
         self: Self,
         t_min: float = 0,
         t_max: float = float('inf'),
-    ) -> Self:
-        new = copy.deepcopy(self)
-        new._times_zones = None
-        new.times = {
+        in_place: bool = False,
+    ) -> Self | None:
+        
+        if in_place:
+            groot_between = self
+        else:
+            groot_between = copy.deepcopy(self)
+        groot_between._times_zones = None
+        groot_between.times = {
             train: {
                 zone: (max(t_min, t[0]), min(t_max, t[1]))
                 for zone, t in data.items()
                 if t[1] > t_min and t[0] < t_max
             }
-            for train, data in new.times.items()
+            for train, data in groot_between.times.items()
         }
-        return new
 
-    def before(self: Self, t: float) -> Self:
-        return self.between(t_max=t)
+        if not in_place:
+            return groot_between
 
-    def after(self: Self, t: float) -> Self:
-        return self.between(t_min=t)
+    def before(self: Self, t: float, in_place: bool = False) -> Self | None:
+        return self.between(t_max=t, in_place=in_place)
+
+    def after(self: Self, t: float, in_place: bool = False) -> Self | None:
+        return self.between(t_min=t, in_place=in_place)
 
     def add_delay(
         self: Self,
         train: str,
         zone: str,
-        delay: float
-    ) -> Self:
-        new = copy.deepcopy(self)
-        new._times_zones = None
+        delay: float,
+        in_place: bool = False,
+    ) -> Self | None:
+        
+        if in_place:
+            groot_with_delay_added = self
+        else:
+            groot_with_delay_added = copy.deepcopy(self)
+        groot_with_delay_added._times_zones = None
         path = self.path(train)
         tvd = self.get_tvd(train, zone)
         idx = path.index(tvd)
         for i, zone in enumerate(path[idx:]):
-            new.times[train][zone] = (
+            groot_with_delay_added.times[train][zone] = (
                 self.times[train][zone][0] + delay,
                 self.times[train][zone][1] + delay
             ) if i !=0 or idx ==0 else (
                 self.times[train][zone][0],
                 self.times[train][zone][1] + delay
             )
-        return new
+        if not in_place:
+            return groot_with_delay_added
 
     def previous_zones(self: Self, train: str, zone: str) -> list[str]:
         zones = self.path_zones(train)
@@ -402,8 +439,9 @@ class Groot(object):
         waiting_train: str,
         priority_train: str,
         wait_at: str,
-        conflict_zone: str
-    ) -> Self:
+        conflict_zone: str,
+        in_place: bool = False,
+    ) -> Self | None:
 
             if (self.ends_with_a_signal[self.get_tvd(priority_train, conflict_zone)]):
                 zone_to_free_priority = conflict_zone
@@ -421,11 +459,16 @@ class Groot(object):
                     - self.times_zones[waiting_train][conflict_zone][0]
             )
             delay=max(delay_zone_to_free, delay_zone)
-            new_groot =  self.add_delay(waiting_train, wait_at, delay)
+
+            if in_place:
+                new_groot = self
+                new_groot.add_delay(waiting_train, wait_at, delay, in_place=True)
+            else:      
+                new_groot =  self.add_delay(waiting_train, wait_at, delay, in_place=False)
 
             tr1, tr2, new_conflict_zone, _ = new_groot.earliest_conflict(priority_train, waiting_train)
             if (
-                new_conflict_zone
+                new_conflict_zone in self.path_zones(waiting_train)
                 and (
                     self.path_zones(waiting_train).index(wait_at)
                     <= self.path_zones(waiting_train).index(new_conflict_zone)
@@ -436,9 +479,11 @@ class Groot(object):
                     waiting_train,
                     wait_at,
                     self.times_zones[priority_train][new_conflict_zone][1]
-                    - self.times_zones[waiting_train][new_conflict_zone][0]
+                    - self.times_zones[waiting_train][new_conflict_zone][0],
+                    in_place=in_place
                 )
-            return new_groot
+            if not in_place:
+                return new_groot
 
     @property
     def departure_times(self: Self) -> dict[str, float]:
@@ -479,9 +524,18 @@ class Groot(object):
             return
         return trains[idx+1]
 
-    def speedup(self: Self, ref: Self, train: str, zone: str) -> Self:
+    def speedup(
+        self: Self,
+        ref: Self,
+        train: str,
+        zone: str,
+        in_place: bool = False
+    ) -> Self | None:
 
-        reaccelerated = copy.deepcopy(self)
+        if in_place:
+            reaccelerated = self
+        else:
+            reaccelerated = copy.deepcopy(self)
         reaccelerated._times_zones = None
 
         solver = pywraplp.Solver.CreateSolver("GLOP")
@@ -526,4 +580,5 @@ class Groot(object):
                     t_out[tvd].solution_value()
                 )
 
-        return reaccelerated
+        if not in_place:
+            return reaccelerated

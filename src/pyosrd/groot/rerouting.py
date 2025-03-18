@@ -8,8 +8,13 @@ from pyosrd.groot import Groot
 def reroute_train_to_avoid_zone(
     self: Groot,
     train: str,
-    zone: str
+    zone: str,
+    in_place: bool = False,
+    info: list[dict[str, str|float]] | None = None,
 ) -> Groot | None:
+
+    if info is not None:
+        info.append(copy.deepcopy(self.times))
 
     tvd_conflict = self.get_tvd(train, zone)
     next_station = self.next_station(train, zone)
@@ -52,7 +57,7 @@ def reroute_train_to_avoid_zone(
         return None
 
     train_path = self.path(train)
-
+    
     while nx.has_path(subg, source=source, target=target):
 
         tvds = nx.shortest_path(subg, source, target)
@@ -66,12 +71,12 @@ def reroute_train_to_avoid_zone(
             train_path.index(new_path[-1])+1
         ]
 
-
-        new_groot = copy.deepcopy(self)
-        new_groot._times_zones = None
-        new_groot.times[train] = {
+        
+        rerouted_groot = copy.deepcopy(self)
+        rerouted_groot._times_zones = None
+        rerouted_groot.times[train] = {
             k: v
-            for k, v in new_groot.times[train].items()
+            for k, v in rerouted_groot.times[train].items()
             if k not in original_path[1:-1]
         }
 
@@ -147,8 +152,8 @@ def reroute_train_to_avoid_zone(
                     t_out_0
                     + (ts_out_0-t_out_0) * length/new_length_before_station
                 )
-                new_groot.times[train][tvd] = (t_in, t_out)
-            new_groot.times[train][tvd_new_station] = self.times[train][tvd_original_station]
+                rerouted_groot.times[train][tvd] = (t_in, t_out)
+            rerouted_groot.times[train][tvd_new_station] = self.times[train][tvd_original_station]
             new_length_after_station = sum(
                 distance_between_points(
                     self._sim,
@@ -176,7 +181,7 @@ def reroute_train_to_avoid_zone(
                     ts_out_1
                     + (t_out_1-ts_out_1) * length/new_length_after_station
                 )
-                new_groot.times[train][tvd] = (t_in, t_out)
+                rerouted_groot.times[train][tvd] = (t_in, t_out)
 
             zones_that_must_be_free = [
                 self.zones[tvd] for tvd in tvds_after_new_station
@@ -222,15 +227,18 @@ def reroute_train_to_avoid_zone(
                 new_entry_times,
                 new_exit_times
             ):
-                new_groot.times[train][tvd] = (entry_time, exit_time)
+                rerouted_groot.times[train][tvd] = (entry_time, exit_time)
             zones_that_must_be_free = new_zones
     
-        tr1, tr2, conflict_zone, _ = new_groot.earliest_conflict()
-        conflict_tvd = new_groot.get_tvd(train, conflict_zone)
+        tr1, tr2, conflict_zone, _ = rerouted_groot.earliest_conflict()
+        conflict_tvd = rerouted_groot.get_tvd(train, conflict_zone)
 
         if conflict_zone in zones_that_must_be_free and train in (tr1, tr2):
             subg = nx.subgraph(subg, [n for n in subg if n!=conflict_tvd])
         else:
-            return new_groot
-
-    return None
+            if in_place:
+                self.times = rerouted_groot.times
+                self._times_zones = None
+                return
+            else:
+                return rerouted_groot

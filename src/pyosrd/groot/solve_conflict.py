@@ -30,7 +30,12 @@ def solve_conflict(
     ref: Groot,
     switch_order: bool = False,
     leave_station_asap: bool = True,
-) -> Groot:
+    info: list[dict[str, str|float]] | None = None,
+    in_place: bool=False,
+) -> Groot | None:
+
+    if info is not None:
+        info.append(copy.deepcopy(self.times))
 
     train1, train2, conflict_zone, t = self.earliest_conflict()
 
@@ -51,7 +56,7 @@ def solve_conflict(
         # self.path(train1)[0] == self.path(train2)[0]
     )
     if switch_order and (not can_switch) and not opposite_directions:
-        return Groot()
+        return None
    
     if switch_order:
         priority_train, waiting_train = waiting_train, priority_train
@@ -89,7 +94,10 @@ def solve_conflict(
         )
         leave_station_asap = False
 
-    new_groot = copy.deepcopy(self)
+    if in_place:
+        new_groot = self
+    else:
+        new_groot = copy.deepcopy(self)
     new_groot._times_zones = None
     
     if opposite_directions:
@@ -101,23 +109,42 @@ def solve_conflict(
 
         while conflict_in_common_zones:
             
-            new_groot = new_groot.make_train_wait(
-                waiting_train,
-                priority_train,
-                new_groot.previous_signal(waiting_train, conflict_zone),
-                conflict_zone
-            )
+            if in_place:
+                new_groot.make_train_wait(
+                    waiting_train,
+                    priority_train,
+                    new_groot.previous_signal(waiting_train, conflict_zone),
+                    conflict_zone,
+                    in_place=True
+                )
+            else:
+                new_groot = new_groot.make_train_wait(
+                    waiting_train,
+                    priority_train,
+                    new_groot.previous_signal(waiting_train, conflict_zone),
+                    conflict_zone
+                )
             tr1, tr2 , conflict_zone, _ = new_groot.earliest_conflict()
             conflict_in_common_zones = (
                 set([tr1, tr2]) == set([priority_train, waiting_train])
                 and conflict_zone in common_zones
             )
     else:
-        new_groot = new_groot.make_train_wait(
-            waiting_train,
-            priority_train,
-            prev_station,
-            zone_to_free
-        )
+        if in_place:
+            new_groot.make_train_wait(
+                waiting_train,
+                priority_train,
+                prev_station,
+                zone_to_free,
+                in_place=True
+            )
+        else:
+            new_groot = new_groot.make_train_wait(
+                waiting_train,
+                priority_train,
+                prev_station,
+                zone_to_free
+            )
 
-    return new_groot
+    if not in_place:
+        return new_groot
