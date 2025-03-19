@@ -355,6 +355,7 @@ class Groot(object):
         else:
             groot_with_delay_added = copy.deepcopy(self)
         groot_with_delay_added._times_zones = None
+
         path = self.path(train)
         tvd = self.get_tvd(train, zone)
         idx = path.index(tvd)
@@ -443,47 +444,32 @@ class Groot(object):
         in_place: bool = False,
     ) -> Self | None:
 
-            if (self.ends_with_a_signal[self.get_tvd(priority_train, conflict_zone)]):
-                zone_to_free_priority = conflict_zone
-                zone_to_free_waiting = conflict_zone
-            else:
-                zone_to_free_priority = self.next_signal(priority_train, conflict_zone)
-                zone_to_free_waiting = self.next_signal(waiting_train, conflict_zone)
+        
+        if in_place:
+            new_groot = self
+        else:
+            new_groot = copy.deepcopy(self)
+        new_groot._times_zones = None
 
-            delay_zone_to_free = (
-                    self.times_zones[priority_train][zone_to_free_priority][1]
-                    - self.times_zones[waiting_train][zone_to_free_waiting][0]
-            )
-            delay_zone = (
-                    self.times_zones[priority_train][conflict_zone][1]
-                    - self.times_zones[waiting_train][conflict_zone][0]
-            )
-            delay=max(delay_zone_to_free, delay_zone)
 
-            if in_place:
-                new_groot = self
-                new_groot.add_delay(waiting_train, wait_at, delay, in_place=True)
-            else:      
-                new_groot =  self.add_delay(waiting_train, wait_at, delay, in_place=False)
+        delays = []
+        for zone in self.path_zones(waiting_train)[
+            self.path_zones(waiting_train).index(wait_at)
+            : self.path_zones(waiting_train).index(conflict_zone) +1
+        ]:
+            if zone in self.path_zones(priority_train):
+                delays.append(self.times_zones[priority_train][zone][1]
+                - self.times_zones[waiting_train][zone][0])
 
-            tr1, tr2, new_conflict_zone, _ = new_groot.earliest_conflict(priority_train, waiting_train)
-            if (
-                new_conflict_zone in self.path_zones(waiting_train)
-                and (
-                    self.path_zones(waiting_train).index(wait_at)
-                    <= self.path_zones(waiting_train).index(new_conflict_zone)
-                    < self.path_zones(waiting_train).index(conflict_zone)
-                )
-            ):
-                new_groot = self.add_delay(
-                    waiting_train,
-                    wait_at,
-                    self.times_zones[priority_train][new_conflict_zone][1]
-                    - self.times_zones[waiting_train][new_conflict_zone][0],
-                    in_place=in_place
-                )
-            if not in_place:
-                return new_groot
+        delay = max(delays)
+    
+        if in_place:
+            new_groot.add_delay(waiting_train, wait_at, delay, in_place=True)
+        else:      
+            new_groot = new_groot.add_delay(waiting_train, wait_at, delay, in_place=False)
+
+        if not in_place:
+            return new_groot
 
     @property
     def departure_times(self: Self) -> dict[str, float]:
