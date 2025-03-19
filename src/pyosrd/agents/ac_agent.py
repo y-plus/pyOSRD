@@ -57,7 +57,7 @@ def random_path(self: Self) -> nx.DiGraph:
             )
 
             if self.debug:
-                print(node,'->', new_node)
+                print(new_node)
 
             if info['valid']:
                 break
@@ -92,7 +92,6 @@ class ACAgent(GrootAgent):
          
         groot =  copy.deepcopy(self.disrupted_groot)
 
-
         self.tree = nx.DiGraph()
         self.tree.add_node(0, info={'done': False, 'valid': True})
         node = 0
@@ -119,7 +118,7 @@ class ACAgent(GrootAgent):
                 pheromone = 0 if (not info['valid']) or info['done'] else 1
             )
             if self.debug:
-                print(node,'->', new_node)
+                print(new_node)
             
             if not info['valid']:
                 action = 0
@@ -142,7 +141,7 @@ class ACAgent(GrootAgent):
                     pheromone =0 if (not info['valid']) or info['done'] else 1
                 )
                 if self.debug:
-                    print(node,'->', new_node)
+                    print(new_node)
                 
             if not info['valid']:
                 action = 1
@@ -166,7 +165,7 @@ class ACAgent(GrootAgent):
                 )
                 # 
                 if self.debug:
-                    print(node,'->', new_node)
+                    print(new_node)
             if not info['valid']:
                 raise ValueError('No interlocking solution found')
             done = info['done']       
