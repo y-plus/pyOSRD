@@ -30,23 +30,31 @@ def solve_conflict(
     ref: Groot,
     switch_order: bool = False,
     leave_station_asap: bool = True,
-    info: list[dict[str, str|float]] | None = None,
+    not_before: float = 0,
+    saved_times: list[dict[str, str|float]] | None = None,
     in_place: bool=False,
 ) -> Groot | None:
 
-    if info is not None:
-        info.append(copy.deepcopy(self.times))
+    if saved_times is not None:
+        saved_times.append(copy.deepcopy(self.times))
 
     train1, train2, conflict_zone, t = self.earliest_conflict()
 
     if not conflict_zone:
         return self
 
-    priority_train, waiting_train = ref.trains_order_in_zone(
-        train1,
-        train2,
-        conflict_zone
-    )
+    try:
+        priority_train, waiting_train = ref.trains_order_in_zone(
+            train1,
+            train2,
+            conflict_zone
+        )
+    except KeyError:    
+        priority_train, waiting_train = self.trains_order_in_zone(
+            train1,
+            train2,
+            conflict_zone
+        )
 
     opposite_directions = head_to_head(self, priority_train, waiting_train, conflict_zone)
 
@@ -55,6 +63,7 @@ def solve_conflict(
         # or
         # self.path(train1)[0] == self.path(train2)[0]
     )
+
     if switch_order and (not can_switch) and not opposite_directions:
         return None
    
@@ -99,6 +108,13 @@ def solve_conflict(
     else:
         new_groot = copy.deepcopy(self)
     new_groot._times_zones = None
+
+    if self.times_zones[waiting_train][prev_station][1] < not_before:
+        new_groot.times = {}
+        if in_place:
+            return
+        else:
+            return new_groot
     
     if opposite_directions:
         leave_station_asap = False
@@ -138,6 +154,7 @@ def solve_conflict(
                 zone_to_free,
                 in_place=True
             )
+            
         else:
             new_groot = new_groot.make_train_wait(
                 waiting_train,

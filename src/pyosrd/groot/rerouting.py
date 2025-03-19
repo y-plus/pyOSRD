@@ -10,11 +10,11 @@ def reroute_train_to_avoid_zone(
     train: str,
     zone: str,
     in_place: bool = False,
-    info: list[dict[str, str|float]] | None = None,
+    saved_times: list[dict[str, str|float]] | None = None,
 ) -> Groot | None:
 
-    if info is not None:
-        info.append(copy.deepcopy(self.times))
+    if saved_times is not None:
+        saved_times.append(copy.deepcopy(self.times))
 
     tvd_conflict = self.get_tvd(train, zone)
     next_station = self.next_station(train, zone)
@@ -54,7 +54,8 @@ def reroute_train_to_avoid_zone(
                 source, target = n1, n2
                 break
     if not path_found:
-        return None
+        self.times =  {}
+        return
 
     train_path = self.path(train)
     
@@ -236,9 +237,9 @@ def reroute_train_to_avoid_zone(
         if conflict_zone in zones_that_must_be_free and train in (tr1, tr2):
             subg = nx.subgraph(subg, [n for n in subg if n!=conflict_tvd])
         else:
-            if in_place:
-                self.times = rerouted_groot.times
-                self._times_zones = None
-                return
-            else:
+            if not in_place:
                 return rerouted_groot
+            self.times = rerouted_groot.times
+            return
+
+    self.times =  {}
