@@ -11,15 +11,18 @@ def evaluate_action(
     now: float = 0.,
 ) -> tuple[Groot, dict[str, str|float]]:
 
-
     train1, train2, zone, time = self.earliest_conflict()
     if not train1:
-        return self, {'done': True, 'valid': True, 'score': scorer(self, ref)}
-
+        return self, {
+            'done': True,
+            'valid': True,
+            'score': scorer(self, ref)
+        }
     try:
         train1, train2 = ref.trains_order_in_zone(train1, train2, zone)
     except KeyError:
         train1, train2 = self.trains_order_in_zone(train1, train2, zone)
+    
     info = {"action": a}
 
     match a:
@@ -47,7 +50,12 @@ def evaluate_action(
             priority_train = train1
             waiting_train = train2
             if not (wait_at := self.previous_station(waiting_train, zone)):
-                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+                return self, {
+                    **info,
+                    'done': True,
+                    'valid': False,
+                    'score': float('inf')
+                }
             r = self.make_train_wait(waiting_train, priority_train, wait_at, zone)
             _, _, _, t_new_conlict = r.earliest_conflict()
             done = t_new_conlict is None
@@ -67,8 +75,13 @@ def evaluate_action(
                 train2,
                 zone
             )
-            if not r:
-                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+            if r is None:
+                return self, {
+                    **info,
+                    'done': True,
+                    'valid': False,
+                    'score': float('inf') #scorer(self, ref)
+                }
             valid = True
             done = not r.has_conflicts()
             info['conflict_at'] = zone
@@ -85,12 +98,22 @@ def evaluate_action(
             waiting_train = train1
             cvg = self.previous_common_convergence(train1, train2, zone)
             if not cvg:
-                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+                return self, {
+                    **info,
+                    'done': True,
+                    'valid': False,
+                    'score': float('inf')
+                }
 
             wait_at = self.previous_signal(waiting_train, cvg)
 
             if self.times_zones[waiting_train][wait_at][1] < now:
-                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+                return self, {
+                    **info,
+                    'done': True,
+                    'valid': False,
+                    'score': float('inf')
+                }
 
             r = self.make_train_wait(waiting_train, priority_train, wait_at, zone)
             tr1, tr2, _, t_new_conlict = r.earliest_conflict()
@@ -111,14 +134,29 @@ def evaluate_action(
             cvg = self.previous_common_convergence(train1, train2, zone)
 
             if not cvg:
-                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+                return self, {
+                    **info,
+                    'done': True,
+                    'valid': False,
+                    'score': float('inf')
+                }
             
             if not (wait_at := self.previous_station(waiting_train, cvg)):
-                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
+                return self, {
+                    **info,
+                    'done': True,
+                    'valid': False,
+                    'score': float('inf')
+                }
             
             if self.times_zones[waiting_train][wait_at][1] < now:
-                return self, {**info, 'done': True, 'valid': False, 'score': scorer(self, ref)}
-
+               return self, {
+                    **info,
+                    'done': True,
+                    'valid': False,
+                    'score': float('inf')
+                }
+            
             r = self.make_train_wait(waiting_train, priority_train, wait_at, zone)
             _, _, _, t_new_conlict = r.earliest_conflict()
             done = t_new_conlict is None

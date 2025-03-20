@@ -241,5 +241,3 @@ def reroute_train_to_avoid_zone(
                 return rerouted_groot
             self.times = rerouted_groot.times
             return
-
-    self.times =  {}
