@@ -54,7 +54,6 @@ def reroute_train_to_avoid_zone(
                 source, target = n1, n2
                 break
     if not path_found:
-        self.times =  {}
         return
 
     train_path = self.path(train)
@@ -237,7 +236,12 @@ def reroute_train_to_avoid_zone(
         if conflict_zone in zones_that_must_be_free and train in (tr1, tr2):
             subg = nx.subgraph(subg, [n for n in subg if n!=conflict_tvd])
         else:
+
             if not in_place:
+                rerouted_groot._times_zones = None
                 return rerouted_groot
             self.times = rerouted_groot.times
             return
+
+    if not in_place:
+        return rerouted_groot
