@@ -5,6 +5,7 @@ import pytest
 from pyosrd import OSRD
 
 from .groot.fixtures import *
+from .groot2.fixtures import *
 from .agents.fixtures import *
 
 
