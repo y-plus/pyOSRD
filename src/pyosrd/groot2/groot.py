@@ -6,7 +6,6 @@ from typing_extensions import Self
 
 import matplotlib.pyplot as plt
 import networkx as nx
-import pandas as pd
 
 from matplotlib.axes._axes import Axes
 
@@ -61,17 +60,6 @@ class Groot(object):
         if not hasattr(self, '_tvds_graph'):
             self._tvds_graph = tvds_graph(self.zones, self.ends_with_a_signal)
         return self._tvds_graph
-
-    def to_df(self: Self) -> pd.DataFrame:
-        df = pd.DataFrame(
-            columns=pd.MultiIndex.from_product(
-                [self.trains, ['s', 'e']]
-            ),
-            index=self.zones.values()
-        )
-        for train in self.trains:
-            df[train] = pd.DataFrame(self.times_zones[train]).T.rename(columns={0: 's', 1:'e'})
-        return df.drop_duplicates()
 
     def plot(
         self: Self,

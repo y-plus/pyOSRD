@@ -10,7 +10,7 @@ from pyosrd.groot2 import from_sim
 
 
 @pytest.fixture
-def groot2_1train():
+def groot2_1train() -> Groot:
     g = Groot()
 
     g.zones = {'A': 'A', 'B': 'B', 'C': 'C'}
@@ -45,7 +45,7 @@ def groot2_1train():
 
 
 @pytest.fixture
-def groot2_2trains():
+def groot2_2trains() -> Groot:
     g = Groot()
 
     g.zones = {'A': 'A', 'B': 'B', 'C': 'C'}
@@ -90,7 +90,7 @@ def groot2_2trains():
 
 
 @pytest.fixture(scope='session')
-def groot2_vu_alternate():
+def groot2_vu_alternate() -> Groot:
     sim = OSRD(
         dir='voie_unique_alternate',
         simulation="voie_unique_circulations",
@@ -106,7 +106,7 @@ def groot2_vu_alternate():
     
 
 @pytest.fixture(scope='session')
-def groot2_vu_following():
+def groot2_vu_following() -> Groot:
     sim = OSRD(
         dir='voie_unique_following',
         simulation="voie_unique_circulations",
@@ -121,7 +121,7 @@ def groot2_vu_following():
     
 
 @pytest.fixture(scope='session')
-def groot2_crossing():
+def groot2_crossing() -> Groot:
     sim = OSRD(
         dir='voie_unique_crossing',
         simulation="voie_unique_circulations",
@@ -139,7 +139,7 @@ def groot2_crossing():
    
 
 @pytest.fixture(scope='session')
-def groot2_reroute():
+def groot2_reroute() -> Groot:
     sim = OSRD(
         dir='reroute',
         simulation="c1yy3yy1_3trains",

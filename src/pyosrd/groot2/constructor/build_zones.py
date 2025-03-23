@@ -118,7 +118,11 @@ def diverging_release_detectors_in_route(self, route_id: str) -> set[str]:
     return zone_delimiters
 
 
-def build_zones(sim: OSRD):
+def build_zones(sim: OSRD) -> tuple[
+    dict[str, str], # zones
+    list[str], # stations
+    dict[str, bool] # ends_with_a_signal
+]:
 
     points = sim.points_on_track_sections()
     switches_ids = [s['id'] for s in sim.switches]
