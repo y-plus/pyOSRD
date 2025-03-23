@@ -13,8 +13,6 @@ from pyosrd.groot.solve_conflict import solve_conflict
 from pyosrd.groot.rerouting import reroute_train_to_avoid_zone
 
 
-
-
 def evaluate_action(
     groot: Groot,
     ref_groot: Groot,
@@ -248,17 +246,22 @@ class ACOAgent(GrootAgent):
         _, groot = interlocking_path(self, '_')
         return groot
 
+    @property
+    def now(self: Self) -> float:
+        now = 0
+        for train in self.ref_groot.trains:
+            for tvd, (t1, t2) in self.ref_groot.times[train].items():
+                if self.disrupted_groot.times[train][tvd] != (t1, t2):
+                    now = t1
+                    break
+        return now
+
     def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
         
         if not self.disrupted_groot.has_conflicts():
             return self.disrupted_groot
     
-        self.now = 0
-        for train in self.ref_groot.trains:
-            for tvd, (t1, t2) in self.ref_groot.times[train].items():
-                if self.disrupted_groot.times[train][tvd] != (t1, t2):
-                    self.now = t1
-                    break
+
 
         self.tree = nx.DiGraph()
         self.tree.add_node('_', info={'done': False, 'valid': True}, pheromone=1)
