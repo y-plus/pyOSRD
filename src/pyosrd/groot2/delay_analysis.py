@@ -1,8 +1,8 @@
 import numpy as np
 
 from pyosrd.utils import hour_to_seconds, seconds_to_hour
-from pyosrd.groot import Groot
-from pyosrd.groot.compare import difference_departures_per_zone
+from .groot import Groot
+from .compare import difference_departures_per_zone
 
 
 def interpolate_entries(

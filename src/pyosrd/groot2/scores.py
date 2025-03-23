@@ -1,4 +1,4 @@
-from pyosrd.groot import Groot
+from .groot import Groot
 
 def sum_delays_at_end(g: Groot, ref: Groot) -> float:
     return sum(

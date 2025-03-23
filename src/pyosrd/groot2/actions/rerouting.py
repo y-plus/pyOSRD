@@ -3,7 +3,7 @@ import copy
 import networkx as nx
 
 from pyosrd.infra.distances import distance_between_points
-from .groot import Groot, GrootTimes
+from ..groot import Groot, GrootTimes
 
 def reroute_train_to_avoid_zone(
     self: Groot,

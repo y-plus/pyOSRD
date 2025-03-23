@@ -2,7 +2,7 @@ import copy
 import pytest
 
 from pyosrd.groot2 import Groot
-from pyosrd.groot2.solve_conflict import solve_conflict
+from pyosrd.groot2.actions.solve_conflict import solve_conflict
 
 
 class TestGrootSolveCOnflict:

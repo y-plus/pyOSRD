@@ -1,6 +1,6 @@
 import itertools
 import math
-from pyosrd.groot import Groot
+from .groot import Groot
 
 
 def difference_durations(g1: Groot, g2: Groot) -> dict[str, dict[str, float]]:

@@ -1,7 +1,7 @@
 import copy
 
 from pyosrd.groot2 import Groot
-from pyosrd.groot2.rerouting import reroute_train_to_avoid_zone
+from pyosrd.groot2.actions.rerouting import reroute_train_to_avoid_zone
 
 
 def test_rerouting( groot2_reroute: Groot) -> None:

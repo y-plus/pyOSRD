@@ -1,5 +1,5 @@
 import copy
-from .groot import Groot, GrootTimes
+from ..groot import Groot, GrootTimes
 
 
 def head_to_head(

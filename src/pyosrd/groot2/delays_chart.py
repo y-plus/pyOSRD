@@ -1,9 +1,9 @@
 import plotly.graph_objects as go
 
 from pyosrd.utils import seconds_to_hour, hour_to_seconds
-from pyosrd.groot import Groot
-from pyosrd.groot.compare import difference_departures_per_zone
-from pyosrd.groot.delay_analysis import merge_time_entries, \
+from .groot import Groot
+from .compare import difference_departures_per_zone
+from .delay_analysis import merge_time_entries, \
     build_dict_difference_departures_per_departure_times, \
     get_latest_non_zero_delay_for_each_train, \
     get_earliest_non_zero_delay_for_each_train, \
@@ -20,23 +20,32 @@ def plot_groot_delays(
     dmax: float | str | None = None,
     ref_fig: go.Figure | None = None,
 ) -> go.Figure:
-    """Build a figure showing the cumulated delay of the disrupted groot
+    """Build a plotly figure showing the cumulated delay of the disrupted groot
 
     Parameters
     ----------
     disrupted : Groot
         The disrupted or dispatched groot.
     ref : Groot
-        THe reference groot.
+        The reference groot.
     all_trains : bool
-        true if we want to keep delays for all trains or only for
-        trains active at each time point (delay will end at 0 if false)
+        True if we want to keep delays for all trains or only for
+        trains active at each time point (delay will end at 0 if False)
+    tmin : float | str | None, optional
+        Min value on x-axis in seconds or in 'HH:mm:ss' format, by default None
+    tmax : float | str | None, optional
+        Max value on x-axis in seconds or in 'HH:mm:ss' format, , by default None
+    dmax : float | str | None, optional
+        Max value on y-axis in seconds or in 'HH:mm:ss' format, , by default None
+    ref_fig : go.Figure | None, optional
+        Another plotly figure to replicate its axis, by default None
 
     Returns
     -------
     go.Figure
         A figure showing the cumulated delays of the disrupted groot.
     """
+
     diff_departure_time_per_zone = difference_departures_per_zone(
         disrupted,
         ref
