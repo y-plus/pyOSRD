@@ -90,9 +90,13 @@ def solve_conflict(
         else:
             break
 
-    zone_to_free = common_zones[-1]
+    if not common_zones:
+        zone_to_free = conflict_zone
+    else:
+        zone_to_free = common_zones[-1]
 
-    prev_station = self.previous_station(waiting_train, zone)
+
+    prev_station = self.previous_station(waiting_train, zone_to_free)
     if prev_station is None:
         prev_station = self.path_zones(waiting_train)[0]
     if prev_station == conflict_zone:

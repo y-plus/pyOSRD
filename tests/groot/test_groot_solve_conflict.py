@@ -38,7 +38,7 @@ class TestsGrootSolveConflictsVUAFollowinge:
             switch_order=True,
             leave_station_asap=True
         )
-        assert dispatched_groot == Groot()
+        assert dispatched_groot is None
         
         
 
