@@ -49,25 +49,6 @@ def test_groot2_to_df(groot2_2trains):
     assert_frame_equal(df, expected)
 
 
-def test_groot2_add_delay_start(groot2_1train):
-    delayed = groot2_1train.add_delay('train1', 'A', 1)
-    expected_times = {
-        'A': (1, 4),
-        'B': (3.5, 6.5),
-        'C': (6, 9),
-    }
-    assert delayed.times['train1'] == expected_times
-
-def test_groot2_add_delay(groot2_1train):
-    delayed = groot2_1train.add_delay('train1', 'B', 1)
-    expected_times = {
-        'A': (0, 3),
-        'B': (2.5, 6.5),
-        'C': (6, 9),
-    }
-    assert delayed.times['train1'] == expected_times
-
-
 def test_groot2_departure_times(groot2_2trains):
     assert groot2_2trains.departure_times == {'train1': 0, 'train2': 4}
 
@@ -91,8 +72,8 @@ def test_groot2_previous_train(groot2_2trains):
 
 
 def test_groot2_trains_order_in_zone(groot2_2trains):
-        assert groot2_2trains.trains_order_in_zone('train2', 'train1', 'B') ==\
-            ('train1', 'train2')
+    assert groot2_2trains.trains_order_in_zone('train2', 'train1', 'B') ==\
+        ('train1', 'train2')
 
 
 def test_groot2_previous_zones(groot2_1train):

@@ -99,7 +99,8 @@ def groot_vu_alternate():
             'num_blocks_between_stations': 6,
             'num_trains': 3,
             'alternate': True,
-        })
+        }
+    )
     shutil.rmtree('voie_unique_alternate', ignore_errors=True)
     return from_sim(sim)
     
@@ -113,13 +114,14 @@ def groot_vu_following():
             "num_stations":3,
             'num_blocks_between_stations': 6,
             'num_trains': 2,
-        })
+        }
+    )
     shutil.rmtree('voie_unique_following', ignore_errors=True)
     return from_sim(sim)
     
 
 @pytest.fixture(scope='session')
-def groot_crossing():
+def groot_vu_crossing():
     sim = OSRD(
         dir='voie_unique_crossing',
         simulation="voie_unique_circulations",
@@ -129,7 +131,8 @@ def groot_crossing():
             'num_trains': 4,
             'alternate': True,
             'crossing': True
-        })
+        }
+    )
     shutil.rmtree('voie_unique_crossing', ignore_errors=True)
     return from_sim(sim)
-    
+ 

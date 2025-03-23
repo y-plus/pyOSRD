@@ -142,13 +142,13 @@ class TestsGrootSolveConflictsInverseDirections:
     @pytest.mark.parametrize("delay", [300, 600])
     def test_delay_A_interlocking(
         self,
-        groot_crossing: Groot, 
+        groot_vu_crossing: Groot, 
         delay: float
     ) -> None:
-        disrupted_groot = groot_crossing.add_delay('train00', 'A/V1', delay)
+        disrupted_groot = groot_vu_crossing.add_delay('train00', 'A/V1', delay)
         dispatched_groot = solve_conflict(
             disrupted_groot,
-            ref=groot_crossing,
+            ref=groot_vu_crossing,
             switch_order=False,
             leave_station_asap=False
         )
@@ -163,7 +163,7 @@ class TestsGrootSolveConflictsInverseDirections:
         
         assert dispatched_groot == solve_conflict(
             disrupted_groot,
-            ref=groot_crossing,
+            ref=groot_vu_crossing,
             switch_order=False,
             leave_station_asap=True
         )
@@ -171,13 +171,13 @@ class TestsGrootSolveConflictsInverseDirections:
     @pytest.mark.parametrize("delay", [300, 600])
     def test_delay_A_reorder(
         self,
-        groot_crossing: Groot, 
+        groot_vu_crossing: Groot, 
         delay: float
     ) -> None:
-        disrupted_groot = groot_crossing.add_delay('train00', 'A/V1', delay)
+        disrupted_groot = groot_vu_crossing.add_delay('train00', 'A/V1', delay)
         dispatched_groot = solve_conflict(
             disrupted_groot,
-            ref=groot_crossing,
+            ref=groot_vu_crossing,
             switch_order=True,
             leave_station_asap=False
         )
@@ -192,7 +192,7 @@ class TestsGrootSolveConflictsInverseDirections:
         
         assert dispatched_groot == solve_conflict(
             disrupted_groot,
-            ref=groot_crossing,
+            ref=groot_vu_crossing,
             switch_order=True,
             leave_station_asap=True
         )
@@ -200,13 +200,13 @@ class TestsGrootSolveConflictsInverseDirections:
     @pytest.mark.parametrize("delay", [300, 600, 900])
     def test_delay_B_interlocking(
         self,
-        groot_crossing: Groot, 
+        groot_vu_crossing: Groot, 
         delay: float
     ) -> None:
-        disrupted_groot = groot_crossing.add_delay('train00', 'B/V1', delay)
+        disrupted_groot = groot_vu_crossing.add_delay('train00', 'B/V1', delay)
         dispatched_groot = solve_conflict(
             disrupted_groot,
-            ref=groot_crossing,
+            ref=groot_vu_crossing,
             switch_order=False,
             leave_station_asap=False
         )
@@ -217,7 +217,7 @@ class TestsGrootSolveConflictsInverseDirections:
             'train00',
             'train03',
             'C/V1'
-        ) == groot_crossing.trains_order_in_zone(
+        ) == groot_vu_crossing.trains_order_in_zone(
             'train00',
             'train03',
             'C/V1'
@@ -225,7 +225,7 @@ class TestsGrootSolveConflictsInverseDirections:
         
         assert dispatched_groot == solve_conflict(
             disrupted_groot,
-            ref=groot_crossing,
+            ref=groot_vu_crossing,
             switch_order=False,
             leave_station_asap=True
         )
@@ -233,13 +233,13 @@ class TestsGrootSolveConflictsInverseDirections:
     @pytest.mark.parametrize("delay", [300, 600, 900])
     def test_delay_B_reorder(
         self,
-        groot_crossing: Groot, 
+        groot_vu_crossing: Groot, 
         delay: float
     ) -> None:
-        disrupted_groot = groot_crossing.add_delay('train00', 'B/V1', delay)
+        disrupted_groot = groot_vu_crossing.add_delay('train00', 'B/V1', delay)
         dispatched_groot = solve_conflict(
             disrupted_groot,
-            ref=groot_crossing,
+            ref=groot_vu_crossing,
             switch_order=True,
             leave_station_asap=False
         )
@@ -250,7 +250,7 @@ class TestsGrootSolveConflictsInverseDirections:
             'train00',
             'train03',
             'C/V1'
-        ) == groot_crossing.trains_order_in_zone(
+        ) == groot_vu_crossing.trains_order_in_zone(
             'train00',
             'train03',
             'C/V1'
@@ -258,7 +258,7 @@ class TestsGrootSolveConflictsInverseDirections:
         
         assert dispatched_groot == solve_conflict(
             disrupted_groot,
-            ref=groot_crossing,
+            ref=groot_vu_crossing,
             switch_order=True,
             leave_station_asap=True
         )

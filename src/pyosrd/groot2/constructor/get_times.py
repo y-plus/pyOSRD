@@ -1,5 +1,5 @@
 # from pyosrd import OSRD
-
+from ..groot import GrootTimes, GrootDurations
 
 def _route_tvds(
     sim,
@@ -41,10 +41,7 @@ def _route_tvds(
 def get_times(
     sim,
     zones: dict[str, str],
-) -> tuple[
-    dict[str, dict[str, tuple[float, float]]],
-    dict[str, dict[str, float]],
-]:
+) -> tuple[GrootTimes, GrootDurations]:
 
     times = dict()
     min_durations = dict()

@@ -3,18 +3,15 @@ import copy
 import networkx as nx
 
 from pyosrd.infra.distances import distance_between_points
-from pyosrd.groot import Groot
+from .groot import Groot, GrootTimes
 
 def reroute_train_to_avoid_zone(
     self: Groot,
     train: str,
     zone: str,
-    in_place: bool = False,
-    saved_times: list[dict[str, str|float]] | None = None,
-) -> Groot | None:
+) -> GrootTimes | None:
 
-    if saved_times is not None:
-        saved_times.append(copy.deepcopy(self.times))
+    original_times = {train: copy.deepcopy(self.times[train])}
 
     tvd_conflict = self.get_tvd(train, zone)
     next_station = self.next_station(train, zone)
@@ -73,7 +70,6 @@ def reroute_train_to_avoid_zone(
 
         
         rerouted_groot = copy.deepcopy(self)
-        rerouted_groot._times_zones = None
         rerouted_groot.times[train] = {
             k: v
             for k, v in rerouted_groot.times[train].items()
@@ -236,12 +232,6 @@ def reroute_train_to_avoid_zone(
         if conflict_zone in zones_that_must_be_free and train in (tr1, tr2):
             subg = nx.subgraph(subg, [n for n in subg if n!=conflict_tvd])
         else:
-
-            if not in_place:
-                rerouted_groot._times_zones = None
-                return rerouted_groot
             self.times = rerouted_groot.times
-            return
+            return original_times
 
-    if not in_place:
-        return rerouted_groot

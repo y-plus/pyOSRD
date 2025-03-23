@@ -1,5 +1,5 @@
 # from pyosrd import OSRD
-from .groot import Groot
+from ..groot import Groot
 from .build_zones import build_zones, zones_graph, tvds_graph
 from .get_times import get_times
 
