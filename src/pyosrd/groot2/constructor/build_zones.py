@@ -1,5 +1,8 @@
 import networkx as nx
 
+from pyosrd import OSRD
+
+
 SWITCH_EXIT = {
     'link': {'STATIC': {'A': 'B', 'B': 'A'}},
     'point_switch': {
@@ -20,19 +23,19 @@ SWITCH_EXIT = {
     }
 }
 
-def switches_and_detectors_on_route(self, route_id: str):
+def switches_and_detectors_on_route(sim: OSRD, route_id: str):
 
-    route = next(r for r in self.infra['routes'] if r['id'] == route_id)
+    route = next(r for r in sim.infra['routes'] if r['id'] == route_id)
 
     curr_track = next(
         p['track']
-        for p in self.infra['detectors'] + self.infra['buffer_stops']
+        for p in sim.infra['detectors'] + sim.infra['buffer_stops']
         if p['id'] == route['entry_point']['id']
     )
 
     SWITCHES_TRACKS = {
         s['id']: [e['track'] for e in s['ports'].values()]
-        for s in self.infra['switches']
+        for s in sim.infra['switches']
     }
 
     not_visited = set(route['switches_directions'].keys())
@@ -42,7 +45,7 @@ def switches_and_detectors_on_route(self, route_id: str):
     while not_visited:
         sw = next(
             switch
-            for switch in self.infra['switches']
+            for switch in sim.infra['switches']
             if curr_track in SWITCHES_TRACKS[switch['id']]
             and switch['id'] in not_visited
         )
@@ -65,7 +68,7 @@ def switches_and_detectors_on_route(self, route_id: str):
 
             release_detectors = [
                 detector | {'type': 'detector'}
-                for detector in self.infra['detectors']
+                for detector in sim.infra['detectors']
                 if detector['id'] in route['release_detectors']
                 and detector['track'] == curr_track
             ]
@@ -90,7 +93,7 @@ def switches_and_detectors_on_route(self, route_id: str):
         track_sections.append({'id': curr_track, 'direction': direction})
         release_detectors = [
             detector | {'type': 'detector'}
-            for detector in self.infra['detectors']
+            for detector in sim.infra['detectors']
             if detector['id'] in route['release_detectors']
             and detector['track'] == curr_track
         ]
@@ -115,17 +118,17 @@ def diverging_release_detectors_in_route(self, route_id: str) -> set[str]:
     return zone_delimiters
 
 
-def build_zones(sim):
+def build_zones(sim: OSRD):
 
     points = sim.points_on_track_sections()
     switches_ids = [s['id'] for s in sim.switches]
-    def route_elements(self, route_id):
 
-        
-        route = next(r for r in self.infra['routes'] if r['id']==route_id)
+    def route_elements(s: OSRD, route_id):
+
+        route = next(r for r in s.infra['routes'] if r['id']==route_id)
         previous = ''
         elements = []
-        for t in self.route_track_sections(route_id):
+        for t in s.route_track_sections(route_id):
             for p in (points[t['id']] if t['direction']=='START_TO_STOP' else points[t['id']][::-1]):
                 if p.id in (
                     route['release_detectors']
