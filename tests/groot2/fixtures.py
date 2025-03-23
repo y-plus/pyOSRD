@@ -13,34 +13,34 @@ from pyosrd.groot2 import from_sim
 def groot2_1train() -> Groot:
     g = Groot()
 
-    g.zones = {'A': 'A', 'B': 'B', 'C': 'C'}
+    g.zones = {'A->B': 'A->B', 'B->C': 'B->C', 'C->D': 'C->D'}
     g.times = {
         'train1': {
-            'A': (0, 3),
-            'B': (2.5, 5.5),
-            'C': (5, 8),
+            'A->B': (0, 3),
+            'B->C': (2.5, 5.5),
+            'C->D': (5, 8),
         },
     }
     g._zones_graph = nx.DiGraph()
     g._zones_graph.add_edges_from(
         [
-            ('A', 'B'),
-            ('B', 'C'),
+            ('A->B', 'B->C'),
+            ('B->C', 'C->D'),
         ]
     )
     g.min_durations = {
         'train1': {
-            'A': 2,
-            'B': 2,
-            'C': 2,
+            'A->B': 2,
+            'B->C': 2,
+            'C->D': 2,
         },
     }
     g.ends_with_a_signal = {
-            'A': True,
-            'B': True,
-            'C': True,
+            'A->B': True,
+            'B->C': True,
+            'C->D': True,
     }
-    g.stations = ['A', 'C']
+    g.stations = ['A->B', 'C->D']
     return g
 
 
@@ -48,44 +48,44 @@ def groot2_1train() -> Groot:
 def groot2_2trains() -> Groot:
     g = Groot()
 
-    g.zones = {'A': 'A', 'B': 'B', 'C': 'C'}
+    g.zones = {'A->B': 'A->B', 'B->C': 'B->C', 'C->D': 'C->D'}
     g.times = {
         'train1': {
-            'A': (0, 3),
-            'B': (2.5, 5.5),
-            'C': (5, 8),
+            'A->B': (0, 3),
+            'B->C': (2.5, 5.5),
+            'C->D': (5, 8),
         },
         'train2': {
-            'A': (4, 7),
-            'B': (6.5, 9.5),
-            'C': (9, 12),
+            'A->B': (4, 7),
+            'B->C': (6.5, 9.5),
+            'C->D': (9, 12),
         },
     }
     g._zones_graph = nx.DiGraph()
     g._zones_graph.add_edges_from(
         [
-            ('A', 'B'),
-            ('B', 'C'),
+            ('A->B', 'B->C'),
+            ('B->C', 'C->D'),
         ]
     )
     g.min_durations = {
         'train1': {
-            'A': 2,
-            'B': 2,
-            'C': 2,
+            'A->B': 2,
+            'B->C': 2,
+            'C->D': 2,
         },
         'train2': {
-            'A': 2,
-            'B': 2,
-            'C': 2,
+            'A->B': 2,
+            'B->C': 2,
+            'C->D': 2,
         },
     }
     g.ends_with_a_signal = {
-            'A': True,
-            'B': True,
-            'C': True,
+            'A->B': True,
+            'B->C': True,
+            'C->D': True,
     }
-    g.stations = ['A', 'C']
+    g.stations = ['A->B', 'C->D']
     return g
 
 
