@@ -4,6 +4,8 @@ import networkx as nx
 
 from pyosrd.infra.distances import distance_between_points
 from ..groot import Groot, GrootTimes
+from .utils import is_a_convergence
+
 
 def reroute_train_to_avoid_zone(
     groot: Groot,
@@ -50,7 +52,26 @@ def reroute_train_to_avoid_zone(
             if path_found:= nx.has_path(subg, source=n1, target=n2):
                 source, target = n1, n2
                 break
+    # if zone == groot.path_zones(train)[0]:
+    #     sp = nx.shortest_path(graph, tvd_conflict, tvd_next_next_station)
+    #     for tvd in sp:
+    #         if is_a_convergence(groot, tvd):
+    #             break
+    #     other_tvds_in_zone = [
+    #         t for t in groot.zones
+    #         if t != tvd and groot.zones[t] == groot.zones[tvd]
+    #         and t.split('->')[1] == tvd.split('->')[1]
+    #     ]
+    #     print(other_tvds_in_zone)
+    #     for tvd in nx.ancestors(graph, other_tvds_in_zone[0]):
+    #         if not is_a_convergence(groot, tvd):
+    #             print(groot.zones[tvd])
+    #         source =    tvd
+    #         target = tvd_next_station or tvd_next_next_station
+    #         print(path_found:= nx.has_path(graph, source, target))
+        
     if not path_found:
+        print('No path found')
         return
 
     train_path = groot.path(train)
