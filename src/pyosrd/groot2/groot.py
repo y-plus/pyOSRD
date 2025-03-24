@@ -28,6 +28,9 @@ class Groot(object):
     times: GrootTimes = field(default_factory=dict)
     min_durations: GrootDurations = field(default_factory=dict)
 
+    def clone(self:Self) -> Self:
+        return copy.deepcopy(self)
+
     @property
     def trains(self: Self) -> list[str]:
         return [train for train in self.times]
@@ -94,9 +97,16 @@ class Groot(object):
 
 
         if train:
-            t1 = self.times_zones[train][self.path_zones(train)[0]][0]
-            t2 = self.times_zones[train][self.path_zones(train)[-1]][1]
-            times_zones = self.between(t1, t2).times_zones
+            t_min = self.times_zones[train][self.path_zones(train)[0]][0]
+            t_max = self.times_zones[train][self.path_zones(train)[-1]][1]
+            times_zones = {
+            train: {
+                zone: (max(t_min, t[0]), min(t_max, t[1]))
+                for zone, t in data.items()
+                if t[1] > t_min and t[0] < t_max
+            }
+            for train, data in self.times_zones.items()
+        }
         else:
             times_zones = self.times_zones
 
@@ -126,7 +136,7 @@ class Groot(object):
                     color=colors[tr]
                 )
         if train:
-             ax.set_xlim(t1, t2)
+             ax.set_xlim(t_min, t_max)
         else:
             ax.set_xlim(
                 min(self.departure_times.values()),
@@ -357,9 +367,8 @@ class Groot(object):
     def set_times(
         self: Self,
         times: GrootTimes,
-        train: str,
     ) -> GrootTimes:
         
-        modified_times = {train : copy.deepcopy(self.times[train])}
-        self.times[train] = times[train]
+        modified_times = copy.deepcopy(self.times)
+        self.times.update(times)
         return modified_times
