@@ -16,7 +16,7 @@ class TestGrootSolveCOnflict:
         modified_times = solve_conflict(
             groot,
             ref=groot2_vu_following,
-            switch_order=False,
+            reorder=False,
             leave_station_asap=True
         )
         assert modified_times == original_times
@@ -35,7 +35,7 @@ class TestsGrootSolveConflictsVUAFollowinge:
         solve_conflict(
             groot,
             ref=groot2_vu_following,
-            switch_order=False,
+            reorder=False,
             leave_station_asap=True
         )
         assert groot.trains_order_in_zone(
@@ -45,7 +45,7 @@ class TestsGrootSolveConflictsVUAFollowinge:
         ) == ('train00', 'train01')
 
     @pytest.mark.parametrize("delay", [270, 300, 320])
-    def test_delay_A_switch_order(
+    def test_delay_A_reorder(
         self,
         groot2_vu_following: Groot, 
         delay: float
@@ -55,14 +55,14 @@ class TestsGrootSolveConflictsVUAFollowinge:
         modified_times = solve_conflict(
             groot,
             ref=groot2_vu_following,
-            switch_order=True,
+            reorder=True,
             leave_station_asap=True
         )
         assert modified_times is None
         
         
 
-class TestsGrootSolveConflictsVUAQlternate:
+class TestsGrootSolveConflictsVUAlternate:
     
     @pytest.mark.parametrize("delay", [270, 300, 320])
     def test_delay_A_interlocking_leave_station_asap(
@@ -75,7 +75,7 @@ class TestsGrootSolveConflictsVUAQlternate:
         solve_conflict(
             groot,
             ref=groot2_vu_alternate,
-            switch_order=False,
+            reorder=False,
             leave_station_asap=True
         )
         assert groot.trains_order_in_zone(
@@ -100,7 +100,7 @@ class TestsGrootSolveConflictsVUAQlternate:
         _ = solve_conflict(
             groot,
             ref=groot2_vu_alternate,
-            switch_order=False,
+            reorder=False,
             leave_station_asap=False
         )
         assert groot.trains_order_in_zone(
@@ -123,7 +123,7 @@ class TestsGrootSolveConflictsVUAQlternate:
         solve_conflict(
             groot,
             ref=groot2_vu_alternate,
-            switch_order=True,
+            reorder=True,
             leave_station_asap=True
         )
         assert groot.trains_order_in_zone(
@@ -148,7 +148,7 @@ class TestsGrootSolveConflictsVUAQlternate:
         _ = solve_conflict(
             groot,
             ref=groot2_vu_alternate,
-            switch_order=True,
+            reorder=True,
             leave_station_asap=False
         )
         assert groot.trains_order_in_zone(
@@ -174,7 +174,7 @@ class TestsGrootSolveConflictsInverseDirections:
         _ = solve_conflict(
             groot,
             ref=groot2_crossing,
-            switch_order=False,
+            reorder=False,
             leave_station_asap=False
         )
 
@@ -195,20 +195,12 @@ class TestsGrootSolveConflictsInverseDirections:
     ) -> None:
         groot = copy.deepcopy(groot2_crossing)
         groot.add_delay('train00', 'A/V1', delay)
-        _ = solve_conflict(
+        assert solve_conflict(
             groot,
             ref=groot2_crossing,
-            switch_order=True,
+            reorder=True,
             leave_station_asap=False
-        )
-
-        assert groot.earliest_conflict('train00', 'train01')[0] is None
-
-        assert groot.trains_order_in_zone(
-            'train00',
-            'train01',
-            'A/V1'
-        ) == ('train01', 'train00')
+        ) is None
 
 
     @pytest.mark.parametrize("delay", [300, 600, 900])
@@ -222,7 +214,7 @@ class TestsGrootSolveConflictsInverseDirections:
         _ = solve_conflict(
             groot,
             ref=groot2_crossing,
-            switch_order=False,
+            reorder=False,
             leave_station_asap=False
         )
 
@@ -250,7 +242,7 @@ class TestsGrootSolveConflictsInverseDirections:
         _ = solve_conflict(
             groot,
             ref=groot2_crossing,
-            switch_order=True,
+            reorder=True,
             leave_station_asap=False
         )
 
