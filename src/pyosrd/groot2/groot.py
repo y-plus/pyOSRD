@@ -372,3 +372,26 @@ class Groot(object):
         modified_times = copy.deepcopy(self.times)
         self.times.update(times)
         return modified_times
+
+
+    def add_delay(
+        self: Self,
+        train: str,
+        zone: str,
+        delay: float,
+    ) -> GrootTimes:
+        
+        modified_times = {train : copy.deepcopy(self.times[train])}
+
+        path = self.path(train)
+        tvd = self.get_tvd(train, zone)
+        idx = path.index(tvd)
+        for i, zone in enumerate(path[idx:]):
+            self.times[train][zone] = (
+                self.times[train][zone][0] + delay,
+                self.times[train][zone][1] + delay
+            ) if i !=0  else (
+                self.times[train][zone][0],
+                self.times[train][zone][1] + delay
+            )
+        return modified_times

@@ -3,13 +3,13 @@ import pytest
 
 from pyosrd.groot2 import Groot
 from pyosrd.groot2.actions.solve_conflict import solve_conflict
-from pyosrd.groot2.exploitation.modifications import add_delay
+
 
 class TestGrootSolveCOnflict:
    
     def test_returns_original_times(self, groot2_vu_following) -> None:
         groot = copy.deepcopy(groot2_vu_following)
-        add_delay(groot, 'train00', 'A/V1', 300)
+        groot.add_delay('train00', 'A/V1', 300)
         original_times = {
             'train01': copy.deepcopy(groot2_vu_following.times['train01'])
         }
@@ -31,7 +31,7 @@ class TestsGrootSolveConflictsVUAFollowinge:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_vu_following)
-        add_delay(groot, 'train00', 'A/V1', delay)
+        groot.add_delay('train00', 'A/V1', delay)
         solve_conflict(
             groot,
             ref=groot2_vu_following,
@@ -51,7 +51,7 @@ class TestsGrootSolveConflictsVUAFollowinge:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_vu_following)
-        add_delay(groot, 'train00', 'A/V1', delay)
+        groot.add_delay('train00', 'A/V1', delay)
         modified_times = solve_conflict(
             groot,
             ref=groot2_vu_following,
@@ -71,7 +71,7 @@ class TestsGrootSolveConflictsVUAQlternate:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_vu_alternate)
-        add_delay(groot, 'train00', 'A/V1', delay)
+        groot.add_delay('train00', 'A/V1', delay)
         solve_conflict(
             groot,
             ref=groot2_vu_alternate,
@@ -96,7 +96,7 @@ class TestsGrootSolveConflictsVUAQlternate:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_vu_alternate)
-        add_delay(groot, 'train00', 'A/V1', delay)
+        groot.add_delay('train00', 'A/V1', delay)
         _ = solve_conflict(
             groot,
             ref=groot2_vu_alternate,
@@ -119,7 +119,7 @@ class TestsGrootSolveConflictsVUAQlternate:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_vu_alternate)
-        add_delay(groot, 'train00', 'A/V1', delay)
+        groot.add_delay('train00', 'A/V1', delay)
         solve_conflict(
             groot,
             ref=groot2_vu_alternate,
@@ -144,7 +144,7 @@ class TestsGrootSolveConflictsVUAQlternate:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_vu_alternate)
-        add_delay(groot, 'train00', 'A/V1', delay)
+        groot.add_delay('train00', 'A/V1', delay)
         _ = solve_conflict(
             groot,
             ref=groot2_vu_alternate,
@@ -170,7 +170,7 @@ class TestsGrootSolveConflictsInverseDirections:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_crossing)
-        add_delay(groot, 'train00', 'A/V1', delay)
+        groot.add_delay('train00', 'A/V1', delay)
         _ = solve_conflict(
             groot,
             ref=groot2_crossing,
@@ -194,7 +194,7 @@ class TestsGrootSolveConflictsInverseDirections:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_crossing)
-        add_delay(groot, 'train00', 'A/V1', delay)
+        groot.add_delay('train00', 'A/V1', delay)
         _ = solve_conflict(
             groot,
             ref=groot2_crossing,
@@ -218,7 +218,7 @@ class TestsGrootSolveConflictsInverseDirections:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_crossing)
-        add_delay(groot, 'train00', 'B/V1', delay)
+        groot.add_delay('train00', 'B/V1', delay)
         _ = solve_conflict(
             groot,
             ref=groot2_crossing,
@@ -246,7 +246,7 @@ class TestsGrootSolveConflictsInverseDirections:
         delay: float
     ) -> None:
         groot = copy.deepcopy(groot2_crossing)
-        add_delay(groot, 'train00', 'B/V1', delay)
+        groot.add_delay('train00', 'B/V1', delay)
         _ = solve_conflict(
             groot,
             ref=groot2_crossing,
