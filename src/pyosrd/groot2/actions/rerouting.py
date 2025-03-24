@@ -180,7 +180,7 @@ def reroute_train_to_avoid_zone(
                 rerouted_groot.times[train][tvd] = (t_in, t_out)
 
             zones_that_must_be_free = [
-                groot.zones[tvd] for tvd in tvds_after_new_station
+                groot.zones[tvd] for tvd in tvds_before_new_station
             ] + [new_station]
 
         else:
