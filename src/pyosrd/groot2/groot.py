@@ -369,9 +369,9 @@ class Groot(object):
         times: GrootTimes,
     ) -> GrootTimes:
         
-        modified_times = copy.deepcopy(self.times)
+        original_times = copy.deepcopy(self.times)
         self.times.update(times)
-        return modified_times
+        return original_times
 
 
     def add_delay(
@@ -381,7 +381,7 @@ class Groot(object):
         delay: float,
     ) -> GrootTimes:
         
-        modified_times = {train : copy.deepcopy(self.times[train])}
+        original_times = {train : copy.deepcopy(self.times[train])}
 
         path = self.path(train)
         tvd = self.get_tvd(train, zone)
@@ -394,4 +394,4 @@ class Groot(object):
                 self.times[train][zone][0],
                 self.times[train][zone][1] + delay
             )
-        return modified_times
+        return original_times
