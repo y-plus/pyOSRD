@@ -126,6 +126,14 @@ def build_dict_difference_departures_per_departure_times(
                     min(ref.times[train][tvd][0], first_ref_arrival_time)
             train_diff[departure_time] = diff[train][tvd]
 
+        tvd = disrupted.path(train)[0]
+        if (
+            ref.times[train][tvd][0] == disrupted.times[train][tvd][0]
+            and
+            ref.times[train][tvd][1] < disrupted.times[train][tvd][1]
+        ):
+            train_diff[ref.times[train][tvd][1]] = 0
+
         if add_fictionnal_point_at_end and max_timestamp > 0:
             train_diff[max_timestamp+1] = 0
         if first_ref_arrival_time >= 0:

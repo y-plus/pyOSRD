@@ -54,9 +54,10 @@ def plot_groot_delays(
         build_dict_difference_departures_per_departure_times(
             disrupted,
             ref,
-            diff_departure_time_per_zone,
-            not all_trains
+            diff=diff_departure_time_per_zone,
+            add_fictionnal_point_at_end=not all_trains
         )
+
     all_entries = merge_time_entries(diff_departure_time_per_dep_time)
     interpolated_diffs = interpolate_entries(
         diff_departure_time_per_dep_time,
