@@ -28,10 +28,10 @@ def test_rerouting( groot2_reroute: Groot) -> None:
 def test_rerouting_returns_original_times(groot2_reroute) -> None:
     groot = copy.deepcopy(groot2_reroute)
     original_times = {'train2': groot2_reroute.times['train2']}
-    modified_times = reroute_train_to_avoid_zone(
+    original_times = reroute_train_to_avoid_zone(
         groot,
         'train2',
         'station/T2'
 
     )
-    assert modified_times == original_times
+    assert original_times == original_times

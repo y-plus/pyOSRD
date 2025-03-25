@@ -13,13 +13,13 @@ class TestGrootSolveCOnflict:
         original_times = {
             'train01': copy.deepcopy(groot2_vu_following.times['train01'])
         }
-        modified_times = solve_conflict(
+        original_times = solve_conflict(
             groot,
             ref=groot2_vu_following,
             reorder=False,
             leave_station_asap=True
         )
-        assert modified_times == original_times
+        assert original_times == original_times
 
 
 class TestsGrootSolveConflictsVUAFollowinge:
@@ -52,13 +52,13 @@ class TestsGrootSolveConflictsVUAFollowinge:
     ) -> None:
         groot = copy.deepcopy(groot2_vu_following)
         groot.add_delay('train00', 'A/V1', delay)
-        modified_times = solve_conflict(
+        original_times = solve_conflict(
             groot,
             ref=groot2_vu_following,
             reorder=True,
             leave_station_asap=True
         )
-        assert modified_times is None
+        assert original_times is None
         
         
 

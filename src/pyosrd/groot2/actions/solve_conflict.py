@@ -82,7 +82,7 @@ def solve_conflict(
         return
     
     if leave_station_asap and not opposite_directions:
-        modified_times = {waiting_train: copy.deepcopy(groot.times[waiting_train])}
+        original_times = {waiting_train: copy.deepcopy(groot.times[waiting_train])}
 
         conflict_in_common_zones = True
         while conflict_in_common_zones:
@@ -101,7 +101,7 @@ def solve_conflict(
                 and conflict_zone in common_zones
             )
 
-        return modified_times
+        return original_times
     
     return make_train_wait(
             groot,
