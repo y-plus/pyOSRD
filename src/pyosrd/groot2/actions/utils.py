@@ -1,6 +1,7 @@
  
 from ..groot import Groot
 
+
 def head_to_head(
     groot: Groot,
     train1: str,
@@ -16,6 +17,7 @@ def head_to_head(
         (tvd1.split("->")[1] == tvd2.split("->")[0])
     )
 
+
 def is_a_divergence(groot: Groot, tvd: str) -> bool:
 
     parents = list(groot.tvds_graph.predecessors(tvd))
@@ -23,7 +25,6 @@ def is_a_divergence(groot: Groot, tvd: str) -> bool:
         return False
     brothers = list(groot.tvds_graph.successors(parents[0]))
     return len(brothers) == 2
-
 
 
 def is_a_convergence(groot: Groot, tvd: str) -> bool:
