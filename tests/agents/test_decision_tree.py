@@ -9,11 +9,11 @@ def tree() -> DecisionTree:
         nodes={
             '': None,
             'A': None,
-            'B': None,
-            'C': None,
+            'B': 1,
+            'C': 1,
             'BA': None,
             'BB': None,
-            'CB': None,
+            'CA': None,
         }
     )
 
@@ -46,7 +46,7 @@ def test_children(tree: DecisionTree):
     assert tree.children('') == {'A', 'B', 'C'}
     assert len(tree.children('A')) == 0
     assert tree.children('B') == {'BA', 'BB'}
-    assert tree.children('C') == {'CB'}
+    assert tree.children('C') == {'CA'}
 
 
 def test_num_children(tree: DecisionTree):
@@ -56,20 +56,32 @@ def test_num_children(tree: DecisionTree):
     assert tree.num_children('C') == 1
 
 
+def test_missing_children_edges(tree: DecisionTree):
+    assert tree.missing_children_edges('') == []
+    assert tree.missing_children_edges('A') == ['A', 'B', 'C']
+    assert tree.missing_children_edges('B') == ['C']
+    assert tree.missing_children_edges('C') == ['B', 'C']
+
+
+def test_missing_brothers_edges(tree: DecisionTree):
+    assert tree.missing_brothers_edges('') is None
+    assert tree.missing_brothers_edges('A') == []
+    assert tree.missing_brothers_edges('BA') == ['C']
+    assert tree.missing_brothers_edges('CA') == ['B', 'C']
+
+
 def test_missing_children(tree: DecisionTree):
     assert tree.missing_children('') == []
-    assert tree.missing_children('A') == ['A', 'B', 'C']
-    assert tree.missing_children('B') == ['C']
-    assert tree.missing_children('C') == ['A', 'C']
+    assert tree.missing_children('A') == ['AA', 'AB', 'AC']
+    assert tree.missing_children('B') == ['BC']
+    assert tree.missing_children('C') == ['CB', 'CC']
 
 
-def test_is_leaf(tree: DecisionTree):
-    assert not tree.is_leaf('')
-    assert tree.is_leaf('A')
-    assert not tree.is_leaf('B')
-    assert not tree.is_leaf('C')
-    assert tree.is_leaf('BA')
-    assert tree.is_leaf('CB')
+def test_missing_brothers(tree: DecisionTree):
+    assert tree.missing_brothers('') is None
+    assert tree.missing_brothers('A') == []
+    assert tree.missing_brothers('BA') == ['BC']
+    assert tree.missing_brothers('CA') == ['CB', 'CC']
 
 
 def test_max_num_sucessors(tree: DecisionTree):
@@ -88,7 +100,6 @@ def test_max_num_sucessors(tree: DecisionTree):
 
 
 def test_num_successors_on_missing_children_branches(tree: DecisionTree):
-
     assert tree.num_successors_on_missing_children_branches('', 0) == 0
     assert tree.num_successors_on_missing_children_branches('', 1) == 0
     assert tree.num_successors_on_missing_children_branches('', 2) == 0
@@ -105,4 +116,59 @@ def test_num_successors_on_missing_children_branches(tree: DecisionTree):
     
     assert tree.num_successors_on_missing_children_branches('BA', 3) == 3
     assert tree.num_successors_on_missing_children_branches('BB', 3) == 3
-    assert tree.num_successors_on_missing_children_branches('CB', 3) == 3
+    assert tree.num_successors_on_missing_children_branches('CA', 3) == 3
+
+
+def test_node_states(tree: DecisionTree) -> None:
+    assert tree.unfinished_nodes == {'B', 'C'}
+    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA'}
+    tree.update_nodes_states()
+    assert tree.unfinished_nodes == {'B', 'C'}
+    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA'}
+
+
+def test_node_states2(tree: DecisionTree) -> None:
+    tree.nodes['BC'] = 1
+    assert tree.unfinished_nodes == {'B', 'C', 'BC'}
+    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA'}
+    tree.update_nodes_states()
+    assert tree.unfinished_nodes == {'B', 'C', 'BC'}
+    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA'}
+
+
+def test_node_states3(tree: DecisionTree) -> None:
+    tree.nodes['BC'] = None
+    assert tree.unfinished_nodes == {'B', 'C'}
+    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA', 'BC'}
+    tree.update_nodes_states()
+    assert tree.unfinished_nodes == {'C'}
+    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA', 'BC', 'B'}
+
+
+def test_add(tree: DecisionTree) -> None:
+    paths = [
+        DecisionTree(nodes={'': None, 'B': 1, 'BA': None}),
+        DecisionTree(nodes={'': None, 'A': None}),
+        DecisionTree(nodes={'': None, 'B': 1, 'BB': None}),
+        DecisionTree(nodes={'': None, 'C': 1, 'CA': None}),
+    ]
+    new_tree = DecisionTree()
+    for path in paths:
+        new_tree.add(path)
+    assert new_tree.nodes == tree.nodes
+
+
+def test_add_not_overwrite(tree: DecisionTree) -> None:
+
+    paths = [
+        DecisionTree(nodes={'': None, 'B': 1, 'BA': None}),
+        DecisionTree(nodes={'': None, 'A': None}),
+        DecisionTree(nodes={'': None, 'B': 1, 'BB': None}),
+        DecisionTree(nodes={'': None, 'C': 1, 'CA': None}),
+        DecisionTree(actions=tree.actions, nodes={'': None, 'C': 1, 'CA': None}),
+    ]
+    new_tree = DecisionTree()
+    for path in paths:
+        new_tree.add(path)
+    assert new_tree.nodes == tree.nodes
+
