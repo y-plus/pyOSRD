@@ -7,13 +7,13 @@ def tree() -> DecisionTree:
     return DecisionTree(
         actions=['A', 'B', 'C'],
         nodes={
-            '': None,
-            'A': None,
-            'B': 1,
-            'C': 1,
-            'BA': None,
-            'BB': None,
-            'CA': None,
+            '': 1,
+            'A': 5,
+            'B': dict(),
+            'C': dict(),
+            'BA': 5,
+            'BB': 5,
+            'CA': 3,
         }
     )
 
@@ -36,10 +36,17 @@ def test_depth(tree: DecisionTree):
     assert tree.depth('BA') == 2
 
 
+def test_is_root(tree: DecisionTree):
+    assert tree.is_root('')
+    assert not tree.is_root('A')
+    assert not tree.is_root('BB')
+
+
 def test_parent(tree: DecisionTree):
     assert tree.parent('') is None
     assert tree.parent('A') == ''
     assert tree.parent('BA') == 'B'
+    assert tree.parent('BAC') == 'BA'
 
 
 def test_children(tree: DecisionTree):
@@ -119,56 +126,88 @@ def test_num_successors_on_missing_children_branches(tree: DecisionTree):
     assert tree.num_successors_on_missing_children_branches('CA', 3) == 3
 
 
-def test_node_states(tree: DecisionTree) -> None:
+def test_nodes_finished_unfinished_or_solution_(tree: DecisionTree):
+    assert tree.solution_nodes == {'A', 'BA', 'BB', 'CA'}
     assert tree.unfinished_nodes == {'B', 'C'}
     assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA'}
-    tree.update_nodes_states()
-    assert tree.unfinished_nodes == {'B', 'C'}
-    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA'}
 
 
-def test_node_states2(tree: DecisionTree) -> None:
-    tree.nodes['BC'] = 1
-    assert tree.unfinished_nodes == {'B', 'C', 'BC'}
-    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA'}
-    tree.update_nodes_states()
-    assert tree.unfinished_nodes == {'B', 'C', 'BC'}
-    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA'}
+def test_nodes_finished_unfinished_or_solution_2(tree: DecisionTree):
+    tree.nodes['BC'] = dict()
+    assert tree.finished_nodes == {'A', 'B', 'BA', 'BB', 'CA'}
+    assert tree.unfinished_nodes == {'C', 'BC'}
+    assert tree.solution_nodes == {'A', 'BA', 'BB', 'CA'}
 
 
-def test_node_states3(tree: DecisionTree) -> None:
-    tree.nodes['BC'] = None
-    assert tree.unfinished_nodes == {'B', 'C'}
-    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA', 'BC'}
-    tree.update_nodes_states()
+def test_nodes_finished_unfinished_or_solution_3(tree: DecisionTree):
+    tree.nodes['BC'] = 5
+    assert tree.finished_nodes == {'A', 'B', 'BA', 'BB', 'CA', 'BC'}
     assert tree.unfinished_nodes == {'C'}
-    assert tree.finished_nodes == {'A', 'BA', 'BB', 'CA', 'BC', 'B'}
+    assert tree.solution_nodes == {'A', 'BA', 'BB', 'BC', 'CA'}
 
 
-def test_add(tree: DecisionTree) -> None:
+def test_combine(tree: DecisionTree):
     paths = [
-        DecisionTree(nodes={'': None, 'B': 1, 'BA': None}),
-        DecisionTree(nodes={'': None, 'A': None}),
-        DecisionTree(nodes={'': None, 'B': 1, 'BB': None}),
-        DecisionTree(nodes={'': None, 'C': 1, 'CA': None}),
+        DecisionTree(nodes={'': 1, 'B': dict(), 'BA': 5}),
+        DecisionTree(nodes={'': 1, 'A': 5}),
+        DecisionTree(nodes={'': 1, 'B': dict(), 'BB': 5}),
+        DecisionTree(nodes={'': 1, 'C': dict(), 'CA': 3}),
     ]
     new_tree = DecisionTree()
     for path in paths:
-        new_tree.add(path)
+        new_tree.combine(path)
     assert new_tree.nodes == tree.nodes
 
 
-def test_add_not_overwrite(tree: DecisionTree) -> None:
+def test_add_not_overwrite(tree: DecisionTree):
 
     paths = [
-        DecisionTree(nodes={'': None, 'B': 1, 'BA': None}),
-        DecisionTree(nodes={'': None, 'A': None}),
-        DecisionTree(nodes={'': None, 'B': 1, 'BB': None}),
-        DecisionTree(nodes={'': None, 'C': 1, 'CA': None}),
-        DecisionTree(actions=tree.actions, nodes={'': None, 'C': 1, 'CA': None}),
+        DecisionTree(nodes={'': 1, 'B': dict(), 'BA': 5}),
+        DecisionTree(nodes={'': 1, 'A': 5}),
+        DecisionTree(nodes={'': 1, 'B': dict(), 'BB': 5}),
+        DecisionTree(nodes={'': 1, 'C': dict(), 'CA': 3}),
+        DecisionTree(nodes={'': 1, 'C': dict(), 'CA': 3}),
     ]
     new_tree = DecisionTree()
     for path in paths:
-        new_tree.add(path)
+        new_tree.combine(path)
     assert new_tree.nodes == tree.nodes
 
+
+def test_best_solution_confidence(tree: DecisionTree):
+    assert tree.depth_completeness_ratio('A') == 1
+    assert tree.depth_completeness_ratio('BA') == 1/2
+
+    tree.nodes['BC'] =  5
+    assert tree.depth_completeness_ratio('BA') == 4/6
+
+    tree.nodes['BC'] =  dict()
+    tree.nodes['BCA'] =  5
+    assert tree.depth_completeness_ratio('BA') == 4/6
+    assert tree.depth_completeness_ratio('BCA') == 1/11
+    assert tree.unfinished_nodes == {'BC', 'C'}
+
+
+def test_best_nodes(tree: DecisionTree):
+    assert tree.best_nodes == ['CA', 'A', 'BA', 'BB']
+
+
+def test_to_explore_from_top(tree: DecisionTree):
+    tree.nodes['BC'] = dict(),
+    tree.nodes['BCA'] = 5
+    assert tree.to_explore_from_top() == ['C', 'BC']
+    assert tree.to_explore_from_best_solutions() == ['CB', 'CC', 'BCB', 'BCC']
+
+    tree.nodes['BCA'] = 1
+    assert tree.to_explore_from_top() == ['C', 'BC']
+    assert tree.to_explore_from_best_solutions() == ['BCB', 'BCC', 'CB', 'CC', ]
+
+    tree.nodes['BCA'] = 5
+    tree.nodes['BA'] = 1
+    assert tree.to_explore_from_top() == ['C', 'BC']
+    assert tree.to_explore_from_best_solutions() == ['CB', 'CC', 'BCB', 'BCC']
+
+    tree.nodes['BCA'] = 5
+    tree.nodes['A'] = 1
+    assert tree.to_explore_from_top() == ['C', 'BC']
+    assert tree.to_explore_from_best_solutions() == []
