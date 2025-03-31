@@ -1,5 +1,7 @@
 import numbers
+
 from dataclasses import dataclass, field
+
 from typing import Any
 from typing_extensions import Self
 
@@ -94,7 +96,7 @@ class DecisionTree:
     def is_solution(self: Self, node: NodeIndex) -> bool:
         return not self.is_root(node) and isinstance(self.nodes[node], numbers.Number)
 
-    def is_finished(self: Self, node: NodeIndex) -> bool:
+    def is_explored(self: Self, node: NodeIndex) -> bool:
         return self.is_solution(node) or self.num_children(node)==self.num_actions
 
     @property
@@ -105,29 +107,29 @@ class DecisionTree:
         )
 
     @property
-    def finished_nodes(self: Self) -> set[NodeIndex]:
+    def explored_nodes(self: Self) -> set[NodeIndex]:
         return set(
             node for node in self.nodes
-            if not self.is_root(node) and self.is_finished(node)
+            if not self.is_root(node)
+            and self.is_explored(node)
         )
 
     @property
-    def unfinished_nodes(self: Self) -> set[NodeIndex]:
+    def unexplored_nodes(self: Self) -> set[NodeIndex]:
         return set(
             node for node in self.nodes
-            if not self.is_finished(node)
+            if not self.is_explored(node)
         )
 
     def combine(self: Self, other: Self):
         self.nodes.update(other.nodes)
-
 
     def depth_completeness_ratio(self: Self, node: NodeIndex) -> float:
         depth = self.depth(node)
 
         missing_nodes_at_this_depth = sum(
             self.num_successors_on_missing_children_branches(n, depth)
-            for n in self.unfinished_nodes
+            for n in self.unexplored_nodes
             if self.depth(n) <= depth
         )
 
@@ -147,10 +149,10 @@ class DecisionTree:
             key=lambda k: self.nodes[k]
         )
     
-    def to_explore_from_top(self: Self) -> list[NodeIndex]:
-        return sorted(self.unfinished_nodes, key=self.depth)
+    def nodes_for_exploration(self: Self) -> list[NodeIndex]:
+        return sorted(self.unexplored_nodes, key=self.depth)
 
-    def to_explore_from_best_solutions(self: Self) -> list[NodeIndex]:
+    def nodes_for_improvements(self: Self) -> list[NodeIndex]:
         best_nodes = self.best_nodes
         best_node = best_nodes[0]
 
