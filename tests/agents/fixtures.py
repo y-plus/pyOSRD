@@ -1,4 +1,5 @@
 import shutil
+from typing import Generator
 
 import pytest
 
@@ -7,7 +8,7 @@ from pyosrd.agents import GDTAgent
 
 
 @pytest.fixture(scope='session')
-def agent_vu_alternate() -> GDTAgent:
+def agent_vu_alternate() -> Generator[GDTAgent]:
     sim = OSRD(
         dir='vu_alternate',
         simulation="voie_unique_circulations",
