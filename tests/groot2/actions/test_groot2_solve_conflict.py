@@ -5,12 +5,12 @@ from pyosrd.groot2 import Groot
 from pyosrd.groot2.actions.solve_conflict import solve_conflict
 
 
-class TestGrootSolveCOnflict:
+class TestGrootSolveConflict:
    
     def test_returns_original_times(self, groot2_vu_following) -> None:
         groot = copy.deepcopy(groot2_vu_following)
         groot.add_delay('train00', 'A/V1', 300)
-        original_times = {
+        expected_times = {
             'train01': copy.deepcopy(groot2_vu_following.times['train01'])
         }
         original_times = solve_conflict(
@@ -19,10 +19,10 @@ class TestGrootSolveCOnflict:
             reorder=False,
             leave_station_asap=True
         )
-        assert original_times == original_times
+        assert original_times == expected_times
 
 
-class TestsGrootSolveConflictsVUAFollowinge:
+class TestsGrootSolveConflictsVUFollowing:
     
     @pytest.mark.parametrize("delay", [270, 300, 320])
     def test_delay_A_interlocking(
