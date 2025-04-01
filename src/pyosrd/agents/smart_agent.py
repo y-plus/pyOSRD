@@ -20,9 +20,6 @@ class SmartAgent(BaseAgent):
         super().__init__(name, sim, debug)
         self.num_waves = num_waves
 
-        self.leave_station_asap = leave_station_asap
-
-        self.tree = DecisionTree(
         self.tree = GrootDecisionTree(
             actions=self.ACTIONS,
             ref_groot=self.ref_groot,
@@ -30,7 +27,6 @@ class SmartAgent(BaseAgent):
             not_before=self.now,
             scorer=self._scorer,
         )
-        
 
     @property
     def now(self: Self) -> float:
@@ -70,75 +66,29 @@ class SmartAgent(BaseAgent):
             
         if not self.disrupted_groot.has_conflicts():
                 return self.disrupted_groot
-
-    def create_node_in_path(
-        self: Self,
-        node: str,
-        path: DecisionTree,
-        groot: Groot,
-    ) -> bool:
         
-        if node in self.tree.nodes and  self.tree.nodes[node] is None:
-            return False
-        
-        if node in self.tree.nodes:
-            path.nodes[node] = groot.set_times(self.tree.nodes[node])
-            return True
-        
-        action = node[-1]
-        original_times = self.evaluate_action(groot, action)
-        path.nodes[node] = original_times
+        for wave in range(self.num_waves):
 
-        if original_times is None:
-            return False
- 
-        score = self._scorer(groot, self.ref_groot)
+            # Exploration phase
+            if wave == 0:
+                nodes = [
+                f'{a}{b}'
+                for a in self.ACTIONS
+                for b in self.ACTIONS
+            ]
+            else:
+                nodes = self.tree.nodes_for_exploration()
+            
+            self.tree.grow(nodes)
+            if self._no_more_improvement():
+                break
 
-        if score > self.best_solution:
-            path.nodes[node] = None
-            groot.set_times(original_times)
-            return False
+            # Improvements phase
+            nodes = self.tree.nodes_for_improvements()
+            self.tree.grow(nodes)
+            if self._no_more_improvement():
+                break
 
-        return True
-
-
-# Those functions are not methods so that we can use them
-# with multiprocessing
-
-def path_to(
-    agent: SmartAgent,
-    node_to_reach: str
-) -> tuple[DecisionTree, Groot]:
-    
-    path = DecisionTree()
-    groot = agent.disrupted_groot.clone()
-
-    for i, _ in enumerate(node_to_reach):
-        ok = agent.create_node_in_path(node_to_reach[:i+1], path, groot)
-        if not ok or not groot.has_conflicts():
-            break
-    return path, groot
-
-
-def path_through(
-    self: SmartAgent,
-    node_to_include: str,
-)-> tuple[DecisionTree, Groot]:
-
-    path, groot = self.path_to(node_to_include)
-
-    node = path.last_node
-    stop = path.nodes[node] is None
-    
-    while not stop:
-        if missing_actions := self.tree.missing_children_edges(node):
-            action = missing_actions[0]
-            new_node = f"{node}{action}"
-            ok = self.create_node_in_path(new_node, path, groot)
-            stop = not groot.has_conflicts()
-            if ok:
-                node = new_node
-        else:
-            node = path.parent(node)
-
-    return path, groot
+            
+        return self.tree.best_groot
+  
