@@ -106,26 +106,6 @@ def test_max_num_sucessors(tree: DecisionTree):
     assert tree.max_num_sucessors('BA', 4) == 12
 
 
-def test_num_successors_on_missing_children_branches(tree: DecisionTree):
-    assert tree.num_successors_on_missing_children_branches('', 0) == 0
-    assert tree.num_successors_on_missing_children_branches('', 1) == 0
-    assert tree.num_successors_on_missing_children_branches('', 2) == 0
-
-    assert tree.num_successors_on_missing_children_branches('A', 1) == 0
-    
-    assert tree.num_successors_on_missing_children_branches('A', 2) == 3
-    assert tree.num_successors_on_missing_children_branches('B', 2) == 1
-    assert tree.num_successors_on_missing_children_branches('C', 2) == 2
-    
-    assert tree.num_successors_on_missing_children_branches('A', 3) == 12
-    assert tree.num_successors_on_missing_children_branches('B', 3) == 4
-    assert tree.num_successors_on_missing_children_branches('C', 3) == 8
-    
-    assert tree.num_successors_on_missing_children_branches('BA', 3) == 3
-    assert tree.num_successors_on_missing_children_branches('BB', 3) == 3
-    assert tree.num_successors_on_missing_children_branches('CA', 3) == 3
-
-
 def test_nodes_explored_unexplored_or_solution_(tree: DecisionTree):
     assert tree.solution_nodes == {'A', 'BA', 'BB', 'CA'}
     assert tree.unexplored_nodes == {'B', 'C'}
@@ -176,7 +156,7 @@ def test_add_not_overwrite(tree: DecisionTree):
 
 def test_best_solution_confidence(tree: DecisionTree):
     assert tree.depth_completeness_ratio('A') == 1
-    assert tree.depth_completeness_ratio('BA') == 1/2
+    assert tree.depth_completeness_ratio('BA') == 3/6
 
     tree.nodes['BC'] =  5
     assert tree.depth_completeness_ratio('BA') == 4/6
@@ -184,9 +164,14 @@ def test_best_solution_confidence(tree: DecisionTree):
     tree.nodes['BC'] =  dict()
     tree.nodes['BCA'] =  5
     assert tree.depth_completeness_ratio('BA') == 4/6
-    assert tree.depth_completeness_ratio('BCA') == 1/11
+    assert tree.depth_completeness_ratio('BCA') == 1/9
     assert tree.unexplored_nodes == {'BC', 'C'}
 
+    tree.nodes.pop('CA')
+    tree.nodes.pop('C')
+    assert tree.depth_completeness_ratio('A') == 2/(2 + 1)
+    assert tree.depth_completeness_ratio('BA') == 3/(3 + 3)
+    assert tree.depth_completeness_ratio('BCA') == 1/(1 + 11)
 
 def test_best_nodes(tree: DecisionTree):
     assert tree.best_nodes == ['CA', 'A', 'BA']
