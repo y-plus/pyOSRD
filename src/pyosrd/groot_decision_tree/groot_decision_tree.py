@@ -90,14 +90,14 @@ class GrootDecisionTree(DecisionTree):
         return results
 
     def grow(self: Self, nodes: list[NodeIndex]) -> Groot:
-        new_branches: Self = self.grow_branches(nodes)
+        new_branches: list[Self] = self.grow_branches(nodes)
         for branch in new_branches:
             self.combine(branch)
             last_node = branch.last_node
             if self.is_solution(last_node) and self.nodes[last_node] < self.best_solution:
-                self.best_groot = self.current_groot
+                self.best_groot = branch.current_groot
                 self.best_node = last_node
-                self.best_solution = self.nodes[last_node]
+                self.best_solution = branch.nodes[last_node]
     
 
 # Those functions are not methods so that we can use them
@@ -126,7 +126,6 @@ def grow_branch_through(
     node_to_include: str,
 )-> GrootDecisionTree:
 
-    print(node_to_include)
     branch = grow_branch_to(tree, node_to_include)
 
     if branch.nodes[branch.last_node] == float('inf'):

@@ -71,7 +71,7 @@ def reroute_train_to_avoid_zone(
     #         print(path_found:= nx.has_path(graph, source, target))
         
     if not path_found:
-        print('No path found')
+        # print('No path found')
         return
 
     train_path = groot.path(train)
