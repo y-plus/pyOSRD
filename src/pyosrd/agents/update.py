@@ -274,7 +274,8 @@ def updated_sim(
                             if f'{eco_or_base}_simulations' not in updated.results[group]:
                                 continue
                             hp = updated._head_position(train, eco_or_base)
-                            for r in hp:
+                            hp[0]['time'] = new_groot.times[train][new_groot.path(train)[0]][0]
+                            for r in hp[1:]:
                                 r['time'] += delay
                     else:
                         add_delay_between_points(
