@@ -31,7 +31,7 @@ def c1_with_blocks_3trains(
     train1 = sim_builder.add_train_schedule(
         A,
         B,
-        label='First train',
+        label='train00',
         departure_time=0,
     )
     # train1.add_stop(120., position=7_500)
@@ -40,7 +40,7 @@ def c1_with_blocks_3trains(
     train2 = sim_builder.add_train_schedule(
         A,
         B,
-        label='Second train',
+        label='train01',
         departure_time=2*60,
     )
 
@@ -49,7 +49,7 @@ def c1_with_blocks_3trains(
     train3 = sim_builder.add_train_schedule(
         A,
         B,
-        label='Third train',
+        label='train02',
         departure_time=4*60,
     )
 

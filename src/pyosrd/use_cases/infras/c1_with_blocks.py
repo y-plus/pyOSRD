@@ -24,7 +24,7 @@ def c1_with_blocks(
 
     infra_builder = InfraBuilder()
 
-    T = infra_builder.add_track_section(label='T', length=10_000)
+    T = infra_builder.add_track_section(label='T', length=10_000, track_name='V1')
 
     begin = (0.21, 45.575988410701974)
     end = inverse_haversine(begin[::-1], 10, direction=Dir.EAST, unit='km')[::-1]
@@ -79,9 +79,9 @@ def c1_with_blocks(
         is_route_delimiter=True,
     ).add_logical_signal("BAL", settings={"Nf": "true"})
 
-    stationA = infra_builder.add_operational_point(label='stationA')
+    stationA = infra_builder.add_operational_point(label='A')
     stationA.add_part(track=T, offset=460)
-    stationB = infra_builder.add_operational_point(label='stationB')
+    stationB = infra_builder.add_operational_point(label='B')
     stationB.add_part(track=T, offset=10_000-60)
 
     os.makedirs(dir, exist_ok=True)

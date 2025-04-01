@@ -27,7 +27,7 @@ def straight_line(
 
     infra_builder = InfraBuilder()
 
-    T = infra_builder.add_track_section(label='T', length=10_000)
+    T = infra_builder.add_track_section(label='T', length=10_000, track_name='V1')
 
     T.add_buffer_stop(0, label='buffer_stop.0')
     T.add_buffer_stop(T.length, label='buffer_stop.1')
@@ -53,9 +53,9 @@ def straight_line(
     A = Location(T, 460)
     B = Location(T, 10_000 - 460)
 
-    stationA = infra_builder.add_operational_point(label='stationA')
+    stationA = infra_builder.add_operational_point(label='A')
     stationA.add_part(track=T, offset=460)
-    stationB = infra_builder.add_operational_point(label='stationB')
+    stationB = infra_builder.add_operational_point(label='B')
     stationB.add_part(track=T, offset=10_000-460)
 
     os.makedirs(dir, exist_ok=True)

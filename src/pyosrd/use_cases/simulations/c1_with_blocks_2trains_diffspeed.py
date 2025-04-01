@@ -31,7 +31,7 @@ def c1_with_blocks_2trains_diffspeed(
     train1 = sim_builder.add_train_schedule(
         A,
         B,
-        label='First train',
+        label='train00',
         departure_time=0,
         rolling_stock='short_fast_rolling_stock'
     )
@@ -41,7 +41,7 @@ def c1_with_blocks_2trains_diffspeed(
     train2 = sim_builder.add_train_schedule(
         A,
         B,
-        label='Second train',
+        label='train01',
         departure_time=6*60.,
         rolling_stock='fast_rolling_stock'
     )

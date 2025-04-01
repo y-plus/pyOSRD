@@ -25,7 +25,7 @@ def c1(
 
     infra_builder = InfraBuilder()
 
-    T = infra_builder.add_track_section(label='T', length=10_000)
+    T = infra_builder.add_track_section(label='T', length=10_000, track_name='V1')
 
     begin = (0.21, 45.575988410701974)
     end = inverse_haversine(begin[::-1], 10, direction=Dir.WEST, unit='km')[::-1]
