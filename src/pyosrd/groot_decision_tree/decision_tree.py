@@ -37,7 +37,12 @@ class DecisionTree:
 
     @property
     def last_node(self: Self) -> NodeIndex:
-        return max(self.nodes, key=len)
+        return max(
+            sorted(
+                [n for n in self.nodes if not self.is_root(n)],
+                key=lambda n: self.actions.index(n[-1]),
+                reverse=True
+            ) + [''], key=len)
 
     def is_root(self: Self, node: NodeIndex) -> bool:
         return self.depth(node) == 0
@@ -144,10 +149,12 @@ class DecisionTree:
 
     @property
     def best_nodes(self: Self) -> list[NodeIndex]:
-        return sorted(
+        solutions = sorted(
             sorted(self.solution_nodes),
             key=lambda k: self.nodes[k]
         )
+
+        return [n for n in solutions if self.nodes[n] != float('inf')]
     
     def nodes_for_exploration(self: Self) -> list[NodeIndex]:
         return sorted(self.unexplored_nodes, key=self.depth)

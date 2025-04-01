@@ -1,23 +1,26 @@
 import shutil
-from typing import Generator
 
 import pytest
 
 from pyosrd import OSRD
-from pyosrd.agents import GDTAgent
+from pyosrd.agents.base_agent import BaseAgent
+
+
+class Agent(BaseAgent):
+
+    def _calculate_dispatch(self, debug):
+        ...
+
+    def _calculate_interlocking(self, debug):
+        ...
 
 
 @pytest.fixture(scope='session')
-def agent_vu_alternate() -> Generator[GDTAgent, None, None]:
+def base_agent() -> Agent:
     sim = OSRD(
-        dir='vu_alternate',
-        simulation="voie_unique_circulations",
-        params_use_case={
-            "num_stations":3,
-            'num_blocks_between_stations': 6,
-            'num_trains': 3,
-            'alternate': True,
-        })
-
-    yield GDTAgent('groot', sim)
-    shutil.rmtree('vu_alternate', ignore_errors=True)
+        dir='tmp',
+        simulation="c1_with_blocks_3trains"
+    )
+    agent = Agent("base_agent", sim)
+    shutil.rmtree('tmp', ignore_errors=True)
+    return agent

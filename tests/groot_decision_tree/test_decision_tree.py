@@ -1,5 +1,5 @@
 import pytest
-from pyosrd.agents.decision_tree import DecisionTree
+from pyosrd.groot_decision_tree.decision_tree import DecisionTree
 
 
 @pytest.fixture
@@ -189,7 +189,7 @@ def test_best_solution_confidence(tree: DecisionTree):
 
 
 def test_best_nodes(tree: DecisionTree):
-    assert tree.best_nodes == ['CA', 'A', 'BA', 'BB']
+    assert tree.best_nodes == ['CA', 'A', 'BA']
 
 
 def test_nodes_for_exploration(tree: DecisionTree):
