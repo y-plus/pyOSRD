@@ -4,12 +4,14 @@ from abc import ABC, abstractmethod
 from typing import Callable
 from typing_extensions import Self
 
+import plotly.graph_objects as go
+
 from pyosrd import OSRD
 from pyosrd.utils import seconds_to_hour
 from pyosrd.groot2 import Groot, from_sim
 from pyosrd.agents.update import updated_sim
 from pyosrd.groot2.scores import sum_delays_at_end
-
+from pyosrd.groot2.delays_chart import plot_groot_delays
 
 class BaseAgent(ABC):
 
@@ -75,7 +77,7 @@ class BaseAgent(ABC):
         self._interlocking_groot = None
         self.interlocking_actions = None
         self._dispatched_groot = None
-        self.actions = None
+
 
     def score(self: Self, formatted: bool = False) -> float:
         s = self._scorer(self.dispatched_groot, self.ref_groot)
@@ -96,7 +98,40 @@ class BaseAgent(ABC):
     def reset_disruptions(self: Self) -> None:
         self.disrupted_groot = self.ref_groot.clone()
         self.clear_cache()
-    
+      
+    def plot_delays(
+        self: Self,
+        all_trains: bool = False,
+        tmin: float | str | None = None,
+        tmax: float | str | None = None,
+        dmax: float | str | None = None,
+    ) -> go.Figure:
+
+        return plot_groot_delays(
+            self.dispatched_groot,
+            self.ref_groot,
+            all_trains=all_trains,
+            tmin=tmin,
+            tmax=tmax,
+            dmax=dmax
+        )
+
+    def plot_interlocking_delays(
+        self: Self,
+        all_trains: bool = False,
+        tmin: float | str | None = None,
+        tmax: float | str | None = None,
+        dmax: float | str | None = None,
+    ) -> go.Figure:
+
+        return plot_groot_delays(
+            self.interlocking_groot,
+            self.ref_groot,
+            all_trains=all_trains,
+            tmin=tmin,
+            tmax=tmax,
+            dmax=dmax
+        )
 
 def load_agent(path_to_file: str) -> BaseAgent:
     with open(path_to_file, "rb") as f:
