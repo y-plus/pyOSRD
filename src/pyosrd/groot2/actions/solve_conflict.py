@@ -74,6 +74,8 @@ def solve_conflict(
             if prev_station != groot.path_zones(waiting_train)[0]
             else prev_station
         )
+    if prev_station is None:
+        prev_station = groot.path_zones(waiting_train)[0]
 
     if conflict_zone == groot.path_zones(waiting_train)[0]:
         leave_station_asap = False
