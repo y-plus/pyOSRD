@@ -94,12 +94,13 @@ def add_delays_in_results(self) -> None:
                     if isinstance(records, list):
                         for i, record in enumerate(records):
                             for subkey, value in record.items():
-                                if 'time' in subkey and time_threshold == 0:
-                                    self.results[gr][sim][idx][key][i][subkey] += \
-                                        delay
-                                elif 'time' in subkey and value > time_threshold:
-                                    self.results[gr][sim][idx][key][i][subkey] += \
-                                        delay
+                                if i>0:
+                                    if 'time' in subkey and time_threshold == 0:
+                                        self.results[gr][sim][idx][key][i][subkey] += \
+                                            delay
+                                    elif 'time' in subkey and value > time_threshold:
+                                        self.results[gr][sim][idx][key][i][subkey] += \
+                                            delay
                     if key == 'head_positions' and time_threshold > 0:
                         position = None
                         for i, record in enumerate(records):
