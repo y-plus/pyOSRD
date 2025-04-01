@@ -6,7 +6,7 @@ from pyosrd.groot2 import Groot, GrootTimes
 from pyosrd.groot2.actions import reroute_train_to_avoid_zone, solve_conflict
 
 from pyosrd.agents.base_agent import BaseAgent
-from pyosrd.agents.decision_tree import DecisionTree
+from pyosrd.groot_decision_tree.decision_tree import DecisionTree
 
 class SmartAgent(BaseAgent):
 
@@ -24,7 +24,7 @@ class SmartAgent(BaseAgent):
     ) -> None:
         super().__init__(name, sim, debug)
         self.num_waves = num_waves
-        
+
         self.leave_station_asap = leave_station_asap
 
         self.tree = DecisionTree(
@@ -61,7 +61,7 @@ class SmartAgent(BaseAgent):
                     train_to_reroute = self.ref_groot.trains_order_in_zone(tr1, tr2, zone)[1]
                 except KeyError:
                     train_to_reroute = groot.trains_order_in_zone(tr1, tr2, zone)[1]
-                
+
                 original_times = reroute_train_to_avoid_zone(
                     groot,
                     train_to_reroute,
@@ -78,7 +78,7 @@ class SmartAgent(BaseAgent):
                 original_times = solve_conflict(
                     groot,
                     ref=self.ref_groot,
-                    reorder=True, 
+                    reorder=True,
                     in_place=True,
                     not_before=self.now
                 )
@@ -88,14 +88,14 @@ class SmartAgent(BaseAgent):
 
         groot = self.disrupted_groot.clone()
         stop = not groot.has_conflicts
-        
+
         while not stop:
             self.evaluate_action(groot, 'S')
 
         return groot
 
     def calculate_dispatch(self: Self, debug: bool = False) -> Groot:
-            
+
         if not self.disrupted_groot.has_conflicts():
                 return self.disrupted_groot
 
@@ -105,21 +105,21 @@ class SmartAgent(BaseAgent):
         path: DecisionTree,
         groot: Groot,
     ) -> bool:
-        
+
         if node in self.tree.nodes and  self.tree.nodes[node] is None:
             return False
-        
+
         if node in self.tree.nodes:
             path.nodes[node] = groot.set_times(self.tree.nodes[node])
             return True
-        
+
         action = node[-1]
         original_times = self.evaluate_action(groot, action)
         path.nodes[node] = original_times
 
         if original_times is None:
             return False
- 
+
         score = self._scorer(groot, self.ref_groot)
 
         if score > self.best_solution:
@@ -137,7 +137,7 @@ def path_to(
     agent: SmartAgent,
     node_to_reach: str
 ) -> tuple[DecisionTree, Groot]:
-    
+
     path = DecisionTree()
     groot = agent.disrupted_groot.clone()
 
@@ -157,7 +157,7 @@ def path_through(
 
     node = path.last_node
     stop = path.nodes[node] is None
-    
+
     while not stop:
         if missing_actions := self.tree.missing_children_edges(node):
             action = missing_actions[0]
