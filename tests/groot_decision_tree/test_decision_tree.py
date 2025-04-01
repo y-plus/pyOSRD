@@ -91,21 +91,6 @@ def test_missing_brothers(tree: DecisionTree):
     assert tree.missing_brothers('CA') == ['CB', 'CC']
 
 
-def test_max_num_sucessors(tree: DecisionTree):
-    assert tree.max_num_sucessors('', 0) == 0
-    assert tree.max_num_sucessors('', 1) == 3
-    assert tree.max_num_sucessors('', 2) == 12
-
-    assert tree.max_num_sucessors('A', 1) == 0
-    assert tree.max_num_sucessors('A', 2) == 3
-    assert tree.max_num_sucessors('A', 3) == 12
-    assert tree.max_num_sucessors('A', 4) == 39
-
-    assert tree.max_num_sucessors('BA', 2) == 0
-    assert tree.max_num_sucessors('BA', 3) == 3
-    assert tree.max_num_sucessors('BA', 4) == 12
-
-
 def test_nodes_explored_unexplored_or_solution_(tree: DecisionTree):
     assert tree.solution_nodes == {'A', 'BA', 'BB', 'CA'}
     assert tree.unexplored_nodes == {'B', 'C'}

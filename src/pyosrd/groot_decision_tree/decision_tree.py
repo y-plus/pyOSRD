@@ -80,13 +80,6 @@ class DecisionTree:
         if node:
             return self.missing_children(self.parent(node))
 
-    def max_num_sucessors(self: Self, node: NodeIndex, depth: int) -> int:
-        N = self.num_actions
-        return int(
-            ( 1 - N ** (depth - self.depth(node) + 1))
-            / (1-len(self.actions)) - 1
-        )
-
     def is_solution(self: Self, node: NodeIndex) -> bool:
         return not self.is_root(node) and isinstance(self.nodes[node], numbers.Number)
 
