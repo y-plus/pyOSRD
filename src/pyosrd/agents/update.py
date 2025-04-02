@@ -256,7 +256,33 @@ def updated_sim(
                     new_hp.sort(key=lambda r: r['time'])
                     updated.results[group][f'{eco_or_base}_simulations'][idx_in_group]['head_positions'] =\
                         new_hp
-
+                
+                # update stops
+                    for stop in updated.get_stops(train):
+                        if (
+                            'location' in stop 
+                            and updated.offset_in_path_of_train(
+                                Point(
+                                    track_section=stop['location']['track_section'],
+                                    position=stop['location']['offset'],
+                                ),
+                                train
+                        ) is None):
+                            new_path_offset = sim.offset_in_path_of_train(
+                                Point(
+                                    track_section=stop['location']['track_section'],
+                                    position=stop['location']['offset'],
+                                ),
+                                train
+                            )
+                            track_section, offset = _get_track_and_position(
+                                train_track_section_distances,
+                                new_path_offset
+                            )
+                            stop['location']= {
+                                'track_section': track_section, 
+                                'offset': offset,
+                            }
 
         # UPDATE TIMES
 
