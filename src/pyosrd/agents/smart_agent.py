@@ -1,10 +1,14 @@
+import time
 from typing_extensions import Self
+
 
 from pyosrd import OSRD
 from pyosrd.groot2 import Groot
 from pyosrd.agents.base_agent import BaseAgent
 from pyosrd.groot_decision_tree.groot_decision_tree import GrootDecisionTree
 from pyosrd.groot2.actions.evaluate_action import evaluate_action
+from pyosrd.utils import seconds_to_hour
+
 
 class SmartAgent(BaseAgent):
 
@@ -26,6 +30,7 @@ class SmartAgent(BaseAgent):
             disrupted_groot=self.disrupted_groot,
             not_before=self.now,
             scorer=self._scorer,
+            debug=self.debug,
         )
 
     @property
@@ -40,11 +45,15 @@ class SmartAgent(BaseAgent):
 
     def _calculate_interlocking(self: Self, debug: bool) -> Groot:
 
+        if self.debug:
+            print('Calculating interlocking')
         groot = self.disrupted_groot.clone()
         stop = not groot.has_conflicts
 
+        self.interlocking_node = ''
         while not stop:
             evaluate_action(groot, self.ref_groot, 'S')
+            self.interlocking_node += 'S'
             stop = not groot.has_conflicts()
 
         return groot
@@ -57,19 +66,42 @@ class SmartAgent(BaseAgent):
             disrupted_groot=self.disrupted_groot,
             not_before=self.now,
             scorer=self._scorer,
+            debug=self.debug,
         )
 
-    def _no_more_improvement(self: Self) -> bool:
-        return self.tree.depth_completeness_ratio(self.tree.best_node)
+    def _stop_criteria(self: Self) -> bool:
+        if self.debug:
+            print(
+                f' Best delay: {seconds_to_hour(self.tree.best_solution)} ({self.tree.best_node}): '
+                f'{self.tree.depth_completeness_ratio(self.tree.best_node):.1%}'
+            )
+            if self.tree.nodes[self.tree.best_node] == self.tree.nodes['']:
+                print('No more extra delays')
+        return (
+            self.tree.depth_completeness_ratio(self.tree.best_node) == 1
+            or
+            self.tree.nodes[self.tree.best_node] == self.tree.nodes['']
+        )
 
     def _calculate_dispatch(self: Self, debug: bool = False) -> Groot:
-            
+        
+        if self.debug:
+            print('Calculating dispatch')
+            t0 = time.perf_counter()
+
+        self.tree.best_solution = self.interlocking_score()
+        self.tree.best_node = self.interlocking_node
+        self.tree.best_groot = self.interlocking_groot
+
+
         if not self.disrupted_groot.has_conflicts():
                 return self.disrupted_groot
         
         for wave in range(self.num_waves):
 
             # Exploration phase
+            if self.debug:
+                print(' Exploration phase')
             if wave == 0:
                 nodes = [
                 f'{a}{b}'
@@ -77,18 +109,29 @@ class SmartAgent(BaseAgent):
                 for b in self.ACTIONS
             ]
             else:
-                nodes = self.tree.nodes_for_exploration()
-            
+                nodes = self.tree.nodes_for_exploration()[:self.tree.num_proc]
+            if self.debug:
+                print(' ', nodes)
             self.tree.grow(nodes)
-            if self._no_more_improvement():
+            if self._stop_criteria():
                 break
 
             # Improvements phase
-            nodes = self.tree.nodes_for_improvements()
+            nodes = self.tree.nodes_for_improvements()[:self.tree.num_proc]
+            # nodes = self.tree.missing_nodes_at_depth(self.tree.depth(self.tree.best_node))
+            if self.debug:
+                print(' Improvements phase')
+                print(' ', nodes)
+
             self.tree.grow(nodes)
-            if self._no_more_improvement():
+            if self._stop_criteria():
                 break
 
-            
+        if self.debug:
+            if wave == self.num_waves-1:
+                print('Max number of  waves reached')
+
+            print(f'Time to calculate dispatch: {(time.perf_counter() - t0):.1f}s')
+        
         return self.tree.best_groot
   
