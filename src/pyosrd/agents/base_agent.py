@@ -133,6 +133,39 @@ class BaseAgent(ABC):
             dmax=dmax
         )
 
+    def plot_space_time(
+        self: Self,
+        train: str,
+        reverse: bool = False,
+    ) -> go.Figure:
+        return self.dispatched_sim.space_time_chart_plotly(
+            train,
+            ref= self.sim,
+            reverse=reverse
+        )
+
+    def plot_disrupted_space_time(
+        self: Self,
+        train: str,
+        reverse: bool = False,
+    ) -> go.Figure:
+        return self.disrupted_sim.space_time_chart_plotly(
+            train,
+            ref= self.sim,
+            reverse=reverse
+        )
+
+    def plot_interlocking_space_time(
+        self: Self,
+        train: str,
+        reverse: bool = False,
+    ) -> go.Figure:
+        return self.interlocking_sim.space_time_chart_plotly(
+            train,
+            ref= self.sim,
+            reverse=reverse
+        )
+
 def load_agent(path_to_file: str) -> BaseAgent:
     with open(path_to_file, "rb") as f:
         agent = pickle.load(f)
