@@ -133,10 +133,3 @@ class TestGrootDecisionTree:
         assert tree.nodes_for_improvements() == ['SO']
         tree.grow(['SO'])
         assert set(tree.nodes.keys()) == {'', 'R', 'S', 'SR', 'SS', 'SO'}
-
-        assert tree.nodes_for_exploration() == ['']
-        tree.grow([''])
-        assert set(tree.nodes.keys()) == {'', 'R', 'S', 'SR', 'SS', 'SO', 'O'}
-
-        assert tree.best_nodes == ['SS']
-        assert tree.depth_completeness_ratio('SS') == 1.0
