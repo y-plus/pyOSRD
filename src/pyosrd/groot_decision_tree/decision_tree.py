@@ -111,10 +111,10 @@ class DecisionTree:
     def combine(self: Self, other: Self):
         self.nodes.update(other.nodes)
 
-    def depth_completeness_ratio(self: Self, node: NodeIndex) -> float:
-        depth = self.depth(node)
-        
+    def missing_nodes_at_depth(self: Self, depth: int) -> list[NodeIndex]:
+
         missing_nodes = []
+
         for d in range(depth):
             missing_children = []
             for n in missing_nodes + [
@@ -123,12 +123,23 @@ class DecisionTree:
             ]:
                 missing_children += self.missing_children(n)
             missing_nodes = missing_children
-        num_missing_nodes = len(missing_nodes)
 
-        num_nodes = len([
+        return missing_nodes        
+
+    def nodes_at_depth(self: Self, depth: int) -> list[NodeIndex]:
+        return [
             n for n in self.nodes
             if self.depth(n) == depth
-        ])
+        ]
+
+    def depth_completeness_ratio(self: Self, node: NodeIndex) -> float:
+        depth = self.depth(node)
+        
+        missing_nodes = self.missing_nodes_at_depth(depth)
+        num_missing_nodes = len(missing_nodes)
+
+        nodes = self.nodes_at_depth(depth)
+        num_nodes = len(nodes)
 
         return  num_nodes / (num_nodes + num_missing_nodes)
 
