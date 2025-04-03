@@ -65,24 +65,28 @@ def solve_conflict(
     else:
         zone_to_free = common_zones[-1]
 
-    prev_station = groot.previous_station(waiting_train, zone_to_free)
-    if prev_station is None:
-        prev_station = groot.path_zones(waiting_train)[0]
-    if prev_station == conflict_zone:
-        prev_station = (
-            groot.previous_station(waiting_train, prev_station)
-            if prev_station != groot.path_zones(waiting_train)[0]
-            else prev_station
+    wait_at = groot.previous_station(waiting_train, zone_to_free)
+    if wait_at is None:
+        wait_at = groot.path_zones(waiting_train)[0]
+    if wait_at == conflict_zone:
+        wait_at = (
+            groot.previous_station(waiting_train, wait_at)
+            if wait_at != groot.path_zones(waiting_train)[0]
+            else wait_at
         )
-    if prev_station is None:
-        prev_station = groot.path_zones(waiting_train)[0]
+    if wait_at is None:
+        wait_at = groot.path_zones(waiting_train)[0]
 
     if conflict_zone == groot.path_zones(waiting_train)[0]:
         leave_station_asap = False
 
-    if groot.times_zones[waiting_train][prev_station][0] <= not_before and prev_station in groot.path_zones(priority_train):
-        return
-    
+    if wait_at == groot.path_zones(waiting_train)[0]:
+        if  groot.times_zones[waiting_train][wait_at][0] <= not_before and wait_at in groot.path_zones(priority_train):
+            return
+    else:
+        if  groot.times_zones[waiting_train][wait_at][0] < not_before:
+            return
+
     if leave_station_asap and not opposite_directions:
         original_times = {waiting_train: copy.deepcopy(groot.times[waiting_train])}
 
@@ -105,10 +109,17 @@ def solve_conflict(
 
         return original_times
     
-    return make_train_wait(
+    else:
+        original_times = make_train_wait(
             groot,
             waiting_train,
             priority_train,
-            prev_station,
+            wait_at,
             zone_to_free,
         )
+
+        tr1, tr2 , conflict_zone, t2 = groot.earliest_conflict()
+        if t2 and t2 <= t:
+            return
+
+        return original_times
