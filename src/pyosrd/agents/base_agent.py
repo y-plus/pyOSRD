@@ -23,7 +23,7 @@ class BaseAgent(ABC):
     ) -> None:
         self.name = name
         self.sim = sim
-        self.debug = debug
+        self._debug = debug
         self._scorer = scorer 
 
         self.ref_groot = from_sim(sim)
@@ -32,6 +32,15 @@ class BaseAgent(ABC):
     
         self._interlocking_groot = None
         self._dispatched_groot = None
+
+    @property
+    def debug(self:Self) -> bool:
+        return self._debug
+    
+    @debug.setter
+    def debug (self: Self, value: bool) -> None:
+        self._debug = value
+
 
     def save(self, path_to_file: str) -> None:
         with open(path_to_file, "wb") as f:

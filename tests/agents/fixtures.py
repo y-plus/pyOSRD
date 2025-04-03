@@ -16,7 +16,7 @@ class Agent(BaseAgent):
 
 
 @pytest.fixture(scope='session')
-def base_agent() -> Agent:
+def base_agent_straight_line() -> Agent:
     sim = OSRD(
         dir='tmp',
         simulation="c1_with_blocks_3trains"

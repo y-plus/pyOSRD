@@ -32,6 +32,14 @@ class SmartAgent(BaseAgent):
             scorer=self._scorer,
             debug=self.debug,
         )
+    @property
+    def debug(self:Self) -> bool:
+        return self._debug
+    
+    @debug.setter
+    def debug (self: Self, value: bool) -> None:
+        self._debug = value
+        self.tree.debug = value
 
     @property
     def now(self: Self) -> float:
