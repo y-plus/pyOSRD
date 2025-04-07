@@ -70,11 +70,11 @@ def test_missing_children_edges(tree: DecisionTree):
     assert tree.missing_children_edges('C') == ['B', 'C']
 
 
-def test_missing_brothers_edges(tree: DecisionTree):
-    assert tree.missing_brothers_edges('') is None
-    assert tree.missing_brothers_edges('A') == []
-    assert tree.missing_brothers_edges('BA') == ['C']
-    assert tree.missing_brothers_edges('CA') == ['B', 'C']
+def test_missing_siblings_edges(tree: DecisionTree):
+    assert tree.missing_siblings_edges('') is None
+    assert tree.missing_siblings_edges('A') == []
+    assert tree.missing_siblings_edges('BA') == ['C']
+    assert tree.missing_siblings_edges('CA') == ['B', 'C']
 
 
 def test_missing_children(tree: DecisionTree):
@@ -84,11 +84,11 @@ def test_missing_children(tree: DecisionTree):
     assert tree.missing_children('C') == ['CB', 'CC']
 
 
-def test_missing_brothers(tree: DecisionTree):
-    assert tree.missing_brothers('') is None
-    assert tree.missing_brothers('A') == []
-    assert tree.missing_brothers('BA') == ['BC']
-    assert tree.missing_brothers('CA') == ['CB', 'CC']
+def test_missing_siblings(tree: DecisionTree):
+    assert tree.missing_siblings('') is None
+    assert tree.missing_siblings('A') == []
+    assert tree.missing_siblings('BA') == ['BC']
+    assert tree.missing_siblings('CA') == ['CB', 'CC']
 
 
 def test_nodes_explored_unexplored_or_solution_(tree: DecisionTree):

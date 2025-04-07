@@ -66,7 +66,7 @@ class DecisionTree:
             if f"{node}{a}" not in self.children(node)
         ]
 
-    def missing_brothers_edges(self: Self, node: NodeIndex) -> list[Action]:
+    def missing_siblings_edges(self: Self, node: NodeIndex) -> list[Action]:
         if node:
             return self.missing_children_edges(self.parent(node))
 
@@ -76,7 +76,7 @@ class DecisionTree:
             if f"{node}{a}" not in self.children(node)
         ]
 
-    def missing_brothers(self: Self, node: NodeIndex) -> list[Action]:
+    def missing_siblings(self: Self, node: NodeIndex) -> list[Action]:
         if node:
             return self.missing_children(self.parent(node))
 
@@ -164,7 +164,7 @@ class DecisionTree:
 
         return sum(
             [
-                self.missing_brothers(n)
+                self.missing_siblings(n)
                 for n in self.best_nodes
             ],
             []
