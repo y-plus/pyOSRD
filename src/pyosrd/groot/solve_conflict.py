@@ -21,8 +21,8 @@ def is_a_div(self: Groot, tvd: str) -> bool:
     parents = list(self.tvds_graph.predecessors(tvd))
     if not parents:
         return False
-    brothers = list(self.tvds_graph.successors(parents[0]))
-    return len(brothers) == 2
+    siblings = list(self.tvds_graph.successors(parents[0]))
+    return len(siblings) == 2
 
 
 def solve_conflict(

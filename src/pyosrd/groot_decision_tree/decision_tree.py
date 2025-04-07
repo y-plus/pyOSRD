@@ -66,7 +66,7 @@ class DecisionTree:
             if f"{node}{a}" not in self.children(node)
         ]
 
-    def missing_brothers_edges(self: Self, node: NodeIndex) -> list[Action]:
+    def missing_siblings_edges(self: Self, node: NodeIndex) -> list[Action]:
         if node:
             return self.missing_children_edges(self.parent(node))
 
@@ -76,27 +76,9 @@ class DecisionTree:
             if f"{node}{a}" not in self.children(node)
         ]
 
-    def missing_brothers(self: Self, node: NodeIndex) -> list[Action]:
+    def missing_siblings(self: Self, node: NodeIndex) -> list[Action]:
         if node:
             return self.missing_children(self.parent(node))
-
-    def max_num_sucessors(self: Self, node: NodeIndex, depth: int) -> int:
-        N = self.num_actions
-        return int(
-            ( 1 - N ** (depth - self.depth(node) + 1))
-            / (1-len(self.actions)) - 1
-        )
-
-    def num_successors_on_missing_children_branches(
-        self: Self,
-        node: NodeIndex,
-        depth: int
-    ) -> int:
-        return int(
-            self.max_num_sucessors(node, depth)
-            * len(self.missing_children_edges(node))
-            / self.num_actions
-        )
 
     def is_solution(self: Self, node: NodeIndex) -> bool:
         return not self.is_root(node) and isinstance(self.nodes[node], numbers.Number)
@@ -129,23 +111,37 @@ class DecisionTree:
     def combine(self: Self, other: Self):
         self.nodes.update(other.nodes)
 
-    def depth_completeness_ratio(self: Self, node: NodeIndex) -> float:
-        depth = self.depth(node)
+    def missing_nodes_at_depth(self: Self, depth: int) -> list[NodeIndex]:
 
-        missing_nodes_at_this_depth = sum(
-            self.num_successors_on_missing_children_branches(n, depth)
-            for n in self.unexplored_nodes
-            if self.depth(n) <= depth
-        )
+        missing_nodes = []
 
-        nodes_at_this_depth = len([
+        for d in range(depth):
+            missing_children = []
+            for n in missing_nodes + [
+                n for n in self.nodes
+                if self.depth(n)==d and not self.is_solution(n)
+            ]:
+                missing_children += self.missing_children(n)
+            missing_nodes = missing_children
+
+        return missing_nodes        
+
+    def nodes_at_depth(self: Self, depth: int) -> list[NodeIndex]:
+        return [
             n for n in self.nodes
             if self.depth(n) == depth
-        ])
+        ]
 
-        return  nodes_at_this_depth / (
-            nodes_at_this_depth + missing_nodes_at_this_depth
-        )
+    def depth_completeness_ratio(self: Self, node: NodeIndex) -> float:
+        depth = self.depth(node)
+        
+        missing_nodes = self.missing_nodes_at_depth(depth)
+        num_missing_nodes = len(missing_nodes)
+
+        nodes = self.nodes_at_depth(depth)
+        num_nodes = len(nodes)
+
+        return  num_nodes / (num_nodes + num_missing_nodes)
 
     @property
     def best_nodes(self: Self) -> list[NodeIndex]:
@@ -168,7 +164,7 @@ class DecisionTree:
 
         return sum(
             [
-                self.missing_brothers(n)
+                self.missing_siblings(n)
                 for n in self.best_nodes
             ],
             []

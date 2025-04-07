@@ -23,8 +23,8 @@ def is_a_divergence(groot: Groot, tvd: str) -> bool:
     parents = list(groot.tvds_graph.predecessors(tvd))
     if not parents:
         return False
-    brothers = list(groot.tvds_graph.successors(parents[0]))
-    return len(brothers) == 2
+    siblings = list(groot.tvds_graph.successors(parents[0]))
+    return len(siblings) == 2
 
 
 def is_a_convergence(groot: Groot, tvd: str) -> bool:
@@ -32,5 +32,5 @@ def is_a_convergence(groot: Groot, tvd: str) -> bool:
     children = list(groot.tvds_graph.successors(tvd))
     if not children:
         return False
-    brothers = list(groot.tvds_graph.predecessors(children[0]))
-    return len(brothers) == 2
+    siblings = list(groot.tvds_graph.predecessors(children[0]))
+    return len(siblings) == 2

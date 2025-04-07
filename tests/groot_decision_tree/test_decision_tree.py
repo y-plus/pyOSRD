@@ -70,11 +70,11 @@ def test_missing_children_edges(tree: DecisionTree):
     assert tree.missing_children_edges('C') == ['B', 'C']
 
 
-def test_missing_brothers_edges(tree: DecisionTree):
-    assert tree.missing_brothers_edges('') is None
-    assert tree.missing_brothers_edges('A') == []
-    assert tree.missing_brothers_edges('BA') == ['C']
-    assert tree.missing_brothers_edges('CA') == ['B', 'C']
+def test_missing_siblings_edges(tree: DecisionTree):
+    assert tree.missing_siblings_edges('') is None
+    assert tree.missing_siblings_edges('A') == []
+    assert tree.missing_siblings_edges('BA') == ['C']
+    assert tree.missing_siblings_edges('CA') == ['B', 'C']
 
 
 def test_missing_children(tree: DecisionTree):
@@ -84,46 +84,11 @@ def test_missing_children(tree: DecisionTree):
     assert tree.missing_children('C') == ['CB', 'CC']
 
 
-def test_missing_brothers(tree: DecisionTree):
-    assert tree.missing_brothers('') is None
-    assert tree.missing_brothers('A') == []
-    assert tree.missing_brothers('BA') == ['BC']
-    assert tree.missing_brothers('CA') == ['CB', 'CC']
-
-
-def test_max_num_sucessors(tree: DecisionTree):
-    assert tree.max_num_sucessors('', 0) == 0
-    assert tree.max_num_sucessors('', 1) == 3
-    assert tree.max_num_sucessors('', 2) == 12
-
-    assert tree.max_num_sucessors('A', 1) == 0
-    assert tree.max_num_sucessors('A', 2) == 3
-    assert tree.max_num_sucessors('A', 3) == 12
-    assert tree.max_num_sucessors('A', 4) == 39
-
-    assert tree.max_num_sucessors('BA', 2) == 0
-    assert tree.max_num_sucessors('BA', 3) == 3
-    assert tree.max_num_sucessors('BA', 4) == 12
-
-
-def test_num_successors_on_missing_children_branches(tree: DecisionTree):
-    assert tree.num_successors_on_missing_children_branches('', 0) == 0
-    assert tree.num_successors_on_missing_children_branches('', 1) == 0
-    assert tree.num_successors_on_missing_children_branches('', 2) == 0
-
-    assert tree.num_successors_on_missing_children_branches('A', 1) == 0
-    
-    assert tree.num_successors_on_missing_children_branches('A', 2) == 3
-    assert tree.num_successors_on_missing_children_branches('B', 2) == 1
-    assert tree.num_successors_on_missing_children_branches('C', 2) == 2
-    
-    assert tree.num_successors_on_missing_children_branches('A', 3) == 12
-    assert tree.num_successors_on_missing_children_branches('B', 3) == 4
-    assert tree.num_successors_on_missing_children_branches('C', 3) == 8
-    
-    assert tree.num_successors_on_missing_children_branches('BA', 3) == 3
-    assert tree.num_successors_on_missing_children_branches('BB', 3) == 3
-    assert tree.num_successors_on_missing_children_branches('CA', 3) == 3
+def test_missing_siblings(tree: DecisionTree):
+    assert tree.missing_siblings('') is None
+    assert tree.missing_siblings('A') == []
+    assert tree.missing_siblings('BA') == ['BC']
+    assert tree.missing_siblings('CA') == ['CB', 'CC']
 
 
 def test_nodes_explored_unexplored_or_solution_(tree: DecisionTree):
@@ -176,7 +141,7 @@ def test_add_not_overwrite(tree: DecisionTree):
 
 def test_best_solution_confidence(tree: DecisionTree):
     assert tree.depth_completeness_ratio('A') == 1
-    assert tree.depth_completeness_ratio('BA') == 1/2
+    assert tree.depth_completeness_ratio('BA') == 3/6
 
     tree.nodes['BC'] =  5
     assert tree.depth_completeness_ratio('BA') == 4/6
@@ -184,9 +149,14 @@ def test_best_solution_confidence(tree: DecisionTree):
     tree.nodes['BC'] =  dict()
     tree.nodes['BCA'] =  5
     assert tree.depth_completeness_ratio('BA') == 4/6
-    assert tree.depth_completeness_ratio('BCA') == 1/11
+    assert tree.depth_completeness_ratio('BCA') == 1/9
     assert tree.unexplored_nodes == {'BC', 'C'}
 
+    tree.nodes.pop('CA')
+    tree.nodes.pop('C')
+    assert tree.depth_completeness_ratio('A') == 2/(2 + 1)
+    assert tree.depth_completeness_ratio('BA') == 3/(3 + 3)
+    assert tree.depth_completeness_ratio('BCA') == 1/(1 + 11)
 
 def test_best_nodes(tree: DecisionTree):
     assert tree.best_nodes == ['CA', 'A', 'BA']
